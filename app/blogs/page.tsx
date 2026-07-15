@@ -1,13 +1,17 @@
-import BlogCards from "@/app/components/blog/BlogCards";
-import BlogParent from "@/app/components/blog/BlogParent";
+"use client";
+import { useState } from "react";
+import BlogCards from "@/app/components/Blog/BlogCards";
+import BlogParent from "@/app/components/Blog/BlogParent";
 
-const page = () => {
+const BlogsPage = () => {
+  const [active, setActive] = useState("ALL");
+
   return (
     <div>
-      <BlogParent />
-      <BlogCards />
+      <BlogParent active={active} setActive={setActive} />
+      <BlogCards active={active} />
     </div>
   );
 };
 
-export default page;
+export default BlogsPage;
