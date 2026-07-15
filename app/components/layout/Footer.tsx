@@ -1,5 +1,6 @@
 "use client"
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import "../../styles/footer.css"
 import { caseStudies } from "../caseStudy/caseStudiesData";
@@ -17,7 +18,7 @@ function Footer() {
 
     useEffect(() => {
         const updateTime = () => {
-            const format = (timeZone) =>
+            const format = (timeZone: string) =>
                 new Intl.DateTimeFormat("en-US", {
                     timeZone,
                     hour: "2-digit",
@@ -63,7 +64,7 @@ function Footer() {
                         </button>
 
 
-                        <h2 className="footer-connect-title">Let's Connect</h2>
+                        <h2 className="footer-connect-title">Let&apos;s Connect</h2>
 
 
 
@@ -111,20 +112,20 @@ function Footer() {
                     <div className='footer-inner-link-col'>
                         <div className="footer-nav-col">
                             <h4 className="footer-nav-title">Links</h4>
-                            <a href="/" className="footer-nav-link">Home</a>
-                            <a href="/about" className="footer-nav-link">About</a>
-                            <a href="/service" className="footer-nav-link">Services</a>
-                            <a href="/contact" className="footer-nav-link">Contact</a>
+                            <Link href="/" className="footer-nav-link">Home</Link>
+                            <Link href="/about" className="footer-nav-link">About</Link>
+                            <Link href="/service" className="footer-nav-link">Services</Link>
+                            <Link href="/contact" className="footer-nav-link">Contact</Link>
                         </div>
                         <div className="footer-nav-col">
                             <h4 className="footer-nav-title">Other</h4>
-                            <a href="/work" className="footer-nav-link">Work</a>
-                            <a href="/blog" className="footer-nav-link">Blog</a>
+                            <Link href="/work" className="footer-nav-link">Work</Link>
+                            <Link href="/blog" className="footer-nav-link">Blog</Link>
                         </div>
                         <div className="footer-nav-col">
                             <h4 className="footer-nav-title">Info</h4>
-                            <a href="/privacy" className="footer-nav-link">Privacy Policy</a>
-                            <a href="/terms" className="footer-nav-link">Terms Of Service</a>
+                            <Link href="/privacy" className="footer-nav-link">Privacy Policy</Link>
+                            <Link href="/terms" className="footer-nav-link">Terms Of Service</Link>
                         </div>
                         <div className="footer-nav-col">
                             <h4 className="footer-nav-title">Address</h4>
