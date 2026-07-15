@@ -1,0 +1,13 @@
+.homehero {
+    height: 100vh;
+    display: flex;
+}
+.homehero img{
+    width: 100%;
+    height: 100%;
+}
+@media (max-width:760px){
+    .homehero img{
+        object-fit:cover;
+    }
+}

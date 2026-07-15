@@ -1,0 +1,99 @@
+/* ── Blog Inner Layout ── */
+.bi-container {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  padding: 150px 50px;
+}
+
+.bi-left-image {
+  width: 45%;
+  height: 880px;
+  position: sticky;
+  top: 0;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.bi-left-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.bi-right {
+  flex: 1;
+  padding: 0px 31px;
+}
+
+.bi-label {
+  color: #0c0c0c;
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.bi-subtitle {
+  color: rgba(12, 12, 12, 0.5);
+  font-size: 40px;
+  padding-top: 8px;
+  font-weight: 500;
+}
+
+.bi-heading {
+  color: #0c0c0c;
+  font-size: 60px;
+  font-weight: 500;
+}
+
+.bi-date {
+  color: #0c0c0c;
+  font-family: "Neue Montreal";
+  font-size: 25px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-top: 16px;
+}
+
+/* ── Body paragraphs ── */
+.bi-content {
+  margin-top: 54px;
+}
+
+.bi-content p {
+  margin: 0 0 20px 0;
+  color: rgba(12, 12, 12, 0.7);
+  font-family: "Neue Montreal";
+  font-size: 21px;
+  font-weight: 500;
+  padding-block: 15px;
+  line-height: normal;
+}
+
+.bi-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .bi-container {
+    flex-direction: column;
+  }
+
+  .bi-left-image {
+    width: 100%;
+    height: 420px;
+    position: relative;
+  }
+
+  .bi-right {
+    padding: 32px 24px;
+  }
+
+  .bi-heading {
+    font-size: 36px;
+  }
+}

@@ -1,0 +1,89 @@
+/* ── BlogParent Hero ── */
+.bp-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  width: 100%;
+  padding: 90px 40px;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.bp-hero h1 {
+  font-family: "Neue Montreal", sans-serif;
+  font-size: clamp(40px, 6.5vw, 90px);
+  font-weight: 500;
+  line-height: 1.08;
+  text-align: center;
+  margin: 0;
+}
+
+.bp-h1-black {
+  color: #0a0a0a;
+}
+
+.bp-h1-gray {
+  color: #8f8f8f;
+}
+
+.bp-hero p {
+  font-family: "Neue Montreal", sans-serif;
+  font-size: clamp(14px, 1.1vw, 17px);
+  font-weight: 400;
+  text-align: center;
+  color: #555;
+  max-width: 500px;
+  margin: 0;
+}
+
+.bp-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.bp-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 22px;
+  border-radius: 100px;
+  border: 1.5px solid #c8c8c8;
+  background: transparent;
+  color: #111;
+  font-family: "Neue Montreal", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+  /* No CSS transition — GSAP owns hover animation */
+}
+
+.bp-filter-btn.active {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+.bp-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+  /* Initial scale set by GSAP (0.5), animated to 1 on hover/active */
+}
+@media (max-width:990px){
+.bp-hero {
+  padding: 90px 15px;
+
+}
+}

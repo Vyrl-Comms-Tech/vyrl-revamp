@@ -1,0 +1,417 @@
+.collective {
+  width: 100%;
+  height: 100vh;
+  background-color: var(--bodybg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px; /* Increased perspective for deeper 3D effect */
+  perspective-origin: center center;
+  transform-style: preserve-3d; /* Enable 3D transforms */
+  /* overflow: hidden; Prevent boxes from going outside bounds */
+  /* border: 5px solid green; */
+  position: relative;
+  perspective: 1800px;
+  perspective-origin: center center;
+}
+
+.boxes-container {
+  /* border: 5px solid red; */
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.tp-section1 {
+  width: 50%;
+  height: 100%;
+  /* border: 1px solid black; */
+  position: relative;
+  transform-style: preserve-3d; /* Enable 3D transforms for children */
+}
+
+.tp-section1 h2 {
+  color: #000;
+  /* background-color: red; */
+  /* font-size: clamp(37px, 2.8vw, 54px); */
+  font-size: clamp(2.313rem, 4.8rem, 5.375rem);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1;
+  position: absolute;
+  top: 37%;
+  left: 100%;
+  transform: translate(-50%, -120%);
+  white-space: nowrap;
+  text-align: center;
+}
+
+#colored-text {
+  /* color: #7b7b7b; */
+}
+
+.tp-section2 {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  /* border: 1px solid black; */
+  transform-style: preserve-3d; /* Enable 3D transforms for children */
+}
+
+/* Enhanced box styles with 3D support */
+.box {
+  transform-style: preserve-3d;
+  transform-origin: center center;
+  transition: transform 0.1s ease-out;
+  will-change: transform; /* Optimize for animations */
+  backface-visibility: visible;
+  /* opacity: 0; */
+}
+
+.box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-style: preserve-3d;
+  backface-visibility: visible;
+}
+
+/* Enhanced positioning for better 3D depth effect */
+#tpbox1 {
+  height: 200px;
+  aspect-ratio: 9/16;
+  position: absolute;
+  top: 10%;
+  left: 70%;
+  z-index: 10;
+}
+
+#tpbox2 {
+  width: 260px;
+  aspect-ratio: 16/9;
+  position: absolute;
+  top: 40%;
+  left: 65%;
+  z-index: 8;
+}
+
+#tpbox3 {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  top: 20%;
+  left: 70%;
+  z-index: 12;
+}
+
+#tpbox4 {
+  width: 300px;
+  height: 300px;
+  position: absolute;
+  top: 45%;
+  left: 40%;
+  z-index: 6;
+}
+
+#tpbox5 {
+  width: 260px;
+  aspect-ratio: 16/9;
+  position: absolute;
+  top: 25%;
+  right: 70%;
+  z-index: 9;
+}
+
+#tpbox6 {
+  /* width: 150px; */
+  height: 150px;
+  aspect-ratio: 9/16;
+  position: absolute;
+  top: 25%;
+  right: 100%;
+  z-index: 11;
+}
+
+#tpbox7 {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  top: 60%;
+  right: 100%;
+  z-index: 7;
+}
+
+/* #tpbox8 {
+  width: 350px;
+  height: 350px;
+  position: absolute;
+  top: 55%;
+  right: 40%;
+  z-index: 5;
+} */
+
+#tpbox8 {
+  /* width: 350px; */
+  height: 250px;
+  position: absolute;
+  aspect-ratio: 9/16;
+  top: 25%;
+  right: 70%;
+  z-index: 5;
+}
+.tp-detailsbox {
+  position: absolute;
+  top: 64%;
+  left: 0%; 
+  transform: translate(-50%, -50%);
+  width: min(90%, 700px);
+  text-align: center;
+}
+
+.p-tp-detailsbox {
+  color: #011825;
+  /* font-size: clamp(21px, 1.3vw, 25px); */
+  font-size: clamp(1.313rem, 1.1vw, 1.563rem);
+  font-style: normal;
+  font-weight: 300;
+  line-height: 1.1; /* 120% */
+}
+
+.buttonsrow {
+  display: flex;
+  align-items: center;
+  color: white !important;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+#partner-sale-btn {
+  gap: 20px;
+}
+#partner-sale-btn svg {
+  position: relative;
+  top: 1px;
+}
+#partner-contact-btn svg {
+  position: relative;
+  top: 1px;
+}
+
+/* Enhanced 3D effects on hover */
+.box:hover {
+  /* transform: translateZ(20px) rotateY(5deg); */
+  /* box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); */
+}
+
+@media(max-width:1550px){
+
+  .p-tp-detailsbox {
+    font-size: clamp(1rem, 1.27vw, 1.3rem);
+    line-height: 25px;
+  }
+  .sale-button,
+  .rent-button {
+    padding: 10px 18px;
+  }
+  .tp-section1 h2 {
+    font-size: 3.8rem;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 1380px) {
+  .p-tp-detailsbox {
+    font-size: clamp(1rem, 1.27vw, 1.3rem);
+    line-height: 25px !important;
+  }
+  .sale-button,
+  .rent-button {
+    padding: 10px 18px;
+  }
+}
+
+/* @media (max-width: 1350px) {
+  .tp-detailsbox {
+    left: -30%;
+  }
+  .tp-section1 h2 {
+    font-weight: 300;
+  }
+  .tp-detailsbox {
+    font-weight: 200;
+  }
+} */
+@media (max-width: 1024px) {
+  /* Below this width, text is no longer positioned per-half against
+     the image boxes (which is what caused it to land top-left/cut off
+     on narrow screens). Instead the whole section becomes one centered
+     flex column that stacks heading → paragraph → button, and the
+     image boxes are absolutely positioned behind/around it — so text
+     is always centered and can never overlap or get pushed off a box. */
+  .collective {
+    flex-direction: column;
+    justify-content: center;
+    perspective: 800px;
+  }
+
+  .tp-section1,
+  .tp-section2 {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tp-section1 {
+    top: 0;
+    justify-content: flex-end;
+    z-index: 20;
+    pointer-events: none;
+  }
+
+  .tp-section2 {
+    top: 50%;
+    justify-content: flex-start;
+    z-index: 21;
+    pointer-events: none;
+  }
+
+  .tp-section1 h2,
+  .tp-detailsbox {
+    pointer-events: auto;
+  }
+
+  .tp-section1 h2 {
+    position: static;
+    transform: none;
+    font-size: 2.5rem;
+    text-align: center;
+    white-space: normal;
+  }
+
+  #tpbox1 {
+    height: 150px;
+    left: 60%;
+  }
+
+  #tpbox2 {
+    width: 200px;
+    left: 55%;
+  }
+
+  #tpbox5 {
+    width: 200px;
+    right: 60%;
+  }
+
+  #tpbox6 {
+    height: 150px;
+    right: 90%;
+  }
+
+  .tp-detailsbox {
+    position: static;
+    transform: none;
+    width: min(90%, 500px);
+    margin-top: 1.5rem;
+  }
+
+  .p-tp-detailsbox {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .collective {
+    perspective: 600px;
+  }
+
+  .tp-section1 h2 {
+    font-size: 2rem;
+  }
+
+  #tpbox1 {
+    height: 110px;
+  }
+
+  #tpbox2 {
+    width: 150px;
+  }
+
+  #tpbox5 {
+    width: 150px;
+  }
+
+  #tpbox6 {
+    height: 110px;
+  }
+
+  .p-tp-detailsbox {
+    font-size: 1rem;
+  }
+
+  .buttonsrow {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .sale-button,
+  .rent-button {
+    width: auto;
+    white-space: nowrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .collective {
+    perspective: 400px;
+  }
+
+  .tp-section1 h2 {
+    font-size: 1.6rem;
+    padding: 0 1rem;
+  }
+
+  #tpbox1 {
+    height: 90px;
+  }
+
+  #tpbox2 {
+    width: 120px;
+  }
+
+  #tpbox5 {
+    width: 120px;
+  }
+
+  #tpbox6 {
+    height: 90px;
+  }
+
+  .p-tp-detailsbox {
+    font-size: 0.9rem;
+  }
+}
+
+.collective {
+  perspective: 1800px;
+  perspective-origin: center center;
+  transform-style: preserve-3d;
+  position: relative;
+  overflow: hidden;
+}
+
+.box {
+  transform-style: preserve-3d;
+}
+
+.box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}

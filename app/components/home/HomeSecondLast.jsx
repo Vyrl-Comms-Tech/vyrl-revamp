@@ -1,0 +1,55 @@
+import React from "react";
+import "../../styles/home-second-last.css";
+import TextAnimation from "./TextAnimation";
+
+const HomeSecondLast = () => {
+  return (
+    <section className="hp-section">
+      <div className="hp-grid">
+        {/* Left dark panel */}
+        <div className="hp-left">
+          <div className="hp-text-group">
+            <TextAnimation blockColor="#fff" stagger={0.12} duration={1}>
+              <h2 className="hp-heading">
+                Have any query
+                <br />
+                reach out now
+              </h2>
+            </TextAnimation>
+            <TextAnimation blockColor="#fff" stagger={0.12} duration={1}>
+              <p className="hp-para">
+                Find the best hand-picked website design inspiration. We're a
+                curated website design gallery for Creatives, updated daily.
+              </p>
+            </TextAnimation>
+          </div>
+
+          <button className="hp-btn">
+            See All Works
+            <span className="hp-btn-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="15"
+                height="18"
+                viewBox="0 0 15 18"
+                fill="none"
+              >
+                <path
+                  d="M10.3213 0.000213146L1.27547e-05 4.4884L0.64805 5.937L8.47908 2.53785L2.7051 17.4253L4.19683 18.0038L9.97081 3.11641L13.462 10.9068L14.9174 10.274L10.3213 0.000213146Z"
+                  fill="white"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+
+        {/* Right image panel */}
+        <div className="hp-right">
+          <img src="/img2.png" alt="3D digital sculpture" className="hp-img" />
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default HomeSecondLast;

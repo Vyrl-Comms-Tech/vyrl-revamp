@@ -1,0 +1,116 @@
+.nav-container {
+  position: fixed;
+  top: 24px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 50;
+}
+
+.nav {
+  width: 30%;
+  height: 64px;
+  display: flex;
+  flex-direction: column;
+  background: #111;
+  color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  /* closing order: height shrinks first, then width */
+  transition:
+    height 0.45s cubic-bezier(0.65, 0, 0.35, 1),
+    border-radius 0.45s cubic-bezier(0.65, 0, 0.35, 1),
+    width 0.45s cubic-bezier(0.65, 0, 0.35, 1) 0.65s;
+}
+
+.nav-expanded {
+  width: 72%;
+  height: 550px;
+  border-radius: 24px;
+  /* opening order: width expands first, then height */
+  transition:
+    width 0.45s cubic-bezier(0.65, 0, 0.35, 1),
+    height 0.45s cubic-bezier(0.65, 0, 0.35, 1) 0.65s,
+    border-radius 0.45s cubic-bezier(0.65, 0, 0.35, 1) 0.65s;
+}
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  height: 64px;
+  padding: 0 28px;
+}
+
+.nav h2 {
+  font-size: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.nav-toggle {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav-dropdown {
+  display: flex;
+  flex: 1;
+  gap: 24px;
+  padding: 23px 44px 36px 28px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.nav-expanded .nav-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.35s ease 1.1s;
+}
+
+.nav-dropdown-image {
+  position: relative;
+  width: 40%;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.nav-dropdown-img {
+  object-fit: cover;
+}
+
+.nav-dropdown-caption {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 25px;
+  /* line-height: 1.3; */
+}
+
+.nav-dropdown-links {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 14px;
+}
+
+.nav-dropdown-links a {
+  font-size: 35px;
+  font-weight: 600;
+  color: #777;
+}
+
+.nav-dropdown-links a.active {
+  color: #fff;
+}

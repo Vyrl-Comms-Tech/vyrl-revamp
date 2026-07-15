@@ -1,0 +1,213 @@
+.upperSection {
+  height: 0vh !important;
+}
+
+.aboutUsStack {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cardsStack {
+  width: 60.17vw;
+  height: 70vh;
+  overflow: hidden;
+  border-radius: 9px;
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+  will-change: transform, opacity;
+}
+
+.cardsStack video {
+  width: 35%;
+  position: absolute;
+  object-fit: cover;
+}
+
+.upperHeadingStack {
+  z-index: 2;
+  left: 3%;
+  top: 5%;
+  position: absolute;
+}
+
+.upperHeadingStack span {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: "Neue Montreal", Helvetica, sans-serif;
+  font-size: 1.8rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.upperHeadingStack h1 {
+  color: #fff;
+  font-family: "Neue Montreal", Helvetica, sans-serif;
+  font-size: 4rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.cardsStack p {
+  color: #fff;
+  text-align: right;
+  position: absolute;
+  right: 3%;
+  bottom: 5%;
+  width: 50%;
+  font-weight: 400;
+  z-index: 2;
+  font-family: "regular-neue", sans-serif;
+}
+
+.counterStack {
+  position: absolute;
+  left: 10%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.counterStack p {
+  color: #7a7a7a;
+  font-family: "regular-neue", sans-serif;
+}
+
+.lineFill {
+  height: 1rem;
+  width: 2px;
+  opacity: 0.4;
+  background-color: #000;
+}
+
+@media (max-width: 700px) {
+  .cardsStack {
+    width: 90vw;
+    height: 55vh;
+  }
+
+  .upperHeadingStack h1 {
+    font-size: 2.2rem;
+  }
+
+  .cardsStack video {
+    width: 60%;
+  }
+}
+/* .upperSection {
+  height: 100vh;
+  width: 100vw;
+} */
+
+.aboutUsStack {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cardsStack {
+  width: 60.17vw;
+  height: 70vh;
+  overflow: hidden;
+  border-radius: 9px;
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+  will-change: transform, opacity;
+}
+
+.cardsStack video {
+  width: 35%;
+  position: absolute;
+  object-fit: cover;
+}
+
+.upperHeadingStack {
+  z-index: 2;
+  left: 3%;
+  top: 5%;
+  position: absolute;
+}
+
+.upperHeadingStack span {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: "Neue Montreal", Helvetica, sans-serif;
+  font-size: 1.8rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.upperHeadingStack h1 {
+  color: #fff;
+  font-family: "Neue Montreal", Helvetica, sans-serif;
+  font-size: 4rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.cardsStack p {
+  color: #fff;
+  text-align: right;
+  position: absolute;
+  right: 3%;
+  bottom: 5%;
+  width: 50%;
+  font-weight: 400;
+  z-index: 2;
+  font-family: "regular-neue", sans-serif;
+}
+
+.counterStack {
+  position: absolute;
+  left: 10%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.counterStack p {
+  color: #7a7a7a;
+  font-family: "regular-neue", sans-serif;
+}
+
+.lineFill {
+  height: 1rem;
+  width: 2px;
+  opacity: 0.4;
+  background-color: #000;
+}
+
+@media (max-width: 700px) {
+  .cardsStack {
+    width: 90vw;
+    height: 55vh;
+  }
+
+  .upperHeadingStack h1 {
+    font-size: 2.2rem;
+  }
+
+  .cardsStack video {
+    width: 60%;
+  }
+}

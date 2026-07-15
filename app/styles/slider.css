@@ -1,0 +1,129 @@
+.banner {
+  width: 100%;
+  min-height: 120vh;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  padding: 10rem 3% 6rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.slider-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  text-align: left;
+  gap: 2rem;
+}
+
+.slider-headingCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.slider-tag {
+  color: #7b7b7b;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+
+.slider-headingCol h1 {
+  color: #011825;
+  font-size: clamp(2rem, 3.2vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.slider-heading-muted {
+  color: #9a9a9a;
+}
+
+.slider-textCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  max-width: 320px;
+  padding-top: 0.5rem;
+}
+
+.slider-desc {
+  color: #011825;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.banner .slider {
+  position: relative;
+  width: 200px;
+  height: 250px;
+  margin: 6rem auto 0;
+  transform-style: preserve-3d;
+  transform: perspective(1000px);
+  animation: autoRun 20s linear infinite;
+  z-index: 2;
+  flex-shrink: 0;
+}
+@keyframes autoRun {
+  from {
+    transform: perspective(1000px) rotateX(-8deg) rotateY(0deg);
+  }
+  to {
+    transform: perspective(1000px) rotateX(-11deg) rotateY(360deg);
+  }
+}
+
+.banner .slider .item {
+  position: absolute;
+  inset: 0 0 0 0;
+  transform: rotateY(
+      calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
+    )
+    translateZ(550px);
+}
+.banner .slider .item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media screen and (max-width: 1023px) {
+  .slider-top {
+    flex-direction: column;
+  }
+
+  .slider-textCol {
+    align-items: flex-start;
+    text-align: left;
+    max-width: unset;
+  }
+
+  .banner .slider {
+    width: 160px;
+    height: 200px;
+  }
+  .banner .slider .item {
+    transform: rotateY(
+        calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
+      )
+      translateZ(300px);
+  }
+}
+@media screen and (max-width: 767px) {
+  .banner .slider {
+    width: 100px;
+    height: 150px;
+  }
+  .banner .slider .item {
+    transform: rotateY(
+        calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
+      )
+      translateZ(180px);
+  }
+}

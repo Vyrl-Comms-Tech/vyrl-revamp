@@ -1,0 +1,118 @@
+.bc-section {
+  width: 100%;
+  padding: 84px 24px 0;
+  background: #fff;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.bc-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 30px;
+  position: relative;
+}
+
+/* ── Card shell — grid item + Flip target only, no visual styles ── */
+.bc-card {
+  padding-block: 40px;
+  grid-column: span 3;
+}
+
+/* ── Card inner — animation target + all visual styles ── */
+.bc-card-inner {
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Image area ── */
+.bc-img {
+  width: 100%;
+  height: 552px;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.bc-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Card body ── */
+.bc-body {
+  padding: 16px 4px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bc-title {
+  font-size: 35px;
+  color: #0d0d0d;
+  font-family: "Neue Montreal";
+  font-style: normal;
+  width: max-content;
+  font-weight: 500;
+}
+
+.bc-desc {
+  font-size: 19px;
+  color: rgba(28, 28, 28, 0.7);
+  font-family: "Neue Montreal";
+  width: max-content;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.bc-meta {
+  font-family: "Neue Montreal", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #999;
+  margin-top: 2px;
+}
+
+@media (max-width: 900px) {
+  .bc-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .bc-section {
+    padding: 24px 15px 0;
+  }
+  .bc-card {
+    grid-column: span 1;
+  }
+  .bc-title {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 560px) {
+  .bc-grid {
+    grid-template-columns: 1fr;
+  }
+  .bc-title {
+    font-size: 25px;
+  }
+  .bc-card {
+    grid-column: span 1;
+  }
+  .bc-img {
+    height: 280px;
+  }
+  .bc-desc {
+    font-size: 18px;
+  }
+}

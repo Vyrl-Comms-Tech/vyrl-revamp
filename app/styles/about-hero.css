@@ -1,0 +1,107 @@
+.aboutHero {
+  position: relative;
+  width: 100%;
+  min-height: 150vh;
+  padding: 4rem 3% 4rem;
+  box-sizing: border-box;
+}
+
+.aboutHero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  gap: 2rem;
+}
+
+.aboutHero-imageCol {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Reserves the small starting box's footprint in the flex column so
+   the paragraph/button below sit correctly; the real image is an
+   absolutely-positioned overlay Flip snaps onto this rect. */
+.aboutHero-imagePlaceholder {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  margin-bottom: 1.5rem;
+}
+
+.aboutHero-desc {
+  color: #011825;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-width: 320px;
+  margin-bottom: 1.5rem;
+}
+
+.aboutHero-headingCol {
+  width: 55%;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.aboutHero-tag {
+  color: #7b7b7b;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+
+.aboutHero-headingCol h1 {
+  color: #011825;
+  font-size: clamp(2rem, 3.2vw, 3.5rem);
+  font-weight: 500;
+}
+
+/* Reserves the natural (final) image height in flow so content after this
+   section starts in the right place, even though the image itself is
+   position:absolute and animated via GSAP Flip. */
+.aboutHero-imageSpacer {
+  width: 100%;
+  height: 80vh;
+  margin-top: 6rem;
+}
+
+/* Natural (final) position/size — full width, taller, sitting below the
+   top row with a gap, matching the Figma reference. Starts snapped onto
+   the placeholder rect, then Flip animates it here on scroll. */
+.aboutHero-imageWrap {
+  position: absolute;
+  width: 100%;
+  height: 70vh;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.aboutHero-imageWrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .aboutHero-top {
+    flex-direction: column;
+  }
+
+  .aboutHero-imageCol,
+  .aboutHero-headingCol {
+    width: 100%;
+  }
+
+  .aboutHero-headingCol {
+    text-align: left;
+    align-items: flex-start;
+    margin-top: 2rem;
+  }
+
+  .aboutHero-imageWrap {
+    height: 45vh;
+  }
+}

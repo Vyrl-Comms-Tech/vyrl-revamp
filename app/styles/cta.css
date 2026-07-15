@@ -1,0 +1,115 @@
+.cta-btn-container {
+  position: relative;
+  width: fit-content;
+}
+
+.cta-btn {
+  padding: 0.4rem 1rem 0.4rem 0.5rem;
+  width: fit-content;
+  border-radius: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-decoration: none;
+  color: #fff;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  gap: 1.5rem;
+  background-color: #000;
+}
+
+.cta-btn-vid {
+  position: absolute;
+  display: flex;
+  inset: 0;
+  width: 0%;
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    letter-spacing 0.4s ease,
+    width 0.4s ease;
+  justify-content: center;
+  align-items: center;
+}
+
+.cta-btn-vid video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cta-arrow-box {
+  padding: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transform: translateX(0%);
+  border-radius: 50rem;
+  background-color: #ffffff27;
+  backdrop-filter: blur(10px);
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.cta-btn p {
+  font-size: 1.1rem;
+  position: relative;
+  transform: translateX(0%);
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    letter-spacing 0.4s ease,
+    color 0.4s ease;
+}
+
+.cta-btn:hover .cta-arrow-box {
+  transform: translateX(270%) rotate(70deg);
+  box-shadow:
+    0 0 20px rgba(255, 255, 255, 0.4),
+    0 0 60px rgba(255, 255, 255, 0.15);
+}
+
+.cta-btn:hover p {
+  transform: translateX(-70%);
+  color: #fff;
+}
+
+.cta-btn:hover .cta-btn-vid {
+  width: 100%;
+}
+
+/* ── White variant ── */
+.cta-button-carousel {
+  background-color: #fff;
+  color: #000;
+}
+
+.cta-button-carousel .cta-arrow-box {
+  background-color: #0000001a;
+}
+
+.cta-button-carousel .cta-arrow-box svg path {
+  fill: #000;
+}
+
+.cta-button-carousel:hover .cta-arrow-box {
+  background-color: #ffffff40;
+  box-shadow:
+    0 0 20px rgba(255, 255, 255, 0.4),
+    0 0 60px rgba(255, 255, 255, 0.15);
+}
+
+.cta-button-carousel:hover .cta-arrow-box svg path {
+  fill: #fff;
+}
+
+.cta-button-carousel:hover p {
+  color: #fff;
+}
+@media (max-width: 1760px) {
+  .cta-arrow-box {
+    padding: 0.4rem;
+  }
+}
