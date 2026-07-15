@@ -113,6 +113,7 @@
   .logos-left {
     width: 100%;
     padding-inline: 15px;
+    gap: 20px;
     align-items: center;
   }
 

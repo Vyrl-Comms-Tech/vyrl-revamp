@@ -257,7 +257,8 @@
   padding-block: 50px;
 }
   .custom-slide {
-    width: 450px !important;
+    width: 100vw !important;
+    max-width: 420px;
     padding-inline: 15px;
   }
   .h2-section {

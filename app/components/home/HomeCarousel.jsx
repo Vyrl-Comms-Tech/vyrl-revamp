@@ -79,6 +79,14 @@ const HomeCarousel = () => {
             modifier: 1,
             scale: 0.75,
           }}
+          breakpoints={{
+            0: {
+              spaceBetween: -20,
+            },
+            769: {
+              spaceBetween: -75,
+            },
+          }}
           onSwiper={(swiper) => (swiperRef.current = swiper)}
           onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
           className="simple-swiper"

@@ -228,10 +228,12 @@
     width: 70vw;
   }
   .site-nav {
-    bottom: -80%;
+    top: auto;
+    bottom: 6%;
+    height: auto;
     flex-direction: column;
   }
-  .grid-cards {
+  .grid-cards,.cursor-follow {
     display: none;
   }
 }
