@@ -96,26 +96,29 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
     // ------------------------------------------------
     // Controls
     // ------------------------------------------------
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.08;
-    controls.enableZoom = false;
-    controls.enablePan = false;
-
-    // Let it spin freely left/right (full horizontal orbit), but
-    // clamp how far it can tilt up/down so it can't flip over the
-    // top or bottom and drift off-screen.
-    const basePolarAngle = Math.PI / 2; // looking straight at it
-    controls.minPolarAngle = basePolarAngle - 0.6; // ~34° up
-    controls.maxPolarAngle = basePolarAngle + 0.6; // ~34° down
-    controls.rotateSpeed = 0.6;
-
-    // On mobile, OrbitControls captures single-finger touch drags as
-    // rotation, which eats the swipe the user actually meant as a page
-    // scroll. Disabling rotate on touch (mouse-drag rotate on desktop
-    // stays untouched) lets that same gesture fall through to the page.
+    // OrbitControls attaches touch listeners that call preventDefault()
+    // to suppress the page's default touch-scroll while orbiting — that
+    // holds true even with rotate/zoom/pan all disabled, since it still
+    // has to distinguish a one-finger orbit gesture from a two-finger
+    // pinch. On mobile that swallows the swipe the user meant as a page
+    // scroll, so on mobile we simply never attach controls to the canvas.
     const isMobile = window.innerWidth <= 700;
-    controls.enableRotate = !isMobile;
+    const controls = isMobile ? null : new OrbitControls(camera, renderer.domElement);
+
+    if (controls) {
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.enableZoom = false;
+      controls.enablePan = false;
+
+      // Let it spin freely left/right (full horizontal orbit), but
+      // clamp how far it can tilt up/down so it can't flip over the
+      // top or bottom and drift off-screen.
+      const basePolarAngle = Math.PI / 2; // looking straight at it
+      controls.minPolarAngle = basePolarAngle - 0.6; // ~34° up
+      controls.maxPolarAngle = basePolarAngle + 0.6; // ~34° down
+      controls.rotateSpeed = 0.6;
+    }
 
     // ------------------------------------------------
     // Lights
@@ -176,7 +179,6 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       camera.updateProjectionMatrix();
       renderer.setSize(cubeMount.clientWidth, cubeMount.clientHeight);
       updateCameraPosition();
-      controls.enableRotate = window.innerWidth > 700;
       ScrollTrigger.refresh();
     };
     window.addEventListener("resize", handleResize);
@@ -205,7 +207,7 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       // about a third of the original speed so it doesn't tumble.
       pivot.rotation.y += 0.004;
       pivot.rotation.x += 0.004;
-      controls.update();
+      if (controls) controls.update();
       if (mixer) mixer.setTime(Math.min(scrollProgress * CLIP_DURATION, MAX_TIME));
       renderer.render(scene, camera);
     };
@@ -279,12 +281,27 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
     desc.textContent = SERVICES[0].desc;
     currentIndex = 0;
 
+    // Desktop uses a long, smoothly-scrubbed distance across all services.
+    // Mobile uses a much shorter distance with lower scrub (less lag per
+    // swipe) plus snap points, so each swipe reliably lands on a clean
+    // service boundary instead of stalling mid-transition between two.
+    const scrollDistance = isMobile ? 2400 : 6000;
+    const scrubAmount = isMobile ? 0.5 : 2;
+    const snapStep = 1 / (SERVICES.length - 1);
+
     const mainScrollTrigger = ScrollTrigger.create({
       trigger: section,
       start: "top top",
-      end: "+=6000",
-      scrub: 2,
+      end: `+=${scrollDistance}`,
+      scrub: scrubAmount,
       pin: true,
+      snap: isMobile
+        ? {
+            snapTo: (value) => Math.round(value / snapStep) * snapStep,
+            duration: 0.3,
+            ease: "power1.inOut",
+          }
+        : undefined,
       onUpdate(self) {
         // Clamped [0,1] here; actually applied to the mixer in the
         // render loop every frame (see animate()) so it's never stale
@@ -316,7 +333,7 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       if (titleSplit) titleSplit.revert();
       if (descSplit) descSplit.revert();
 
-      controls.dispose();
+      if (controls) controls.dispose();
       renderer.dispose();
       dracoLoader.dispose();
       if (cubeMount.contains(renderer.domElement)) {

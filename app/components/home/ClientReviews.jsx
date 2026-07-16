@@ -335,7 +335,7 @@ function ClientReviewSection() {
           <CtaButton
             label={active.ctaLabel}
             href={active.href}
-            className="client-review-cta-btn"
+            className="cta-button-carousel"
           />
         </div>
       </div>

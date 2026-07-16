@@ -112,6 +112,7 @@
 
 .client-review-cta {
   display: flex;
+  color: #000;
   justify-content: flex-end;
 }
 

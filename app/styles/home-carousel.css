@@ -258,7 +258,7 @@
 }
   .custom-slide {
     width: 100vw !important;
-    max-width: 420px;
+    max-width: 410px;
     padding-inline: 15px;
   }
   .h2-section {
@@ -284,6 +284,7 @@
      .h2-footer-left only contains the counter here. */
   .h2-footer-center {
     order: 1;
+    width: 100%;
   }
 
   .h2-footer-left {
@@ -297,8 +298,10 @@
     width: 90vw;
   } */
   .h2-nav {
-    padding-top: 10%;
-    gap: 130px;
+    width: 100%;
+    padding-top: 6%;
+    justify-content: space-between;
+    gap: 0;
   }
   .h2-footer-left {
     align-items: center;
@@ -306,7 +309,11 @@
   .h2-slider-wrapper {
     padding-top: 10%;
   }
+  .h2-footer-left {
+    width: 100%;
+  }
+
   .h2-counter{
-    width: 90vw;
+    width: 100%;
   }
 }

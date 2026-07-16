@@ -484,7 +484,7 @@
   }
 
   .footer-connect-row {
-    padding: 22px 18px;
+    padding: 0px 7px;
     gap: 22px;
     border-radius: 16px;
   }
@@ -548,7 +548,7 @@
   }
 
   .footer-subscribe {
-    padding: 22px 18px;
+    padding: 22px 7px;
     border-radius: 16px;
     gap: 14px;
   }
@@ -589,12 +589,12 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 14px;
-    padding: 18px;
+    padding: 18px 7px;
     border-radius: 16px;
   }
 
   .footer-time-label {
-    font-size: 18px;
+    font-size: 18px 7px;
   }
 
   .footer-time-values {
