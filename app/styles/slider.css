@@ -1,10 +1,10 @@
 .banner {
+  padding: 10rem 3% 6rem;
   width: 100%;
   min-height: 120vh;
   text-align: center;
   overflow: hidden;
   position: relative;
-  padding: 10rem 3% 6rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -33,10 +33,9 @@
 
 .slider-headingCol h1 {
   color: #011825;
-  font-size: clamp(2rem, 3.2vw, 3.5rem);
+  font-size: clamp(40px, 3.2vw, 3.5rem);
   font-weight: 500;
   line-height: 1.15;
-  margin: 0;
 }
 
 .slider-heading-muted {
@@ -44,18 +43,18 @@
 }
 
 .slider-textCol {
+  padding-top: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   text-align: right;
   max-width: 320px;
-  padding-top: 0.5rem;
 }
 
 .slider-desc {
-  color: #011825;
   font-size: 0.95rem;
-  line-height: 1.5;
+  color: #011825;
+  line-height: 1.2;
   margin-bottom: 1.5rem;
 }
 
@@ -93,7 +92,7 @@
   object-fit: cover;
 }
 
-@media screen and (max-width: 1023px) {
+@media  (max-width: 1023px) {
   .slider-top {
     flex-direction: column;
   }
@@ -115,7 +114,7 @@
       translateZ(300px);
   }
 }
-@media screen and (max-width: 767px) {
+@media (max-width: 767px) {
   .banner .slider {
     width: 100px;
     height: 150px;
@@ -126,4 +125,18 @@
       )
       translateZ(180px);
   }
+  .banner {
+    min-height: 90vh;
+    padding: 6rem 15px 2rem;
+  }
+  .slider-desc{
+    font-size: 18px;
+  }
+.slider-top {
+gap: 1rem;
+}
+
+.slider-desc {
+  font-size: 18px;
+}
 }

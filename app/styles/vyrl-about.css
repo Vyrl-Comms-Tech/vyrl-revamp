@@ -29,6 +29,7 @@
   margin: 0;
   /* border: 1px solid blue; */
   padding-block: 20px;
+  font-weight: 500;
   white-space: nowrap;
 }
 
@@ -145,4 +146,86 @@
   font-family: "Neue Montreal Regular", sans-serif;
   font-size: 18px;
   font-weight: 400;
+}
+
+/* ------------------------------------------------------------
+   Mobile: drop the pinned scroll choreography entirely — just a
+   centered heading followed by the 3 cards stacked in normal flow.
+------------------------------------------------------------ */
+@media (max-width: 760px) {
+  .vyrl-main-wrapper {
+    height: auto;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .vyrl-service-about-container {
+    position: static;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .vyrl-service-about-text1,
+  .vyrl-service-about-text2 {
+    position: static;
+    padding-block: 0;
+    font-size: 28px;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .vyrl-section-about-image {
+    display: none;
+  }
+
+  .vyrl-sections-cards-div {
+    position: static;
+    width: 100%;
+    height: auto;
+  }
+
+  .card-wrapper {
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding-inline: 0;
+    padding-bottom: 0;
+  }
+
+  .card-inner-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .vyrl-section-card1,
+  .vyrl-section-card2,
+  .vyrl-section-card3 {
+    opacity: 1;
+    height: auto;
+    padding: 24px 20px;
+  }
+
+  .vyrl-section-card1 h1,
+  .vyrl-section-card2 h1,
+  .vyrl-section-card3 h1 {
+    font-size: 28px;
+  }
+
+  .vyrl-section-card1 p,
+  .vyrl-section-card2 p,
+  .vyrl-section-card3 p {
+    font-size: 15px;
+    margin-top: 12px;
+  }
 }

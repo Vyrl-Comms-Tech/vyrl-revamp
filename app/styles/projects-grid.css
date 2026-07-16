@@ -19,12 +19,6 @@
   font-size: 14rem;
 }
 
-@media (max-width: 800px) {
-  .centerHeadingProject {
-    font-size: 4rem;
-  }
-}
-
 .filterCtas {
   position: absolute;
   bottom: 3%;
@@ -78,28 +72,9 @@
   padding: 2rem 0;
 }
 
-@media (max-width: 720px) {
-  .cardsSection {
-    width: auto;
-  }
-  .cardsProject {
-    height: 50vh !important;
-    width: 93.09vw !important; /* 885 / 1920 * 100 */
-  }
-  .imgFollow {
-    display: none !important;
-  }
-}
-
 .seprateDivs {
   display: flex;
   gap: 2.5rem;
-}
-
-@media (max-width: 800px) {
-  .seprateDivs {
-    flex-direction: column;
-  }
 }
 
 .cardsProject {
@@ -204,4 +179,35 @@
   border: 1px solid #fff;
   color: #fff;
   margin-top: 0.5rem;
+}
+
+@media (max-width: 800px) {
+  .seprateDivs {
+    flex-direction: column;
+  }
+  .centerHeadingProject {
+    font-size: 4rem;
+  }
+  .heroProject {
+    height: 45vh;
+  }
+  .filterCtas h1 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .cardsSection {
+    width: auto;
+  }
+  .cardsProject {
+    height: 50vh !important;
+    width: 93.09vw !important; /* 885 / 1920 * 100 */
+  }
+  .imgFollow {
+    display: none !important;
+  }
+  .ctaF{
+    padding: .2rem 1rem;
+  }
 }

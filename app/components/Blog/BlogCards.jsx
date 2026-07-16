@@ -12,7 +12,7 @@ const cards = [
   {
     id: 1,
     category: "NEW",
-    image: "/blog2.png",
+    image: "/pro1.png",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -21,7 +21,7 @@ const cards = [
   {
     id: 2,
     category: "NEW",
-    image: "/blog3.jpg",
+    image: "/pro1.png",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -30,7 +30,7 @@ const cards = [
   {
     id: 3,
     category: "EDUCATIONAL",
-    image: "/blog3.jpg",
+    image: "/pro1.png",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -39,7 +39,7 @@ const cards = [
   {
     id: 4,
     category: "EDUCATIONAL",
-    image: "/blog2.png",
+    image: "/pro1.png",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -48,7 +48,7 @@ const cards = [
   {
     id: 5,
     category: "REAL ESTATES",
-    image: "/blog2.png",
+    image: "/pro1.png",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -57,7 +57,7 @@ const cards = [
   {
     id: 6,
     category: "REAL ESTATES",
-    image: "/blog3.jpg",
+    image: "/pro1.png",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -66,7 +66,7 @@ const cards = [
   {
     id: 7,
     category: "EDUCATIONAL",
-    image: "/blog2.png",
+    image: "/pro1.png",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -75,7 +75,7 @@ const cards = [
   {
     id: 8,
     category: "EDUCATIONAL",
-    image: "/blog3.jpg",
+    image: "/pro1.png",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -84,7 +84,7 @@ const cards = [
   {
     id: 9,
     category: "REAL ESTATES",
-    image: "/blog2.png",
+    image: "/pro1.png",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -93,7 +93,7 @@ const cards = [
   {
     id: 10,
     category: "REAL ESTATES",
-    image: "/blog3.jpg",
+    image: "/pro1.png",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -117,7 +117,15 @@ const BlogCards = ({ active }) => {
   }, []);
 
   // Swoop entrance — pair-based, no row wrappers needed
-  useLayoutEffect(() => {
+  //
+  // This must run as a passive effect (not useLayoutEffect): React fires
+  // ALL layout effects across the tree before ANY passive effect, so a
+  // useLayoutEffect here would rotate .bc-card-inner via inline transform
+  // before TextAnimation's plain useEffect below it ever runs SplitText.
+  // SplitText measures line widths via getBoundingClientRect/offsetWidth,
+  // and those return bogus (shrunk) values on an element mid-rotation —
+  // which baked in wrong, word-per-line splits for every rotated card.
+  useEffect(() => {
     const ctx = gsap.context(() => {
       const cardEls = gsap.utils.toArray(".bc-card", gridRef.current);
 
@@ -196,13 +204,13 @@ const BlogCards = ({ active }) => {
                 <img src={image} alt={title} />
               </div>
               <div className="bc-body">
-                    <TextAnimation animateOnScroll={true} delay={0.3}>
+                <TextAnimation animateOnScroll={false} delay={0.1}>
                   <h3 className="bc-title">{title}</h3>
                 </TextAnimation>
-                  <TextAnimation animateOnScroll={true} delay={0.3}>
+                <TextAnimation animateOnScroll={false} delay={0.1}>
                   <p className="bc-desc">{desc}</p>
                 </TextAnimation>
-                  <TextAnimation animateOnScroll={true} delay={0.3}>
+                <TextAnimation animateOnScroll={false} delay={0.1}>
                   <p className="bc-meta">
                     {readTime} • {date}
                   </p>

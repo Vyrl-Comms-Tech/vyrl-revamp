@@ -21,7 +21,7 @@ const PROJECT_ROWS = [
       title: "PRIME ESTATES",
       category: "branding",
       type: "image",
-      src: "/assets/prime.jpeg",
+      src: "/pro1.png",
       tags: ["Strategic Roadmaps", "Strategic Roadmaps"],
     },
     {
@@ -29,7 +29,7 @@ const PROJECT_ROWS = [
       title: "SLAB STUDIO",
       category: "website",
       type: "video",
-      src: "/assets/3beb18695b78c8924607216fd722e025_t4.mp4",
+      src: "/video03.mp4",
       tags: ["Strategic Roadmaps", "Strategic Roadmaps"],
     },
   ],
@@ -39,7 +39,7 @@ const PROJECT_ROWS = [
       title: "PRIME ESTATES",
       category: "website",
       type: "image",
-      src: "/assets/image.png",
+      src: "/pro1.png",
       stretch: true,
       tags: ["Strategic Roadmaps", "Strategic Roadmaps"],
     },
@@ -50,7 +50,7 @@ const PROJECT_ROWS = [
       title: "ARABIAN ESTATES",
       category: "branding",
       type: "image",
-      src: "/assets/arabian.png",
+      src: "/pro1.png",
       tags: ["Strategic Roadmaps", "Strategic Roadmaps"],
     },
     {
@@ -58,7 +58,7 @@ const PROJECT_ROWS = [
       title: "LALA DARBAR",
       category: "website",
       type: "image",
-      src: "/assets/lala.jpeg",
+      src: "/pro1.png",
       tags: ["Strategic Roadmaps", "Strategic Roadmaps"],
     },
   ],
@@ -198,10 +198,7 @@ export default function ProjectsGrid() {
                   <ProjectMedia project={project} />
                 </div>
 
-                <div
-                  className="imgFollow"
-                  ref={setFollowerRef(project.id)}
-                >
+                <div className="imgFollow" ref={setFollowerRef(project.id)}>
                   <ProjectMedia project={project} />
                 </div>
 
@@ -209,10 +206,7 @@ export default function ProjectsGrid() {
                   <h1>{project.title}</h1>
                   <div className="tagsProject">
                     {project.tags.map((tag, i) => (
-                      <div
-                        className="tagP"
-                        key={`${project.id}-tag-${i}`}
-                      >
+                      <div className="tagP" key={`${project.id}-tag-${i}`}>
                         {tag}
                       </div>
                     ))}

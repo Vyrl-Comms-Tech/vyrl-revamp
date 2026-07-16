@@ -7,7 +7,7 @@ import Slider from "@/app/components/services/Slider";
 const page = () => {
   return (
     <div>
-      <Slider/>
+      <Slider />
       <Services3d dark />
       <ClientReviews />
       <VyrlAbout />

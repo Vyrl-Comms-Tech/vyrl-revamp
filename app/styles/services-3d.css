@@ -104,6 +104,35 @@
   color: hsla(0, 4%, 11%, 0.822);
 }
 
+.services-main-section--dark .service-desc {
+  color: rgba(255, 255, 255, 0.822);
+}
+
+.services-main-section--dark .cta-btn {
+  background-color: #fff;
+  color: #000;
+}
+
+.services-main-section--dark .cta-arrow-box {
+  background-color: #0000001a;
+}
+
+.services-main-section--dark .cta-arrow-box svg path {
+  fill: #000;
+}
+
+.services-main-section--dark .cta-btn:hover .cta-arrow-box {
+  background-color: #00000033;
+}
+
+.services-main-section--dark .cta-btn:hover .cta-arrow-box svg path {
+  fill: #000;
+}
+
+.services-main-section--dark .cta-btn:hover p {
+  color: #000;
+}
+
 /* ------------------------------
    Left counter (00 / 0N stack)
 ------------------------------ */

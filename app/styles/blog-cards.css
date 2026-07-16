@@ -55,17 +55,15 @@
 .bc-title {
   font-size: 35px;
   color: #0d0d0d;
-  font-family: "Neue Montreal";
   font-style: normal;
-  width: max-content;
+  width: 100%;
   font-weight: 500;
 }
 
 .bc-desc {
   font-size: 19px;
   color: rgba(28, 28, 28, 0.7);
-  font-family: "Neue Montreal";
-  width: max-content;
+  width: 100%;
   font-style: normal;
   font-weight: 400;
   line-height: normal;

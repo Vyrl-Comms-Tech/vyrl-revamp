@@ -1,9 +1,17 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import gsap from "gsap";
 
-const navLinks = ["Home", "About", "Services", "Lab", "Work", "Contact"];
+const navLinks = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Lab", href: "#" },
+  { label: "Work", href: "/projects" },
+  { label: "Contact", href: "/contact-us" },
+];
 
 const underlinePaths = [
   "M5 20.9999C26.7762 16.2245 49.5532 11.5572 71.7979 14.6666C84.9553 16.5057 97.0392 21.8432 109.987 24.3888C116.413 25.6523 123.012 25.5143 129.042 22.6388C135.981 19.3303 142.586 15.1422 150.092 13.3333C156.799 11.7168 161.702 14.6225 167.887 16.8333C181.562 21.7212 194.975 22.6234 209.252 21.3888C224.678 20.0548 239.912 17.991 255.42 18.3055C272.027 18.6422 288.409 18.867 305 17.9999",
@@ -20,7 +28,7 @@ const idleMessages = [
   "I miss your cursor 😔",
 ];
 
-const NavLink = ({ label }) => {
+const NavLink = ({ label, href }) => {
   const linkRef = useRef(null);
   const charsRef = useRef([]);
   const pathRef = useRef(null);
@@ -99,8 +107,8 @@ const NavLink = ({ label }) => {
   };
 
   return (
-    <a
-      href="#"
+    <Link
+      href={href}
       ref={linkRef}
       className="nav-link-item"
       onMouseEnter={handleMouseEnter}
@@ -129,7 +137,7 @@ const NavLink = ({ label }) => {
           />
         </svg>
       </span>
-    </a>
+    </Link>
   );
 };
 
@@ -358,9 +366,9 @@ const Navbar = () => {
         <div className="menu-dropdown" ref={menuDropdownRef}>
           <div className="right-content">
             <ul ref={rightContentLinksRef}>
-              {navLinks.map((label) => (
+              {navLinks.map(({ label, href }) => (
                 <li key={label}>
-                  <NavLink label={label} />
+                  <NavLink label={label} href={href} />
                 </li>
               ))}
             </ul>

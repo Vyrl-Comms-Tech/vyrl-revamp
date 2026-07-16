@@ -1,4 +1,4 @@
-@import "tailwindcss";
+/* @import "tailwindcss"; */
 @import "./styles/navbar.css";
 @import "./styles/header.css";
 @import "./styles/footer.css";
@@ -53,12 +53,17 @@ body {
 :root {
   --bodybg: #fcfcfc;
 }
-
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 body {
   font-family: var(--font-neue-montreal), Arial, Helvetica, sans-serif;
 }
 
 body {
   overflow-x: hidden;
+  cursor: none;
   background-color: var(--bodybg);
 }

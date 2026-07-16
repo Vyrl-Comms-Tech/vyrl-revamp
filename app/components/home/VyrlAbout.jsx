@@ -136,6 +136,13 @@ function VyrlAbout() {
   const card3Ref = useRef(null);
 
   useEffect(() => {
+    // The pinned scroll choreography (image growing, cards fading in,
+    // headings sliding to the edges) assumes desktop-width layout math
+    // (vw-based translateX targets, fixed px card widths). On mobile we
+    // instead show a simple static stack (see CSS breakpoint), so skip
+    // creating any of this scroll-driven animation there.
+    if (window.innerWidth <= 760) return;
+
     const ctx = gsap.context(() => {
       // ─PHASE 1: Image slides straight down ─
       gsap.to(imageRef.current, {
@@ -170,7 +177,7 @@ function VyrlAbout() {
         trigger: sectionMainRef.current,
         start: "25% top",
         end: "75% top",
-        pin: true,
+        pin: window.innerWidth > 760,
         // markers: true,
 
         onUpdate: (self) => {

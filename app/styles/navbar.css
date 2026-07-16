@@ -223,6 +223,7 @@
   .nav-link-item {
     font-size: 2.3rem;
     width: 70vw;
+    line-height: 1.2;
   }
   .site-nav {
     top: auto;
