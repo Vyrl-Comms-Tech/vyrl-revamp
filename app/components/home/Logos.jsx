@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import "../../styles/logos.css";
 import TextAnimation from "./TextAnimation";
 
 const blankPositions = [3, 0, 3];

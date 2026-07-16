@@ -249,13 +249,16 @@
     font-size: 18px;
     line-height: 1.1;
   }
+  .simple-swiper {
+    padding: 0.right-text-services h1;
+  }
 }
 @media (max-width: 769px) {
   .h2-section {
-  min-height: auto;
-  padding-top: 0 !important;
-  padding-block: 50px;
-}
+    min-height: auto;
+    padding-top: 0 !important;
+    padding-block: 50px;
+  }
   .custom-slide {
     width: 100vw !important;
     max-width: 410px;
@@ -291,7 +294,8 @@
     order: 2;
   }
   /* .h2-description, */
-  .cta-button-carousel,.h2-description {
+  .cta-button-carousel,
+  .h2-description {
     display: none;
   }
   /* .h2-description{
@@ -313,7 +317,7 @@
     width: 100%;
   }
 
-  .h2-counter{
+  .h2-counter {
     width: 100%;
   }
 }

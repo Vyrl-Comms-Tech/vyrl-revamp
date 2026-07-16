@@ -4,7 +4,6 @@ import { gsap } from "gsap";
 import { Flip } from "gsap/Flip";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
-import "../../styles/blog-cards.css";
 import TextAnimation from "../home/TextAnimation";
 
 gsap.registerPlugin(Flip, ScrollTrigger);

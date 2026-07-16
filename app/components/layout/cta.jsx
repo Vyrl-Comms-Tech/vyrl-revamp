@@ -1,5 +1,4 @@
 import React from "react";
-import "../../styles/cta.css";
 
 const CtaButton = ({
   label = "SERVICES",

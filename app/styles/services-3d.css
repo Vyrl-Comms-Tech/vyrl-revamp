@@ -36,7 +36,7 @@
 ------------------------------ */
 .services-cta-desktop {
   position: absolute;
-  bottom: 40%;
+  bottom: 50%;
   right: 3%;
   z-index: 20;
 }
@@ -91,7 +91,7 @@
 
 .right-text-services h1 {
   font-size: 4rem;
-  font-weight: 600;
+  font-weight: 500;
   overflow: hidden;
   line-height: 1.2;
   margin-bottom: 0.7rem;

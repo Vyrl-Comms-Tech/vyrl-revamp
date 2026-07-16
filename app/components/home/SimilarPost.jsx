@@ -2,7 +2,6 @@
 import React, { useRef, useState } from "react";
 import gsap from "gsap";
 // import MagneticButton from "./Common/MagneticButton";
-import "../../styles/similarPost.css";
 import TextAnimation from "./TextAnimation";
 
 function SimilarPost() {

@@ -1,6 +1,5 @@
 "use client";
 import React, { useRef } from "react";
-import "../../styles/about-hero.css";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";

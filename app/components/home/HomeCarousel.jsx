@@ -6,7 +6,6 @@ import "swiper/css";
 import "swiper/css/effect-coverflow";
 import ChangeTextAnimation from "../layout/ChangeTextAnimation";
 import CtaButton from "../layout/cta";
-import "../../styles/home-carousel.css";
 
 const slides = [
   {

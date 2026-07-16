@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import "../../styles/home-second-last.css";
 import TextAnimation from "./TextAnimation";
 
 const   HomeSecondLast = () => {

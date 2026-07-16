@@ -280,7 +280,6 @@
 "use client";
 
 import { Fragment, useEffect, useRef } from "react";
-import "../../styles/aboutus-stack.css";
 
 /**
  * Card data — swap `video` paths for files placed under /public/assets/*

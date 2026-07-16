@@ -120,7 +120,6 @@
 
 "use client";
 import { useEffect, useRef } from "react";
-import "../../styles/vyrl-about.css";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 

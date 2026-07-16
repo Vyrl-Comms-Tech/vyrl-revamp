@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
-import "../../styles/caseStudyInner.css";
 import { getCaseStudy, getNextCaseStudy } from "./caseStudiesData";
 
 gsap.registerPlugin(ScrollTrigger, Flip);

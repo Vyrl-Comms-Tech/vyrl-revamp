@@ -7,7 +7,6 @@ import SplitType from "split-type";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import "../../styles/services-3d.css";
 import CtaButton from "../layout/cta";
 
 gsap.registerPlugin(ScrollTrigger);

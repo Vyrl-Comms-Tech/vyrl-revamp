@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
-import "../../styles/navbar.css";
 
 const navLinks = ["Home", "About", "Services", "Lab", "Work", "Contact"];
 
@@ -348,9 +347,8 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="cursor-follow" ref={cursorRef}>
-        <Image src="/hand.png" alt="" fill sizes="60px" />
-      </div>
+      <div className="cursor-follow" ref={cursorRef} />
+
 
       <div className="cursor-popup" ref={popupRef}>
         &#128075; yo!

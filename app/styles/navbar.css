@@ -170,13 +170,10 @@
   pointer-events: none;
   transform: translate(-50%, -50%) translateY(10px);
   z-index: 9999;
-}
-
-.cursor-follow img {
-  object-fit: cover;
-  transition:
-    width 0.2s ease,
-    height 0.2s ease;
+  background-image: url("/hand.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .cursor-popup {

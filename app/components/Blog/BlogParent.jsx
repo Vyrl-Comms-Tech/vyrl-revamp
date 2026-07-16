@@ -1,7 +1,6 @@
 "use client";
 import { useRef, useLayoutEffect } from "react";
 import { gsap } from "gsap";
-import "../../styles/blogParent.css";
 import TextAnimation from "../home/TextAnimation";
 
 const filters = ["ALL", "NEW", "EDUCATIONAL", "REAL ESTATES"];

@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import "../../styles/client-review.css";
 import gsap from "gsap";
 import TextAnimation from "./TextAnimation";
 import ChangeTextAnimation from "../layout/ChangeTextAnimation";

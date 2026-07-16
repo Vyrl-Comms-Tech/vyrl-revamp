@@ -203,7 +203,6 @@
 'use client';
 
 import React, { useEffect, useRef } from "react";
-import "../../styles/team-profile.css";
 import Matter from "matter-js";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";

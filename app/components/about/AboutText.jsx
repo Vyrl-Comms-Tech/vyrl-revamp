@@ -1,7 +1,6 @@
 'use client'
 import React from "react";
 import TextAnimation from "../home/TextAnimation";
-import "../../styles/text-and-cards.css";
 import CtaButton from "../layout/cta";
 
 const AboutText = ({

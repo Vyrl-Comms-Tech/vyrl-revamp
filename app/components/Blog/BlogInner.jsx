@@ -1,5 +1,4 @@
 import React from "react";
-import "../../styles/blog-inner.css";
 import TextAnimation from "../home/TextAnimation";
 
 const biContent = [

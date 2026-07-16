@@ -4,7 +4,6 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TextAnimation from "./TextAnimation";
-import "../../styles/text-and-cards.css";
 import CtaButton from "../layout/cta";
 
 gsap.registerPlugin(ScrollTrigger);
