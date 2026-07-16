@@ -76,14 +76,16 @@ const BlogParent = ({ active, setActive }) => {
 
   return (
     <div className="bp-hero">
-      <TextAnimation blockColor="#8f8f8f" stagger={0.12} duration={1.1}>
+                        <TextAnimation animateOnScroll={true} delay={0.3}>
+      
         <h1>
           <span className="bp-h1-black">What We Do,</span>
           <br />
           <span className="bp-h1-gray">We Do Differently</span>
         </h1>
       </TextAnimation>
-      <TextAnimation blockColor="#8f8f8f" stagger={0.12} duration={1}>
+                        <TextAnimation animateOnScroll={true} delay={0.3}>
+      
         <p>
           Our services are designed to transform ideas into refined digital
           experiences that leave a lasting impression.

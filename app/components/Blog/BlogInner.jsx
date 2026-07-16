@@ -24,21 +24,26 @@ const BlogInner = () => {
         <img src="/blog5.jpg" alt="" />
       </div>
       <div className="bi-right">
-        <TextAnimation blockColor="#2C2D2D" stagger={0.12} duration={1}>
+                        <TextAnimation animateOnScroll={true} delay={0.3}>
+      
           <div className="bi-label">• Digital Campaign</div>
         </TextAnimation>
-        <TextAnimation blockColor="#2C2D2D" stagger={0.12} duration={1}>
+                        <TextAnimation animateOnScroll={true} delay={0.3}>
+
           <div className="bi-subtitle">The Future of Digital Experiences:</div>
         </TextAnimation>
-        <TextAnimation blockColor="#2C2D2D" stagger={0.12} duration={1}>
+                        <TextAnimation animateOnScroll={true} delay={0.3}>
+
           <h2 className="bi-heading">Designing with Purpose</h2>
         </TextAnimation>
-        <TextAnimation blockColor="#2C2D2D" stagger={0.12} duration={1}>
+                        <TextAnimation animateOnScroll={true} delay={0.3}>
+
           <div className="bi-date">April 16, 2026</div>
         </TextAnimation>
         <div className="bi-content">
           {biContent.map((text, i) => (
-            <TextAnimation blockColor="#2C2D2D" stagger={0.12} duration={1}>
+                            <TextAnimation animateOnScroll={true} delay={0.3}>
+
               <p key={i}>{text}</p>
             </TextAnimation>
           ))}

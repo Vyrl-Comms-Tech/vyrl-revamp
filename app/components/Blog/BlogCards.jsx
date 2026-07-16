@@ -197,34 +197,13 @@ const BlogCards = ({ active }) => {
                 <img src={image} alt={title} />
               </div>
               <div className="bc-body">
-                <TextAnimation
-                  blockColor="#2C2D2D"
-                  stagger={0.05}
-                  duration={1}
-                  triggerSelector=".bc-card"
-                  triggerStart="top 60%"
-                  delay={0.5}
-                >
+                    <TextAnimation animateOnScroll={true} delay={0.3}>
                   <h3 className="bc-title">{title}</h3>
                 </TextAnimation>
-                <TextAnimation
-                  blockColor="#2C2D2D"
-                  stagger={0.05}
-                  duration={1}
-                  triggerSelector=".bc-card"
-                  triggerStart="top 60%"
-                  delay={0.5}
-                >
+                  <TextAnimation animateOnScroll={true} delay={0.3}>
                   <p className="bc-desc">{desc}</p>
                 </TextAnimation>
-                <TextAnimation
-                  blockColor="#2C2D2D"
-                  stagger={0.05}
-                  duration={1}
-                  triggerSelector=".bc-card"
-                  triggerStart="top 60%"
-                  delay={0.5}
-                >
+                  <TextAnimation animateOnScroll={true} delay={0.3}>
                   <p className="bc-meta">
                     {readTime} • {date}
                   </p>

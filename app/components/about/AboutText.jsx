@@ -15,7 +15,7 @@ const AboutText = ({
     <div>
       <section className="hs-text-section">
         <div className="hs-text-inner">
-          <TextAnimation blockColor="#111" stagger={0.12} duration={1.1}>
+              <TextAnimation animateOnScroll={true} delay={0.3}>
             <h1 className="hs-heading">
               <span className="hs-heading-indent" aria-hidden="true" />
               {children ?? (

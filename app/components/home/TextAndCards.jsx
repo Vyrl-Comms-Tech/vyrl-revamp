@@ -82,7 +82,7 @@ export default function TextAndCards() {
       <div className="text-and-cards">
         <section className="hs-text-section">
           <div className="hs-text-inner">
-            <TextAnimation blockColor="#111" stagger={0.12} duration={1.1}>
+            <TextAnimation animateOnScroll={true} delay={0.3}>
               <h1 className="hs-heading">
                 <span className="hs-heading-indent" aria-hidden="true" />
                 Vyrl is a full-stack digital agency building connected

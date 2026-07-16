@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import "../../styles/home-second-last.css";
 import TextAnimation from "./TextAnimation";
@@ -9,14 +10,16 @@ const HomeSecondLast = () => {
         {/* Left dark panel */}
         <div className="hp-left">
           <div className="hp-text-group">
-            <TextAnimation blockColor="#fff" stagger={0.12} duration={1}>
+            <TextAnimation animateOnScroll={true} delay={0.3}>
               <h2 className="hp-heading">
-               Your Next Digital Move Starts Here.
+                Your Next Digital Move Starts Here.
               </h2>
             </TextAnimation>
-            <TextAnimation blockColor="#fff" stagger={0.12} duration={1}>
+            <TextAnimation animateOnScroll={true} delay={0.3}>
               <p className="hp-para">
-               Whether you need a website, app, campaign, content system, automation setup, or complete digital ecosystem, tell us what you are building, and we will help shape the next move.
+                Whether you need a website, app, campaign, content system,
+                automation setup, or complete digital ecosystem, tell us what
+                you are building, and we will help shape the next move.
               </p>
             </TextAnimation>
           </div>

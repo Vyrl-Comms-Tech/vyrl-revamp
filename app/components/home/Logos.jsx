@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React from "react";
 import "../../styles/logos.css";
 import TextAnimation from "./TextAnimation";
@@ -22,18 +22,15 @@ const Logos = () => {
   return (
     <div className="logos-container">
       <div className="logos-left">
-        <TextAnimation blockColor="#fff" stagger={0.12} duration={0.7}>
-
-        <h2>Our Clients</h2>
+        <TextAnimation animateOnScroll={true} delay={0.3}>
+          <h2>Our Clients</h2>
         </TextAnimation>
-        <TextAnimation blockColor="#fff" stagger={0.12} duration={0.7}>
-
-
-        <p>
-          We partner with high-growth brands, premium businesses, and
-          forward-thinking teams across the world, building digital ecosystems
-          designed for visibility, trust, and scale.
-        </p>
+        <TextAnimation animateOnScroll={true} delay={0.3}>
+          <p>
+            We partner with high-growth brands, premium businesses, and
+            forward-thinking teams across the world, building digital ecosystems
+            designed for visibility, trust, and scale.
+          </p>
         </TextAnimation>
       </div>
       <div className="logos-right">

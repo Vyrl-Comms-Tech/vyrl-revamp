@@ -259,7 +259,12 @@ function ClientReviewSection() {
         if (dragDirectionLocked.current !== "horizontal") return;
         const dx = e.clientX - dragStartX.current;
 
-        if (Math.abs(dx) > 80) {
+        // Mobile swipes are naturally shorter than desktop mouse drags,
+        // so a lower distance threshold there keeps a normal swipe from
+        // needing to feel like an exaggerated drag to register.
+        const shiftThreshold = window.innerWidth <= 700 ? 35 : 80;
+
+        if (Math.abs(dx) > shiftThreshold) {
           shift(dx < 0 ? 1 : -1);
         } else {
           snapCenterBack();
@@ -314,7 +319,8 @@ function ClientReviewSection() {
 
   return (
     <div className="client-review-section-container">
-      <TextAnimation blockColor="#fff" stagger={0.12} duration={0.7}>
+                       <TextAnimation animateOnScroll={true} delay={0.3}>
+     
         <h1 className="client-review-section-text">
           <span className="client-review-heading-line-1">Real Stories.</span>
           <span className="client-review-heading-line-2">Real Results.</span>
@@ -385,8 +391,8 @@ function ClientReviewSection() {
             fill="none"
           >
             <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
+              fillRule="evenodd"
+             clipRule="evenodd"
               d="M0.516885 12.222L10.5037 22L13 19.5559L4.26129 11L13 2.44406L10.5037 0L0.516885 9.77797C0.185924 10.1021 0 10.5417 0 11C0 11.4583 0.185924 11.8979 0.516885 12.222Z"
               fill="white"
             />
@@ -404,8 +410,8 @@ function ClientReviewSection() {
             fill="none"
           >
             <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
+              fillRule="evenodd"
+             clipRule="evenodd"
               d="M12.4831 12.222L2.49627 22L0 19.5559L8.73871 11L0 2.44406L2.49627 0L12.4831 9.77797C12.8141 10.1021 13 10.5417 13 11C13 11.4583 12.8141 11.8979 12.4831 12.222Z"
               fill="white"
             />

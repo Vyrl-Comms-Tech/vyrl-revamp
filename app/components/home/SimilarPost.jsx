@@ -171,13 +171,15 @@ function SimilarPost() {
       <div className="review-mobile-card">
         <div className="review-mobile-content" ref={mobileContentRef}>
           <h3 className="review-mobile-name">
-            <TextAnimation blockColor="#2C2D2D" stagger={0.12} duration={1}>
-              {activeReview.name}
+                            <TextAnimation animateOnScroll={true} delay={0.3}>
+          
+              <span>{activeReview.name}</span>
             </TextAnimation>
           </h3>
           <p className="review-mobile-description">
-            <TextAnimation blockColor="#2C2D2D" stagger={0.12} duration={1}>
-              {activeReview.content}
+                             <TextAnimation animateOnScroll={true} delay={0.3}>
+           
+              <span>{activeReview.content}</span>
             </TextAnimation>
           </p>
           <div className="review-mobile-meta">

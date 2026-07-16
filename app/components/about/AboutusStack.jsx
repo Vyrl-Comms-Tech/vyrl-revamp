@@ -319,7 +319,7 @@ const CARDS = [
     description:
       "Every strategy is shaped around your business, audience, goals, and the next stage of your growth.",
   }, {
-    id: "video-2",
+    id: "video-5",
     tag: "Creative",
     title: "Client Centered",
     video: "/video02.mp4",

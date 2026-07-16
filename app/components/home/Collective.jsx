@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -7,6 +7,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CtaButton from "../layout/cta";
+import TextAnimation from "./TextAnimation";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -77,7 +78,7 @@ function Collective() {
               const delay = index * 0.1;
               const adjustedProgress = Math.max(
                 0,
-                Math.min(1, (progress - delay) / 0.8)
+                Math.min(1, (progress - delay) / 0.8),
               );
 
               const boxId = box.id;
@@ -107,7 +108,7 @@ function Collective() {
               });
             });
           },
-        })
+        }),
       );
 
       const headingElement = container.querySelector("h2");
@@ -125,9 +126,9 @@ function Collective() {
                 end: "20% center",
                 scrub: 1,
                 id: "collective-heading",
-              })
+              }),
             ),
-          }
+          },
         );
       }
 
@@ -146,9 +147,9 @@ function Collective() {
                 end: "20% center",
                 scrub: 1,
                 id: "collective-details",
-              })
+              }),
             ),
-          }
+          },
         );
       }
 
@@ -157,15 +158,19 @@ function Collective() {
         scrollTriggerInstancesRef.current = [];
       };
     },
-    { scope: containerRef, dependencies: [] }
+    { scope: containerRef, dependencies: [] },
   );
 
   return (
     <div className="collective" ref={containerRef}>
       <div className="tp-section1">
         <h2>
-          The Collective Behind <br />{" "}
-          <span id="colored-text">Every Experience</span>
+          <TextAnimation animateOnScroll={true} delay={0.3}>
+            <span>
+              {" "}
+              The Collective Behind <br /> Every Experience
+            </span>
+          </TextAnimation>
         </h2>
         <div className="box" id="tpbox1">
           <Image
@@ -185,14 +190,13 @@ function Collective() {
             style={{ objectFit: "cover" }}
           />
         </div>
-
       </div>
       <div className="tp-section2">
         <div className="tp-detailsbox">
           <p className="p-tp-detailsbox">
-            Built by a collective of thinkers, makers, developers, creators,
-            and growth specialists, all working together to turn bold ideas
-            into digital systems that perform.
+            Built by a collective of thinkers, makers, developers, creators, and
+            growth specialists, all working together to turn bold ideas into
+            digital systems that perform.
           </p>
           <div className="buttonsrow">
             <CtaButton
@@ -202,7 +206,6 @@ function Collective() {
             >
               About us
             </CtaButton>
-      
           </div>
         </div>
         <div className="box" id="tpbox5">
