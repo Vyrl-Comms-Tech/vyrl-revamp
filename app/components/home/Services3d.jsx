@@ -63,155 +63,191 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
 
     if (!section || !cubeMount || !title || !desc) return;
 
-    // ------------------------------------------------
-    // Scene / Camera / Renderer
-    // ------------------------------------------------
-    const scene = new THREE.Scene();
-
-    const camera = new THREE.PerspectiveCamera(
-      45,
-      cubeMount.clientWidth / cubeMount.clientHeight,
-      0.1,
-      100,
-    );
-
-    const updateCameraPosition = () => {
-      if (window.innerWidth <= 700) {
-        camera.position.set(0, 0.5, 6);
-      } else {
-        camera.position.set(0, 0.5, 3.5);
+    // Some environments (sandboxed browsers, disabled GPU/hardware
+    // acceleration, certain VMs/remote desktops) can't create a WebGL
+    // context at all. THREE.WebGLRenderer still constructs in that case
+    // but logs an unhandled console error and leaves a broken canvas.
+    // Detect it up front and skip ONLY the 3D setup below when
+    // unavailable — the scroll-pin, text-cycling, and counters must
+    // keep working regardless of whether the cube can render.
+    const hasWebGL = (() => {
+      try {
+        // A canvas only ever binds to one context type — once
+        // getContext("webgl2") succeeds or fails, calling getContext
+        // again with a different type on that SAME element always
+        // returns null. Each candidate needs its own fresh canvas.
+        return (
+          !!document.createElement("canvas").getContext("webgl2") ||
+          !!document.createElement("canvas").getContext("webgl") ||
+          !!document
+            .createElement("canvas")
+            .getContext("experimental-webgl")
+        );
+      } catch {
+        return false;
       }
-    };
-    updateCameraPosition();
+    })();
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setClearColor(0x000000, 0);
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(cubeMount.clientWidth, cubeMount.clientHeight);
-    cubeMount.appendChild(renderer.domElement);
-
-    // ------------------------------------------------
-    // Controls
-    // ------------------------------------------------
-    // OrbitControls attaches touch listeners that call preventDefault()
-    // to suppress the page's default touch-scroll while orbiting — that
-    // holds true even with rotate/zoom/pan all disabled, since it still
-    // has to distinguish a one-finger orbit gesture from a two-finger
-    // pinch. On mobile that swallows the swipe the user meant as a page
-    // scroll, so on mobile we simply never attach controls to the canvas.
     const isMobile = window.innerWidth <= 700;
-    const controls = isMobile ? null : new OrbitControls(camera, renderer.domElement);
 
-    if (controls) {
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.08;
-      controls.enableZoom = false;
-      controls.enablePan = false;
-
-      // Let it spin freely left/right (full horizontal orbit), but
-      // clamp how far it can tilt up/down so it can't flip over the
-      // top or bottom and drift off-screen.
-      const basePolarAngle = Math.PI / 2; // looking straight at it
-      controls.minPolarAngle = basePolarAngle - 0.6; // ~34° up
-      controls.maxPolarAngle = basePolarAngle + 0.6; // ~34° down
-      controls.rotateSpeed = 0.6;
-    }
+    // Scroll progress is written by ScrollTrigger's onUpdate below (always
+    // runs) and read by the cube's render loop (only runs when WebGL is
+    // available) — declared here so both sides can see it regardless of
+    // which branch below actually executes.
+    let scrollProgress = 0;
+    let handleResize = null;
 
     // ------------------------------------------------
-    // Lights
+    // Scene / Camera / Renderer (only when WebGL is available)
     // ------------------------------------------------
-    scene.add(new THREE.AmbientLight(0xffffff, 2));
+    let renderer, controls, rafId, dracoLoader;
 
-    const key = new THREE.DirectionalLight(0xffffff, 4);
-    key.position.set(5, 8, 5);
-    scene.add(key);
+    if (hasWebGL) {
+      const scene = new THREE.Scene();
 
-    const fill = new THREE.DirectionalLight(0xffffff, 2);
-    fill.position.set(-5, 3, -5);
-    scene.add(fill);
+      const camera = new THREE.PerspectiveCamera(
+        45,
+        cubeMount.clientWidth / cubeMount.clientHeight,
+        0.1,
+        100,
+      );
 
-    const rim = new THREE.DirectionalLight(0xffffff, 2);
-    rim.position.set(0, 5, -10);
-    scene.add(rim);
+      const updateCameraPosition = () => {
+        if (window.innerWidth <= 700) {
+          camera.position.set(0, 0.5, 6);
+        } else {
+          camera.position.set(0, 0.5, 3.5);
+        }
+      };
+      updateCameraPosition();
 
-    const mouseLight = new THREE.PointLight(0xffffff, 10, 100);
-    mouseLight.position.set(0, 0, 5);
-    scene.add(mouseLight);
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setClearColor(0x000000, 0);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.2;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(cubeMount.clientWidth, cubeMount.clientHeight);
+      cubeMount.appendChild(renderer.domElement);
 
-    // ------------------------------------------------
-    // Loaders / Model
-    // ------------------------------------------------
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath(
-      "https://www.gstatic.com/draco/versioned/decoders/1.5.7/",
-    );
+      // ------------------------------------------------
+      // Controls
+      // ------------------------------------------------
+      // OrbitControls attaches touch listeners that call preventDefault()
+      // to suppress the page's default touch-scroll while orbiting — that
+      // holds true even with rotate/zoom/pan all disabled, since it still
+      // has to distinguish a one-finger orbit gesture from a two-finger
+      // pinch. On mobile that swallows the swipe the user meant as a page
+      // scroll, so on mobile we simply never attach controls to the canvas.
+      controls = isMobile ? null : new OrbitControls(camera, renderer.domElement);
 
-    const loader = new GLTFLoader();
-    loader.setDRACOLoader(dracoLoader);
+      if (controls) {
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.08;
+        controls.enableZoom = false;
+        controls.enablePan = false;
 
-    const pivot = new THREE.Group();
-    scene.add(pivot);
+        // Let it spin freely left/right (full horizontal orbit), but
+        // clamp how far it can tilt up/down so it can't flip over the
+        // top or bottom and drift off-screen.
+        const basePolarAngle = Math.PI / 2; // looking straight at it
+        controls.minPolarAngle = basePolarAngle - 0.6; // ~34° up
+        controls.maxPolarAngle = basePolarAngle + 0.6; // ~34° down
+        controls.rotateSpeed = 0.6;
+      }
 
-    let mixer;
+      // ------------------------------------------------
+      // Lights
+      // ------------------------------------------------
+      scene.add(new THREE.AmbientLight(0xffffff, 2));
 
-    loader.load(modelUrl, (gltf) => {
-      const model = gltf.scene;
-      pivot.add(model);
+      const key = new THREE.DirectionalLight(0xffffff, 4);
+      key.position.set(5, 8, 5);
+      scene.add(key);
 
-      mixer = new THREE.AnimationMixer(model);
-      gltf.animations.forEach((clip) => {
-        mixer.clipAction(clip).play();
+      const fill = new THREE.DirectionalLight(0xffffff, 2);
+      fill.position.set(-5, 3, -5);
+      scene.add(fill);
+
+      const rim = new THREE.DirectionalLight(0xffffff, 2);
+      rim.position.set(0, 5, -10);
+      scene.add(rim);
+
+      const mouseLight = new THREE.PointLight(0xffffff, 10, 100);
+      mouseLight.position.set(0, 0, 5);
+      scene.add(mouseLight);
+
+      // ------------------------------------------------
+      // Loaders / Model
+      // ------------------------------------------------
+      dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath(
+        "https://www.gstatic.com/draco/versioned/decoders/1.5.7/",
+      );
+
+      const loader = new GLTFLoader();
+      loader.setDRACOLoader(dracoLoader);
+
+      const pivot = new THREE.Group();
+      scene.add(pivot);
+
+      let mixer;
+
+      loader.load(modelUrl, (gltf) => {
+        const model = gltf.scene;
+        pivot.add(model);
+
+        mixer = new THREE.AnimationMixer(model);
+        gltf.animations.forEach((clip) => {
+          mixer.clipAction(clip).play();
+        });
+
+        const box = new THREE.Box3().setFromObject(model);
+        const center = box.getCenter(new THREE.Vector3());
+        model.position.sub(center);
       });
 
-      const box = new THREE.Box3().setFromObject(model);
-      const center = box.getCenter(new THREE.Vector3());
-      model.position.sub(center);
-    });
+      // ------------------------------------------------
+      // Resize
+      // ------------------------------------------------
+      handleResize = () => {
+        camera.aspect = cubeMount.clientWidth / cubeMount.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(cubeMount.clientWidth, cubeMount.clientHeight);
+        updateCameraPosition();
+        ScrollTrigger.refresh();
+      };
+      window.addEventListener("resize", handleResize);
 
-    // ------------------------------------------------
-    // Resize
-    // ------------------------------------------------
-    const handleResize = () => {
-      camera.aspect = cubeMount.clientWidth / cubeMount.clientHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(cubeMount.clientWidth, cubeMount.clientHeight);
-      updateCameraPosition();
-      ScrollTrigger.refresh();
-    };
-    window.addEventListener("resize", handleResize);
+      // ------------------------------------------------
+      // Render loop
+      // ------------------------------------------------
+      // scrollProgress (outer-scoped) is written by ScrollTrigger's
+      // onUpdate below and applied to the mixer every animation frame,
+      // right before render — rather than only inside onUpdate — so the
+      // cube's assembled pose can never be one frame stale relative to
+      // what's actually painted.
+      const CLIP_DURATION = 3;
+      // Three.js's default LoopRepeat wraps time back to 0 whenever
+      // time >= duration (strict >=, see AnimationAction._updateTime).
+      // Landing on exactly 3 therefore snapped the cube back to its
+      // scattered t=0 pose — this is what "shattered on the last scroll
+      // tick / after the pin released" actually was. Never let the target
+      // time reach the exact duration.
+      const MAX_TIME = CLIP_DURATION - 0.001;
 
-    // ------------------------------------------------
-    // Render loop
-    // ------------------------------------------------
-    // Scroll progress is written here by ScrollTrigger's onUpdate and
-    // applied to the mixer every animation frame, right before render —
-    // rather than only inside onUpdate — so the cube's assembled pose
-    // can never be one frame stale relative to what's actually painted.
-    let scrollProgress = 0;
-    const CLIP_DURATION = 3;
-    // Three.js's default LoopRepeat wraps time back to 0 whenever
-    // time >= duration (strict >=, see AnimationAction._updateTime).
-    // Landing on exactly 3 therefore snapped the cube back to its
-    // scattered t=0 pose — this is what "shattered on the last scroll
-    // tick / after the pin released" actually was. Never let the target
-    // time reach the exact duration.
-    const MAX_TIME = CLIP_DURATION - 0.001;
-
-    let rafId;
-    const animate = () => {
-      rafId = requestAnimationFrame(animate);
-      // Moderate idle drift on both axes — visible motion, but
-      // about a third of the original speed so it doesn't tumble.
-      pivot.rotation.y += 0.004;
-      pivot.rotation.x += 0.004;
-      if (controls) controls.update();
-      if (mixer) mixer.setTime(Math.min(scrollProgress * CLIP_DURATION, MAX_TIME));
-      renderer.render(scene, camera);
-    };
-    animate();
+      const animate = () => {
+        rafId = requestAnimationFrame(animate);
+        // Moderate idle drift on both axes — visible motion, but
+        // about a third of the original speed so it doesn't tumble.
+        pivot.rotation.y += 0.004;
+        pivot.rotation.x += 0.004;
+        if (controls) controls.update();
+        if (mixer) mixer.setTime(Math.min(scrollProgress * CLIP_DURATION, MAX_TIME));
+        renderer.render(scene, camera);
+      };
+      animate();
+    }
 
     // ------------------------------------------------
     // Text + counter change on scroll
@@ -325,7 +361,7 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
     // Cleanup
     // ------------------------------------------------
     return () => {
-      window.removeEventListener("resize", handleResize);
+      if (handleResize) window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(rafId);
 
       mainScrollTrigger.kill();
@@ -334,11 +370,13 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       if (descSplit) descSplit.revert();
 
       if (controls) controls.dispose();
-      renderer.dispose();
-      dracoLoader.dispose();
-      if (cubeMount.contains(renderer.domElement)) {
-        cubeMount.removeChild(renderer.domElement);
+      if (renderer) {
+        renderer.dispose();
+        if (cubeMount.contains(renderer.domElement)) {
+          cubeMount.removeChild(renderer.domElement);
+        }
       }
+      if (dracoLoader) dracoLoader.dispose();
     };
   }, [modelUrl]);
 
