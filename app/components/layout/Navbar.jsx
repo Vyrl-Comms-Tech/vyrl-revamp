@@ -391,7 +391,7 @@ const Navbar = () => {
           <div className="bgs" ref={bgsRef}>
             <Image src="/bgs.png" alt="" fill sizes="95vw" />
           </div>
-          <div className="logo">
+          <div className="logo" id="mble-nav-logo">
             <svg
               ref={(el) => {
                 if (el) upToRef.current = el.querySelectorAll(".up-to");

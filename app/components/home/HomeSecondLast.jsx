@@ -11,15 +11,12 @@ const HomeSecondLast = () => {
           <div className="hp-text-group">
             <TextAnimation blockColor="#fff" stagger={0.12} duration={1}>
               <h2 className="hp-heading">
-                Have any query
-                <br />
-                reach out now
+               Your Next Digital Move Starts Here.
               </h2>
             </TextAnimation>
             <TextAnimation blockColor="#fff" stagger={0.12} duration={1}>
               <p className="hp-para">
-                Find the best hand-picked website design inspiration. We're a
-                curated website design gallery for Creatives, updated daily.
+               Whether you need a website, app, campaign, content system, automation setup, or complete digital ecosystem, tell us what you are building, and we will help shape the next move.
               </p>
             </TextAnimation>
           </div>

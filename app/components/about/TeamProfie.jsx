@@ -205,8 +205,16 @@
 import React, { useEffect, useRef } from "react";
 import "../../styles/team-profile.css";
 import Matter from "matter-js";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
 
 const CARD_COUNT = 12;
+const MOBILE_CARDS = Array.from({ length: CARD_COUNT }, (_, i) => ({
+  id: i,
+  image: "/team.jpg",
+  name: "Lorem Ipsum",
+  designation: "Designation",
+}));
 
 const INITIAL_POSITIONS = [
   { x: 0.06, y: 0.15, rotate: 10 },
@@ -369,18 +377,48 @@ export default function TeamProfile() {
       wrapper.removeEventListener("mousemove", onMouseMove);
   }
 
-  return (
-    <div className="team-section-container" ref={wrapperRef}>
-      <div className="team-section-wrapper">
-        <div className="team-section-content">
-          <h1>The collective behind every experience</h1>
-          <p>
-            Have an idea or project in mind? We're here to turn your vision into
-            a powerful digital experience. Let's collaborate and build something
-            that truly stands out.
-          </p>
-        </div>
-      </div>
+  const sectionHeading = (
+    <div className="team-section-content">
+      <h1>The collective behind every experience</h1>
+      <p>
+        Have an idea or project in mind? We&apos;re here to turn your vision
+        into a powerful digital experience. Let&apos;s collaborate and build
+        something that truly stands out.
+      </p>
     </div>
+  );
+
+  return (
+    <>
+      <div className="team-section-container" ref={wrapperRef}>
+        <div className="team-section-wrapper">{sectionHeading}</div>
+      </div>
+
+      {/* Mobile-only: the Matter.js physics scatter above is desktop-only
+          (see .team-section-container display:none at the mobile
+          breakpoint) — on mobile the same cards are shown as a swipeable
+          carousel instead. */}
+      <div className="team-section-mobile">
+        {sectionHeading}
+
+        <Swiper
+          slidesPerView={1}
+          spaceBetween={20}
+          className="team-mobile-swiper"
+        >
+          {MOBILE_CARDS.map((card) => (
+            <SwiperSlide key={card.id}>
+              <div className="item-card">
+                <div className="item-card-image">
+                  <img src={card.image} alt={card.name} />
+                </div>
+                <h2 className="item-name">{card.name}</h2>
+                <p className="item-designation">{card.designation}</p>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+    </>
   );
 }

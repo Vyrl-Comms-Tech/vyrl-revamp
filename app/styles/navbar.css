@@ -233,7 +233,10 @@
     height: auto;
     flex-direction: column;
   }
-  .grid-cards,.cursor-follow {
+  .grid-cards,.cursor-follow,.cursor-popup {
     display: none;
+  }
+  #mble-nav-logo{
+    scale: 0.85;
   }
 }

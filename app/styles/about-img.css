@@ -7,16 +7,34 @@
 }
 
 .aboutImg img {
-  height: 50vh;
+  height:80vh;
   margin-top: 20px;
   width: auto;
+  margin-bottom: -260px;
   max-width: 100%;
   object-fit: contain;
 }
 
 @media (max-width: 900px) {
+  /* AboutHero renders its own copy of AboutImg inline (mobileWordmark
+     prop) on mobile, so the standalone top-level instance in page.jsx
+     is hidden here to avoid showing the wordmark twice. */
+  .aboutImg-desktop-only {
+    display: none;
+  }
+
   .aboutImg img {
     height: 28vh;
     margin-top: 10px;
+  }
+}
+@media (max-width: 760px) {
+  .aboutImg img {
+    height: 39vh;
+    margin-block: -100px;
+    /* margin-bottom: -100px; */
+  }
+  .aboutHero-desc {
+    display: none;
   }
 }

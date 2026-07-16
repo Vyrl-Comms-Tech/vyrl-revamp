@@ -23,10 +23,6 @@ const AboutHero = ({ mobileWordmark }) => {
       const spacer = spacerRef.current;
       if (!container || !imageWrap || !placeholder || !spacer) return;
 
-      // The scroll-driven Flip resize is a desktop-only effect — on
-      // mobile the photo just displays scaled down in normal flow.
-      if (window.innerWidth <= 900) return;
-
       const containerRect = container.getBoundingClientRect();
       const placeholderRect = placeholder.getBoundingClientRect();
       const spacerRect = spacer.getBoundingClientRect();
@@ -59,9 +55,16 @@ const AboutHero = ({ mobileWordmark }) => {
         paused: true,
       });
 
+      // No pinning — the image simply grows/moves as a normal part of
+      // the page's scroll. The animation spans exactly the natural
+      // distance between the top row (where the small placeholder
+      // sits) and the spacer (where the full-size image settles), so
+      // it finishes right as that content scrolls into place — no
+      // pin, no leftover blank gap.
       const st = ScrollTrigger.create({
         trigger: container,
         start: "top top",
+        endTrigger: spacer,
         end: "bottom bottom",
         scrub: 1,
         onUpdate: (self) => {
@@ -84,8 +87,8 @@ const AboutHero = ({ mobileWordmark }) => {
           <div className="aboutHero-imagePlaceholder" ref={placeholderRef} />
           <p className="aboutHero-desc">
             We are not here to simply design, post, develop, or advertise. We
-            are here to understand what your brand is trying to become —
-            then build the digital system that helps it get there.
+            are here to understand what your brand is trying to become — then
+            build the digital system that helps it get there.
           </p>
           <CtaButton label="Lets Get In Touch" href="/contact" />
         </div>

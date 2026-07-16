@@ -149,7 +149,7 @@
 
 @media (max-width: 700px) {
   .cube-rotate {
-    transform: translateY(-15%);
+    transform: translateY(-28%);
   }
   .right-text-services {
     width: 80%;

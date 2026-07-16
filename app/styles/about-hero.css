@@ -1,45 +1,47 @@
 .aboutHero {
   position: relative;
   width: 100%;
-  min-height: 150vh;
-  padding: 4rem 3% 4rem;
+  min-height: 100vh;
+  padding: 40px 3% 4rem;
   box-sizing: border-box;
 }
 
 .aboutHero-top {
+  position: relative;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: flex-end;
   width: 100%;
   gap: 2rem;
 }
 
 .aboutHero-imageCol {
-  width: 30%;
+  /* width: 220px; */
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: 23px;
 }
 
 /* Reserves the small starting box's footprint in the flex column so
    the paragraph/button below sit correctly; the real image is an
    absolutely-positioned overlay Flip snaps onto this rect. */
 .aboutHero-imagePlaceholder {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  margin-bottom: 1.5rem;
+  width: 270px;
+  height: 154px;
+  border-radius: 6px;
 }
 
 .aboutHero-desc {
-  color: #011825;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  max-width: 320px;
-  margin-bottom: 1.5rem;
+  color: #000;
+  font-size: 22px;
+  line-height: 1.15;
+  max-width: 620px;
 }
 
 .aboutHero-headingCol {
-  width: 55%;
+  align-self: flex-start;
   text-align: right;
   display: flex;
   flex-direction: column;
@@ -47,15 +49,21 @@
 }
 
 .aboutHero-tag {
-  color: #7b7b7b;
-  font-size: 0.95rem;
-  margin-bottom: 0.75rem;
+  /* color: #7b7b7b; */
+  font-size: 20px;
+  color: #000;
+  margin-top: 10px;
 }
 
 .aboutHero-headingCol h1 {
   color: #011825;
-  font-size: clamp(2rem, 3.2vw, 3.5rem);
-  font-weight: 500;
+  font-size: clamp(1.75rem, 85px, 110px);
+  font-weight: 600;
+  line-height: 1.15;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-bottom: 0 !important;
 }
 
 /* Desktop lays the wordmark out separately (see AboutImg component
@@ -70,17 +78,25 @@
    position:absolute and animated via GSAP Flip. */
 .aboutHero-imageSpacer {
   width: 100%;
-  height: 80vh;
-  margin-top: 6rem;
+  max-width: 92vw;
+  height: 85vh;
+  margin-top: 3rem;
+  margin-inline: auto;
 }
 
-/* Natural (final) position/size — full width, taller, sitting below the
-   top row with a gap, matching the Figma reference. Starts snapped onto
-   the placeholder rect, then Flip animates it here on scroll. */
+/* Natural (final) position/size — capped width/height so it stays
+   contained on wide screens instead of stretching edge-to-edge, sitting
+   below the top row with a gap, matching the Figma reference. Starts
+   snapped onto the placeholder rect, then Flip animates it here on
+   scroll. This must match .aboutHero-imageSpacer's box, since the JS
+   reads the spacer's rect as the Flip target — if the two disagree,
+   the image ends up growing toward the wrong size/position instead of
+   settling into the spacer's reserved spot below the top row. */
 .aboutHero-imageWrap {
   position: absolute;
   width: 100%;
-  height: 70vh;
+  max-width: 92vw;
+  height: 85vh;
   border-radius: 4px;
   overflow: hidden;
 }
@@ -92,10 +108,29 @@
   display: block;
 }
 
+/* Laptop / tablet range — the top row's fixed sizing (270px photo,
+   clamp-up-to-110px heading) starts to crowd or overflow narrower
+   desktops before the mobile stack kicks in at 900px. */
+@media (max-width: 1600px) {
+  .aboutHero-headingCol h1 {
+    font-size: clamp(1.75rem, 5vw, 85px);
+  }
+
+  .aboutHero-imagePlaceholder {
+    width: 200px;
+    height: 114px;
+  }
+
+  .aboutHero-desc {
+    max-width: 520px;
+    font-size: 18px;
+  }
+}
+
 @media (max-width: 900px) {
   .aboutHero {
     min-height: 0;
-    padding: 2.5rem 5% 3rem;
+    padding: 4.5rem 5% 3rem;
   }
 
   .aboutHero-top {
@@ -109,12 +144,23 @@
 
   /* Mobile order: tag + heading first, then the description/button,
      matching the Figma stack (About tag → heading → wordmark image →
-     button → photo). */
+     button → photo). The heading is position:absolute on desktop
+     (pinned bottom-right of the row) — that has to be undone here or
+     it floats on top of the photo/button instead of flowing after the
+     tag in the stack. */
   .aboutHero-headingCol {
     order: 1;
-    text-align: left;
-    align-items: flex-start;
-    margin-top: 0;
+    text-align: center;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .aboutHero-headingCol h1 {
+    position: static;
+    text-align: center;
+    margin-top: 0px;
+    gap: 10px;
   }
 
   .aboutHero-mobileWordmark {
@@ -125,24 +171,46 @@
 
   .aboutHero-imageCol {
     order: 3;
-    margin-top: 1.5rem;
+    margin-top: -1.5rem;
+    align-items: center;
   }
 
-  /* The scroll-driven Flip resize is disabled on mobile (see
-     AboutHero.jsx), so the placeholder/spacer no longer need to
-     reserve space for a separately-animated absolute overlay. */
+  /* Starting size for the scroll-driven scale-up — the JS reads this
+     element's rect as the small "before" snapshot for GSAP Flip, so
+     this box's actual width/height IS the animation's start size. */
   .aboutHero-imagePlaceholder {
-    display: none;
+    width: 333px;
+    height: 171px;
+    aspect-ratio: auto;
+    max-width: 88vw;
+    margin-top: 18px;
+    order: 2;
   }
 
+  .aboutHero-desc {
+    order: 0;
+  }
+
+  .aboutHero-imageCol .cta-btn-container {
+    order: 1;
+  }
+
+  /* Final size the image scales up to — the JS reads this element's
+     rect as the "after" snapshot for GSAP Flip, so this box's
+     width/height IS the animation's end size. */
   .aboutHero-imageSpacer {
-    display: none;
+    width: 410px;
+    max-width: 88vw;
+    height: 581px;
+    margin-top: 2.6rem;
+    margin-inline: auto;
   }
 
+  /* No fixed width/height here — the JS drives both via the Flip
+     tween between the placeholder's size (start) and the spacer's
+     size (end). Forcing a fixed size with !important, as before,
+     silently overrides that inline animation and freezes the scale. */
   .aboutHero-imageWrap {
-    position: static;
-    width: 100%;
-    height: 45vh;
-    margin-top: 1.5rem;
+    border-radius: 12px;
   }
 }

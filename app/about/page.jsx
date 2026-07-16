@@ -6,10 +6,15 @@ import Logos from "@/app/components/home/Logos";
 import AboutUsStack from "../components/about/AboutusStack";
 import AboutHero from "../components/about/AboutHero";
 import AboutImg from "../components/about/aboutImg";
+import AboutText from "../components/about/AboutText";
 const page = () => {
   return (
     <div>
+      <div className="aboutImg-desktop-only">
+        <AboutImg />
+      </div>
       <AboutHero mobileWordmark={<AboutImg />} />
+      <AboutText/>
       <AboutUsStack/>
       <Logos />
       <TeamProfile />

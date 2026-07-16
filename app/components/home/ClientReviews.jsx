@@ -201,16 +201,47 @@ function ClientReviewSection() {
         }
       }
 
+      // Track where the gesture started and whether we've committed to
+      // treating it as a horizontal card-drag yet. On touch devices we
+      // must NOT preventDefault() until we know the gesture is
+      // horizontal — otherwise a finger that lands on a card and moves
+      // vertically (an ordinary page scroll) gets swallowed instead of
+      // scrolling the page.
+      const dragStartY = { current: 0 };
+      const dragDirectionLocked = { current: null }; // 'horizontal' | 'vertical' | null
+
       function onPointerDown(e) {
         if (animating.current) return;
-        e.preventDefault();
         dragStartX.current = e.clientX;
+        dragStartY.current = e.clientY;
+        dragDirectionLocked.current = null;
         dragging.current = true;
       }
 
       function onPointerMove(e) {
         if (!dragging.current || animating.current) return;
         const dx = e.clientX - dragStartX.current;
+        const dy = e.clientY - dragStartY.current;
+
+        if (dragDirectionLocked.current === null) {
+          // Wait for a small, unambiguous movement before deciding —
+          // avoids locking in the wrong direction on the very first
+          // pixel of jitter.
+          if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+          dragDirectionLocked.current =
+            Math.abs(dx) > Math.abs(dy) ? "horizontal" : "vertical";
+        }
+
+        if (dragDirectionLocked.current === "vertical") {
+          // Let the browser handle it as a normal page scroll.
+          dragging.current = false;
+          return;
+        }
+
+        // Committed to a horizontal drag — now it's safe to suppress
+        // the default touch behavior so the page doesn't also scroll.
+        e.preventDefault();
+
         const centerCard = cardRefs.current.find(
           (_, i) => posSlot(i, offsetRef.current) === 2,
         );
@@ -225,6 +256,7 @@ function ClientReviewSection() {
       function onPointerUp(e) {
         if (!dragging.current) return;
         dragging.current = false;
+        if (dragDirectionLocked.current !== "horizontal") return;
         const dx = e.clientX - dragStartX.current;
 
         if (Math.abs(dx) > 80) {

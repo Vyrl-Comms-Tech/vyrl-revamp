@@ -276,25 +276,22 @@
   }
 
   .review-mobile-name {
-    font-size: 22px;
-    font-family: var(--font-primary);
+    font-size: 27px;
     font-weight: 600;
     line-height: 1.2;
     margin: 0 0 12px 0;
   }
 
   .review-mobile-description {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.4;
     font-weight: 300;
-    font-family: var(--font-primary);
     opacity: 0.85;
     margin: 0 0 14px 0;
   }
 
   .review-mobile-meta {
-    font-size: 12px;
-    font-family: var(--font-primary);
+    font-size: 14px;
     display: flex;
     align-items: center;
     gap: 6px;

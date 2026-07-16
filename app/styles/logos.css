@@ -88,6 +88,14 @@
     gap: 140px;
   }
 
+.logos-left h2 {
+  font-size: 62px;
+}
+
+.logos-left p {
+  font-size: 19px;
+  line-height: 1.2;
+}
   .logos-left {
     width: 55%;
   }
@@ -118,11 +126,11 @@
   }
 
   .logos-left h2 {
-    font-size: 28px;
+    font-size: 32px;
   }
 
   .logos-left p {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   /* Hide the desktop hover-glow grid; show the marquee instead. */

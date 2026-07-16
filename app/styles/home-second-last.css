@@ -30,8 +30,7 @@
 }
 
 .hp-heading {
-  font-family: "Neue Montreal", sans-serif;
-  font-size: clamp(28px, 3.8vw, 65px);
+  font-size: clamp(33px, 3.8vw, 65px);
   font-weight: 500;
   line-height: 1.15;
   letter-spacing: -0.02em;
@@ -114,7 +113,7 @@
     height: 700px;
   }
   .hp-heading {
-    font-size: clamp(28px, 3.2vw, 65px);
+    font-size: clamp(31px, 3.2vw, 65px);
     line-height: 1.1;
   }
   .hp-para {
@@ -139,7 +138,7 @@
   }
   .hp-para {
     padding-bottom: 20px !important;
-    font-size: 19px;
+    font-size: 17px;
     line-height: 1.2;
   }
   .hp-text-group {
