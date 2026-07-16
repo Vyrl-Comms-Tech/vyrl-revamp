@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
+import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from "swiper/modules";
 import "swiper/css";
@@ -93,7 +94,14 @@ const HomeCarousel = () => {
           {slides.map((slide, i) => (
             <SwiperSlide key={i} className="custom-slide">
               <div className="slider-card">
-                <img src={slide.image} alt="" className="slider-image" />
+                <Image
+                  src={slide.image}
+                  alt=""
+                  fill
+                  sizes="(max-width: 768px) 90vw, 500px"
+                  className="slider-image"
+                  style={{ objectFit: "cover" }}
+                />
               </div>
             </SwiperSlide>
           ))}

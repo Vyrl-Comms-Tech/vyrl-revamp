@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import TextAnimation from "./TextAnimation";
 import ChangeTextAnimation from "../layout/ChangeTextAnimation";
@@ -362,7 +363,14 @@ function ClientReviewSection() {
                   draggable={false}
                 />
               ) : (
-                <img src={item.img} alt="review" draggable={false} />
+                <Image
+                  src={item.img}
+                  alt="review"
+                  draggable={false}
+                  fill
+                  sizes="(max-width: 640px) 55vw, (max-width: 1620px) 78vw, 390px"
+                  style={{ objectFit: "cover" }}
+                />
               )}
             </div>
           ))}

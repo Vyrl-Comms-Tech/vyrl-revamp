@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import TextAnimation from "./TextAnimation";
 
 const blankPositions = [3, 0, 3];
@@ -45,7 +46,13 @@ const Logos = () => {
                   onMouseMove={handleLogoMouseMove}
                 >
                   {/* logo */}
-                  <img src="/img16.png" alt="" />
+                  <Image
+                    src="/img16.png"
+                    alt=""
+                    fill
+                    sizes="(max-width: 1780px) 141px, 196px"
+                    style={{ objectFit: "contain" }}
+                  />
                 </div>
               ),
             )}
