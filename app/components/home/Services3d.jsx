@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useLayoutEffect, useRef } from "react";
 import * as THREE from "three";
 import gsap from "gsap";
@@ -11,7 +11,6 @@ import "../../styles/services-3d.css";
 import CtaButton from "../layout/cta";
 
 gsap.registerPlugin(ScrollTrigger);
-
 
 const SERVICES = [
   {
@@ -38,7 +37,8 @@ const SERVICES = [
     title: "Digital Marketing",
     desc: "Performance-driven campaigns, SEO, content strategy, and analytics designed to increase visibility, engagement, and conversions.",
     tags: ["SEO", "ADS", "ANALYTICS"],
-  }, {
+  },
+  {
     title: "Brand Identity",
     desc: "Distinctive visual identities, messaging systems, and brand experiences that create recognition and lasting customer trust.",
     tags: ["BRANDING", "LOGO", "IDENTITY"],
@@ -79,9 +79,7 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
         return (
           !!document.createElement("canvas").getContext("webgl2") ||
           !!document.createElement("canvas").getContext("webgl") ||
-          !!document
-            .createElement("canvas")
-            .getContext("experimental-webgl")
+          !!document.createElement("canvas").getContext("experimental-webgl")
         );
       } catch {
         return false;
@@ -139,7 +137,9 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       // has to distinguish a one-finger orbit gesture from a two-finger
       // pinch. On mobile that swallows the swipe the user meant as a page
       // scroll, so on mobile we simply never attach controls to the canvas.
-      controls = isMobile ? null : new OrbitControls(camera, renderer.domElement);
+      controls = isMobile
+        ? null
+        : new OrbitControls(camera, renderer.domElement);
 
       if (controls) {
         controls.enableDamping = true;
@@ -250,7 +250,8 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
         pivot.rotation.y += 0.004;
         pivot.rotation.x += 0.004;
         if (controls) controls.update();
-        if (mixer) mixer.setTime(Math.min(scrollProgress * CLIP_DURATION, MAX_TIME));
+        if (mixer)
+          mixer.setTime(Math.min(scrollProgress * CLIP_DURATION, MAX_TIME));
         renderer.render(scene, camera);
       };
       animate();

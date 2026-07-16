@@ -1,13 +1,56 @@
 import type { Metadata } from "next";
 import Footer from "./components/layout/Footer";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/app/components/layout/Navbar";
 import SmoothScroll from "@/app/components/layout/SmoothScroll";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const neueMontreal = localFont({
+  src: [
+    {
+      path: "../public/fonts/NeueMontreal-Light.otf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/NeueMontreal-LightItalic.otf",
+      weight: "300",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/NeueMontreal-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/NeueMontreal-Italic.otf",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/NeueMontreal-Medium.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/NeueMontreal-MediumItalic.otf",
+      weight: "500",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/NeueMontreal-Bold.otf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/NeueMontreal-BoldItalic.otf",
+      weight: "700",
+      style: "italic",
+    },
+  ],
+  variable: "--font-neue-montreal",
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
@@ -28,7 +71,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${neueMontreal.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body suppressHydrationWarning={true} className="min-h-full">
         <SmoothScroll />

@@ -1,0 +1,207 @@
+.projectContainer {
+  position: relative;
+}
+
+.heroProject {
+  height: 80vh;
+  width: 100vw;
+  background-color: #000;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+}
+
+.centerHeadingProject {
+  display: flex;
+  color: #fff;
+  font-weight: 100;
+  font-size: 14rem;
+}
+
+@media (max-width: 800px) {
+  .centerHeadingProject {
+    font-size: 4rem;
+  }
+}
+
+.filterCtas {
+  position: absolute;
+  bottom: 3%;
+  left: 3%;
+  color: #fcfcfc;
+}
+
+.filterCtas h1 {
+  font-size: 1.5rem;
+  font-weight: 100;
+  opacity: 0.5;
+}
+
+.ctaFilter {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.ctaF {
+  border-radius: 10rem;
+  padding: 0.4rem 1.5rem;
+  border: 1px solid white;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.ctaF:hover {
+  background-color: #fff;
+  color: #000;
+  transition: 0.5s;
+}
+
+.ctaActive {
+  background-color: #fff;
+  color: #000;
+}
+
+.cardsSection {
+  height: fit-content;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  flex-direction: column;
+  background-color: #000;
+  padding: 2rem 0;
+}
+
+@media (max-width: 720px) {
+  .cardsSection {
+    width: auto;
+  }
+  .cardsProject {
+    height: 50vh !important;
+    width: 93.09vw !important; /* 885 / 1920 * 100 */
+  }
+  .imgFollow {
+    display: none !important;
+  }
+}
+
+.seprateDivs {
+  display: flex;
+  gap: 2.5rem;
+}
+
+@media (max-width: 800px) {
+  .seprateDivs {
+    flex-direction: column;
+  }
+}
+
+.cardsProject {
+  position: relative;
+  width: 46.09vw; /* 885 / 1920 * 100 */
+  height: 67.04vh; /* 724 / 1080 * 100 */
+  display: flex;
+  border-radius: 5px;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  cursor: pointer;
+}
+
+.cardStrech {
+  width: 94.5vw;
+}
+
+.cardsProject:hover .imgFollow {
+  clip-path: inset(0%);
+  transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.imgFollow {
+  height: 20vh;
+  width: 22vh;
+  clip-path: inset(50%);
+  top: 0%;
+  left: 0%;
+  position: absolute;
+  transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  pointer-events: none;
+}
+
+.imgFollow img,
+.imgFollow video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imageBgContainer {
+  position: absolute;
+  transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageBgContainer img,
+.imageBgContainer video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardsProject:hover .imageBgContainer {
+  filter: blur(5px) brightness(0.7);
+  transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.contentProject {
+  position: absolute;
+  bottom: 3%;
+  left: 3%;
+  font-weight: 100;
+}
+
+.contentProject h1 {
+  color: #fff;
+  transform: translateY(80%);
+  font-size: 3rem;
+  font-weight: 200;
+  transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.cardsProject:hover .contentProject h1 {
+  transform: translateY(0%);
+  transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.tagsProject {
+  display: flex;
+  gap: 0.5rem;
+  transform: translateY(200%);
+  transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.cardsProject:hover .tagsProject {
+  transform: translateY(0%);
+  transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.tagP {
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  border: 1px solid #fff;
+  color: #fff;
+  margin-top: 0.5rem;
+}

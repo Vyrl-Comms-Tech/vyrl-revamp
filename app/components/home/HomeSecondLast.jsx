@@ -3,7 +3,7 @@ import React from "react";
 import "../../styles/home-second-last.css";
 import TextAnimation from "./TextAnimation";
 
-const HomeSecondLast = () => {
+const   HomeSecondLast = () => {
   return (
     <section className="hp-section">
       <div className="hp-grid">
