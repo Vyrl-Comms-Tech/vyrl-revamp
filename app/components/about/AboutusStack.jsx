@@ -409,26 +409,33 @@ export default function AboutUsStack() {
           zIndex: (index) => index + 1,
         });
 
-        const timeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: containerRef.current,
-            pin: true,
-            scrub: 1,
-            start: "top top",
-            end: "+=400% bottom",
-            invalidateOnRefresh: true,
-          },
-        });
+        const isMobile = window.innerWidth <= 700;
+        const lastIndex = cardRefs.current.length - 1;
+
+        // Mobile: cards before the last one enter then exit (go up) as
+        // normal, but the last card enters and STAYS — no exit tweens
+        // are added for it, so the timeline's total duration is exactly
+        // "everything up through the last card settling in," with no
+        // trailing dead time. That's then used as the pin's scroll
+        // distance directly, instead of a hardcoded guess, so there's
+        // no blank pinned scroll after the last card before the next
+        // section appears.
+        const exitingCards = isMobile
+          ? cardRefs.current.slice(0, lastIndex)
+          : cardRefs.current;
+        const lastCard = cardRefs.current[lastIndex];
+
+        const timeline = gsap.timeline({ paused: true });
 
         timeline
           .to(cardRefs.current, { y: 0, scale: 1, stagger: 0.4 })
           .to(
-            cardRefs.current,
+            exitingCards,
             { y: -300, opacity: 0.5, scale: 0.5, stagger: 0.4 },
             "0.5"
           )
           .to(
-            cardRefs.current,
+            exitingCards,
             { y: -600, scale: 0.1, opacity: 0, stagger: 0.4 },
             "1"
           )
@@ -443,6 +450,25 @@ export default function AboutUsStack() {
             "0.6"
           )
           .to(counterRefs.current, { color: "#000", stagger: 0.4 }, "0.2");
+
+        if (isMobile && lastCard) {
+          // A brief hold once the last card is fully in place, so it
+          // reads as a deliberate stop rather than a flash before the
+          // pin releases.
+          timeline.to(lastCard, { scale: 1 }, ">+=0.3");
+        }
+
+        ScrollTrigger.create({
+          animation: timeline,
+          trigger: containerRef.current,
+          pin: true,
+          scrub: 1,
+          start: "top top",
+          end: isMobile
+            ? `+=${timeline.duration() * 100}%`
+            : "+=400% bottom",
+          invalidateOnRefresh: true,
+        });
       }, containerRef);
     })();
 

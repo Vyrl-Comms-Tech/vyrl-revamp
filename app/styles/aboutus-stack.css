@@ -118,7 +118,7 @@
 
 .cardsStack {
   width: 60.17vw;
-  height: 70vh;
+  height: 80vh;
   overflow: hidden;
   border-radius: 9px;
   display: flex;
@@ -217,9 +217,10 @@
     width: 60%;
   }
   .counterStack{
-    flex-direction: row;
+display: none;
+    /* flex-direction: row;
     gap: 15px;
     left: 20%;
-    bottom: 10%;
+    bottom: 10%; */
   }
 }
