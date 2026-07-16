@@ -81,31 +81,31 @@
 }
 
 /* ── White variant ── */
-.cta-button-carousel {
+.cta-button-white {
   background-color: #fff;
   color: #000;
 }
 
-.cta-button-carousel .cta-arrow-box {
+.cta-button-white .cta-arrow-box {
   background-color: #0000001a;
 }
 
-.cta-button-carousel .cta-arrow-box svg path {
+.cta-button-white .cta-arrow-box svg path {
   fill: #000;
 }
 
-.cta-button-carousel:hover .cta-arrow-box {
+.cta-button-white:hover .cta-arrow-box {
   background-color: #ffffff40;
   box-shadow:
     0 0 20px rgba(255, 255, 255, 0.4),
     0 0 60px rgba(255, 255, 255, 0.15);
 }
 
-.cta-button-carousel:hover .cta-arrow-box svg path {
+.cta-button-white:hover .cta-arrow-box svg path {
   fill: #fff;
 }
 
-.cta-button-carousel:hover p {
+.cta-button-white:hover p {
   color: #fff;
 }
 @media (max-width: 1760px) {
