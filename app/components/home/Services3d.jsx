@@ -110,6 +110,13 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
     controls.maxPolarAngle = basePolarAngle + 0.6; // ~34° down
     controls.rotateSpeed = 0.6;
 
+    // On mobile, OrbitControls captures single-finger touch drags as
+    // rotation, which eats the swipe the user actually meant as a page
+    // scroll. Disabling rotate on touch (mouse-drag rotate on desktop
+    // stays untouched) lets that same gesture fall through to the page.
+    const isMobile = window.innerWidth <= 700;
+    controls.enableRotate = !isMobile;
+
     // ------------------------------------------------
     // Lights
     // ------------------------------------------------
@@ -169,6 +176,7 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       camera.updateProjectionMatrix();
       renderer.setSize(cubeMount.clientWidth, cubeMount.clientHeight);
       updateCameraPosition();
+      controls.enableRotate = window.innerWidth > 700;
       ScrollTrigger.refresh();
     };
     window.addEventListener("resize", handleResize);

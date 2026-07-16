@@ -58,6 +58,13 @@
   font-weight: 500;
 }
 
+/* Desktop lays the wordmark out separately (see AboutImg component
+   above this section); only shown inline on mobile between the
+   heading and the description/button. */
+.aboutHero-mobileWordmark {
+  display: none;
+}
+
 /* Reserves the natural (final) image height in flow so content after this
    section starts in the right place, even though the image itself is
    position:absolute and animated via GSAP Flip. */
@@ -86,6 +93,11 @@
 }
 
 @media (max-width: 900px) {
+  .aboutHero {
+    min-height: 0;
+    padding: 2.5rem 5% 3rem;
+  }
+
   .aboutHero-top {
     flex-direction: column;
   }
@@ -95,13 +107,42 @@
     width: 100%;
   }
 
+  /* Mobile order: tag + heading first, then the description/button,
+     matching the Figma stack (About tag → heading → wordmark image →
+     button → photo). */
   .aboutHero-headingCol {
+    order: 1;
     text-align: left;
     align-items: flex-start;
-    margin-top: 2rem;
+    margin-top: 0;
+  }
+
+  .aboutHero-mobileWordmark {
+    display: block;
+    order: 2;
+    width: 100%;
+  }
+
+  .aboutHero-imageCol {
+    order: 3;
+    margin-top: 1.5rem;
+  }
+
+  /* The scroll-driven Flip resize is disabled on mobile (see
+     AboutHero.jsx), so the placeholder/spacer no longer need to
+     reserve space for a separately-animated absolute overlay. */
+  .aboutHero-imagePlaceholder {
+    display: none;
+  }
+
+  .aboutHero-imageSpacer {
+    display: none;
   }
 
   .aboutHero-imageWrap {
+    position: static;
+    width: 100%;
     height: 45vh;
+    margin-top: 1.5rem;
   }
 }

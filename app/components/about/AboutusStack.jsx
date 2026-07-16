@@ -54,15 +54,16 @@ const COUNTER_LABELS = ["00", "01", "02", "03", "04"];
 export default function AboutUsStack() {
   const containerRef = useRef(null);
   const cardRefs = useRef([]);
+  const placeholderRefs = useRef([]);
   const lineRefs = useRef([]);
   const counterRefs = useRef([]);
 
-  cardRefs.current = [];
-  lineRefs.current = [];
-  counterRefs.current = [];
-
   const setCardRef = (el) => {
     if (el && !cardRefs.current.includes(el)) cardRefs.current.push(el);
+  };
+  const setPlaceholderRef = (el) => {
+    if (el && !placeholderRefs.current.includes(el))
+      placeholderRefs.current.push(el);
   };
   const setLineRef = (el) => {
     if (el && !lineRefs.current.includes(el)) lineRefs.current.push(el);
@@ -80,11 +81,12 @@ export default function AboutUsStack() {
     let isMounted = true;
 
     (async () => {
-      const [{ default: Lenis }, gsapModule, scrollTriggerModule] =
+      const [{ default: Lenis }, gsapModule, scrollTriggerModule, flipModule] =
         await Promise.all([
           import("lenis"),
           import("gsap"),
           import("gsap/ScrollTrigger"),
+          import("gsap/Flip"),
           import("lenis/dist/lenis.css"),
         ]);
 
@@ -96,8 +98,9 @@ export default function AboutUsStack() {
       const gsap = gsapModule.gsap ?? gsapModule.default;
       const ScrollTrigger =
         scrollTriggerModule.ScrollTrigger ?? scrollTriggerModule.default;
+      const Flip = flipModule.Flip ?? flipModule.default;
 
-      gsap.registerPlugin(ScrollTrigger);
+      gsap.registerPlugin(ScrollTrigger, Flip);
       gsapInstance = gsap;
       scrollTriggerInstance = ScrollTrigger;
 
@@ -130,6 +133,36 @@ export default function AboutUsStack() {
           zIndex: (index) => index + 1,
         });
 
+        const containerRect = containerRef.current.getBoundingClientRect();
+
+        // Snap-and-grow entrance (same mechanic as AboutHero's photo): each
+        // card starts small, matching its placeholder's rect, then Flip
+        // grows/repositions it into its natural full-size stack position.
+        const cardFlips = cardRefs.current.map((card, index) => {
+          const placeholder = placeholderRefs.current[index];
+          if (!card || !placeholder) return null;
+
+          const naturalRect = card.getBoundingClientRect();
+          const placeholderRect = placeholder.getBoundingClientRect();
+
+          gsap.set(card, {
+            top: naturalRect.top - containerRect.top,
+            left: naturalRect.left - containerRect.left,
+            width: naturalRect.width,
+            height: naturalRect.height,
+          });
+          const naturalState = Flip.getState(card);
+
+          gsap.set(card, {
+            top: placeholderRect.top - containerRect.top,
+            left: placeholderRect.left - containerRect.left,
+            width: placeholderRect.width,
+            height: placeholderRect.height,
+          });
+
+          return Flip.fit(card, naturalState, { getVars: true });
+        });
+
         const timeline = gsap.timeline({
           scrollTrigger: {
             trigger: containerRef.current,
@@ -141,18 +174,24 @@ export default function AboutUsStack() {
           },
         });
 
+        cardRefs.current.forEach((card, index) => {
+          const flip = cardFlips[index];
+          if (!card || !flip) return;
+
+          timeline
+            .to(
+              card,
+              { ...flip, opacity: 1, ease: "none" },
+              index * 0.4,
+            )
+            .to(
+              card,
+              { y: "-=600", scale: 0.1, opacity: 0, ease: "none" },
+              index * 0.4 + 0.9,
+            );
+        });
+
         timeline
-          .to(cardRefs.current, { y: 0, scale: 1, stagger: 0.4 })
-          .to(
-            cardRefs.current,
-            { y: -300, opacity: 0.5, scale: 0.5, stagger: 0.4 },
-            "0.5"
-          )
-          .to(
-            cardRefs.current,
-            { y: -600, scale: 0.1, opacity: 0, stagger: 0.4 },
-            "1"
-          )
           .to(
             lineRefs.current,
             { height: "4rem", opacity: 1, stagger: 0.4 },
@@ -210,12 +249,17 @@ export default function AboutUsStack() {
 
         {CARDS.map((card, index) => (
           <div
-            key={card.id}
+            key={`${card.id}-placeholder-${index}`}
+            className="cardsStackPlaceholder"
+            ref={setPlaceholderRef}
+          />
+        ))}
+
+        {CARDS.map((card, index) => (
+          <div
+            key={`${card.id}-${index}`}
             ref={setCardRef}
             className="cardsStack"
-            style={{
-              transform: index === 0 ? "translateY(0%)" : "translateY(150%)",
-            }}
           >
             <div className="upperHeadingStack">
               <span>{card.tag}</span>

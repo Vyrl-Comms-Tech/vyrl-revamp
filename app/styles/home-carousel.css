@@ -290,12 +290,12 @@
     order: 2;
   }
   /* .h2-description, */
-  .cta-button-carousel {
+  .cta-button-carousel,.h2-description {
     display: none;
   }
-  .h2-description{
+  /* .h2-description{
     width: 90vw;
-  }
+  } */
   .h2-nav {
     padding-top: 10%;
     gap: 130px;

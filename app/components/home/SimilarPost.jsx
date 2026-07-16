@@ -1,8 +1,9 @@
-'use client'
+"use client";
 import React, { useRef, useState } from "react";
 import gsap from "gsap";
 // import MagneticButton from "./Common/MagneticButton";
 import "../../styles/similarPost.css";
+import TextAnimation from "./TextAnimation";
 
 function SimilarPost() {
   const cardRefs = useRef([]);
@@ -169,8 +170,16 @@ function SimilarPost() {
 
       <div className="review-mobile-card">
         <div className="review-mobile-content" ref={mobileContentRef}>
-          <h3 className="review-mobile-name">{activeReview.name}</h3>
-          <p className="review-mobile-description">{activeReview.content}</p>
+          <h3 className="review-mobile-name">
+            <TextAnimation blockColor="#2C2D2D" stagger={0.12} duration={1}>
+              {activeReview.name}
+            </TextAnimation>
+          </h3>
+          <p className="review-mobile-description">
+            <TextAnimation blockColor="#2C2D2D" stagger={0.12} duration={1}>
+              {activeReview.content}
+            </TextAnimation>
+          </p>
           <div className="review-mobile-meta">
             <span>5 min read</span>
             <span>•</span>

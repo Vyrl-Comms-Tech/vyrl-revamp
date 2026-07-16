@@ -9,8 +9,7 @@ import AboutImg from "../components/about/aboutImg";
 const page = () => {
   return (
     <div>
-      <AboutImg/>
-      <AboutHero/>
+      <AboutHero mobileWordmark={<AboutImg />} />
       <AboutUsStack/>
       <Logos />
       <TeamProfile />

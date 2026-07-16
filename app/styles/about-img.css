@@ -13,3 +13,10 @@
   max-width: 100%;
   object-fit: contain;
 }
+
+@media (max-width: 900px) {
+  .aboutImg img {
+    height: 28vh;
+    margin-top: 10px;
+  }
+}

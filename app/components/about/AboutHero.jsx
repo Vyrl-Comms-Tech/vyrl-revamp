@@ -9,7 +9,7 @@ import CtaButton from "../layout/cta";
 
 gsap.registerPlugin(ScrollTrigger, Flip);
 
-const AboutHero = () => {
+const AboutHero = ({ mobileWordmark }) => {
   const containerRef = useRef(null);
   const imageWrapRef = useRef(null);
   const placeholderRef = useRef(null);
@@ -22,6 +22,10 @@ const AboutHero = () => {
       const placeholder = placeholderRef.current;
       const spacer = spacerRef.current;
       if (!container || !imageWrap || !placeholder || !spacer) return;
+
+      // The scroll-driven Flip resize is a desktop-only effect — on
+      // mobile the photo just displays scaled down in normal flow.
+      if (window.innerWidth <= 900) return;
 
       const containerRect = container.getBoundingClientRect();
       const placeholderRect = placeholder.getBoundingClientRect();
@@ -94,6 +98,10 @@ const AboutHero = () => {
             For The Digital Era
           </h1>
         </div>
+
+        {mobileWordmark && (
+          <div className="aboutHero-mobileWordmark">{mobileWordmark}</div>
+        )}
       </div>
 
       <div className="aboutHero-imageSpacer" ref={spacerRef} />

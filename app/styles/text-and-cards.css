@@ -3,15 +3,15 @@
   height: auto;
   background: #fff;
 }
-.text-and-cards{
-height: auto;
+.text-and-cards {
+  height: auto;
 }
 /* ── Text Section ── */
 .hs-text-section {
   display: flex;
   align-items: center;
   background: #fff;
-  padding: 150px 240px 40px ;
+  padding: 150px 240px 40px;
 }
 
 .hs-text-inner {
@@ -23,7 +23,7 @@ height: auto;
 
 .hs-heading {
   font-size: clamp(1.75rem, 3.2vw, 3rem);
-  font-weight:500;
+  font-weight: 500;
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: #121212 !important;
@@ -75,7 +75,7 @@ height: auto;
   background: #0f0f0f;
 }
 .hs-card--light {
-  background: #F4F4F4;
+  background: #f4f4f4;
 }
 
 /* Heading */
@@ -94,7 +94,7 @@ height: auto;
   content: "";
   position: absolute;
   inset: 0;
-  
+
   z-index: 1;
   pointer-events: none;
 }
@@ -108,7 +108,7 @@ height: auto;
 
 .hs-card-desc {
   max-width: 90%;
-}    
+}
 .hs-card--light .hs-card-title {
   color: #111;
 }
@@ -147,24 +147,23 @@ height: auto;
   color: #111;
 }
 
-@media(max-width:1860px){
-  .hs-text-section{
+@media (max-width: 1860px) {
+  .hs-text-section {
     padding: 100px 136px 40px;
   }
-  .hs-cards-section
-{
-  padding: 2rem 3rem 5rem;
-}
-  
-.hs-heading {
-  font-size: clamp(26px, 2.9vw, 3rem);
-}
+  .hs-cards-section {
+    padding: 2rem 3rem 5rem;
+  }
+
+  .hs-heading {
+    font-size: clamp(26px, 2.9vw, 3rem);
+  }
   .hs-card {
     width: 32.5%;
     height: 390px;
     padding: 25px 42px 24px 21px;
   }
-  .hs-card-title{
+  .hs-card-title {
     font-size: 49px;
   }
 }
@@ -176,9 +175,10 @@ height: auto;
   }
   .hs-card {
     /* width: min(594px, calc(50% - 10px)); */
-  }    .hs-card-title {
-        font-size: 35px;
-    }
+  }
+  .hs-card-title {
+    font-size: 35px;
+  }
 }
 .hs-heading-indent {
   display: inline-block;
@@ -186,7 +186,7 @@ height: auto;
 }
 @media (max-width: 720px) {
   .hs-text-section {
-    padding: 2rem 15px 2.7rem 1.8rem;
+    padding: 2rem 15px 2.7rem 1.6rem;
     min-height: auto;
   }
   .hs-cards-section {
@@ -196,7 +196,7 @@ height: auto;
   .hs-cards-grid {
     flex-direction: column;
     align-items: stretch;
-  }
+  } 
   .hs-card {
     width: 100%;
     height: 300px;
@@ -210,8 +210,8 @@ height: auto;
   .hs-card-desc {
     font-size: 18px;
   }
-  
-  .hs-heading{
+
+  .hs-heading {
     line-height: 1.1;
     max-width: 100%;
   }
