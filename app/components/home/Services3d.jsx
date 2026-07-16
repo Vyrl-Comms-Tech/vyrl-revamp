@@ -184,6 +184,13 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       dracoLoader.setDecoderPath(
         "https://www.gstatic.com/draco/versioned/decoders/1.5.7/",
       );
+      // Some browsers (seen in Opera, also possible with certain
+      // extensions/privacy modes elsewhere) cap how much linear memory a
+      // WASM module can request, and Draco's WASM decoder can exceed
+      // that and throw "Cannot allocate Wasm memory for new instance".
+      // Forcing the JS decoder avoids WASM memory allocation entirely —
+      // slightly slower to decode once on load, but works everywhere.
+      dracoLoader.setDecoderConfig({ type: "js" });
 
       const loader = new GLTFLoader();
       loader.setDRACOLoader(dracoLoader);
