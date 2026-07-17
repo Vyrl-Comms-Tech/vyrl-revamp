@@ -11,11 +11,11 @@ const page = () => {
   return (
     <div>
       <div className="aboutImg-desktop-only">
-        <AboutImg />
+      <AboutImg />
       </div>
       <AboutHero mobileWordmark={<AboutImg />} />
-      <AboutText/>
-      <AboutUsStack/>
+      <AboutText />
+      <AboutUsStack />
       <Logos />
       <TeamProfile />
       <SimilarPost />

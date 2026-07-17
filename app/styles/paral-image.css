@@ -1,0 +1,27 @@
+.paral-img-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.paral-img-parallax {
+  position: absolute;
+  inset: 0;
+}
+
+.paral-img {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  will-change: transform;
+}
+
+.paral-img-wrap .paral-img-parallax .paral-img {
+  inset: 0;
+  height: 100%;
+}
+
+.paral-img-front {
+  z-index: 1;
+}

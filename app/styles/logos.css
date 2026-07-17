@@ -16,7 +16,7 @@
 
 .logos-left h2 {
   font-size: 65px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .logos-left p {
@@ -101,7 +101,7 @@
   }
 
   .logos-right {
-    width: auto;
+    /* width: auto; */
   }
 }
 /* ---------- Mobile marquee (hidden on desktop) ---------- */

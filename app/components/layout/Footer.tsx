@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { caseStudies } from "../caseStudy/caseStudiesData";
+import "../../styles/footer.css";
 
 const CASE_STUDY_PATHS = Object.values(caseStudies).map((c) => c.href);
 

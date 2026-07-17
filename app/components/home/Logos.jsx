@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import TextAnimation from "./TextAnimation";
+import "../../styles/logos.css";
 
 const blankPositions = [3, 0, 3];
 

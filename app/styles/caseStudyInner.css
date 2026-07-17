@@ -6,6 +6,29 @@
   z-index: 1000;
 }
 
+/* Parallax wrapper for panel 2/4/5/6 images — masks a wider-than-container
+   image so it can drift horizontally (matching this section's horizontal
+   scroll direction — a vertical parallax would read as motion on the
+   wrong axis here) without revealing its overflow. The clip-path reveal
+   that also animates the <img> itself (via containerAnimation, tied to
+   the horizontal scroll-through) is untouched — that animates clipPath,
+   this animates x, so neither conflicts.
+   .cs-full-img / .cs-img-80 / .cs-img-90 supply this wrapper's own size. */
+.cs-img-parallax-wrap {
+  overflow: hidden;
+  display: block;
+}
+
+.cs-img-parallax {
+  display: block;
+  width: calc(100% + var(--paral-offset, 80px));
+  height: 100%;
+  object-fit: cover;
+  position: relative;
+  left: calc(var(--paral-offset, 80px) / -2);
+  will-change: transform;
+}
+
 .cs-outer {
   position: relative;
   width: 100%;
@@ -50,7 +73,7 @@
 .cs-title {
   font-size: clamp(3rem, 5.5vw, 75px);
   font-weight: 500;
-  font-family: --var(--font-primary);
+  line-height: 1;
   color: #0a0a0a;
 }
 
@@ -134,8 +157,7 @@
   width: 90%;
   height: 100%;
   border-radius: 20px;
-  object-fit: cover;
-  display: block;
+  filter: brightness(0.8);
 }
 
 /* panel 3 */
@@ -175,9 +197,7 @@
 .cs-img-80 {
   width: 65vw;
   height: 68vh;
-  object-fit: cover;
   border-radius: 20px;
-  display: block;
 }
 
 /* panel 5 */
@@ -191,9 +211,7 @@
 .cs-img-90 {
   width: 60vw;
   height: 95vh;
-  object-fit: cover;
   border-radius: 20px;
-  display: block;
 }
 /* panel 6 */
 .cs-panel--6 {
@@ -210,7 +228,7 @@
 
 .cs-similar-title {
   position: absolute;
-  top: 40px;
+  top: 140px;
   right: 50px;
   font-size: 45px;
   font-weight: 500;
@@ -271,7 +289,7 @@
 }
 
 .cs-p8-next-text {
-  font-size: clamp(3.5rem, 5.5vw, 52px);
+  font-size: clamp(3rem, 5.5vw, 52px);
   font-weight: 500;
   margin: 0 0 10px;
 }
@@ -286,9 +304,10 @@
 
 .cs-p8-line {
   flex: 1;
-  height: 1.5px;
+  height: 4.5px;
   background: rgba(217, 217, 217, 0.3);
   overflow: hidden;
+  border-radius: 40px;
 }
 
 .cs-p8-fill {
@@ -307,4 +326,334 @@
   color: #fff;
   margin-left: 8px;
   flex-shrink: 0;
+}
+@media (max-width: 1720px) {
+  .cs-mockup {
+    width: 66%;
+    height: 69%;
+    top: 27%;
+    left: 31%;
+  }
+  .cs-panel--7 {
+    width: 39vw;
+  }
+  .cs-similar-sub {
+    font-size: 24px;
+    line-height: 1.1;
+  }
+  .cs-similar-sub {
+    right: 40px;
+  }
+  .cs-panel--6 {
+    width: 68vw;
+  }
+  .cs-visit-btn {
+    height: 55px;
+    padding: 4px 6px 4px 28px;
+    font-size: 22px;
+  }
+  .cs-p3-content p {
+    font-size: 25px;
+  }
+  .cs-similar-title {
+    top: 110px;
+  }
+  .cs-title {
+    /* font-size: clamp(3rem, 4.5vw, 75px); */
+  }
+}
+
+/* ── Tablet: still the horizontal-scroll mechanic, just tighter panel
+   proportions so images/text don't overflow narrower viewports. ── */
+@media (max-width: 1024px) {
+  .cs-p1-header {
+    padding: 70px 30px 0;
+  }
+
+  .cs-title {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+  }
+
+  .cs-services {
+    left: 30px;
+    font-size: 16px;
+  }
+
+  .cs-visit-btn {
+    height: 48px;
+    padding: 4px 6px 4px 22px;
+    font-size: 18px;
+  }
+
+  .cs-mockup {
+    width: 78%;
+    height: 62%;
+    top: 30%;
+    left: 20%;
+  }
+
+  .cs-full-img {
+    width: 96%;
+  }
+
+  .cs-panel--4 {
+    width: 90vw;
+  }
+
+  .cs-img-80 {
+    width: 82vw;
+    height: 55vh;
+  }
+
+  .cs-panel--5 {
+    width: 80vw;
+  }
+
+  .cs-img-90 {
+    width: 76vw;
+    height: 78vh;
+  }
+
+  .cs-panel--6 {
+    width: 90vw;
+  }
+
+  .cs-panel--3 {
+    padding-inline: 30px;
+  }
+
+  .cs-p3-content h3 {
+    font-size: 32px;
+    margin: 0 0 30px;
+  }
+
+  .cs-p3-content p {
+    font-size: 19px;
+    max-width: 90vw;
+  }
+
+  .cs-panel--7 {
+    width: 60vw;
+  }
+
+  .cs-similar-title {
+    top: 80px;
+    right: 30px;
+    font-size: 32px;
+  }
+
+  .cs-similar-sub {
+    right: 30px;
+    font-size: 18px;
+    bottom: 30px;
+  }
+
+  .cs-panel--8 {
+    width: 82vw;
+    height: 78vh;
+  }
+
+  .cs-p8-project-name {
+    font-size: 34px;
+    margin: 0 0 60px;
+  }
+
+  .cs-p8-next-text {
+    font-size: clamp(2rem, 6vw, 34px);
+  }
+
+  .cs-p8-services {
+    font-size: 15px;
+  }
+}
+
+/* ── Mobile: bypass the horizontal-scroll-hijack entirely — panels stack
+   vertically in normal document flow as compact, content-sized cards
+   (no forced 100vh/min-height per panel), text and images centered, matching
+   the Figma mobile reference. The pin/GSAP-timeline setup in
+   CaseStudyInner.jsx skips itself at this width (see the isMobile check
+   there) in favor of plain scroll-into-view reveals. ── */
+@media (max-width: 900px) {
+  .cs-outer {
+    height: auto;
+    overflow: visible;
+  }
+
+  .cs-inner {
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+  }
+
+  .cs-panel {
+    width: 100% !important;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  /* panel 1 — heading, services, CTA, mockup: stacked, left-aligned */
+  .cs-p1-header {
+    position: static;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 32px 20px 0;
+  }
+
+  .cs-title {
+    font-size: clamp(1.6rem, 7vw, 2.2rem);
+    text-align: left;
+  }
+
+  .cs-services {
+    position: static;
+    transform: none;
+    padding: 4px 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 8px 16px;
+    text-align: left;
+  }
+
+  /* .cs-img-parallax is intentionally wider than its wrapper on desktop
+     (see .cs-img-parallax-wrap) to give the horizontal parallax drift
+     room to travel without exposing its edges. That drift is skipped on
+     mobile (see the isMobile branch in CaseStudyInner.jsx — only a plain
+     scale/opacity fade runs there), so the extra width/offset had nothing
+     driving it and just cropped the image's sides statically. */
+  .cs-img-parallax {
+    width: 100%;
+    left: 0;
+  }
+
+  .cs-visit-btn {
+    height: 44px;
+    padding: 4px 6px 4px 20px;
+    font-size: 16px;
+  }
+
+  .cs-mockup {
+    position: static;
+    width: calc(100% - 40px);
+    height: auto;
+    aspect-ratio: 16 / 10;
+    margin: 20px auto 0;
+  }
+
+  /* panel 2 — full-bleed becomes a centered, content-sized card */
+  .cs-panel--2 {
+    height: auto;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .cs-full-img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+
+  /* panel 3 — "Information" text block, left-aligned */
+  .cs-panel--3 {
+    width: 100%;
+    align-items: flex-start;
+    padding: 8px 20px 20px;
+  }
+
+  .cs-p3-content {
+    padding: 0;
+    text-align: left;
+  }
+
+  .cs-p3-content h3 {
+    font-size: 22px;
+    margin: 0 0 12px;
+  }
+
+  .cs-p3-content p {
+    font-size: 15px;
+    max-width: 100%;
+  }
+
+  /* panel 4 / 6 — centered, content-sized cards */
+  .cs-panel--4,
+  .cs-panel--6 {
+    height: auto;
+    padding: 8px 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .cs-img-80 {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+
+  /* panel 5 */
+  .cs-panel--5 {
+    height: auto;
+    padding: 8px 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .cs-img-90 {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+  }
+
+  /* panel 7 — credits, left-aligned */
+  .cs-panel--7 {
+    width: 100%;
+    padding: 12px 20px 24px;
+  }
+
+  .cs-similar-title,
+  .cs-similar-sub {
+    position: static;
+    width: 100%;
+    text-align: left;
+  }
+
+  .cs-similar-title {
+    font-size: 22px;
+  }
+
+  .cs-similar-sub {
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  /* panel 8 — next-project card, centered content-sized image */
+  .cs-panel--8 {
+    width: calc(100% - 40px);
+    height: auto;
+    aspect-ratio: 4 / 5;
+    margin-inline: 20px;
+    margin-bottom: 20px;
+  }
+
+  .cs-p8-project-name {
+    font-size: 22px;
+    margin: 0 0 24px;
+  }
+
+  .cs-p8-next-text {
+    font-size: clamp(1.4rem, 7vw, 22px);
+  }
+
+  .cs-p8-services {
+    font-size: 12px;
+    top: 14px;
+    right: calc(10% + 14px);
+  }
+
+  .cs-p8-bottom {
+    padding: 0 16px 16px;
+  }
 }

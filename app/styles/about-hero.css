@@ -58,7 +58,7 @@
 .aboutHero-headingCol h1 {
   color: #011825;
   font-size: clamp(1.75rem, 85px, 110px);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.15;
   position: absolute;
   bottom: 0;
@@ -99,6 +99,7 @@
   height: 85vh;
   border-radius: 4px;
   overflow: hidden;
+  will-change: top, left, width, height;
 }
 
 .aboutHero-imageWrap img {
@@ -115,7 +116,9 @@
   .aboutHero-headingCol h1 {
     font-size: clamp(1.75rem, 5vw, 85px);
   }
-
+  .aboutHero-tag {
+    margin-top: 30px;
+  }
   .aboutHero-imagePlaceholder {
     width: 200px;
     height: 114px;

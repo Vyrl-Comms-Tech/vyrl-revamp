@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from "swiper/modules";
 import "swiper/css";
+import "../../styles/home-carousel.css";
 import "swiper/css/effect-coverflow";
 import ChangeTextAnimation from "../layout/ChangeTextAnimation";
 import CtaButton from "../layout/cta";

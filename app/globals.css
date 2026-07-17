@@ -1,30 +1,4 @@
-/* @import "tailwindcss"; */
-@import "./styles/navbar.css";
-@import "./styles/header.css";
-@import "./styles/footer.css";
-@import "./styles/cta.css";
-@import "./styles/home-hero.css";
-@import "./styles/text-and-cards.css";
-@import "./styles/services-3d.css";
-@import "./styles/home-carousel.css";
-@import "./styles/logos.css";
-@import "./styles/client-review.css";
-@import "./styles/collective.css";
-@import "./styles/vyrl-about.css";
-@import "./styles/similarPost.css";
-@import "./styles/home-second-last.css";
-@import "./styles/about-hero.css";
-@import "./styles/aboutus-stack.css";
-@import "./styles/team-profile.css";
-@import "./styles/blog-cards.css";
-@import "./styles/blog-inner.css";
-@import "./styles/blogParent.css";
-@import "./styles/caseStudyInner.css";
-@import "./styles/contact-hero.css";
-@import "./styles/projects-grid.css";
-@import "./styles/slider.css";
-@import "./styles/card-grid.css";
-@import "./styles/about-img.css";
+@import "tailwindcss";
 
 /* :root {
   --background: #ffffff;
@@ -53,7 +27,7 @@ body {
 :root {
   --bodybg: #fcfcfc;
 }
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;

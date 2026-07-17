@@ -4,6 +4,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import TextAnimation from "./TextAnimation";
 import ChangeTextAnimation from "../layout/ChangeTextAnimation";
+import "../../styles/client-review.css";
 import CtaButton from "../layout/cta";
        
 // Base (desktop, >1620px) card geometry. width/height/x/y scale down at

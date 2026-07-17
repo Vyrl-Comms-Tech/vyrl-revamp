@@ -1,5 +1,6 @@
 import React from "react";
 import TextAnimation from "../home/TextAnimation";
+import "../../styles/blog-inner.css";
 
 const biContent = [
   "In a world where attention spans are shrinking and competition is growing by the second, creating meaningful digital experiences is no longer optional—it's essential. Users today are constantly bombarded with content, choices, and interactions, making it increasingly difficult for brands to stand out. This shift has forced businesses to rethink not just how they present themselves online, but how they connect with their audience on a deeper level. A simple presence is no longer enough; what matters is the quality, clarity, and intention behind every interaction.",

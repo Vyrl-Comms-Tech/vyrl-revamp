@@ -46,7 +46,7 @@
 
 .nav h2 {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
 }
 
@@ -91,7 +91,7 @@
   bottom: 16px;
   left: 16px;
   color: #fff;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 25px;
   /* line-height: 1.3; */
 }
@@ -107,7 +107,7 @@
 
 .nav-dropdown-links a {
   font-size: 35px;
-  font-weight: 600;
+  font-weight: 500;
   color: #777;
 }
 

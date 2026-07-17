@@ -33,7 +33,7 @@
 
 .slider-headingCol h1 {
   color: #011825;
-  font-size: clamp(40px, 3.2vw, 3.5rem);
+  font-size: clamp(44px, 3.2vw, 3.5rem);
   font-weight: 500;
   line-height: 1.15;
 }

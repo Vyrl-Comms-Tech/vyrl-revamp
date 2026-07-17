@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import "../../styles/projects-grid.css";
 
 gsap.registerPlugin(ScrollTrigger);
 

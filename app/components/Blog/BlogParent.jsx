@@ -2,6 +2,7 @@
 import { useRef, useLayoutEffect } from "react";
 import { gsap } from "gsap";
 import TextAnimation from "../home/TextAnimation";
+import "../../styles/blogParent.css";
 
 const filters = ["ALL", "NEW", "EDUCATIONAL", "REAL ESTATES"];
 

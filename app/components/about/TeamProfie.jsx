@@ -206,6 +206,7 @@ import React, { useEffect, useRef } from "react";
 import Matter from "matter-js";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import "../../styles/team-profile.css";
 
 const CARD_COUNT = 12;
 const MOBILE_CARDS = Array.from({ length: CARD_COUNT }, (_, i) => ({

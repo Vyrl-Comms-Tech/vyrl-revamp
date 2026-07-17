@@ -4,6 +4,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
+import "../../styles/about-hero.css";
 import CtaButton from "../layout/cta";
 
 gsap.registerPlugin(ScrollTrigger, Flip);
@@ -48,31 +49,30 @@ const AboutHero = ({ mobileWordmark }) => {
         getVars: true,
       });
 
-      const tween = gsap.to(imageWrap, {
-        ...flip,
-        ease: "none",
-        paused: true,
-      });
-
       // No pinning — the image simply grows/moves as a normal part of
       // the page's scroll. The animation spans exactly the natural
       // distance between the top row (where the small placeholder
       // sits) and the spacer (where the full-size image settles), so
       // it finishes right as that content scrolls into place — no
       // pin, no leftover blank gap.
-      const st = ScrollTrigger.create({
-        trigger: container,
-        start: "top top",
-        endTrigger: spacer,
-        end: "bottom bottom",
-        scrub: 1,
-        onUpdate: (self) => {
-          tween.progress(self.progress);
+      //
+      // scrub is passed straight to the tween (rather than driving a
+      // paused tween's progress from a separate ScrollTrigger onUpdate)
+      // so GSAP's own scrub interpolation smooths it — the manual
+      // progress() relay added an extra frame of lag on top of Lenis.
+      const tween = gsap.to(imageWrap, {
+        ...flip,
+        ease: "none",
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          endTrigger: spacer,
+          end: "bottom bottom",
+          scrub: 0.5,
         },
       });
 
       return () => {
-        st.kill();
         tween.kill();
       };
     },

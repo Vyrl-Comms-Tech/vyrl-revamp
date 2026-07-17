@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import "../../styles/collective.css";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CtaButton from "../layout/cta";
 import TextAnimation from "./TextAnimation";

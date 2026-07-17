@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 import gsap from "gsap";
 // import MagneticButton from "./Common/MagneticButton";
 import TextAnimation from "./TextAnimation";
+import "../../styles/similarPost.css";
 
 function SimilarPost() {
   const cardRefs = useRef([]);

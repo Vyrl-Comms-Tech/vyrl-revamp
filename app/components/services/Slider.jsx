@@ -1,5 +1,6 @@
 import React from "react";
 import CtaButton from "../layout/cta";
+import "../../styles/slider.css";
 
 const images = [
   "cr1.png",
