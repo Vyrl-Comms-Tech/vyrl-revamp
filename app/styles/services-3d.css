@@ -177,6 +177,16 @@
 }
 
 @media (max-width: 700px) {
+  /* OrbitControls is never attached to the canvas on mobile (see
+     Services3d.jsx), so there's nothing for the canvas to be
+     interactive for there — but as a real DOM element it can still
+     intercept touch gestures meant for page scroll. pointer-events:none
+     guarantees touches pass straight through to the page. */
+  .cube-rotate,
+  .cube-rotate canvas {
+    pointer-events: none;
+  }
+
   .cube-rotate {
     transform: translateY(-28%);
   }

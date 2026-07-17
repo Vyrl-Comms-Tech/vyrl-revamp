@@ -325,45 +325,201 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
     desc.textContent = SERVICES[0].desc;
     currentIndex = 0;
 
-    // Desktop uses a long, smoothly-scrubbed distance across all services.
-    // Mobile uses a much shorter distance with lower scrub (less lag per
-    // swipe) plus snap points, so each swipe reliably lands on a clean
-    // service boundary instead of stalling mid-transition between two.
-    const scrollDistance = isMobile ? 2400 : 6000;
-    const scrubAmount = isMobile ? 0.5 : 2;
-    const snapStep = 1 / (SERVICES.length - 1);
+    let mainScrollTrigger;
+    let removeStepGestureListeners = null;
 
-    const mainScrollTrigger = ScrollTrigger.create({
-      trigger: section,
-      start: "top top",
-      end: `+=${scrollDistance}`,
-      scrub: scrubAmount,
-      pin: true,
-      snap: isMobile
-        ? {
-            snapTo: (value) => Math.round(value / snapStep) * snapStep,
-            duration: 0.3,
-            ease: "power1.inOut",
-          }
-        : undefined,
-      onUpdate(self) {
-        // Clamped [0,1] here; actually applied to the mixer in the
-        // render loop every frame (see animate()) so it's never stale
-        // relative to what gets painted, and always holds the assembled
-        // pose once progress reaches 1 regardless of scroll direction.
-        scrollProgress = Math.min(Math.max(self.progress, 0), 1);
+    if (isMobile) {
+      // Mobile: one scroll/swipe gesture = exactly one service change,
+      // decoupled from scroll *distance*. The old approach mapped
+      // continuous scroll progress to an index (with GSAP snap on top),
+      // but iOS's momentum/rubber-band scrolling can under-shoot the
+      // distance a single swipe needed to cross a snap boundary and
+      // settle back on the previous service instead of the next one.
+      // Driving the index directly off wheel/touch deltas — with a
+      // cooldown so one gesture can't fire twice — makes each swipe
+      // commit to exactly one step, every time.
+      const STEP_COOLDOWN = 650; // ms — blocks re-triggering mid-transition
+      const WHEEL_THRESHOLD = 12; // px of deltaY to count as an intentional step
+      const TOUCH_THRESHOLD = 40; // px of vertical swipe to count as a step
 
-        let index = Math.floor(self.progress * SERVICES.length);
-        index = gsap.utils.clamp(0, SERVICES.length - 1, index);
-        changeService(index);
+      let stepIndex = 0;
+      let locked = false;
+      let touchStartY = null;
 
+      // scrollProgress drives the cube's assembly pose (see the render
+      // loop above — mixer.setTime(scrollProgress * CLIP_DURATION)) the
+      // same way it always did on desktop: as a smoothly tweened value,
+      // not a snap-to value. Jumping it straight to the new step's
+      // fraction made the cube instantly cut to its new pose instead of
+      // assembling/disassembling — this tweens it over the same step
+      // duration as everything else so the cube keeps its original
+      // scroll-driven look, just advanced by gesture instead of by
+      // scroll distance.
+      const scrollProgressState = { value: 0 };
+
+      const applyStep = (direction) => {
+        if (locked) return;
+        const nextIndex = gsap.utils.clamp(
+          0,
+          SERVICES.length - 1,
+          stepIndex + direction,
+        );
+        if (nextIndex === stepIndex) return; // already at an edge
+
+        locked = true;
+        stepIndex = nextIndex;
+        const targetProgress = stepIndex / (SERVICES.length - 1);
+
+        gsap.to(scrollProgressState, {
+          value: targetProgress,
+          duration: 0.9,
+          ease: "power2.inOut",
+          onUpdate: () => {
+            scrollProgress = scrollProgressState.value;
+          },
+        });
+
+        changeService(stepIndex);
         gsap.to(numberDigits, {
-          yPercent: -100 * index,
+          yPercent: -100 * stepIndex,
           duration: 1,
           overwrite: true,
         });
-      },
-    });
+
+        setTimeout(() => {
+          locked = false;
+        }, STEP_COOLDOWN);
+      };
+
+      // Once the user is at an edge (first/last service) and gestures
+      // further in that same direction, there's nothing left to step to
+      // — let the browser's real scroll through instead of continuing
+      // to swallow it, and jump straight to the end/start of the pin's
+      // reserved scroll range so it releases on this same gesture rather
+      // than requiring the leftover distance to be scrolled through
+      // untouched afterward (which is what made it feel like scrolling
+      // "did nothing" after reaching the last service).
+      const releasePastEdge = (direction) => {
+        const st = mainScrollTrigger;
+        const scrollerEl = st.scroller;
+        const targetScroll =
+          direction > 0
+            ? st.start + (st.end - st.start) + 1
+            : st.start - 1;
+        if (scrollerEl === window) {
+          window.scrollTo({ top: targetScroll, behavior: "auto" });
+        } else {
+          scrollerEl.scrollTop = targetScroll;
+        }
+      };
+
+      const isAtEdge = (direction) =>
+        (direction > 0 && stepIndex === SERVICES.length - 1) ||
+        (direction < 0 && stepIndex === 0);
+
+      const handleWheel = (e) => {
+        if (!mainScrollTrigger.isActive) return;
+        const direction = e.deltaY > 0 ? 1 : -1;
+        if (isAtEdge(direction)) {
+          releasePastEdge(direction);
+          return; // don't preventDefault — let this gesture release the pin
+        }
+        // Only the pinned section should consume the gesture — once
+        // pinned, real page scroll is already suspended here, so this
+        // just needs to stop the browser's default scroll-through.
+        e.preventDefault();
+        if (Math.abs(e.deltaY) < WHEEL_THRESHOLD) return;
+        applyStep(direction);
+      };
+
+      const handleTouchStart = (e) => {
+        touchStartY = e.touches[0]?.clientY ?? null;
+      };
+
+      const handleTouchMove = (e) => {
+        if (!mainScrollTrigger.isActive || touchStartY === null) return;
+        const currentY = e.touches[0]?.clientY ?? touchStartY;
+        const direction = touchStartY - currentY > 0 ? 1 : -1;
+        if (isAtEdge(direction)) return; // let this scroll through normally
+        e.preventDefault();
+      };
+
+      const handleTouchEnd = (e) => {
+        if (!mainScrollTrigger.isActive || touchStartY === null) return;
+        const endY = e.changedTouches[0]?.clientY ?? touchStartY;
+        const deltaY = touchStartY - endY; // positive = swiped up = advance
+        touchStartY = null;
+        if (Math.abs(deltaY) < TOUCH_THRESHOLD) return;
+        const direction = deltaY > 0 ? 1 : -1;
+        if (isAtEdge(direction)) {
+          releasePastEdge(direction);
+          return;
+        }
+        applyStep(direction);
+      };
+
+      section.addEventListener("wheel", handleWheel, { passive: false });
+      section.addEventListener("touchstart", handleTouchStart, {
+        passive: true,
+      });
+      section.addEventListener("touchmove", handleTouchMove, {
+        passive: false,
+      });
+      section.addEventListener("touchend", handleTouchEnd, { passive: true });
+
+      removeStepGestureListeners = () => {
+        section.removeEventListener("wheel", handleWheel);
+        section.removeEventListener("touchstart", handleTouchStart);
+        section.removeEventListener("touchmove", handleTouchMove);
+        section.removeEventListener("touchend", handleTouchEnd);
+      };
+
+      // A fixed-height pin with no scrub — the gesture handlers above
+      // drive all state changes directly, this just keeps the section
+      // pinned in place while the user is stepping through services.
+      // The pinned distance must scale with the number of steps: even
+      // with preventDefault() on wheel/touchmove, some residual scroll
+      // delta can still leak through per gesture (browser/Lenis
+      // handling), so a fixed "+=100%" ran out after only 2-3 steps —
+      // the trigger deactivated and unpinned before the user ever
+      // reached the later services. One full screen height per service
+      // guarantees the pin outlasts stepping through all of them.
+      mainScrollTrigger = ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: `+=${SERVICES.length * 100}%`,
+        pin: true,
+      });
+    } else {
+      // Desktop: a long, smoothly-scrubbed distance across all services.
+      const scrollDistance = 6000;
+      const scrubAmount = 2;
+
+      mainScrollTrigger = ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: `+=${scrollDistance}`,
+        scrub: scrubAmount,
+        pin: true,
+        onUpdate(self) {
+          // Clamped [0,1] here; actually applied to the mixer in the
+          // render loop every frame (see animate()) so it's never stale
+          // relative to what gets painted, and always holds the assembled
+          // pose once progress reaches 1 regardless of scroll direction.
+          scrollProgress = Math.min(Math.max(self.progress, 0), 1);
+
+          let index = Math.floor(self.progress * SERVICES.length);
+          index = gsap.utils.clamp(0, SERVICES.length - 1, index);
+          changeService(index);
+
+          gsap.to(numberDigits, {
+            yPercent: -100 * index,
+            duration: 1,
+            overwrite: true,
+          });
+        },
+      });
+    }
 
     // ------------------------------------------------
     // Cleanup
@@ -372,6 +528,7 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       if (handleResize) window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(rafId);
 
+      if (removeStepGestureListeners) removeStepGestureListeners();
       mainScrollTrigger.kill();
 
       if (titleSplit) titleSplit.revert();
