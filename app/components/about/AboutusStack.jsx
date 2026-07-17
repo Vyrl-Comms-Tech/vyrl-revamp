@@ -460,6 +460,21 @@ export default function AboutUsStack() {
         const isMobile = window.innerWidth <= 700;
         const cardCount = cardRefs.current.length;
 
+        // Per-card "settled" timeline positions, used only for the
+        // mobile discrete-step mechanic below. Card i's enter tween
+        // starts at i*0.4 and (default .to() duration is 0.5s) finishes
+        // around i*0.4 + 0.5 — evenly dividing the timeline's *total*
+        // duration into cardCount-1 steps assumed the choreography was
+        // evenly spaced across its full length, but exits start firing
+        // at fixed absolute times (0.5, 1, ...) that don't scale with
+        // card count, so that even split landed on arbitrary moments —
+        // sometimes mid-exit for a card instead of its settled frame,
+        // which is what made a card appear skipped. Anchoring each step
+        // to the actual enter-complete instant fixes that.
+        const cardSettleTimes = cardRefs.current.map((_, i) =>
+          Math.min(i * 0.4 + 0.5, timeline.duration()),
+        );
+
         if (isMobile) {
           // Mobile: one scroll/swipe gesture = exactly one card settling
           // into place, instead of continuously scrubbing through all
@@ -495,14 +510,17 @@ export default function AboutUsStack() {
 
             locked = true;
             stepIndex = nextIndex;
-            const targetProgress = stepIndex / (cardCount - 1);
+            // Anchored to this card's actual settled instant (see
+            // cardSettleTimes above), not an even fraction of the
+            // timeline's total duration.
+            const targetTime = cardSettleTimes[stepIndex];
 
             gsap.to(progressState, {
-              value: targetProgress,
+              value: targetTime,
               duration: 0.9,
               ease: "power2.inOut",
               onUpdate: () => {
-                timeline.progress(progressState.value);
+                timeline.time(progressState.value);
               },
             });
 
@@ -511,6 +529,11 @@ export default function AboutUsStack() {
             }, STEP_COOLDOWN);
           };
 
+          // Edge checks run before the lock check, always, so a gesture
+          // that arrives while the previous step's cooldown is still
+          // active can still release the pin immediately instead of
+          // silently doing nothing (which was forcing an extra, seemingly
+          // wasted scroll before the release actually registered).
           const isAtEdge = (direction) =>
             (direction > 0 && stepIndex === cardCount - 1) ||
             (direction < 0 && stepIndex === 0);
@@ -532,6 +555,7 @@ export default function AboutUsStack() {
             if (!trigger.isActive) return;
             const direction = e.deltaY > 0 ? 1 : -1;
             if (isAtEdge(direction)) {
+              e.preventDefault();
               releasePastEdge(direction);
               return;
             }
