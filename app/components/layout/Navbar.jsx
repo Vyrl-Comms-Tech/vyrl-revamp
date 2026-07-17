@@ -37,8 +37,60 @@ const NavLink = ({ label, href }) => {
   const nextIndexRef = useRef(null);
   const enterTweenRef = useRef(null);
   const leaveTweenRef = useRef(null);
+  const pathname = usePathname();
+  const isActive = href !== "#" && pathname === href;
+
+  // Draw the underline in for the current route's link, same stroke
+  // animation as hover — so landing on /about shows "About" already
+  // underlined instead of only drawing it in on mouseenter. Navbar lives
+  // in the root layout and never remounts between routes, so the
+  // previously-active link's underline must be explicitly erased here
+  // too when isActive flips to false — otherwise it stays drawn forever
+  // (only the *entering* case was handled before, so e.g. "Work" stayed
+  // underlined after navigating away to "About").
+  useEffect(() => {
+    const path = pathRef.current;
+    if (!path) return;
+
+    if (!isActive) {
+      const length = path.getTotalLength();
+      gsap.killTweensOf(path);
+      gsap.to(path, {
+        strokeDashoffset: -length,
+        duration: 0.4,
+        ease: "power2.inOut",
+        onComplete: () => {
+          gsap.set(path, { opacity: 0 });
+        },
+      });
+      return;
+    }
+
+    if (nextIndexRef.current === null) {
+      nextIndexRef.current = Math.floor(Math.random() * underlinePaths.length);
+    }
+
+    path.setAttribute("d", underlinePaths[nextIndexRef.current]);
+    const length = path.getTotalLength();
+    gsap.set(path, {
+      strokeDasharray: length,
+      strokeDashoffset: length,
+      opacity: 1,
+    });
+
+    enterTweenRef.current = gsap.to(path, {
+      strokeDashoffset: 0,
+      duration: 0.5,
+      ease: "power2.inOut",
+    });
+
+    nextIndexRef.current = (nextIndexRef.current + 1) % underlinePaths.length;
+  }, [isActive]);
 
   const handleMouseEnter = () => {
+    // Already drawn in and staying that way for the active route — no
+    // need to redraw it on hover too.
+    if (isActive) return;
     const chars = charsRef.current;
     gsap.killTweensOf(chars);
 
@@ -86,6 +138,8 @@ const NavLink = ({ label, href }) => {
   };
 
   const handleMouseLeave = () => {
+    // The active route's underline stays drawn regardless of hover.
+    if (isActive) return;
     const path = pathRef.current;
     if (!path) return;
     const length = path.getTotalLength();

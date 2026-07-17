@@ -1,7 +1,8 @@
-'use client'
+"use client";
 import React from "react";
 import TextAnimation from "../home/TextAnimation";
 import CtaButton from "../layout/cta";
+import "../../styles/text-and-cards.css";
 
 const AboutText = ({
   children,
@@ -14,12 +15,15 @@ const AboutText = ({
     <div>
       <section className="hs-text-section">
         <div className="hs-text-inner">
-              <TextAnimation animateOnScroll={true} delay={0.3}>
+          <TextAnimation animateOnScroll={true} delay={0.3}>
             <h1 className="hs-heading">
               <span className="hs-heading-indent" aria-hidden="true" />
               {children ?? (
                 <>
-                                                      Our team brings together creative direction, strategic thinking, technical development, content, media, and automation to create work that is not only visually strong, but commercially meaningful. 
+                  Our team brings together creative direction, strategic
+                  thinking, technical development, content, media, and
+                  automation to create work that is not only visually strong,
+                  but commercially meaningful.
                 </>
               )}
             </h1>

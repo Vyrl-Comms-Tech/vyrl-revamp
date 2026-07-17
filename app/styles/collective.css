@@ -161,7 +161,7 @@
 .tp-detailsbox {
   position: absolute;
   top: 64%;
-  left: 0%; 
+  left: 0%;
   transform: translate(-50%, -50%);
   width: min(90%, 700px);
   text-align: center;
@@ -202,8 +202,7 @@
   /* box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); */
 }
 
-@media(max-width:1550px){
-
+@media (max-width: 1550px) {
   .p-tp-detailsbox {
     font-size: clamp(1rem, 1.27vw, 1.3rem);
     line-height: 25px;
@@ -356,7 +355,12 @@
     flex-direction: column;
     align-items: center;
   }
-
+  .sale-button {
+    padding: 6px 14px;
+  }
+  .cta-btn p{
+    font-size: 1rem;
+  }
   .sale-button,
   .rent-button {
     width: auto;
@@ -365,16 +369,20 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 540px) {
   .collective {
     perspective: 400px;
   }
 
   .tp-section1 h2 {
-    font-size: 1.6rem;
+    font-size: 2.2rem;
     padding: 0 1rem;
   }
-
+  .p-tp-detailsbox {
+    font-size: 1rem;
+    line-height: 1.1 !important;
+    color: #000 !important;
+  }
   #tpbox1 {
     height: 90px;
   }
@@ -392,7 +400,7 @@
   }
 
   .p-tp-detailsbox {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 }
 

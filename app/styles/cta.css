@@ -87,11 +87,11 @@
 }
 
 .cta-button-white .cta-arrow-box {
-  background-color: #0000001a;
+  background-color: #000;
 }
 
 .cta-button-white .cta-arrow-box svg path {
-  fill: #000;
+  fill: #fff;
 }
 
 .cta-button-white:hover .cta-arrow-box {
@@ -110,11 +110,14 @@
 }
 @media (max-width: 1760px) {
   .cta-arrow-box {
-    padding: 0.4rem;
+    padding: 0.8rem;
   }
 }
 @media (max-width: 760px) {
   /* .cta-btn-container {
     margin-top: -20px;
   } */
+   .cta-btn{
+    padding: 0.2rem 1rem .2rem .2rem;
+   }
 }

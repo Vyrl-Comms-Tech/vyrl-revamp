@@ -225,6 +225,12 @@
     width: 70vw;
     line-height: 1.2;
   }
+
+  /* .draw-line-box sits flush at bottom:0 of the link, right against
+     the text baseline — nudge it down slightly for breathing room. */
+  .draw-line-box {
+    bottom: -6px;
+  }
   .site-nav {
     top: auto;
     bottom: 6%;
@@ -236,5 +242,12 @@
   }
   #mble-nav-logo{
     scale: 0.85;
+  }
+
+  /* Links sit close together with no gap here, so the active/hover
+     underline (absolutely positioned at the bottom of each link) can
+     visually crowd the next link's text below it. */
+  .right-content ul li {
+    margin-bottom: 0.75rem;
   }
 }

@@ -356,6 +356,7 @@ export default function AboutUsStack() {
     let gsapCtx;
     let gsapInstance;
     let scrollTriggerInstance;
+    let removeStepGestureListeners = null;
     let tickerFn;
     let isMounted = true;
 
@@ -456,21 +457,157 @@ export default function AboutUsStack() {
           timeline.to(lastCard, { scale: 1 }, ">+=0.3");
         }
 
-        ScrollTrigger.create({
-          animation: timeline,
-          trigger: containerRef.current,
-          pin: true,
-          scrub: 1,
-          start: "top top",
-          end: `+=${timeline.duration() * 100}%`,
-          invalidateOnRefresh: true,
-        });
+        const isMobile = window.innerWidth <= 700;
+        const cardCount = cardRefs.current.length;
+
+        if (isMobile) {
+          // Mobile: one scroll/swipe gesture = exactly one card settling
+          // into place, instead of continuously scrubbing through all
+          // of them across one long scroll region (which read as "I
+          // scroll and it just scrolls through all the cards" instead of
+          // stopping on each one). Same discrete-step approach used for
+          // the services 3D section — evenly divides the timeline's
+          // total duration into cardCount-1 steps and tweens progress()
+          // toward each step on its own gesture, rather than computing
+          // this timeline's exact per-card timestamps (its enter/exit
+          // tweens overlap, so there's no single clean "card i settled"
+          // instant to target directly).
+          const STEP_COOLDOWN = 650;
+          const WHEEL_THRESHOLD = 12;
+          const TOUCH_THRESHOLD = 40;
+
+          let stepIndex = 0;
+          let locked = false;
+          let touchStartY = null;
+          const progressState = { value: 0 };
+
+          const section = containerRef.current;
+          let trigger;
+
+          const applyStep = (direction) => {
+            if (locked) return;
+            const nextIndex = gsap.utils.clamp(
+              0,
+              cardCount - 1,
+              stepIndex + direction,
+            );
+            if (nextIndex === stepIndex) return;
+
+            locked = true;
+            stepIndex = nextIndex;
+            const targetProgress = stepIndex / (cardCount - 1);
+
+            gsap.to(progressState, {
+              value: targetProgress,
+              duration: 0.9,
+              ease: "power2.inOut",
+              onUpdate: () => {
+                timeline.progress(progressState.value);
+              },
+            });
+
+            setTimeout(() => {
+              locked = false;
+            }, STEP_COOLDOWN);
+          };
+
+          const isAtEdge = (direction) =>
+            (direction > 0 && stepIndex === cardCount - 1) ||
+            (direction < 0 && stepIndex === 0);
+
+          const releasePastEdge = (direction) => {
+            const scrollerEl = trigger.scroller;
+            const targetScroll =
+              direction > 0
+                ? trigger.start + (trigger.end - trigger.start) + 1
+                : trigger.start - 1;
+            if (scrollerEl === window) {
+              window.scrollTo({ top: targetScroll, behavior: "auto" });
+            } else {
+              scrollerEl.scrollTop = targetScroll;
+            }
+          };
+
+          const handleWheel = (e) => {
+            if (!trigger.isActive) return;
+            const direction = e.deltaY > 0 ? 1 : -1;
+            if (isAtEdge(direction)) {
+              releasePastEdge(direction);
+              return;
+            }
+            e.preventDefault();
+            if (Math.abs(e.deltaY) < WHEEL_THRESHOLD) return;
+            applyStep(direction);
+          };
+
+          const handleTouchStart = (e) => {
+            touchStartY = e.touches[0]?.clientY ?? null;
+          };
+
+          const handleTouchMove = (e) => {
+            if (!trigger.isActive || touchStartY === null) return;
+            const currentY = e.touches[0]?.clientY ?? touchStartY;
+            const direction = touchStartY - currentY > 0 ? 1 : -1;
+            if (isAtEdge(direction)) return;
+            e.preventDefault();
+          };
+
+          const handleTouchEnd = (e) => {
+            if (!trigger.isActive || touchStartY === null) return;
+            const endY = e.changedTouches[0]?.clientY ?? touchStartY;
+            const deltaY = touchStartY - endY;
+            touchStartY = null;
+            if (Math.abs(deltaY) < TOUCH_THRESHOLD) return;
+            const direction = deltaY > 0 ? 1 : -1;
+            if (isAtEdge(direction)) {
+              releasePastEdge(direction);
+              return;
+            }
+            applyStep(direction);
+          };
+
+          section.addEventListener("wheel", handleWheel, { passive: false });
+          section.addEventListener("touchstart", handleTouchStart, {
+            passive: true,
+          });
+          section.addEventListener("touchmove", handleTouchMove, {
+            passive: false,
+          });
+          section.addEventListener("touchend", handleTouchEnd, {
+            passive: true,
+          });
+
+          trigger = ScrollTrigger.create({
+            trigger: section,
+            start: "top top",
+            end: `+=${cardCount * 100}%`,
+            pin: true,
+          });
+
+          removeStepGestureListeners = () => {
+            section.removeEventListener("wheel", handleWheel);
+            section.removeEventListener("touchstart", handleTouchStart);
+            section.removeEventListener("touchmove", handleTouchMove);
+            section.removeEventListener("touchend", handleTouchEnd);
+          };
+        } else {
+          ScrollTrigger.create({
+            animation: timeline,
+            trigger: containerRef.current,
+            pin: true,
+            scrub: 1,
+            start: "top top",
+            end: `+=${timeline.duration() * 100}%`,
+            invalidateOnRefresh: true,
+          });
+        }
       }, containerRef);
     })();
 
     return () => {
       isMounted = false;
 
+      if (removeStepGestureListeners) removeStepGestureListeners();
       if (gsapInstance && tickerFn) {
         gsapInstance.ticker.remove(tickerFn);
       }
