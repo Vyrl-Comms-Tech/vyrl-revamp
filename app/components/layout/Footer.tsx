@@ -166,7 +166,7 @@ function Footer() {
               <Link href="/work" className="footer-nav-link">
                 Work
               </Link>
-              <Link href="/blog" className="footer-nav-link">
+              <Link href="/blogs" className="footer-nav-link">
                 Blog
               </Link>
             </div>

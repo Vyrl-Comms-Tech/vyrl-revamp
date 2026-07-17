@@ -10,7 +10,7 @@
   width: 45%;
   height: 880px;
   position: sticky;
-  top: 0;
+  top: 5%;
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -76,24 +76,78 @@
 .bi-content p:last-child {
   margin-bottom: 0;
 }
+@media (max-width: 1620px) {
+  .bi-left-image {
+    height: 670px;
+  }
+  .bi-subtitle {
+    font-size: 35px;
+    padding-top: 8px;
+  }
 
+  .bi-heading {
+    font-size: 50px;
+  }
+  .bi-date {
+    font-size: 22px;
+  }
+  .bi-content p {
+    padding-block: 0;
+  }
+}
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .bi-container {
+    display: flex;
     flex-direction: column;
   }
 
+  /* .bi-right normally groups the heading block + .bi-content together,
+     with .bi-left-image as a separate sibling before it — so simple
+     column stacking puts the image first. display:contents unwraps
+     .bi-right so its own children (.bi-label/.bi-subtitle/.bi-heading/
+     .bi-date/.bi-content) become direct flex items of .bi-container
+     alongside .bi-left-image, letting `order` place heading text first,
+     then the image, then the body content, matching the Figma mobile
+     reference. */
+  .bi-right {
+    display: contents;
+  }
+
+  .bi-label,
+  .bi-subtitle,
+  .bi-heading,
+  .bi-date {
+    order: 1;
+  }
+
   .bi-left-image {
+    order: 2;
     width: 100%;
     height: 420px;
     position: relative;
   }
 
-  .bi-right {
-    padding: 32px 24px;
+  .bi-content {
+    order: 3;
   }
 
+  .bi-container {
+    padding: 100px 15px;
+  }
+  .bi-label {
+    font-size: 19px;
+  }
   .bi-heading {
-    font-size: 36px;
+    font-size: 33px;
+  }
+  .bi-subtitle {
+    font-size: 28px;
+    padding-top: 8px;
+  }
+
+  .bi-date {
+    margin-bottom: 24px;
+    font-size: 18px;
   }
 }

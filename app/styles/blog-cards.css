@@ -1,6 +1,6 @@
 .bc-section {
   width: 100%;
-  padding: 84px 24px 0;
+  padding: 84px 24px 40px;
   background: #fff;
   box-sizing: border-box;
   overflow: hidden;
@@ -15,7 +15,7 @@
 
 /* ── Card shell — grid item + Flip target only, no visual styles ── */
 .bc-card {
-  padding-block: 40px;
+  /* padding-block: 40px; */
   grid-column: span 3;
 }
 
@@ -103,6 +103,7 @@
   }
   .bc-title {
     font-size: 25px;
+    line-height: 1.1;
   }
   .bc-card {
     grid-column: span 1;
