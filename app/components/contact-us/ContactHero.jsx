@@ -57,24 +57,33 @@ const SocialIcons = () => (
   </div>
 );
 
+const BackArrow = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="32"
+    height="32"
+    stroke="2"
+    viewBox="0 0 18 14"
+    fill="none"
+  >
+    <path
+      d="M0.469669 6.46967C0.176777 6.76256 0.176777 7.23744 0.469669 7.53033L5.24264 12.3033C5.53553 12.5962 6.01041 12.5962 6.3033 12.3033C6.59619 12.0104 6.59619 11.5355 6.3033 11.2426L2.06066 7L6.3033 2.75736C6.59619 2.46447 6.59619 1.98959 6.3033 1.6967C6.01041 1.40381 5.53553 1.40381 5.24264 1.6967L0.469669 6.46967ZM18 6.25L1 6.25V7.75L18 7.75V6.25Z"
+      fill="white"
+    />
+  </svg>
+);
+
 const ContactHero = () => {
   return (
     <div className="contactHero">
       <div className="contactHero-left">
-        <button className="contactHero-back" aria-label="Go back">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            stroke="2"
-            viewBox="0 0 18 14"
-            fill="none"
-          >
-            <path
-              d="M0.469669 6.46967C0.176777 6.76256 0.176777 7.23744 0.469669 7.53033L5.24264 12.3033C5.53553 12.5962 6.01041 12.5962 6.3033 12.3033C6.59619 12.0104 6.59619 11.5355 6.3033 11.2426L2.06066 7L6.3033 2.75736C6.59619 2.46447 6.59619 1.98959 6.3033 1.6967C6.01041 1.40381 5.53553 1.40381 5.24264 1.6967L0.469669 6.46967ZM18 6.25L1 6.25V7.75L18 7.75V6.25Z"
-              fill="white"
-            />
-          </svg>
+        {/* Desktop: back button floats over the hero image (hidden on
+            mobile, see .contactHero-back--image in the CSS) */}
+        <button
+          className="contactHero-back contactHero-back--image"
+          aria-label="Go back"
+        >
+          <BackArrow />
         </button>
 
         <div className="contactHero-image">
@@ -95,7 +104,18 @@ const ContactHero = () => {
       </div>
 
       <div className="contactHero-right">
-        <h1>Contact us</h1>
+        <div className="contactHero-heading-row">
+          {/* Mobile: back button sits beside the heading instead of
+              floating over the image (hidden on desktop, see
+              .contactHero-back--heading in the CSS) */}
+          <button
+            className="contactHero-back contactHero-back--heading"
+            aria-label="Go back"
+          >
+            <BackArrow />
+          </button>
+          <h1>Contact us</h1>
+        </div>
 
         <div className="contactHero-field-group">
           <span className="contactHero-label">Chose services</span>

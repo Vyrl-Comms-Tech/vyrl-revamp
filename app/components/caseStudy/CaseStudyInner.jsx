@@ -191,6 +191,12 @@ const CaseStudyInner = ({ slug }) => {
         });
         document.body.appendChild(clone);
 
+        // Hide the real panel-8 heading the instant its clone takes over —
+        // otherwise it stays visible in place while the clone flies off,
+        // showing both at once (the clone moving left, the original
+        // still sitting where it started).
+        headingEl.style.visibility = "hidden";
+
         // White overlay — stays alive through SPA navigation
         const overlay = document.createElement("div");
         overlay.className = "cs-transition-overlay";
@@ -258,11 +264,16 @@ const CaseStudyInner = ({ slug }) => {
           ease: "power2.in",
         });
 
-        // Overlay fades in as heading arrives (covers panel-8 background vanishing)
+        // Overlay fades in as heading arrives (covers panel-8 background
+        // vanishing, and must be fully opaque *before* the page swap so
+        // the old clone and the new page's real heading are never both
+        // visible at once). flyTl (phase1 0.85s + phase2 0.45s) completes
+        // at 1.3s and triggers router.push right after — this needs to
+        // finish comfortably earlier than that, not just barely before it.
         gsap.to(overlay, {
           opacity: 1,
-          duration: 0.4,
-          delay: 0.85,
+          duration: 0.3,
+          delay: 0.75,
           ease: "power2.in",
         });
       };

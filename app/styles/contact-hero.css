@@ -17,21 +17,36 @@
 }
 
 .contactHero-back {
-  width:70px;
-  height:70px;
-  border-radius:10px;
- border-radius: 10px;
-background: rgba(0, 0, 0, 0.50);
-backdrop-filter: blur(5px);
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Desktop: floats over the hero image */
+.contactHero-back--image {
   position: absolute;
   top: 1.7rem;
   left: 1.7rem;
   z-index: 2;
+}
+
+/* Mobile-only variant, sits beside the "Contact us" heading instead —
+   hidden on desktop, see .contactHero-heading-row below. */
+.contactHero-back--heading {
+  display: none;
+}
+
+.contactHero-heading-row {
+  display: flex;
+  align-items: center;
 }
 
 .contactHero-image {
@@ -92,6 +107,7 @@ backdrop-filter: blur(5px);
 }
 
 .contactHero-newsletter-form {
+  background: rgba(246, 246, 246, 0.1);
   display: flex;
   align-items: center;
   border: 1px solid rgba(255, 255, 255, 0.25);
@@ -100,16 +116,15 @@ backdrop-filter: blur(5px);
 }
 
 .contactHero-newsletter-form input {
+  font-size: 1.2rem;
+  padding: 0.75rem 1.25rem;
   flex: 1;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  background: rgba(246, 246, 246, 0.1);
+  /* background: rgba(246, 246, 246, 0.1); */
   border: none;
   outline: none;
   color: rgba(246, 246, 246, 0.644);
-
-  font-size: 1.2rem;
-  padding: 0.75rem 1.25rem;
 }
 
 .contactHero-newsletter-form input::placeholder {
@@ -137,7 +152,7 @@ backdrop-filter: blur(5px);
 }
 
 .contactHero-right h1 {
-  font-size: clamp(2.5rem, 65px, 8rem);
+  font-size: clamp(2.2rem, 65px, 8rem);
   font-weight: 500;
   margin: 0 0 2.5rem;
 }
@@ -169,7 +184,6 @@ backdrop-filter: blur(5px);
   font-size: 1.1rem;
   cursor: pointer;
   transition:
-  
     background-color 0.2s ease,
     color 0.2s ease;
 }
@@ -199,7 +213,7 @@ backdrop-filter: blur(5px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
   outline: none;
   color: #fff;
-  font-size:1rem;
+  font-size: 1rem;
   padding: 0.5rem 0;
 }
 
@@ -252,8 +266,8 @@ backdrop-filter: blur(5px);
 }
 
 .contactHero-social-btn {
-  width:60px;
-  height:60px;
+  width: 60px;
+  height: 60px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   display: flex;
@@ -266,9 +280,40 @@ backdrop-filter: blur(5px);
   height: auto;
 }
 
+@media (max-width: 1670px) {
+  .contactHero-newsletter h3 {
+    font-size: 2.5rem;
+  }
+  .contactHero-right h1 {
+    margin: 0 0 1rem;
+  }
+  .contactHero-tag {
+    padding: 0.4rem 1rem;
+    font-size: 1rem;
+  }
+  .contactHero-form {
+    gap: 1.5rem;
+  }
+  .contactHero-blurb {
+    font-size: 1.11rem;
+  }
+  .contactHero-social-btn {
+    width: 45px;
+    height: 45px;
+  }
+  .contactHero-social-btn svg {
+    width: 21px;
+  }
+
+  .contactHero-newsletter-form input {
+    font-size: 1.1rem;
+    padding: 0.55rem 1rem;
+  }
+}
+
 @media (max-width: 900px) {
   .contactHero {
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
 
   .contactHero-left,
@@ -285,8 +330,72 @@ backdrop-filter: blur(5px);
     padding: 3rem 5%;
   }
 
+  /* Swap which back-button variant shows: on mobile the image sits
+     below the form (column-reverse), so the floating-over-image button
+     is hidden and the one beside the heading takes over instead. */
+  .contactHero-back--image {
+    display: none;
+  }
+
+  .contactHero-back--heading {
+    display: flex;
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
+    margin-right: 1rem;
+  }
+
+  .contactHero-back--heading svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .contactHero-heading-row {
+    margin-bottom: 1rem;
+  }
+
+  .contactHero-right h1 {
+    margin: 0;
+  }
+
   .contactHero-form-row {
     flex-direction: column;
     gap: 1.25rem;
+  }
+
+  .contactHero-right h1 {
+    font-size: clamp(1.8rem, 51px, 6rem);
+  }
+  .contactHero-tags {
+    width: 100%;
+  }
+  .contactHero-blurb {
+    font-size: 1rem;
+  }
+  .contactHero-newsletter {
+    padding: 1.3rem;
+  }
+  .contactHero-newsletter h3 {
+    font-size: 2rem;
+  }
+  .contactHero-newsletter {
+    left: 1rem;
+  }
+  .contactHero-newsletter p {
+    width: 100%;
+  }
+
+  .contactHero-newsletter-form input {
+    min-width: 0;
+    font-size: 1rem;
+    padding: 0.65rem 1rem;
+  }
+
+  .contactHero-newsletter-form button {
+    flex-shrink: 0;
+    padding: 0.65rem 1rem;
+    font-size: 0.95rem;
   }
 }

@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import "../../styles/navbar.css";
 
@@ -144,6 +145,8 @@ const NavLink = ({ label, href }) => {
 
 const Navbar = () => {
   const [isActive, setIsActive] = useState(false);
+  const isActiveRef = useRef(isActive);
+  const pathname = usePathname();
 
   const navBarRef = useRef(null);
   const menuDropdownRef = useRef(null);
@@ -162,8 +165,13 @@ const Navbar = () => {
   const idleTimerRef = useRef(null);
   const idleAnimRef = useRef(null);
 
-  const toggleMenu = () => {
-    const nextActive = !isActive;
+  // toggleMenu() flips open/closed; pass forceState to instead drive it
+  // to an explicit state (used to force-close on route change below,
+  // where we always want "closed" regardless of the current state).
+  const toggleMenu = (forceState) => {
+    const nextActive = forceState ?? !isActiveRef.current;
+    if (nextActive === isActiveRef.current) return;
+    isActiveRef.current = nextActive;
     setIsActive(nextActive);
 
     const opacityDots = opacityDotsRef.current.querySelectorAll(".opacity-an");
@@ -249,6 +257,21 @@ const Navbar = () => {
         duration: 0.3,
       });
   };
+
+  // Close the menu whenever the route actually changes — without this,
+  // clicking a nav link left the dropdown open (and the page underneath
+  // it changed), which read as broken/unresponsive rather than like a
+  // real navigation. Skips the initial mount (pathname hasn't "changed"
+  // yet, and the menu isn't open then anyway) so it only fires on real
+  // route transitions.
+  const isFirstPathnameRun = useRef(true);
+  useEffect(() => {
+    if (isFirstPathnameRun.current) {
+      isFirstPathnameRun.current = false;
+      return;
+    }
+    toggleMenu(false);
+  }, [pathname]);
 
   useEffect(() => {
     const cursor = cursorRef.current;
@@ -454,7 +477,11 @@ const Navbar = () => {
           </div>
 
           <div className="menu-toggle">
-            <div className="menu-box" onClick={toggleMenu} ref={opacityDotsRef}>
+            <div
+              className="menu-box"
+              onClick={() => toggleMenu()}
+              ref={opacityDotsRef}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="27"
