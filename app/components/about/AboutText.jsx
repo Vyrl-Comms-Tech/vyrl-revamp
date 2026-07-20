@@ -9,7 +9,7 @@ const AboutText = ({
   showButton = true,
   buttonLabel = "About us",
   buttonHref = "/about",
-  buttonVideoSrc = "/bg-v.mp4",
+  buttonVideoSrc = "/bg-v-compressed.mp4",
 }) => {
   return (
     <div>

@@ -12,7 +12,7 @@
 //     id: "keychain",
 //     tag: "Creative",
 //     title: "first Centered",
-//     video: "/smiley.mp4",
+//     video: "/smiley_compressed.mp4",
 //     description:
 //       "Every strategy is shaped around your business, audience, goals, and the next stage of your growth.",
 //   },
@@ -20,7 +20,7 @@
 //     id: "video-4",
 //     tag: "Creative",
 //     title: "second Centered",
-//     video: "/video01.mp4",
+//     video: "/video01_compressed.mp4",
 //     description:
 //       "second  is shaped around your business, audience, goals, and the next stage of your growth.",
 //   },
@@ -28,7 +28,7 @@
 //     id: "video-3",
 //     tag: "Creative",
 //     title: "third Centered",
-//     video: "/video02.mp4",
+//     video: "/video02_compressed.mp4",
 //     description:
 //       "Every strategy is shaped around your business, audience, goals, and the next stage of your growth.",
 //   },
@@ -36,14 +36,14 @@
 //     id: "video-2",
 //     tag: "Creative",
 //     title: "fourth Centered",
-//     video: "/smiley.mp4",
+//     video: "/smiley_compressed.mp4",
 //     description:
 //       "Every strategy is shaped around your business, audience, goals, and the next stage of your growth.",
 //   }, {
 //     id: "video-2",
 //     tag: "Creative",
 //     title: "Client Centered",
-//     video: "/video02.mp4",
+//     video: "/video02_compressed.mp4",
 //     description:
 //       "Every strategy is shaped around your business, audience, goals, and the next stage of your growth.",
 //   },
@@ -291,7 +291,7 @@ const CARDS = [
     id: "keychain",
     tag: "Creative",
     title: "first Centered",
-    video: "/smiley.mp4",
+    video: "/smiley_compressed.mp4",
     description:
       "Every strategy is shaped around your business, audience, goals, and the next stage of your growth.",
   },
@@ -299,7 +299,7 @@ const CARDS = [
     id: "video-4",
     tag: "Creative",
     title: "second Centered",
-    video: "/video01.mp4",
+    video: "/video01_compressed.mp4",
     description:
       "second  is shaped around your business, audience, goals, and the next stage of your growth.",
   },
@@ -307,7 +307,7 @@ const CARDS = [
     id: "video-3",
     tag: "Creative",
     title: "third Centered",
-    video: "/video02.mp4",
+    video: "/video02_compressed.mp4",
     description:
       "Every strategy is shaped around your business, audience, goals, and the next stage of your growth.",
   },
@@ -315,7 +315,7 @@ const CARDS = [
     id: "video-2",
     tag: "Creative",
     title: "fourth Centered",
-    video: "/smiley.mp4",
+    video: "/smiley_compressed.mp4",
     description:
       "Every strategy is shaped around your business, audience, goals, and the next stage of your growth.",
   },
@@ -323,7 +323,7 @@ const CARDS = [
     id: "video-5",
     tag: "Creative",
     title: "Client Centered",
-    video: "/video02.mp4",
+    video: "/video02_compressed.mp4",
     description:
       "Every strategy is shaped around your business, audience, goals, and the next stage of your growth.",
   },

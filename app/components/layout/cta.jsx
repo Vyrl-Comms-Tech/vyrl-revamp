@@ -1,19 +1,42 @@
-import React from "react";
+"use client";
+import React, { useEffect, useRef, useState } from "react";
 import "../../styles/cta.css";
 
 const CtaButton = ({
   label = "SERVICES",
-  videoSrc = "/bg-v.mp4",
+  videoSrc = "/bg-v-compressed.mp4",
   href = "#",
   className = "",
 }) => {
+  const containerRef = useRef(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    if (shouldLoad || !containerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setShouldLoad(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [shouldLoad]);
+
   return (
-    <div className="cta-btn-container">
+    <div className="cta-btn-container" ref={containerRef}>
       <a className={`cta-btn ${className}`.trim()} href={href}>
         <div className="cta-btn-vid">
-          <video muted loop autoPlay playsInline>
-            <source src={videoSrc} />
-          </video>
+          {shouldLoad && (
+            <video muted loop autoPlay playsInline preload="none">
+              <source src={videoSrc} />
+            </video>
+          )}
         </div>
         <div className="cta-arrow-box">
           <svg

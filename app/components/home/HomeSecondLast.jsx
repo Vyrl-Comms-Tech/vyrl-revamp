@@ -45,7 +45,7 @@ const   HomeSecondLast = () => {
 
         {/* Right image panel */}
         <div className="hp-right">
-          <img src="/img2.png" alt="3D digital sculpture" className="hp-img" />
+          <img src="/img2.avif" alt="3D digital sculpture" className="hp-img" />
         </div>
       </div>
     </section>

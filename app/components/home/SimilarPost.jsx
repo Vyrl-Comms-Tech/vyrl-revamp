@@ -18,7 +18,7 @@ function SimilarPost() {
       content:
         "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
       date: "Aug 12, 2025",
-      image: "/img2.png",
+      image: "/img2.avif",
     },
     {
       id: 2,
@@ -26,7 +26,7 @@ function SimilarPost() {
       content:
         "The 3D interactions he built are mind-blowing. Truly a next-level developer who understands the intersection of design and tech.",
       date: "Jul 28, 2025",
-      image: "/cr1.png",
+      image: "/cr1.avif",
     },
     {
       id: 3,
@@ -34,7 +34,7 @@ function SimilarPost() {
       content:
         "Professional, efficient, and incredibly skilled. A joy to work with on our rebranding and frontend architecture.",
       date: "Jun 15, 2025",
-      image: "/cr2.jpg",
+      image: "/cr2.avif",
     },
     {
       id: 4,

@@ -11,25 +11,25 @@ import CtaButton from "../layout/cta";
 
 const slides = [
   {
-    image: "/cr1.png",
+    image: "/cr1.avif",
     title: "Creative Direction",
     tabs: ["SPLINE", "THREE.JS", "3D"],
     desc: "A curated collection of projects that showcase our approach to design, storytelling, and innovation—each crafted to elevate brands and create lasting impressions.",
   },
   {
-    image: "/cr2.jpg",
+    image: "/cr2.avif",
     title: "Brand Identity",
     tabs: ["LOGO", "TYPOGRAPHY"],
     desc: "Distinct visual systems built to give brands a voice that's instantly recognizable, memorable, and consistent across every touchpoint.",
   },
   {
-    image: "/cr1.png",
+    image: "/cr1.avif",
     title: "Motion & Animation",
     tabs: ["GSAP", "WEBGL", "3D", "MOTION"],
     desc: "Fluid, expressive motion design that brings interfaces to life—turning static ideas into experiences people want to keep exploring.",
   },
   {
-    image: "/cr2.jpg",
+    image: "/cr2.avif",
     title: "Web Experience",
     tabs: ["NEXT.JS", "REACT"],
     desc: "Performance-driven websites engineered for speed and scale, without ever compromising on the craft of the design.",
@@ -113,7 +113,7 @@ const HomeCarousel = () => {
       <div className="h2-footer">
         {/* Left: See All Work + Counter */}
         <div className="h2-footer-left">
-          <CtaButton label="See All Work" videoSrc="/bg-v.mp4" href="/work" className="cta-button-carousel" />
+          <CtaButton label="See All Work" videoSrc="/bg-v-compressed.mp4" href="/work" className="cta-button-carousel" />
 
           <div className="h2-counter">
             <div className="h2-counter-nums">

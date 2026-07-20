@@ -170,7 +170,7 @@
   pointer-events: none;
   transform: translate(-50%, -50%) translateY(10px);
   z-index: 9999;
-  background-image: url("/hand.png");
+  background-image: url("/hand.avif");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -251,3 +251,4 @@
     margin-bottom: 0.75rem;
   }
 }
+/*  */

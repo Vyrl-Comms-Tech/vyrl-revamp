@@ -6,7 +6,7 @@ const HomeHero = () => {
   return (
     <div className='homehero'>
       <Image
-        src="/hero.png"
+        src="/hero.avif"
         alt=""
         fill
         preload

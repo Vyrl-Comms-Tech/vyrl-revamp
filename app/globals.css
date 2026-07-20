@@ -41,3 +41,9 @@ body {
   cursor: none;
   background-color: var(--bodybg);
 }
+
+a,
+button,
+[role="button"] {
+  cursor: none;
+}

@@ -15,7 +15,7 @@ const CARDS = [
     title: "Strategy",
     dark: true,
     image: null,
-    video: "/video02.mp4",
+    video: "/video02_compressed.mp4",
     desc: "Direction that connects brand, audience, and business goals.",
   },
   {
@@ -31,7 +31,7 @@ const CARDS = [
     title: "Performance",
     dark: true,
     image: null,
-    video: "/video01.mp4",
+    video: "/video01_compressed.mp4",
     desc: "Content, campaigns, and media systems designed to drive measurable growth",
   },
 ];
@@ -92,7 +92,7 @@ export default function TextAndCards() {
               </h1>
             </TextAnimation>
 
-            <CtaButton label="About us" videoSrc="/bg-v.mp4" href="/about" />
+            <CtaButton label="About us" videoSrc="/bg-v-compressed.mp4" href="/about" />
           </div>
         </section>
 

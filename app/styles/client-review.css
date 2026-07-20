@@ -130,7 +130,7 @@
   border-radius: 50px;
   border: 1px solid rgba(255, 255, 255, 0.35);
   background: transparent;
-  cursor: pointer;
+  cursor: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -142,6 +142,10 @@
 .client-review-nav-btn:hover {
   border-color: rgba(255, 255, 255, 0.85);
   background: rgba(241, 241, 241, 0.06);
+}
+
+.client-review-nav-btn * {
+  cursor: none;
 }
 @media (max-width: 1670px) {
   .client-review-card-container {

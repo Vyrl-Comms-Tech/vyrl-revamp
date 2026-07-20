@@ -43,7 +43,7 @@ function Footer() {
     <footer className="footer">
       {/* Row 1 – Logo */}
       <div className="footer-logo-row">
-        <img src="/footerimg1.png" alt="Vyrl" className="footer-logo-img" />
+        <img src="/footerimg1.avif" alt="Vyrl" className="footer-logo-img" />
       </div>
 
       {/* Row 2 – Let's Connect + Nav Links */}
@@ -213,7 +213,7 @@ function Footer() {
             muted
             loop
             playsInline
-            src="/smiley.mp4"
+            src="/smiley_compressed.mp4"
           ></video>
         </div>
 

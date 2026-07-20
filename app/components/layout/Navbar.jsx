@@ -459,13 +459,13 @@ const Navbar = () => {
               </div>
               <div className="box-1">
                 <p>Highlighted blogs</p>
-                <Image src="/img2.png" alt="" fill sizes="20vw" />
+                <Image src="/img2.avif" alt="" fill sizes="20vw" />
               </div>
             </div>
             <div className="upper-cards">
               <div className="box-1">
                 <p>Highlighted blogs</p>
-                <Image src="/cr1.png" alt="" fill sizes="20vw" />
+                <Image src="/cr1.avif" alt="" fill sizes="20vw" />
               </div>
             </div>
           </div>

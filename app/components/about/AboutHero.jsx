@@ -109,7 +109,7 @@ const AboutHero = ({ mobileWordmark }) => {
       <div className="aboutHero-imageSpacer" ref={spacerRef} />
 
       <div className="aboutHero-imageWrap" ref={imageWrapRef}>
-        <img src="/img2.png" alt="" />
+        <img src="/img2.avif" alt="" />
       </div>
     </div>
   );
