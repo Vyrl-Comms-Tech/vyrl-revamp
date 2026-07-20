@@ -26,7 +26,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  /* cursor: pointer; */
   flex-shrink: 0;
 }
 
@@ -95,7 +95,7 @@
 
 .contactHero-newsletter h3 {
   font-size: 3rem;
-  font-weight: 500;
+  font-weight: 400;
   margin: 0 0 0.75rem;
 }
 
@@ -107,11 +107,9 @@
 }
 
 .contactHero-newsletter-form {
-  background: rgba(246, 246, 246, 0.1);
+  gap: 16px;
   display: flex;
   align-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 50px;
   overflow: hidden;
 }
 
@@ -121,7 +119,8 @@
   flex: 1;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  /* background: rgba(246, 246, 246, 0.1); */
+  background: rgba(246, 246, 246, 0.1);
+  border-radius: 10px;
   border: none;
   outline: none;
   color: rgba(246, 246, 246, 0.644);
@@ -132,13 +131,14 @@
 }
 
 .contactHero-newsletter-form button {
-  background-color: #fff;
-  color: #0a0a0a;
-  border: none;
-  border-radius: 50px;
+  border-radius: 8px;
+
+  color: #fff;
+  border: 1px solid #f6f6f6 !important;
+  border: #fff;
   padding: 0.75rem 1.25rem;
   font-size: 1.1rem;
-  cursor: pointer;
+  /* font-weight: 400; */
   white-space: nowrap;
 }
 
@@ -153,8 +153,9 @@
 
 .contactHero-right h1 {
   font-size: clamp(2.2rem, 65px, 8rem);
-  font-weight: 500;
-  margin: 0 0 2.5rem;
+  font-weight: 400;
+  color: #f6f6f6;
+  margin: 0 0 1.7rem;
 }
 
 .contactHero-field-group {
@@ -182,7 +183,7 @@
   border-radius: 50px;
   padding: 0.6rem 1.25rem;
   font-size: 1.1rem;
-  cursor: pointer;
+  /* cursor: pointer; */
   transition:
     background-color 0.2s ease,
     color 0.2s ease;
@@ -197,7 +198,7 @@
 .contactHero-form {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 1.5rem;
 }
 
 .contactHero-form-row {
@@ -221,30 +222,34 @@
   color: #8a8a8a;
 }
 
-.contactHero-submit {
+/* Wraps the "Send Now" submit button, which now reuses the shared
+   cta-btn/cta-button-white hover animation (see cta.css) — this just
+   restores the same top spacing the old markup had. */
+.contactHero-form > .cta-btn-container {
   align-self: flex-start;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background-color: #fff;
-  color: #0a0a0a;
-  border: none;
-  font-weight: 400;
-  border-radius: 50px;
-  padding: 0.2rem 0.2rem 0.2rem 1rem;
-  font-size: 1rem;
-  cursor: pointer;
   margin-top: 0.5rem;
+  /* .contactHero-form is a flex column, and a flex item's default
+     min-width/min-height is "auto" — meaning its content's intrinsic
+     size (here, the raw video's native resolution inside
+     .cta-btn-vid) can act as a size floor and blow the button up to
+     the video's real dimensions, ignoring cta-btn's own
+     width:fit-content + overflow:hidden entirely. Explicit width/height
+     here removes that floor. */
+  width: fit-content;
+  height: fit-content;
 }
 
-.contactHero-submit-arrow {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* A native <button> carries UA-stylesheet defaults (border, background,
+   font, sizing quirks) that <a> (what cta-btn was originally built for)
+   doesn't — explicitly reset them here so cta-btn's own width/overflow
+   rules are what actually govern this button's size, instead of any
+   browser default fighting them. */
+.contactHero-form button.cta-btn {
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  min-width: 0;
+  min-height: 0;
 }
 
 .contactHero-blurb {

@@ -6,7 +6,7 @@ import TextAnimation from "./TextAnimation";
 import ChangeTextAnimation from "../layout/ChangeTextAnimation";
 import "../../styles/client-review.css";
 import CtaButton from "../layout/cta";
-       
+
 // Base (desktop, >1620px) card geometry. width/height/x/y scale down at
 // smaller breakpoints via getResponsiveScale(); rotate/zIndex/opacity don't
 // need to change with viewport size, so they stay fixed here.
@@ -106,7 +106,7 @@ const REVIEWS = [
 ];
 
 const N = 5;
- 
+
 function ClientReviewSection() {
   const cardRefs = useRef([]);
   const offsetRef = useRef(0);
@@ -119,6 +119,19 @@ function ClientReviewSection() {
     getPositions(typeof window !== "undefined" ? window.innerWidth : 1920),
   );
   const [activeIndex, setActiveIndex] = useState(2);
+  // The two stickers anchor to the center card slot and swap diagonal
+  // corners on every shift — "tl-br" places sticker1 top-left/sticker2
+  // bottom-right, "tr-bl" flips both to the opposite corner. Independent
+  // of which review is showing; it just alternates each time an arrow
+  // is clicked.
+  const [stickerCorner, setStickerCorner] = useState("tl-br");
+  // Tags shown lag one animation cycle behind activeIndex: on change, the
+  // currently-displayed tags shrink out first, then tagsIndex catches up
+  // and the new tags pop in — same shrink/pop choreography as
+  // Services3d, staged around a state update rather than an in-place
+  // textContent swap, since reviews here have varying tag counts (2-3).
+  const [tagsIndex, setTagsIndex] = useState(2);
+  const tagsRef = useRef(null);
 
   function posSlot(cardIdx, offset) {
     return (((cardIdx - offset) % N) + N) % N;
@@ -181,6 +194,7 @@ function ClientReviewSection() {
         offsetRef.current = (((offsetRef.current + direction) % N) + N) % N;
         const centerCardIdx = (((offsetRef.current + 2) % N) + N) % N;
         setActiveIndex(centerCardIdx);
+        setStickerCorner((prev) => (prev === "tl-br" ? "tr-bl" : "tl-br"));
       }
 
       shiftRef.current = shift;
@@ -316,12 +330,54 @@ function ClientReviewSection() {
     return () => ctx.revert();
   }, []);
 
+  useEffect(() => {
+    if (tagsIndex === activeIndex) return;
+    const tagEls = tagsRef.current?.querySelectorAll(".client-review-tag");
+    if (!tagEls || tagEls.length === 0) {
+      setTagsIndex(activeIndex);
+      return;
+    }
+
+    gsap.killTweensOf(tagEls);
+    gsap.to(tagEls, {
+      scale: 0,
+      opacity: 0,
+      duration: 0.25,
+      stagger: 0.04,
+      overwrite: true,
+      onComplete: () => setTagsIndex(activeIndex),
+    });
+  }, [activeIndex, tagsIndex]);
+
+  const isFirstTagsRender = useRef(true);
+  useEffect(() => {
+    if (isFirstTagsRender.current) {
+      // Skip the pop-in on initial mount — the first review's tags
+      // should just be there already, not animate in on page load.
+      isFirstTagsRender.current = false;
+      return;
+    }
+    const tagEls = tagsRef.current?.querySelectorAll(".client-review-tag");
+    if (!tagEls || tagEls.length === 0) return;
+    gsap.fromTo(
+      tagEls,
+      { scale: 0, opacity: 0 },
+      {
+        scale: 1,
+        opacity: 1,
+        duration: 0.35,
+        stagger: 0.04,
+        ease: "back.out(1.7)",
+      },
+    );
+  }, [tagsIndex]);
+
   const active = REVIEWS[activeIndex];
+  const displayedTagsReview = REVIEWS[tagsIndex];
 
   return (
     <div className="client-review-section-container">
-                       <TextAnimation animateOnScroll={true} delay={0.3}>
-     
+      <TextAnimation animateOnScroll={true} delay={0.3}>
         <h1 className="client-review-section-text">
           <span className="client-review-heading-line-1">Real Stories.</span>
           <span className="client-review-heading-line-2">Real Results.</span>
@@ -336,8 +392,12 @@ function ClientReviewSection() {
           >
             <h2 className="client-review-name">{active.name}</h2>
           </ChangeTextAnimation>
-          <div className="client-review-tags" key={`tags-${active.id}`}>
-            {active.tags.map((tag) => (
+          <div
+            className="client-review-tags"
+            key={`tags-${displayedTagsReview.id}`}
+            ref={tagsRef}
+          >
+            {displayedTagsReview.tags.map((tag) => (
               <span className="client-review-tag" key={tag}>
                 {tag}
               </span>
@@ -375,6 +435,28 @@ function ClientReviewSection() {
               )}
             </div>
           ))}
+
+          {/* Anchored to the center card slot, not any individual review
+              card — swaps diagonal corners each time an arrow is
+              clicked, independent of which review is showing. */}
+          <img
+            src="/sticker1.png"
+            alt=""
+            className={`client-review-sticker client-review-sticker-1 ${
+              stickerCorner === "tl-br"
+                ? "client-review-sticker--top-left"
+                : "client-review-sticker--top-right"
+            }`}
+          />
+          <img
+            src="/sticker2.png"
+            alt=""
+            className={`client-review-sticker client-review-sticker-2 ${
+              stickerCorner === "tl-br"
+                ? "client-review-sticker--bottom-right"
+                : "client-review-sticker--bottom-left"
+            }`}
+          />
         </div>
 
         <div className="client-review-cta" key={`cta-${active.id}`}>
@@ -400,7 +482,7 @@ function ClientReviewSection() {
           >
             <path
               fillRule="evenodd"
-             clipRule="evenodd"
+              clipRule="evenodd"
               d="M0.516885 12.222L10.5037 22L13 19.5559L4.26129 11L13 2.44406L10.5037 0L0.516885 9.77797C0.185924 10.1021 0 10.5417 0 11C0 11.4583 0.185924 11.8979 0.516885 12.222Z"
               fill="white"
             />
@@ -419,7 +501,7 @@ function ClientReviewSection() {
           >
             <path
               fillRule="evenodd"
-             clipRule="evenodd"
+              clipRule="evenodd"
               d="M12.4831 12.222L2.49627 22L0 19.5559L8.73871 11L0 2.44406L2.49627 0L12.4831 9.77797C12.8141 10.1021 13 10.5417 13 11C13 11.4583 12.8141 11.8979 12.4831 12.222Z"
               fill="white"
             />

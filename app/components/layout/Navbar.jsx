@@ -337,8 +337,7 @@ const Navbar = () => {
     };
 
     const showIdleMessage = () => {
-      const msg =
-        idleMessages[Math.floor(Math.random() * idleMessages.length)];
+      const msg = idleMessages[Math.floor(Math.random() * idleMessages.length)];
       popup.textContent = msg;
 
       gsap.fromTo(
@@ -434,7 +433,6 @@ const Navbar = () => {
   return (
     <>
       <div className="cursor-follow" ref={cursorRef} />
-
 
       <div className="cursor-popup" ref={popupRef}>
         &#128075; yo!
@@ -544,13 +542,37 @@ const Navbar = () => {
                 fill="none"
               >
                 <circle cx="3" cy="3" r="3" fill="white" />
-                <circle className="opacity-an" cx="3" cy="12" r="3" fill="white" />
+                <circle
+                  className="opacity-an"
+                  cx="3"
+                  cy="12"
+                  r="3"
+                  fill="white"
+                />
                 <circle cx="3" cy="21" r="3" fill="white" />
-                <circle className="opacity-an" cx="13" cy="3" r="3" fill="white" />
+                <circle
+                  className="opacity-an"
+                  cx="13"
+                  cy="3"
+                  r="3"
+                  fill="white"
+                />
                 <circle cx="13" cy="12" r="3" fill="white" />
-                <circle className="opacity-an" cx="13" cy="21" r="3" fill="white" />
+                <circle
+                  className="opacity-an"
+                  cx="13"
+                  cy="21"
+                  r="3"
+                  fill="white"
+                />
                 <circle cx="23" cy="3" r="3" fill="white" />
-                <circle className="opacity-an" cx="23" cy="12" r="3" fill="white" />
+                <circle
+                  className="opacity-an"
+                  cx="23"
+                  cy="12"
+                  r="3"
+                  fill="white"
+                />
                 <circle cx="23" cy="21" r="3" fill="white" />
               </svg>
             </div>

@@ -32,7 +32,6 @@
 .team-section-content h1 {
   color: #fff;
   text-align: center;
-  font-family: var(--font-inter), sans-serif;
   font-size: 75px;
   font-style: normal;
   font-weight: 500;
@@ -42,7 +41,6 @@
 .team-section-content p {
   color: #fff;
   text-align: center;
-  font-family: var(--font-inter), sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 400;

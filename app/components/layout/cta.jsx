@@ -7,6 +7,7 @@ const CtaButton = ({
   videoSrc = "/bg-v-compressed.mp4",
   href = "#",
   className = "",
+  id,
 }) => {
   const containerRef = useRef(null);
   const [shouldLoad, setShouldLoad] = useState(false);
@@ -29,8 +30,8 @@ const CtaButton = ({
   }, [shouldLoad]);
 
   return (
-    <div className="cta-btn-container" ref={containerRef}>
-      <a className={`cta-btn ${className}`.trim()} href={href}>
+    <div className="cta-btn-container">
+      <a className={`cta-btn ${className}`.trim()} href={href} id={id}>
         <div className="cta-btn-vid">
           {shouldLoad && (
             <video muted loop autoPlay playsInline preload="none">

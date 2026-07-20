@@ -1,5 +1,5 @@
 .hp-section {
-  padding: 20px 100px;
+  padding: 50px 130px;
   width: 100%;
   background: #fefefe;
   box-sizing: border-box;
@@ -8,11 +8,11 @@
 .hp-grid {
   display: grid;
   grid-template-columns: 2fr 3fr;
-  gap: 12px;
+  gap: 30px;
   width: 100%;
 }
 .hp-left {
-  width: 656px;
+  width: auto;
   background: #0a0a0a;
   border-radius: 18px;
   height: 852px;
@@ -35,7 +35,6 @@
   line-height: 1.15;
   letter-spacing: -0.02em;
   color: #ffffff;
-  margin: 0;
 }
 
 .hp-para {

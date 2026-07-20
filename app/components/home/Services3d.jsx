@@ -114,7 +114,7 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
         if (window.innerWidth <= 700) {
           camera.position.set(0, 0.5, 6);
         } else {
-          camera.position.set(0, 0.5, 3.5);
+          camera.position.set(0, 0.5, 3);
         }
       };
       updateCameraPosition();

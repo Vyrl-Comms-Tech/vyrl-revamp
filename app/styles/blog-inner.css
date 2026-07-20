@@ -17,6 +17,7 @@
 
 .bi-left-image img {
   width: 100%;
+  border-radius: 20px;
   height: 100%;
   object-fit: cover;
   display: block;
@@ -55,12 +56,12 @@
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  margin-top: 16px;
+  margin-top: 35px;
 }
 
 /* ── Body paragraphs ── */
 .bi-content {
-  margin-top: 54px;
+  margin-top: 50px;
 }
 
 .bi-content p {

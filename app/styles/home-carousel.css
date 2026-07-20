@@ -96,7 +96,22 @@
   padding: 0 28px 40px;
   gap: 16px;
 }
-
+#home-car-btn{
+background: #fff !important;
+color: #000 !important;
+}
+#home-car-btn .cta-arrow-box {
+  background-color: #0000001a !important;
+}
+#home-car-btn .cta-arrow-box svg path {
+  fill: #000 !important;
+}
+/* On hover the arrow slides out over the button's video-reveal
+   background (see .cta-btn:hover .cta-arrow-box in cta.css), where a
+   black arrow disappears — switch it to white there. */
+#home-car-btn:hover .cta-arrow-box svg path {
+  fill: #fff !important;
+}
 /* Left column */
 
 .h2-footer-left {
@@ -197,6 +212,7 @@
 .h2-description {
   color: rgba(255, 255, 255, 0.82);
   font-size: 20px;
+  line-height: 1.1;
   font-weight: 400;
   width: 800px;
 }

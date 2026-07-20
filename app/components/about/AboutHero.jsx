@@ -65,7 +65,7 @@ const AboutHero = ({ mobileWordmark }) => {
         ease: "none",
         scrollTrigger: {
           trigger: container,
-          start: "top top",
+          start: "top center",
           endTrigger: spacer,
           end: "bottom bottom",
           scrub: 0.5,

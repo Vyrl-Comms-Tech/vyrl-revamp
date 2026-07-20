@@ -7,6 +7,22 @@
   align-items: center;
   position: fixed;
   flex-direction: column-reverse;
+  /* This wrapper is full-width for its visible content to sit centered
+     inside, but its bounding box spans the WHOLE top strip of the page
+     at z-index:1000 — a page-root-level stacking context, so any
+     button under it (e.g. contact page's back button, positioned via
+     its own much lower z-index inside a different stacking context)
+     can never out-rank it and gets its clicks silently swallowed by
+     this element's empty space, even though nothing is visibly drawn
+     there. pointer-events:none here (restored to auto on the two real
+     interactive children below) makes only the actual visible nav
+     content clickable. */
+  pointer-events: none;
+}
+
+.site-nav .menu-dropdown,
+.site-nav .nav-bar {
+  pointer-events: auto;
 }
 
 .nav-bar {

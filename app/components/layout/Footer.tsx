@@ -6,10 +6,11 @@ import { caseStudies } from "../caseStudy/caseStudiesData";
 import "../../styles/footer.css";
 
 const CASE_STUDY_PATHS = Object.values(caseStudies).map((c) => c.href);
+const NO_FOOTER_PATHS = [...CASE_STUDY_PATHS, "/contact-us"];
 
 function Footer() {
   const pathname = usePathname();
-  const hideFooter = CASE_STUDY_PATHS.includes(pathname);
+  const hideFooter = NO_FOOTER_PATHS.includes(pathname);
 
   const [time, setTime] = useState({
     uae: "",
@@ -23,7 +24,7 @@ function Footer() {
           timeZone,
           hour: "2-digit",
           minute: "2-digit",
-          second: "2-digit",
+          // second: "2-digit",
         }).format(new Date());
 
       setTime({

@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import "../../styles/contact-hero.css";
+import "../../styles/cta.css";
 
 const SERVICE_TAGS = [
   "UIUX",
@@ -74,6 +76,21 @@ const BackArrow = () => (
 );
 
 const ContactHero = () => {
+  const router = useRouter();
+
+  // router.back() silently does nothing if there's no history to go
+  // back to — e.g. this page was opened directly (typed URL, refresh,
+  // new tab, external link) rather than navigated to by clicking
+  // through the site. window.history.length > 1 means the browser
+  // actually has a previous entry in *this tab's* history to return to.
+  const handleBack = () => {
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/");
+    }
+  };
+
   return (
     <div className="contactHero">
       <div className="contactHero-left">
@@ -82,6 +99,7 @@ const ContactHero = () => {
         <button
           className="contactHero-back contactHero-back--image"
           aria-label="Go back"
+          onClick={handleBack}
         >
           <BackArrow />
         </button>
@@ -111,6 +129,7 @@ const ContactHero = () => {
           <button
             className="contactHero-back contactHero-back--heading"
             aria-label="Go back"
+            onClick={handleBack}
           >
             <BackArrow />
           </button>
@@ -143,23 +162,33 @@ const ContactHero = () => {
               <input type="text" placeholder="Message" />
             </div>
 
-            <button type="submit" className="contactHero-submit">
-              Send Now
-              <span className="contactHero-submit-arrow">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="15"
-                  height="18"
-                  viewBox="0 0 15 18"
-                  fill="none"
-                >
-                  <path
-                    d="M10.3213 0.000213146L1.27547e-05 4.4884L0.64805 5.937L8.47908 2.53785L2.7051 17.4253L4.19683 18.0038L9.97081 3.11641L13.462 10.9068L14.9174 10.274L10.3213 0.000213146Z"
-                    fill="#fff"
-                  />
-                </svg>
-              </span>
-            </button>
+            <div className="cta-btn-container">
+              <button
+                type="submit"
+                className="cta-btn cta-button-white"
+              >
+                <div className="cta-btn-vid">
+                  <video muted loop autoPlay playsInline>
+                    <source src="/bg-v.mp4" />
+                  </video>
+                </div>
+                <div className="cta-arrow-box">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="15"
+                    height="18"
+                    viewBox="0 0 15 18"
+                    fill="none"
+                  >
+                    <path
+                      d="M10.3213 0.000213146L1.27547e-05 4.4884L0.64805 5.937L8.47908 2.53785L2.7051 17.4253L4.19683 18.0038L9.97081 3.11641L13.462 10.9068L14.9174 10.274L10.3213 0.000213146Z"
+                      fill="#000"
+                    />
+                  </svg>
+                </div>
+                <p>Send Now</p>
+              </button>
+            </div>
           </form>
         </div>
 

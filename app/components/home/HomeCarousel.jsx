@@ -1,5 +1,6 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from "swiper/modules";
@@ -45,7 +46,59 @@ const slides = [
 const HomeCarousel = () => {
   const swiperRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  // Tags shown lag one animation cycle behind activeIndex: on change, the
+  // currently-displayed tags (still showing tagsIndex's set) shrink out
+  // first, then tagsIndex catches up to activeIndex and the new tags pop
+  // in — same shrink/pop choreography as Services3d, just staged around
+  // a state update instead of an in-place textContent swap, since slides
+  // here have varying tag counts (Services3d's sections all have exactly
+  // 3, so it can reuse fixed DOM elements).
+  const [tagsIndex, setTagsIndex] = useState(0);
+  const tagsRef = useRef(null);
   const activeSlide = slides[activeIndex];
+  const displayedTagsSlide = slides[tagsIndex];
+
+  useEffect(() => {
+    if (tagsIndex === activeIndex) return;
+    const tagEls = tagsRef.current?.querySelectorAll(".h2-tab");
+    if (!tagEls || tagEls.length === 0) {
+      setTagsIndex(activeIndex);
+      return;
+    }
+
+    gsap.killTweensOf(tagEls);
+    gsap.to(tagEls, {
+      scale: 0,
+      opacity: 0,
+      duration: 0.25,
+      stagger: 0.04,
+      overwrite: true,
+      onComplete: () => setTagsIndex(activeIndex),
+    });
+  }, [activeIndex, tagsIndex]);
+
+  const isFirstTagsRender = useRef(true);
+  useEffect(() => {
+    if (isFirstTagsRender.current) {
+      // Skip the pop-in on initial mount — the first slide's tags
+      // should just be there already, not animate in on page load.
+      isFirstTagsRender.current = false;
+      return;
+    }
+    const tagEls = tagsRef.current?.querySelectorAll(".h2-tab");
+    if (!tagEls || tagEls.length === 0) return;
+    gsap.fromTo(
+      tagEls,
+      { scale: 0, opacity: 0 },
+      {
+        scale: 1,
+        opacity: 1,
+        duration: 0.35,
+        stagger: 0.04,
+        ease: "back.out(1.7)",
+      },
+    );
+  }, [tagsIndex]);
 
   return (
     <section className="h2-section">
@@ -54,8 +107,8 @@ const HomeCarousel = () => {
         <ChangeTextAnimation key={`title-${activeIndex}`} animateOnScroll={false}>
           <h2 className="h2-title">{activeSlide.title}</h2>
         </ChangeTextAnimation>
-        <div className="h2-tabs" key={`tabs-${activeIndex}`}>
-          {activeSlide.tabs.map((tab) => (
+        <div className="h2-tabs" key={`tabs-${tagsIndex}`} ref={tagsRef}>
+          {displayedTagsSlide.tabs.map((tab) => (
             <span className="h2-tab" key={tab}>
               {tab}
             </span>

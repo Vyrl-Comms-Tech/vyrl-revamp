@@ -174,24 +174,6 @@ function VyrlAbout() {
         .fromTo(card2Ref.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0 })
         .fromTo(card3Ref.current, { opacity: 0, y: 50 }, { opacity: 1, y: 0 });
 
-      ScrollTrigger.create({
-        trigger: sectionMainRef.current,
-        start: "25% top",
-        end: "75% top",
-        pin: window.innerWidth > 760,
-        // markers: true,
-
-        onUpdate: (self) => {
-          // 👇 only move forward, never backward
-          const current = tl.progress();
-          const next = self.progress;
-
-          if (next > current) {
-            tl.progress(next);
-          }
-        },
-      });
-
       tl.to(
         textLeftRef.current,
         {
@@ -219,6 +201,36 @@ function VyrlAbout() {
         },
         0,
       );
+
+      // The pin's scroll distance is sized off tl.duration() (now that
+      // every tween — image grow, card fades, text slides — has been
+      // added) instead of a fixed "75% top" on the 140vh wrapper. That
+      // fixed range covered more scroll distance than the timeline
+      // actually needed, so once the animation finished there was
+      // nothing left to scrub — the section stayed pinned through that
+      // leftover scroll with visibly nothing happening, which is what
+      // read as "stuck" even after the animation had completed.
+      // ~350px of scroll per second of timeline duration is a
+      // comfortable pace for this kind of scrub.
+      const pinDistance = tl.duration() * 350;
+
+      ScrollTrigger.create({
+        trigger: sectionMainRef.current,
+        start: "25% top",
+        end: `+=${pinDistance}`,
+        pin: true,
+        // markers: true,
+
+        onUpdate: (self) => {
+          // 👇 only move forward, never backward
+          const current = tl.progress();
+          const next = self.progress;
+
+          if (next > current) {
+            tl.progress(next);
+          }
+        },
+      });
     });
 
     return () => ctx.revert();

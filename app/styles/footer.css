@@ -1,11 +1,11 @@
 /* ─── Footer ─────────────────────────────────────────────── */
 .footer {
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
   /* overlay:; */
   width: 100%;
   background-color: #000;
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
-  padding: 0 16px 0px;
+  padding: 0 16px 40px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -130,8 +130,9 @@
 }
 
 .footer-connect-subtitle {
-  color: rgba(255, 255, 255, 0.534);
-  font-size: 17px;
+  color: rgba(255, 255, 255, 0.50);
+  font-size: 18px;
+  line-height: 1.1;
 }
 
 /* Social */
@@ -141,8 +142,8 @@
 }
 
 .footer-social-btn {
-  width: 44px;
-  height: 44px;
+  width: 60px;
+  height: 60px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   display: flex;
@@ -153,8 +154,8 @@
 }
 
 .footer-social-icon {
-  width: 18px;
-  height: 18px;
+  width: 25px;
+  height: 23px;
 }
 
 .footer-social-btn:hover {
@@ -213,7 +214,7 @@
   width: min-content;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   /* border: 1px solid yellow; */
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(52px);
@@ -245,7 +246,7 @@
 }
 
 .footer-subscribe-input {
-  width: 660px;
+  width: 600px;
   height: 55px;
   border: none;
   background: rgba(255, 255, 255, 0.07);
@@ -346,7 +347,7 @@
 
 .footer-time-value {
   color: #fff;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 400;
   text-transform: capitalize;
 }
@@ -492,6 +493,10 @@
     border-top-right-radius: 20px;
   }
 
+  .footer {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
   .footer-logo-row {
     height: 180px;
   }
