@@ -204,8 +204,8 @@
 
 @media (max-width: 700px) {
   .cardsStack {
-    width: 90vw !important;
-    height: 55vh;
+    width: 95vw !important;
+    height: 55vh !important;
   }
 .cardsStack p{
   width: 90%;

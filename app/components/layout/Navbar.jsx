@@ -404,12 +404,12 @@ const Navbar = () => {
     window.addEventListener("mouseup", handleMouseUp);
 
     const ticker = () => {
-      const speed = isIdleRef.current ? 0.04 : 0.12;
+      const speed = isIdleRef.current ? 0.04 : 0.65;
       pos.current.x += (mouse.current.x - pos.current.x) * speed;
       pos.current.y += (mouse.current.y - pos.current.y) * speed;
 
       const dx = mouse.current.x - pos.current.x;
-      const rotate = isIdleRef.current ? undefined : dx * 0.5;
+      const rotate = isIdleRef.current ? undefined : dx * 2.2;
 
       gsap.set(cursor, {
         x: pos.current.x,

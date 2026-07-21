@@ -70,14 +70,12 @@
 }
 
 .cta-btn:hover .cta-arrow-box {
-  transform: translateX(270%) rotate(70deg);
   box-shadow:
     0 0 20px rgba(255, 255, 255, 0.4),
     0 0 60px rgba(255, 255, 255, 0.15);
 }
 
 .cta-btn:hover p {
-  transform: translateX(-70%);
   color: #fff;
 }
 
@@ -107,11 +105,11 @@
 }
 
 .cta-button-white:hover .cta-arrow-box svg path {
-  fill: #fff;
+  fill: #000;
 }
 
 .cta-button-white:hover p {
-  color: #fff;
+  color: #000;
 }
 @media (max-width: 1760px) {
   .cta-arrow-box {

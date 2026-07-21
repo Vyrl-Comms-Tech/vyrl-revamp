@@ -1,6 +1,7 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import gsap from "gsap";
 import "../../styles/contact-hero.css";
 import "../../styles/cta.css";
 
@@ -77,6 +78,56 @@ const BackArrow = () => (
 
 const ContactHero = () => {
   const router = useRouter();
+  const submitBtnRef = useRef(null);
+  const submitArrowBoxRef = useRef(null);
+  const submitTextRef = useRef(null);
+
+  useEffect(() => {
+    const btn = submitBtnRef.current;
+    const arrowBox = submitArrowBoxRef.current;
+    const text = submitTextRef.current;
+    if (!btn || !arrowBox || !text) return;
+
+    const handleEnter = () => {
+      const btnRect = btn.getBoundingClientRect();
+      const arrowRect = arrowBox.getBoundingClientRect();
+      const paddingRight = parseFloat(getComputedStyle(btn).paddingRight) || 0;
+
+      const rotateRad = (70 * Math.PI) / 180;
+      const rotatedWidth =
+        Math.abs(arrowRect.width * Math.cos(rotateRad)) +
+        Math.abs(arrowRect.height * Math.sin(rotateRad));
+      const rotationGrowth = (rotatedWidth - arrowRect.width) / 2;
+
+      const travel =
+        btnRect.right - paddingRight * 0.3 - arrowRect.right - rotationGrowth;
+
+      gsap.to(arrowBox, {
+        x: travel,
+        rotate: 70,
+        duration: 0.5,
+        ease: "power3.out",
+      });
+      gsap.to(text, {
+        x: -arrowRect.width * 1.3,
+        duration: 0.5,
+        ease: "power3.out",
+      });
+    };
+
+    const handleLeave = () => {
+      gsap.to(arrowBox, { x: 0, rotate: 0, duration: 0.5, ease: "power3.out" });
+      gsap.to(text, { x: 0, duration: 0.5, ease: "power3.out" });
+    };
+
+    btn.addEventListener("mouseenter", handleEnter);
+    btn.addEventListener("mouseleave", handleLeave);
+
+    return () => {
+      btn.removeEventListener("mouseenter", handleEnter);
+      btn.removeEventListener("mouseleave", handleLeave);
+    };
+  }, []);
 
   // router.back() silently does nothing if there's no history to go
   // back to — e.g. this page was opened directly (typed URL, refresh,
@@ -166,13 +217,14 @@ const ContactHero = () => {
               <button
                 type="submit"
                 className="cta-btn cta-button-white"
+                ref={submitBtnRef}
               >
                 <div className="cta-btn-vid">
                   <video muted loop autoPlay playsInline>
                     <source src="/bg-v.mp4" />
                   </video>
                 </div>
-                <div className="cta-arrow-box">
+                <div className="cta-arrow-box" ref={submitArrowBoxRef}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="15"
@@ -186,7 +238,7 @@ const ContactHero = () => {
                     />
                   </svg>
                 </div>
-                <p>Send Now</p>
+                <p ref={submitTextRef}>Send Now</p>
               </button>
             </div>
           </form>
