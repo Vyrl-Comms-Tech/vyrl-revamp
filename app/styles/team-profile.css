@@ -21,7 +21,8 @@
 }
 
 .team-section-content {
-  width: 60%;
+  width: 55%;
+  gap: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -30,16 +31,25 @@
 }
 
 .team-section-content h1 {
+  font-size: 82px;
   color: #fff;
   text-align: center;
-  font-size: 75px;
-  font-style: normal;
+  line-height: 111%;
   font-weight: 500;
   text-transform: capitalize;
 }
 
-.team-section-content p {
+/* Direct-child selector, not a descendant one — the CTA button's own
+   label <p> sits nested inside it (.cta-btn-container > .cta-btn > p),
+   not as a direct child of .team-section-content, so a broad
+   ".team-section-content p" was also matching it: forcing its text
+   white (invisible against the white cta-button-white background,
+   since CtaButton's own color only applies via inheritance and a
+   direct match always wins over that) plus width:90%/text-align:center
+   distorting its layout, which is what read as "slanted." */
+.team-section-content > p {
   color: #fff;
+  width: 90%;
   text-align: center;
   font-size: 18px;
   font-style: normal;
@@ -48,23 +58,23 @@
 }
 
 .item-card {
-  width: 270px;
-  height: 310px;
+  width: 270px I !important;
+  height: 310px !important;
   background-color: white;
+  z-index: 3;
   padding-inline: 10px;
   padding-block: 10px;
 }
 
 .item-card-image img {
   width: 100%;
-  height: 170px;
+  height: 250px !important;
   object-fit: cover;
   background-position: center;
 }
 
 .item-name {
   color: #000;
-  font-family: var(--font-inter), sans-serif;
   font-size: 17px;
   font-style: normal;
   font-weight: 400;
@@ -73,7 +83,6 @@
 
 .item-designation {
   color: #000;
-  font-family: var(--font-inter), sans-serif;
   font-size: 14px;
   font-style: normal;
 }
@@ -81,6 +90,24 @@
 /* ── Mobile: swipeable card carousel replacing the physics scatter ── */
 .team-section-mobile {
   display: none;
+}
+
+@media (max-width:1620px){
+  
+.item-card {
+  width: 210px I !important;
+  height: 270px !important;
+  padding-inline: 10px;
+  padding-block: 10px;
+}
+.team-section-content h1 {
+  font-size: 72px;
+}
+
+.item-card-image img {
+  width: 100%;
+  height: 210px !important;
+}
 }
 
 @media (max-width: 900px) {

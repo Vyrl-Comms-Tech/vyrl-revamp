@@ -26,14 +26,14 @@
 }
 
 .slider-tag {
-  color: #7b7b7b;
+  color: #000;
   font-size: 0.95rem;
   margin-bottom: 0.75rem;
 }
 
 .slider-headingCol h1 {
   color: #011825;
-  font-size: clamp(44px, 3.2vw, 3.5rem);
+  font-size: clamp(44px, 4.5rem, 5.6rem);
   font-weight: 500;
   line-height: 1.15;
 }
@@ -48,13 +48,13 @@
   flex-direction: column;
   align-items: flex-end;
   text-align: right;
-  max-width: 320px;
+  max-width: 420px;
 }
 
 .slider-desc {
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   color: #011825;
-  line-height: 1.2;
+  line-height: 111%;
   margin-bottom: 1.5rem;
 }
 

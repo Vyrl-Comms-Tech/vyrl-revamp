@@ -6,10 +6,13 @@ import "../../styles/contact-hero.css";
 import "../../styles/cta.css";
 
 const SERVICE_TAGS = [
-  "UIUX",
-  "Web Development",
-  "CGI 3D",
-  "Backend",
+  "   Web Development",
+  " CGI / 3D",
+  " Backend",
+  " Branding",
+  " Social Media",
+  " Performance Marketing",
+  " AI Automation",
   "Other Topic",
 ];
 
@@ -203,7 +206,7 @@ const ContactHero = () => {
           <form className="contactHero-form">
             <div className="contactHero-form-row">
               <input type="text" placeholder="Full Name" />
-              <input type="email" placeholder="Email@" />
+              <input type="email" placeholder="Email Adress" />
             </div>
             <div className="contactHero-form-row">
               <input type="tel" placeholder="Phone Number" />
@@ -221,7 +224,7 @@ const ContactHero = () => {
               >
                 <div className="cta-btn-vid">
                   <video muted loop autoPlay playsInline>
-                    <source src="/bg-v.mp4" />
+                    <source src="/bg-v-compressed.mp4" />
                   </video>
                 </div>
                 <div className="cta-arrow-box" ref={submitArrowBoxRef}>

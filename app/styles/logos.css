@@ -13,13 +13,25 @@
   display: flex;
   justify-content: space-between;
 }
-
+#about-logos-left h2 {
+  font-size: 55px;
+  line-height: 111%;
+}
 .logos-left h2 {
   font-size: 65px;
   font-weight: 500;
 }
+.cta-about-logos {
+  margin-top: 20px;
+}
 
-.logos-left p {
+/* Targets the description paragraph's own class instead of a broad
+   ".logos-left p" selector — CtaButton's label is also a <p> nested
+   inside .logos-left (through the wrapper div), so the old generic
+   selector was also re-styling the button's label at every breakpoint
+   below, inflating its font-size/line-height and therefore the
+   button's rendered height (.cta-btn has no fixed height). */
+.logos-left-desc {
   font-size: 20px;
   line-height: 1.3;
   color: #999;
@@ -88,14 +100,14 @@
     gap: 140px;
   }
 
-.logos-left h2 {
-  font-size: 62px;
-}
+  .logos-left h2 {
+    font-size: 62px;
+  }
 
-.logos-left p {
-  font-size: 19px;
-  line-height: 1.2;
-}
+  .logos-left-desc {
+    font-size: 19px;
+    line-height: 1.2;
+  }
   .logos-left {
     width: 55%;
   }
@@ -129,7 +141,7 @@
     font-size: 32px;
   }
 
-  .logos-left p {
+  .logos-left-desc {
     font-size: 16px;
   }
 

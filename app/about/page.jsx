@@ -7,6 +7,7 @@ import AboutUsStack from "../components/about/AboutusStack";
 import AboutHero from "../components/about/AboutHero";
 import AboutImg from "../components/about/aboutImg";
 import AboutText from "../components/about/AboutText";
+import AboutLogos from "../components/about/AboutLogos";
 const page = () => {
   return (
     <div>
@@ -16,7 +17,8 @@ const page = () => {
       <AboutHero mobileWordmark={<AboutImg />} />
       <AboutText />
       <AboutUsStack />
-      <Logos />
+      {/* <Logos /> */}
+      <AboutLogos/>
       <TeamProfile />
       <SimilarPost />
       <HomeSecondLast />

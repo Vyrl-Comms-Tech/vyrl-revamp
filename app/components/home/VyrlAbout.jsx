@@ -214,6 +214,14 @@ function VyrlAbout() {
       // comfortable pace for this kind of scrub.
       const pinDistance = tl.duration() * 350;
 
+      // pin's own spacer is sized to exactly this scroll distance (via
+      // `end`), so once tl reaches progress 1 there's no leftover dead
+      // scroll left to sit through — no separate unpin/height-collapse
+      // step is needed, and none of the earlier attempts at one (which
+      // resized the section mid-scroll-momentum) are safe: they fight
+      // the browser's own scroll position at the exact moment the pin
+      // is releasing, which is what read as a jump/skip right as the
+      // animation finished.
       ScrollTrigger.create({
         trigger: sectionMainRef.current,
         start: "25% top",
@@ -241,15 +249,23 @@ function VyrlAbout() {
       <section ref={sectionMainRef} className="vyrl-main-wrapper">
         <div className="vyrl-service-about-container">
           <h1 className="vyrl-service-about-text1" ref={textLeftRef}>
-            More Than
+           Built With Trust.
           </h1>
           <h1 className="vyrl-service-about-text2" ref={textRightRef}>
-            JUST DESIGN
+          Proven <br /> Through <br /> Experience.
           </h1>
+          {/* <p>lorem</p> */}
         </div>
 
         <div className="vyrl-section-about-image" ref={imageRef}>
-          <img src="/img1.jpg" alt="" />
+          <div className="vyrl-section-about-image-crop">
+            <img src="/img1.jpg" alt="" />
+          </div>
+          <p className="vyrl-section-about-caption">
+            Our clients work with us for more than deliverables. They come to
+            Vyrl for clarity, execution, creative thinking, and digital
+            systems that help their brands move forward.
+          </p>
         </div>
 
         {/* Cards — ALAG overlay layer, image se bahar */}
@@ -257,27 +273,21 @@ function VyrlAbout() {
           <div className="card-wrapper">
             <div className="card-inner-wrapper">
               <div className="vyrl-section-card1" ref={card1Ref}>
-                <h1>How We Work</h1>
+                <h1>Think Clearly</h1>
                 <p>
-                  From idea to execution, our process is collaborative,
-                  transparent, and designed to ensure every detail aligns with
-                  your goals.
+                  We define the strategy, audience, goals, and digital direction before any creative or technical work begins.
                 </p>
               </div>
               <div className="vyrl-section-card2" ref={card2Ref}>
-                <h1>Why Vyrl</h1>
+                <h1>Build Boldly</h1>
                 <p>
-                  We don't just deliver projects—we build partnerships. Our
-                  focus is on understanding your vision and turning it into
-                  something meaningful and impactful.
+                   We design, develop, create, and execute every layer with a balance of creativity, usability, and performance
                 </p>
               </div>
               <div className="vyrl-section-card3" ref={card3Ref}>
-                <h1>Our Approach</h1>
+                <h1>Improve Constantly</h1>
                 <p>
-                  We combine strategy, creativity, and technology to build
-                  solutions that are not only visually striking but
-                  purpose-driven and results-focused.
+                  We track, refine, optimize, and evolve the work so your digital ecosystem keeps getting stronger.
                 </p>
               </div>
             </div>

@@ -181,7 +181,7 @@ const HomeCarousel = () => {
         <div className="h2-footer">
           {/* Left: See All Work + Counter */}
           <div className="h2-footer-left">
-            <CtaButton label="See All Work" videoSrc="/bg-v-compressed.mp4" href="/work" className="cta-button-carousel" />
+            <CtaButton label="See All Work" videoSrc="/bg-v-compressed.mp4" href="/work" className="cta-button-carousel cta-button-white" />
 
             <div className="h2-counter">
               <div className="h2-counter-nums">

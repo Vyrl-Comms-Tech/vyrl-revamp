@@ -24,20 +24,19 @@ const Slider = () => {
     <div className="banner text">
       <div className="slider-top">
         <div className="slider-headingCol">
-          <span className="slider-tag">• Digital Campaign</span>
+          <span className="slider-tag">• Services </span>
           <h1>
-            What We Do,
+Digital Systems
             <br />
-            <span className="slider-heading-muted">We Do Differently</span>
+            <span className="slider-heading-muted">Built To Move</span>
           </h1>
         </div>
 
         <div className="slider-textCol">
           <p className="slider-desc">
-            Our services are designed to transform ideas into refined digital
-            experiences that leave a lasting impression.
+           Tech, strategy, content, campaigns, and performance — connected under one roof to help ambitious brands show up stronger and scale smarter.
           </p>
-          <CtaButton label="Lets Get In Touch" href="/contact" />
+          <CtaButton label="Lets Get In Touch" href="/contact-us" />
         </div>
       </div>
 

@@ -88,7 +88,8 @@
 /* ── White variant ── */
 .cta-button-white {
   background-color: #fff;
-  color: #000;
+  color: black ;
+  opacity: 1;
 }
 
 .cta-button-white .cta-arrow-box {
@@ -100,10 +101,10 @@
 }
 
 .cta-button-white:hover .cta-arrow-box {
-  background-color: #ffffff40;
-  box-shadow:
+  background-color: #fff;
+  /* box-shadow:
     0 0 20px rgba(255, 255, 255, 0.4),
-    0 0 60px rgba(255, 255, 255, 0.15);
+    0 0 60px rgba(255, 255, 255, 0.15); */
 }
 
 .cta-button-white:hover .cta-arrow-box svg path {
@@ -111,7 +112,7 @@
 }
 
 .cta-button-white:hover p {
-  color: #000;
+  /* color: #000; */
 }
 @media (max-width: 1760px) {
   .cta-arrow-box {

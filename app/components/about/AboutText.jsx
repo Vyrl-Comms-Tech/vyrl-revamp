@@ -7,7 +7,7 @@ import "../../styles/text-and-cards.css";
 const AboutText = ({
   children,
   showButton = true,
-  buttonLabel = "About us",
+  buttonLabel = "Work With Us",
   buttonHref = "/about",
   buttonVideoSrc = "/bg-v-compressed.mp4",
 }) => {

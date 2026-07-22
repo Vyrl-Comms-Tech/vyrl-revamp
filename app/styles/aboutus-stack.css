@@ -150,7 +150,7 @@
   font-weight: 400;
   line-height: normal;
 }
-
+/* 
 .upperHeadingStack h1 {
   color: #fff;
   font-size: 4rem;
@@ -168,7 +168,7 @@
   width: 40%;
   font-weight: 400;
   z-index: 2;
-}
+} */
 
 .counterStack {
   position: absolute;
@@ -199,6 +199,9 @@
 }
   .upperHeadingStack h1 {
     font-size: 3rem;
+  }
+  .cardsStack p {
+  width: 57%;
   }
 }
 

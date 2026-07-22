@@ -200,13 +200,14 @@
 
 // export default TeamProfile
 
-'use client';
+"use client";
 
 import React, { useEffect, useRef } from "react";
 import Matter from "matter-js";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "../../styles/team-profile.css";
+import CtaButton from "../layout/cta";
 
 const CARD_COUNT = 12;
 const MOBILE_CARDS = Array.from({ length: CARD_COUNT }, (_, i) => ({
@@ -327,7 +328,7 @@ export default function TeamProfile() {
       `;
       div.innerHTML = `
          <div class="item-card-image">
-          <img src="/card2.jpg" alt="Team member ${i + 1}" />
+          <img src="/team.jpg" alt="Team member ${i + 1}" />
          </div>
         <h2 class="item-name">Lorem Ipsum</h2>
         <p class="item-designation">Designation</p>
@@ -379,12 +380,18 @@ export default function TeamProfile() {
 
   const sectionHeading = (
     <div className="team-section-content">
-      <h1>The collective behind every experience</h1>
+      <h1>The People Behind The System</h1>
       <p>
-        Have an idea or project in mind? We&apos;re here to turn your vision
-        into a powerful digital experience. Let&apos;s collaborate and build
-        something that truly stands out.
+        Vyrl is built by a team of strategists, designers, developers, content
+        creators, performance marketers, and automation thinkers who bring
+        different strengths to one shared goal: creating digital work that feels
+        bold, works smoothly, and delivers with purpose.
       </p>
+      <CtaButton
+        label="Meet The Team"
+        href="/projects"
+        className="cta-button-white"
+      />
     </div>
   );
 

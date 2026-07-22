@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "../../styles/projects-grid.css";
@@ -9,8 +10,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 const FILTERS = [
   { label: "ALL", value: "all" },
-  { label: "BRANDING", value: "branding" },
-  { label: "WEBSITES", value: "website" },
+  { label: "REAL ESTATE", value: "real-estate" },
+  { label: "RESTAURANT", value: "restaurant" },
+  { label: "AUTOMOTIVE", value: "automotive" },
 ];
 
 // Row-grouped so the "stretched" single-card row renders exactly like the
@@ -18,54 +20,60 @@ const FILTERS = [
 const PROJECT_ROWS = [
   [
     {
-      id: "prime-estates-1",
-      title: "PRIME ESTATES",
-      category: "branding",
-      type: "image",
-      src: "/pro1.png",
-      tags: ["Strategic Roadmaps", "Strategic Roadmaps"],
-    },
-    {
-      id: "slab-studio",
-      title: "SLAB STUDIO",
-      category: "website",
+      id: "banda",
+      title: "BANDA",
+      category: "real-estate",
       type: "video",
-      src: "/video03.mp4",
-      tags: ["Strategic Roadmaps", "Strategic Roadmaps"],
-    },
-  ],
-  [
-    {
-      id: "prime-estates-2",
-      title: "PRIME ESTATES",
-      category: "website",
-      type: "image",
-      src: "/pro1.png",
-      stretch: true,
-      tags: ["Strategic Roadmaps", "Strategic Roadmaps"],
-    },
-  ],
-  [
-    {
-      id: "arabian-estates",
-      title: "ARABIAN ESTATES",
-      category: "branding",
-      type: "image",
-      src: "/pro1.png",
-      tags: ["Strategic Roadmaps", "Strategic Roadmaps"],
+      src: "/banda -v.mp4",
+      href: "/banda",
+      tags: ["Property Developer", "Luxury Homes"],
     },
     {
       id: "lala-darbar",
       title: "LALA DARBAR",
-      category: "website",
+      category: "restaurant",
       type: "image",
-      src: "/pro1.png",
-      tags: ["Strategic Roadmaps", "Strategic Roadmaps"],
+      src: "/lala1.avif",
+      href: "/lala-darbar",
+      tags: ["Traditional Cuisine", "Fine Dining"],
+    },
+  ],
+  [
+    {
+      id: "arabian-estate",
+      title: "ARABIAN ESTATE",
+      category: "real-estate",
+      type: "image",
+      src: "/arab3.avif",
+      stretch: true,
+      href: "/arabian-estate",
+      tags: ["Property Developer", "Residential & Commercial"],
+    },
+  ],
+  [
+    {
+      id: "jeikor",
+      title: "JEIKOR",
+      category: "real-estate",
+      type: "image",
+      src: "/jeikor4.avif",
+      href: "/jeikor",
+      tags: ["Property Developer", "Urban Living"],
+    },
+    {
+      id: "sanam-cars",
+      title: "SANAM CARS",
+      category: "automotive",
+      type: "video",
+      src: "/sanam-v.mp4",
+      href: "/sanamcars",
+      tags: ["Car Dealership", "Premium Vehicles"],
     },
   ],
 ];
 
 export default function ProjectsGrid() {
+  const router = useRouter();
   const sectionRef = useRef(null);
   const cardRefs = useRef(new Map()); // id -> card DOM node
   const followerRefs = useRef(new Map()); // id -> follower DOM node
@@ -160,6 +168,10 @@ export default function ProjectsGrid() {
     if (follower) gsap.to(follower, { scale: 0, duration: 0.2 });
   };
 
+  const handleCardClick = (project) => () => {
+    if (project.href) router.push(project.href);
+  };
+
   return (
     <div className="projectContainer" ref={sectionRef}>
       <div className="heroProject">
@@ -194,6 +206,7 @@ export default function ProjectsGrid() {
                 onMouseMove={handleMouseMove(project.id)}
                 onMouseEnter={handleMouseEnter(project.id)}
                 onMouseLeave={handleMouseLeave(project.id)}
+                onClick={handleCardClick(project)}
               >
                 <div className="imageBgContainer">
                   <ProjectMedia project={project} />

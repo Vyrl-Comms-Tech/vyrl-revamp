@@ -257,7 +257,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-inline: 25px;
+  padding-inline: 30px;
   /* padding-top: 50px; */
 }
 .h2-section-main-heading h2 {
@@ -271,7 +271,7 @@
   width: 32vw;
   /* width: 600px; */
   line-height: 113.043%;
-  font-weight: 200;
+  font-weight: 300;
 }
 /*!  */
 

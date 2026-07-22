@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
 import "../../styles/caseStudyInner.css";
 import { getCaseStudy, getNextCaseStudy } from "./caseStudiesData";
+import CtaButton from "../layout/cta";
 
 gsap.registerPlugin(ScrollTrigger, Flip);
 
@@ -14,7 +15,7 @@ const CaseStudyInner = ({ slug }) => {
   const nextCase = getNextCaseStudy(slug);
   const c2 = {
     ...nextCase,
-    image: nextCase?.images?.[0],
+    image: nextCase?.panel8Image ?? nextCase?.images?.[0],
     nextLabel: "Next Page",
   };
   const nextHref = nextCase?.href ?? "/";
@@ -501,7 +502,12 @@ const CaseStudyInner = ({ slug }) => {
               <h2 className="cs-title">{c1.title}</h2>
               <div className="cs-btn-slot" ref={btnSlotRef}>
                 <button className="cs-visit-btn" ref={btnRef}>
-                  View website
+                   <CtaButton
+            label='View Website'
+            href='/projects'
+            className="cta-button cta-about-logos"
+          />
+                  {/* View website
                   <span className="cs-btn-icon">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -515,7 +521,7 @@ const CaseStudyInner = ({ slug }) => {
                         fill="#E6E6E6"
                       />
                     </svg>
-                  </span>
+                  </span> */}
                 </button>
               </div>
             </div>
@@ -547,21 +553,21 @@ const CaseStudyInner = ({ slug }) => {
           {/* Panel 4 */}
           <div className="cs-panel cs-panel--4">
             <div className="cs-img-80 cs-img-parallax-wrap">
-              <img className="cs-img-parallax" src={c1.images[1]} alt="" />
+              <img className="cs-img-parallax" src={c1.images[2]} alt="" />
             </div>
           </div>
 
           {/* Panel 5 */}
           <div className="cs-panel cs-panel--5">
             <div className="cs-img-90 cs-img-parallax-wrap">
-              <img className="cs-img-parallax" src={c1.images[2]} alt="" />
+              <img className="cs-img-parallax" src={c1.images[3]} alt="" />
             </div>
           </div>
 
           {/* Panel 6 */}
           <div className="cs-panel cs-panel--6">
             <div className="cs-img-80 cs-img-parallax-wrap">
-              <img className="cs-img-parallax" src={c1.images[3]} alt="" />
+              <img className="cs-img-parallax" src={c1.images[4]} alt="" />
             </div>
           </div>
 

@@ -289,47 +289,47 @@ import "../../styles/aboutus-stack.css";
 const CARDS = [
   {
     id: "keychain",
-    tag: "Creative",
-    title: "first Centered",
+    tag: "Purpose",
+    title: "Impact Comes First",
     video: "/smiley_compressed.mp4",
     description:
-      "Every strategy is shaped around your business, audience, goals, and the next stage of your growth.",
+      "We care about what the work does, not just how it looks. Every idea, interface, campaign, and system is built with a clear reason behind it — to help your brand earn attention, build trust, and move people toward action",
   },
   {
     id: "video-4",
-    tag: "Creative",
-    title: "second Centered",
+    tag: "Tailored",
+    title: "Built Around The Client",
     video: "/video01_compressed.mp4",
     description:
-      "second  is shaped around your business, audience, goals, and the next stage of your growth.",
+      "No two brands need the same path. We take time to understand your business, audience, challenges, and goals before shaping the strategy — so the final output feels aligned, useful, and made for your next stage of growth.",
   },
   {
     id: "video-3",
-    tag: "Creative",
-    title: "third Centered",
+    tag: "Evolution",
+    title: "Always Getting Sharper",
     video: "/video02_compressed.mp4",
     description:
-      "Every strategy is shaped around your business, audience, goals, and the next stage of your growth.",
+      "The digital world changes fast, and we believe our thinking should move faster. We keep refining our process, testing new tools, studying what works, and improving how we create so every client gets the benefit of what we learn next.",
   },
-  {
-    id: "video-2",
-    tag: "Creative",
-    title: "fourth Centered",
-    video: "/smiley_compressed.mp4",
-    description:
-      "Every strategy is shaped around your business, audience, goals, and the next stage of your growth.",
-  },
-  {
-    id: "video-5",
-    tag: "Creative",
-    title: "Client Centered",
-    video: "/video02_compressed.mp4",
-    description:
-      "Every strategy is shaped around your business, audience, goals, and the next stage of your growth.",
-  },
+  // {
+  //   id: "video-2",
+  //   tag: "Creative",
+  //   title: "fourth Centered",
+  //   video: "/smiley_compressed.mp4",
+  //   description:
+  //     "Every strategy is shaped around your business, audience, goals, and the next stage of your growth.",
+  // },
+  // {
+  //   id: "video-5",
+  //   tag: "Creative",
+  //   title: "Client Centered",
+  //   video: "/video02_compressed.mp4",
+  //   description:
+  //     "Every strategy is shaped around your business, audience, goals, and the next stage of your growth.",
+  // },
 ];
 
-const COUNTER_LABELS = ["00", "01", "02", "03", "04"];
+const COUNTER_LABELS = ["00", "01", "02"];
 
 export default function AboutUsStack() {
   const containerRef = useRef(null);
@@ -422,7 +422,6 @@ export default function AboutUsStack() {
         // (and no scroll-past-blank-screen) after the last card before
         // the next section appears — on desktop as well as mobile.
         const exitingCards = cardRefs.current.slice(0, lastIndex);
-        const lastCard = cardRefs.current[lastIndex];
 
         const timeline = gsap.timeline({ paused: true });
 
@@ -450,12 +449,15 @@ export default function AboutUsStack() {
           )
           .to(counterRefs.current, { color: "#000", stagger: 0.4 }, "0.2");
 
-        if (lastCard) {
-          // A brief hold once the last card is fully in place, so it
-          // reads as a deliberate stop rather than a flash before the
-          // pin releases.
-          timeline.to(lastCard, { scale: 1 }, ">+=0.3");
-        }
+        // Previously held an extra 0.3s once the last card settled (a
+        // no-op tween to its own resting scale, purely to reserve dead
+        // scroll time before releasing) so the stop read as deliberate
+        // rather than a flash. With fewer cards (content went from 5 to
+        // 3), that fixed 0.3s became a much larger fraction of the
+        // timeline's total duration — which is what showed up as
+        // "reaches the last card, then still scrolls with nothing
+        // happening" before the pin finally released. Removed so the
+        // pin's scroll distance ends right as the last card settles.
 
         const isMobile = window.innerWidth <= 700;
         const cardCount = cardRefs.current.length;
