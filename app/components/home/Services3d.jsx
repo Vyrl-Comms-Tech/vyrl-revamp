@@ -15,32 +15,32 @@ gsap.registerPlugin(ScrollTrigger);
 const SERVICES = [
   {
     title: "Strategy & Consultancy",
-    desc: "Strategic planning, market insights, and business consulting that help brands make confident decisions and achieve sustainable growth.",
+    desc: "Direction before execution. We define the roadmap, audience, positioning, and digital approach your brand needs to grow with clarity.",
     tags: ["STRATEGY", "RESEARCH", "CONSULTING"],
   },
   {
-    title: "Brand Identity",
-    desc: "Distinctive visual identities, messaging systems, and brand experiences that create recognition and lasting customer trust.",
+    title: "Branding & Creative Direction",
+    desc: " Visual identities, campaign concepts, and creative systems designed to make your brand recognizable, consistent, and memorable.",
     tags: ["BRANDING", "LOGO", "IDENTITY"],
   },
   {
-    title: "UI/UX Design",
-    desc: "Beautiful, intuitive digital experiences focused on usability, accessibility, and seamless user journeys across every device.",
+    title: "Web & App Development",
+    desc: "High performing websites, apps, and platforms built for speed, usability, scale, and a digital presence that feels premium.",
     tags: ["UI/UX", "FIGMA", "PROTOTYPING"],
   },
   {
-    title: "Web & App Development",
-    desc: "High-performing websites, apps, and platforms built for speed, usability, scale, and a digital presence that feels premium.",
+    title: "Content & Social Media",
+    desc: "Content strategies, social storytelling, reels, campaigns, and always on creative built to keep your brand visible and relevant.",
     tags: ["SPLINE", "THREE.JS", "3D"],
   },
   {
-    title: "Digital Marketing",
-    desc: "Performance-driven campaigns, SEO, content strategy, and analytics designed to increase visibility, engagement, and conversions.",
+    title: "Performance Marketing",
+    desc: "Paid campaigns, landing pages, testing, and optimization designed to turn attention into measurable action.",
     tags: ["SEO", "ADS", "ANALYTICS"],
   },
   {
-    title: "Brand Identity",
-    desc: "Distinctive visual identities, messaging systems, and brand experiences that create recognition and lasting customer trust.",
+    title: "AI Automation & Tech Solutions",
+    desc: "Smart workflows, CRM systems, lead automation, and custom tech solutions that help your business move faster and work smarter.",
     tags: ["BRANDING", "LOGO", "IDENTITY"],
   },
 ];
@@ -569,7 +569,7 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       </div>
 
       <div className="services-cta-desktop">
-        <CtaButton label="Services" href="/services" />
+        <CtaButton label="Explore Services" href="/services" />
       </div>
 
       <div className="right-text-services">
@@ -587,7 +587,7 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
           {SERVICES[0].desc}
         </p>
         <div className="services-cta-mobile">
-          <CtaButton label="Services" href="/services" />
+          <CtaButton label="Explore Services" href="/services" />
         </div>
       </div>
 

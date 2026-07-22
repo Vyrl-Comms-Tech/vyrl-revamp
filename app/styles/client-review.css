@@ -13,7 +13,7 @@
 
 .client-review-section-text {
   color: #fff;
-  text-align: center; 
+  text-align: center;
   line-height: 1.15;
 }
 
@@ -172,8 +172,21 @@
 
 .client-review-cta {
   display: flex;
+  flex-direction: column;
+  /* justify-content: flex-end; */
   color: #000;
-  justify-content: flex-end;
+  /* border: 2px solid red; */
+  align-items: flex-end;
+  gap: 14px;
+}
+.client-review-cta p:nth-child(2) {
+  color: #fff;
+  text-align: right;
+  /* border: 2px solid green; */
+  width: 25vw;
+  font-size: clamp(16px, 1vw, 23px);
+  font-weight: 200;
+  line-height: 113.043%;
 }
 
 /* ── Bottom nav arrows ── */

@@ -28,8 +28,8 @@ const Logos = () => {
         </TextAnimation>
         <TextAnimation animateOnScroll={true} delay={0.3}>
           <p>
-            We partner with high-growth brands, premium businesses, and
-            forward-thinking teams across the world, building digital ecosystems
+            We partner with high growth brands, premium businesses, and
+            forward thinking teams across the world, building digital ecosystems
             designed for visibility, trust, and scale.
           </p>
         </TextAnimation>

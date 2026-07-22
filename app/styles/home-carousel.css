@@ -19,7 +19,7 @@
 
 .h2-title {
   font-size: 70px;
-  font-weight: 500;
+  font-weight: 400;
   color: #fff;
   text-align: center;
 }
@@ -96,9 +96,9 @@
   padding: 0 28px 40px;
   gap: 16px;
 }
-#home-car-btn{
-background: #fff !important;
-color: #000 !important;
+#home-car-btn {
+  background: #fff !important;
+  color: #000 !important;
 }
 #home-car-btn .cta-arrow-box {
   background-color: #0000001a !important;
@@ -250,6 +250,31 @@ color: #000 !important;
   background: rgba(255, 255, 255, 0.06);
 }
 
+/*!  */
+.h2-section-main-heading {
+  /* border: 2px solid red; */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 25px;
+  /* padding-top: 50px; */
+}
+.h2-section-main-heading h2 {
+  font-size: clamp(52px, 3.8vw, 73px);
+  line-height: 102.74%;
+  font-weight: 500;
+}
+.h2-section-main-heading p {
+  text-align: right;
+  font-size: clamp(21px, 1.25vw, 23px);
+  width: 32vw;
+  /* width: 600px; */
+  line-height: 113.043%;
+  font-weight: 200;
+}
+/*!  */
+
 @media (max-width: 1620px) {
   .slider-card {
     height: 390px;
@@ -271,7 +296,12 @@ color: #000 !important;
     line-height: 1.1;
   }
   .simple-swiper {
-    padding: 0.right-text-services h1;
+    padding: 0right-text-services h1;
+  }
+}
+@media (max-width: 1280px) {
+  .h2-section-main-heading {
+    display: none;
   }
 }
 @media (max-width: 769px) {

@@ -25,7 +25,7 @@ const   HomeSecondLast = () => {
           </div>
 
           <button className="hp-btn">
-            See All Works
+            Start a Project
             <span className="hp-btn-icon">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

@@ -71,7 +71,7 @@ function Footer() {
               </svg>
             </button>
 
-            <h2 className="footer-connect-title">Let&apos;s Connect</h2>
+            <h2 className="footer-connect-title">Stay In The Loop</h2>
 
             <button
               className="footer-arrow-btn footer-arrow-btn--right"
@@ -94,9 +94,8 @@ function Footer() {
           </div>
 
           <p className="footer-connect-subtitle">
-            Stay updated with the latest news, insights, and updates
-            <br />
-            from Vyrl delivered straight to your inbox.
+            Stay updated with our latest work, insights, case <br /> studies, and
+            digital ideas straight from Vyrl
           </p>
 
           <div className="footer-social">
@@ -158,6 +157,9 @@ function Footer() {
               <Link href="/services" className="footer-nav-link">
                 Services
               </Link>
+              <Link href="/work" className="footer-nav-link">
+                Work
+              </Link>
               <Link href="/contact-us" className="footer-nav-link">
                 Contact
               </Link>
@@ -165,10 +167,13 @@ function Footer() {
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Other</h4>
               <Link href="/work" className="footer-nav-link">
-                Work
+                Case Studies
               </Link>
               <Link href="/blogs" className="footer-nav-link">
                 Blog
+              </Link>
+              <Link href="/blogs" className="footer-nav-link">
+                Careers
               </Link>
             </div>
             <div className="footer-nav-col">
@@ -182,7 +187,7 @@ function Footer() {
             </div>
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Address</h4>
-              <span className="footer-nav-link">UAE , Sharjah Etc</span>
+              <span className="footer-nav-link"> Global / UAE</span>
             </div>
           </div>
         </nav>

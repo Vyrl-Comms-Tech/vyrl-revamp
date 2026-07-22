@@ -68,7 +68,7 @@ const REVIEWS = [
     img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=600&fit=crop&crop=face",
     name: "Sanam Cars",
     tags: ["SPLINE", "THREE.JS", "3D"],
-    ctaLabel: "View Site",
+    ctaLabel: "Watch Testimonials",
     href: "#",
   },
   {
@@ -76,7 +76,7 @@ const REVIEWS = [
     img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=face",
     name: "Nova Fitness",
     tags: ["BRANDING", "WEB"],
-    ctaLabel: "View Site",
+    ctaLabel: "Watch Testimonials",
     href: "#",
   },
   {
@@ -84,7 +84,7 @@ const REVIEWS = [
     img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=600&fit=crop&crop=face",
     name: "Lumen Studio",
     tags: ["MOTION", "GSAP", "3D"],
-    ctaLabel: "View Site",
+    ctaLabel: "Watch Testimonials",
     href: "#",
   },
   {
@@ -92,7 +92,7 @@ const REVIEWS = [
     img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=600&fit=crop&crop=face",
     name: "Orbit Foods",
     tags: ["UI/UX", "NEXT.JS"],
-    ctaLabel: "View Site",
+    ctaLabel: "Watch Testimonials",
     href: "#",
   },
   {
@@ -100,7 +100,7 @@ const REVIEWS = [
     img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=600&fit=crop&crop=face",
     name: "Halcyon Wear",
     tags: ["ECOMMERCE", "BRANDING", "3D"],
-    ctaLabel: "View Site",
+    ctaLabel: "Watch Testimonials",
     href: "#",
   },
 ];
@@ -442,20 +442,18 @@ function ClientReviewSection() {
           <img
             src="/sticker1.png"
             alt=""
-            className={`client-review-sticker client-review-sticker-1 ${
-              stickerCorner === "tl-br"
+            className={`client-review-sticker client-review-sticker-1 ${stickerCorner === "tl-br"
                 ? "client-review-sticker--top-left"
                 : "client-review-sticker--top-right"
-            }`}
+              }`}
           />
           <img
             src="/sticker2.png"
             alt=""
-            className={`client-review-sticker client-review-sticker-2 ${
-              stickerCorner === "tl-br"
+            className={`client-review-sticker client-review-sticker-2 ${stickerCorner === "tl-br"
                 ? "client-review-sticker--bottom-right"
                 : "client-review-sticker--bottom-left"
-            }`}
+              }`}
           />
         </div>
 
@@ -465,6 +463,7 @@ function ClientReviewSection() {
             href={active.href}
             className="cta-button-white client-review-cta-btn"
           />
+          <p>Hear from the brands and founders we have partnered with, sharing what it is like to build, launch, and grow with Vyrl.</p>
         </div>
       </div>
 

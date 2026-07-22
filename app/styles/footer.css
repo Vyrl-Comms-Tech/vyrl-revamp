@@ -179,7 +179,7 @@
 .footer-nav-col {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 
 .footer-nav-title {

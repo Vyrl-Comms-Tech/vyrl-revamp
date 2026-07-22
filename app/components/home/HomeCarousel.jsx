@@ -101,137 +101,154 @@ const HomeCarousel = () => {
   }, [tagsIndex]);
 
   return (
-    <section className="h2-section">
-      {/* Title + Tabs */}
-      <div className="h2-top">
-        <ChangeTextAnimation key={`title-${activeIndex}`} animateOnScroll={false}>
-          <h2 className="h2-title">{activeSlide.title}</h2>
-        </ChangeTextAnimation>
-        <div className="h2-tabs" key={`tabs-${tagsIndex}`} ref={tagsRef}>
-          {displayedTagsSlide.tabs.map((tab) => (
-            <span className="h2-tab" key={tab}>
-              {tab}
-            </span>
-          ))}
-        </div>
-      </div>
+    <>
 
-      {/* Slider */}
-      <div className="h2-slider-wrapper">
-        <Swiper
-          effect="coverflow"
-          centeredSlides={true}
-          loop={true}
-          slidesPerView={"auto"}
-          grabCursor={true}
-          spaceBetween={-75}
-          modules={[EffectCoverflow]}
-          coverflowEffect={{
-            rotate: -25,
-            stretch: 0,
-            depth: 0,
-            modifier: 1,
-            scale: 0.75,
-          }}
-          breakpoints={{
-            0: {
-              spaceBetween: -20,
-            },
-            769: {
-              spaceBetween: -75,
-            },
-          }}
-          onSwiper={(swiper) => (swiperRef.current = swiper)}
-          onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-          className="simple-swiper"
-        >
-          {slides.map((slide, i) => (
-            <SwiperSlide key={i} className="custom-slide">
-              <div className="slider-card">
-                <Image
-                  src={slide.image}
-                  alt=""
-                  fill
-                  sizes="(max-width: 768px) 90vw, 500px"
-                  className="slider-image"
-                  style={{ objectFit: "cover" }}
+
+      <section className="h2-section">
+
+        <>
+          <div className="h2-section-main-heading">
+            <h2>Work That Moves <br id="remove-br"/> Brands Forward
+            </h2>
+            <p>
+              A glimpse into the websites, campaigns, platforms, content systems, and digital experiences we have built for ambitious brands across the world.
+            </p>
+          </div>
+        </>
+
+
+        {/* Title + Tabs */}
+        <div className="h2-top">
+          <ChangeTextAnimation key={`title-${activeIndex}`} animateOnScroll={false}>
+            <h2 className="h2-title">{activeSlide.title}</h2>
+          </ChangeTextAnimation>
+          <div className="h2-tabs" key={`tabs-${tagsIndex}`} ref={tagsRef}>
+            {displayedTagsSlide.tabs.map((tab) => (
+              <span className="h2-tab" key={tab}>
+                {tab}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Slider */}
+        <div className="h2-slider-wrapper">
+          <Swiper
+            effect="coverflow"
+            centeredSlides={true}
+            loop={true}
+            slidesPerView={"auto"}
+            grabCursor={true}
+            spaceBetween={-75}
+            modules={[EffectCoverflow]}
+            coverflowEffect={{
+              rotate: -25,
+              stretch: 0,
+              depth: 0,
+              modifier: 1,
+              scale: 0.75,
+            }}
+            breakpoints={{
+              0: {
+                spaceBetween: -20,
+              },
+              769: {
+                spaceBetween: -75,
+              },
+            }}
+            onSwiper={(swiper) => (swiperRef.current = swiper)}
+            onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+            className="simple-swiper"
+          >
+            {slides.map((slide, i) => (
+              <SwiperSlide key={i} className="custom-slide">
+                <div className="slider-card">
+                  <Image
+                    src={slide.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 768px) 90vw, 500px"
+                    className="slider-image"
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
+        {/* Footer */}
+        <div className="h2-footer">
+          {/* Left: See All Work + Counter */}
+          <div className="h2-footer-left">
+            <CtaButton label="See All Work" videoSrc="/bg-v-compressed.mp4" href="/work" className="cta-button-carousel" />
+
+            <div className="h2-counter">
+              <div className="h2-counter-nums">
+                <span className="h2-counter-num">
+                  {String(slides.length).padStart(2, "0")}
+                </span>
+                <span className="h2-counter-num">
+                  {String(activeIndex + 1).padStart(2, "0")}
+                </span>
+              </div>
+              <div className="h2-counter-track">
+                <div
+                  className="h2-counter-fill"
+                  style={{
+                    width: `${((activeIndex + 1) / slides.length) * 100}%`,
+                  }}
                 />
               </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
-
-      {/* Footer */}
-      <div className="h2-footer">
-        {/* Left: See All Work + Counter */}
-        <div className="h2-footer-left">
-          <CtaButton label="See All Work" videoSrc="/bg-v-compressed.mp4" href="/work" className="cta-button-carousel" />
-
-          <div className="h2-counter">
-            <div className="h2-counter-nums">
-              <span className="h2-counter-num">
-                {String(slides.length).padStart(2, "0")}
-              </span>
-              <span className="h2-counter-num">
-                {String(activeIndex + 1).padStart(2, "0")}
-              </span>
-            </div>
-            <div className="h2-counter-track">
-              <div
-                className="h2-counter-fill"
-                style={{
-                  width: `${((activeIndex + 1) / slides.length) * 100}%`,
-                }}
-              />
             </div>
           </div>
-        </div>
 
-        {/* Center: Description + Nav arrows */}
-        <div className="h2-footer-center">
-          <ChangeTextAnimation
-            key={`desc-${activeIndex}`}
-            animateOnScroll={false}
-          >
-            <p className="h2-description">{activeSlide.desc}</p>
-          </ChangeTextAnimation>
-          <div className="h2-nav">
-            <button
-              className="h2-nav-btn"
-              onClick={() => swiperRef.current?.slidePrev()}
+          {/* Center: Description + Nav arrows */}
+          <div className="h2-footer-center">
+            <ChangeTextAnimation
+              key={`desc-${activeIndex}`}
+              animateOnScroll={false}
             >
-              <svg width="27" height="32"  viewBox="0 0 18 18" fill="none">
-                <path
-                  d="M11 14L6 9L11 4"
-                  stroke="white"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            <button
-              className="h2-nav-btn"
-              onClick={() => swiperRef.current?.slideNext()}
-            >
-              <svg width="27" height="32" viewBox="0 0 18 18" fill="none">
-                <path
-                  d="M7 4L12 9L7 14"
-                  stroke="white"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
+              <p className="h2-description">{activeSlide.desc}</p>
+            </ChangeTextAnimation>
+            <div className="h2-nav">
+              <button
+                className="h2-nav-btn"
+                onClick={() => swiperRef.current?.slidePrev()}
+              >
+                <svg width="27" height="32" viewBox="0 0 18 18" fill="none">
+                  <path
+                    d="M11 14L6 9L11 4"
+                    stroke="white"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+              <button
+                className="h2-nav-btn"
+                onClick={() => swiperRef.current?.slideNext()}
+              >
+                <svg width="27" height="32" viewBox="0 0 18 18" fill="none">
+                  <path
+                    d="M7 4L12 9L7 14"
+                    stroke="white"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Right spacer to balance layout */}
-        <div className="h2-footer-right" />
-      </div>
-    </section>
+          {/* Right spacer to balance layout */}
+          <div className="h2-footer-right" />
+        </div>
+      </section>
+
+    </>
   );
 };
 

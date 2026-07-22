@@ -203,9 +203,8 @@ function Collective() {
               className="sale-button"
               variant="dark"
               onClick={() => router.push("/about")}
-            >
-              About us
-            </CtaButton>
+              label="About us"
+            />
           </div>
         </div>
         <div className="box" id="tpbox5">
