@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { caseStudies } from "../caseStudy/caseStudiesData";
+import FooterLogo3D from "./FooterLogo3D";
 import "../../styles/footer.css";
 
 const CASE_STUDY_PATHS = Object.values(caseStudies).map((c) => c.href);
@@ -44,7 +45,7 @@ function Footer() {
     <footer className="footer">
       {/* Row 1 – Logo */}
       <div className="footer-logo-row">
-        <img src="/footerimg1.avif" alt="Vyrl" className="footer-logo-img" />
+        <FooterLogo3D />
       </div>
 
       {/* Row 2 – Let's Connect + Nav Links */}
