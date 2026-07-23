@@ -18,7 +18,7 @@ const page = () => {
       <AboutText />
       <AboutUsStack />
       {/* <Logos /> */}
-      <AboutLogos/>
+      <AboutLogos />
       <TeamProfile />
       <SimilarPost />
       <HomeSecondLast />

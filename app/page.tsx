@@ -6,7 +6,6 @@ import HomeCarousel from "@/app/components/home/HomeCarousel";
 import Logos from "@/app/components/home/Logos";
 import ClientReviews from "@/app/components/home/ClientReviews";
 import Collective from "@/app/components/home/Collective";
-import VyrlAbout from "@/app/components/home/VyrlAbout";
 import Services3d from "@/app/components/home/Services3d";
 
 export default function Home() {

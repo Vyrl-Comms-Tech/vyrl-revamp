@@ -157,7 +157,7 @@ function Footer() {
               <Link href="/services" className="footer-nav-link">
                 Services
               </Link>
-              <Link href="/work" className="footer-nav-link">
+              <Link href="/projects" className="footer-nav-link">
                 Work
               </Link>
               <Link href="/contact-us" className="footer-nav-link">
@@ -166,7 +166,7 @@ function Footer() {
             </div>
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Other</h4>
-              <Link href="/work" className="footer-nav-link">
+              <Link href="/projects" className="footer-nav-link">
                 Case Studies
               </Link>
               <Link href="/blogs" className="footer-nav-link">

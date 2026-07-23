@@ -92,7 +92,7 @@
   object-fit: cover;
 }
 
-@media  (max-width: 1023px) {
+@media (max-width: 1023px) {
   .slider-top {
     flex-direction: column;
   }
@@ -119,6 +119,9 @@
     width: 100px;
     height: 150px;
   }
+  .slider-headingCol h1 {
+    font-size: 3rem;
+  }
   .banner .slider .item {
     transform: rotateY(
         calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
@@ -129,14 +132,14 @@
     min-height: 90vh;
     padding: 6rem 15px 2rem;
   }
-  .slider-desc{
+  .slider-desc {
     font-size: 18px;
   }
-.slider-top {
-gap: 1rem;
-}
+  .slider-top {
+    gap: 1rem;
+  }
 
-.slider-desc {
-  font-size: 18px;
-}
+  .slider-desc {
+    font-size: 18px;
+  }
 }

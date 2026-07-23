@@ -352,26 +352,20 @@ export default function AboutUsStack() {
   };
 
   useEffect(() => {
-    let lenis;
     let gsapCtx;
-    let gsapInstance;
     let scrollTriggerInstance;
     let removeStepGestureListeners = null;
-    let tickerFn;
     let isMounted = true;
 
     (async () => {
-      const [{ default: Lenis }, gsapModule, scrollTriggerModule] =
-        await Promise.all([
-          import("lenis"),
-          import("gsap"),
-          import("gsap/ScrollTrigger"),
-          import("lenis/dist/lenis.css"),
-        ]);
+      const [gsapModule, scrollTriggerModule] = await Promise.all([
+        import("gsap"),
+        import("gsap/ScrollTrigger"),
+      ]);
 
       // Guards against React Strict Mode's dev-only double effect invocation:
       // if this component unmounted while the dynamic imports were in flight,
-      // bail out before creating a second, conflicting Lenis/ScrollTrigger pair.
+      // bail out before creating a second, conflicting ScrollTrigger set.
       if (!isMounted) return;
 
       const gsap = gsapModule.gsap ?? gsapModule.default;
@@ -379,29 +373,16 @@ export default function AboutUsStack() {
         scrollTriggerModule.ScrollTrigger ?? scrollTriggerModule.default;
 
       gsap.registerPlugin(ScrollTrigger);
-      gsapInstance = gsap;
       scrollTriggerInstance = ScrollTrigger;
 
-      // Smooth scroll
-      lenis = new Lenis({
-        duration: 0.9,
-        smoothWheel: true,
-        easing: (t) => 1 - Math.pow(1 - t, 3),
-      });
-
-      // CRITICAL: keep ScrollTrigger's internal scroll position in lockstep
-      // with Lenis. Without this, the pinned/scrubbed timeline below reads a
-      // stale scroll offset and the card enter/exit tweens fire at the wrong
-      // moment — which is what produces the incorrect overlap.
-      lenis.on("scroll", ScrollTrigger.update);
-
-      // Drive Lenis from GSAP's own ticker instead of a separate rAF loop,
-      // so there is exactly one render loop driving both libraries.
-      tickerFn = (time) => {
-        lenis.raf(time * 1000);
-      };
-      gsap.ticker.add(tickerFn);
-      gsap.ticker.lagSmoothing(0);
+      // Smooth scroll is already driven site-wide by the single Lenis
+      // instance in SmoothScroll.jsx (mounted once in the root layout).
+      // This component used to create its own separate Lenis instance
+      // here too — two Lenis instances both fighting over the same
+      // native scroll position (and both feeding ScrollTrigger.update)
+      // is what caused the mobile pin-release scroll to not reliably
+      // land at the bottom: releasePastEdge's raw scrollTo below was
+      // being fought by whichever Lenis instance didn't know about it.
 
       // Scoped GSAP context so ScrollTrigger instances are cleaned up on unmount
       gsapCtx = gsap.context(() => {
@@ -634,12 +615,6 @@ export default function AboutUsStack() {
       isMounted = false;
 
       if (removeStepGestureListeners) removeStepGestureListeners();
-      if (gsapInstance && tickerFn) {
-        gsapInstance.ticker.remove(tickerFn);
-      }
-      if (lenis) {
-        lenis.destroy();
-      }
       if (gsapCtx) {
         // Reverts all animations AND kills the ScrollTriggers created
         // inside this context.

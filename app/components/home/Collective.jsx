@@ -200,9 +200,9 @@ function Collective() {
           </p>
           <div className="buttonsrow">
             <CtaButton
+              href="/about"
               className="sale-button"
               variant="dark"
-              onClick={() => router.push("/about")}
               label="About us"
             />
           </div>

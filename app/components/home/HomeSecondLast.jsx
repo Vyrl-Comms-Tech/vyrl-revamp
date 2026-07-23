@@ -2,8 +2,9 @@
 import React from "react";
 import TextAnimation from "./TextAnimation";
 import "../../styles/home-second-last.css";
+import Link from "next/link";
 
-const   HomeSecondLast = () => {
+const HomeSecondLast = () => {
   return (
     <section className="hp-section">
       <div className="hp-grid">
@@ -24,7 +25,7 @@ const   HomeSecondLast = () => {
             </TextAnimation>
           </div>
 
-          <button className="hp-btn">
+          <Link href="/contact-us" className="hp-btn">
             Start a Project
             <span className="hp-btn-icon">
               <svg
@@ -40,7 +41,7 @@ const   HomeSecondLast = () => {
                 />
               </svg>
             </span>
-          </button>
+          </Link>
         </div>
 
         {/* Right image panel */}

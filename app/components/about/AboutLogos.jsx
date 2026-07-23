@@ -28,7 +28,7 @@ const AboutLogos = () => {
         <TextAnimation animateOnScroll={true} delay={0.3}>
           <h2>Trusted By Brands With Bigger Ambitions</h2>
         </TextAnimation>
-        <div>
+        <div className="logos-left-textcol">
 
         <TextAnimation animateOnScroll={true} delay={0.3}>
           <p className="logos-left-desc">

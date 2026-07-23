@@ -1,8 +1,8 @@
 .aboutHero {
+  padding: 40px 3% 4rem;
   position: relative;
   width: 100%;
   min-height: 100vh;
-  padding: 40px 3% 4rem;
   box-sizing: border-box;
 }
 
@@ -120,7 +120,8 @@
     width: 200px;
     height: 114px;
   }
-
+.aboutHero {
+  padding: 70px 3% 4rem;}
   .aboutHero-desc {
     max-width: 520px;
     font-size: 18px;
@@ -174,7 +175,7 @@
      this box's actual width/height IS the animation's start size. */
   .aboutHero-imagePlaceholder {
     width: 333px;
-    height: 171px;
+    height: 71px;
     aspect-ratio: auto;
     max-width: 88vw;
     margin-top: 18px;

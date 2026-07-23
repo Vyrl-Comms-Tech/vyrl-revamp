@@ -3,6 +3,7 @@ import Footer from "./components/layout/Footer";
 import { Geist_Mono, Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ViewTransitions } from "next-view-transitions";
 import Navbar from "@/app/components/layout/Navbar";
 import SmoothScroll from "@/app/components/layout/SmoothScroll";
 
@@ -76,17 +77,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${neueMontreal.variable} ${geistMono.variable} ${inter.variable} h-full antialiased`}
-    >
-      <body suppressHydrationWarning={true} className="min-h-full">
-        <SmoothScroll />
-        {/* <Header /> */}
-        <Navbar />
-        {children}
-        <Footer />
-      </body>
-    </html>
+    <ViewTransitions>
+      <html
+        lang="en"
+        className={`${neueMontreal.variable} ${geistMono.variable} ${inter.variable} h-full antialiased`}
+      >
+        <body suppressHydrationWarning={true} className="min-h-full">
+          <SmoothScroll />
+          {/* <Header /> */}
+          <Navbar />
+          {children}
+          <Footer />
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }

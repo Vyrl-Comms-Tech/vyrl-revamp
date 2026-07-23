@@ -63,6 +63,8 @@
   bottom: 5%;
   width: 50%;
   font-weight: 400;
+  font-size: 18px;
+  line-height: 116%;
   z-index: 2;
 }
 
@@ -201,6 +203,7 @@
     font-size: 3rem;
   }
   .cardsStack p {
+  font-size: 17px;
   width: 57%;
   }
 }
@@ -211,6 +214,7 @@
     height: 55vh !important;
   }
 .cardsStack p{
+  font-size: 15px;
   width: 90%;
 }
   .upperHeadingStack h1 {

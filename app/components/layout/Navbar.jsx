@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Link, useTransitionRouter } from "next-view-transitions";
 import gsap from "gsap";
+import { slideInOut, isCaseStudyPath } from "./pageTransition";
 import "../../styles/navbar.css";
 
 const navLinks = [
@@ -38,7 +39,21 @@ const NavLink = ({ label, href }) => {
   const enterTweenRef = useRef(null);
   const leaveTweenRef = useRef(null);
   const pathname = usePathname();
+  const router = useTransitionRouter();
   const isActive = href !== "#" && pathname === href;
+
+  const handleClick = (e) => {
+    if (href === "#" || href === pathname) return;
+
+    // Case-study pages own their own hand-built transition (heading
+    // clone + overlay, timed against a plain router.push in
+    // CaseStudyInner.jsx) — let those navigate normally instead of
+    // layering this view transition on top of that.
+    if (isCaseStudyPath(href) || isCaseStudyPath(pathname)) return;
+
+    e.preventDefault();
+    router.push(href, { onTransitionReady: slideInOut });
+  };
 
   // Draw the underline in for the current route's link, same stroke
   // animation as hover — so landing on /about shows "About" already
@@ -91,6 +106,15 @@ const NavLink = ({ label, href }) => {
     // Already drawn in and staying that way for the active route — no
     // need to redraw it on hover too.
     if (isActive) return;
+
+    // Touch devices fire a synthetic mouseenter right before the click/
+    // navigation on tap — with no real hover intent behind it, that
+    // just flashed the underline-draw animation on the link you're
+    // about to leave for as the menu was already closing, which read
+    // as glitchy. Only the actually-active route should ever show an
+    // underline on mobile/touch, so skip the hover animation there.
+    if (window.matchMedia("(hover: none)").matches) return;
+
     const chars = charsRef.current;
     gsap.killTweensOf(chars);
 
@@ -167,6 +191,7 @@ const NavLink = ({ label, href }) => {
       href={href}
       ref={linkRef}
       className="nav-link-item"
+      onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

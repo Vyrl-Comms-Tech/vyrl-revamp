@@ -135,7 +135,7 @@
     line-height: 1.25;
   }
 
-  .team-section-mobile .team-section-content p {
+  .team-section-mobile .team-section-content > p {
     font-size: 16px;
     color: rgba(255, 255, 255, 0.75);
     line-height: 1.25;
@@ -155,6 +155,13 @@
     padding-inline: 15px !important;
   }
 
+.item-card {
+  width: 270px I !important;
+  height: 460px !important;
+}
+.item-card-image img {
+  height:120% !important;
+}
   .team-mobile-swiper .item-card-image {
     width: 100%;
     aspect-ratio: 4 / 4;
@@ -168,14 +175,14 @@
   }
 
   .team-mobile-swiper .item-name {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 500;
-    margin-top: 16px;
+    margin-top: 11px;
   }
 
   .team-mobile-swiper .item-designation {
-    font-size: 13px;
+    font-size: 15px;
     color: #555;
-    margin-top: 4px;
+    margin-top: 2px;
   }
 }

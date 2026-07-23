@@ -163,7 +163,8 @@ function SimilarPost() {
 
         <div className="reviews-label">
           <span>•</span>
-          <h2>BLOGS</h2>
+          <h2>Case Studies & Insights
+</h2>
           <span>•</span>
         </div>
       </div>
@@ -227,7 +228,8 @@ function SimilarPost() {
 
       <div className="review-mobile-label">
         <span>•</span>
-        <h2>VIEW ALL BLOGS</h2>
+        <h2>Case Studies & Insights
+</h2>
         <span>•</span>
       </div>
     </section>

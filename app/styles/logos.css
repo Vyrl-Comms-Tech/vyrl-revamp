@@ -14,7 +14,7 @@
   justify-content: space-between;
 }
 #about-logos-left h2 {
-  font-size: 55px;
+  font-size: 51px;
   line-height: 111%;
 }
 .logos-left h2 {
@@ -105,8 +105,8 @@
   }
 
   .logos-left-desc {
-    font-size: 19px;
-    line-height: 1.2;
+    font-size: 18px;
+    line-height: 111%;
   }
   .logos-left {
     width: 55%;
@@ -137,12 +137,28 @@
     align-items: center;
   }
 
+  /* .logos-left's own align-items: center only centers this wrapper
+     div as a whole flex item — the button inside it (.cta-btn-container,
+     width: fit-content) still sat left-aligned as a block-level child
+     until this div became a flex column centering its own children too. */
+  .logos-left-textcol {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+#about-logos-left h2{
+  font-size: 40px;
+  line-height: 111%;
+}
   .logos-left h2 {
     font-size: 32px;
   }
 
   .logos-left-desc {
     font-size: 16px;
+    line-height: 111%;
+    color: rgba(255, 255, 255, 0.7);
   }
 
   /* Hide the desktop hover-glow grid; show the marquee instead. */
@@ -169,7 +185,11 @@
       transparent 100%
     );
   }
-
+.cta-about-logos{
+align-items: center;
+justify-content: center;
+display: flex;
+}
   .logos-marquee-track {
     display: flex;
     width: max-content;

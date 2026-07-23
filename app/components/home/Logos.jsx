@@ -27,7 +27,7 @@ const Logos = () => {
           <h2>Our Clients</h2>
         </TextAnimation>
         <TextAnimation animateOnScroll={true} delay={0.3}>
-          <p>
+          <p className="logos-left-desc">
             We partner with high growth brands, premium businesses, and
             forward thinking teams across the world, building digital ecosystems
             designed for visibility, trust, and scale.

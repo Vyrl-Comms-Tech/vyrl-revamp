@@ -23,6 +23,7 @@
   position: absolute;
   bottom: 3%;
   left: 3%;
+  right: 3%;
   color: #fcfcfc;
 }
 
@@ -34,13 +35,14 @@
 
 .ctaFilter {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   margin-top: 1rem;
 }
 
 .ctaF {
-  border-radius: 10rem;
   padding: 0.4rem 1.5rem;
+  border-radius: 10rem;
   border: 1px solid white;
   background: transparent;
   color: #fff;
@@ -205,6 +207,10 @@
   .cardsSection {
     width: auto;
   }
+  
+.ctaF {
+  padding: 0.2rem 1rem;
+}
   .cardsProject {
     height: 50vh !important;
     width: 93.09vw !important; /* 885 / 1920 * 100 */

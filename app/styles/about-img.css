@@ -6,7 +6,8 @@
   justify-content: center;
 }
 
-.aboutImg img {
+.aboutImg img,
+.aboutImg video {
   height:80vh;
   margin-top: 20px;
   width: auto;
@@ -23,13 +24,15 @@
     display: none;
   }
 
-  .aboutImg img {
+  .aboutImg img,
+.aboutImg video {
     height: 28vh;
     margin-top: 10px;
   }
 }
 @media (max-width: 760px) {
-  .aboutImg img {
+  .aboutImg img,
+.aboutImg video {
     height: 39vh;
     margin-block: -100px;
     /* margin-bottom: -100px; */

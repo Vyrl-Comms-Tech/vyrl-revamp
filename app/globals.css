@@ -47,3 +47,39 @@ button,
 [role="button"] {
   cursor: none;
 }
+
+/* View Transitions layering fix — pairs with pageTransition.js's
+   slideInOut(), which drives the actual old/new keyframes via WAAPI.
+   Disables the browser's default cross-fade so only our own animation
+   plays, and forces the incoming page above the outgoing one so the
+   clip-path reveal uncovers it top-down instead of cross-fading. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* The browser's view-transition root snapshot layer sits on top of
+   whatever <html>'s own background is (white/--bodybg here) — with
+   nothing behind the old/new snapshots, the gap between the old page
+   fading toward opacity: 0.2 and the new page sliding up to cover the
+   rest of the frame let that lighter background flash through. A solid
+   black layer behind both snapshots means that gap reveals black
+   instead. */
+::view-transition-group(root) {
+  z-index: auto;
+  background: #000;
+}
+
+::view-transition-image-pair(root) {
+  isolation: isolate;
+  z-index: 1;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 999;
+}

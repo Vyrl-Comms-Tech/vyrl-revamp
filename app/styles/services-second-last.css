@@ -1,0 +1,21 @@
+#services-second-last{
+    background: #000;
+}
+#sp-left{
+    background: #fff;
+}
+#sp-heading , #sp-para{
+    color: black;
+}
+#sp-para{
+    font-size: 24px;
+    line-height: 111%;
+}
+#sp-btn{
+    background: #000;
+    color: #fff;
+}
+#sp-btn-icon {
+  background: #fff;
+  color: #000;
+}

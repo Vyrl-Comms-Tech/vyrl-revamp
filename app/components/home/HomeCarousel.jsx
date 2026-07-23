@@ -102,24 +102,26 @@ const HomeCarousel = () => {
 
   return (
     <>
-
-
       <section className="h2-section">
-
         <>
           <div className="h2-section-main-heading">
-            <h2>Work That Moves <br id="remove-br"/> Brands Forward
+            <h2>
+              Work That Moves <br id="remove-br" /> Brands Forward
             </h2>
             <p>
-              A glimpse into the websites, campaigns, platforms, content systems, and digital experiences we have built for ambitious brands across the world.
+              A glimpse into the websites, campaigns, platforms, content
+              systems, and digital experiences we have built for ambitious
+              brands across the world.
             </p>
           </div>
         </>
 
-
         {/* Title + Tabs */}
         <div className="h2-top">
-          <ChangeTextAnimation key={`title-${activeIndex}`} animateOnScroll={false}>
+          <ChangeTextAnimation
+            key={`title-${activeIndex}`}
+            animateOnScroll={false}
+          >
             <h2 className="h2-title">{activeSlide.title}</h2>
           </ChangeTextAnimation>
           <div className="h2-tabs" key={`tabs-${tagsIndex}`} ref={tagsRef}>
@@ -181,7 +183,12 @@ const HomeCarousel = () => {
         <div className="h2-footer">
           {/* Left: See All Work + Counter */}
           <div className="h2-footer-left">
-            <CtaButton label="See All Work" videoSrc="/bg-v-compressed.mp4" href="/work" className="cta-button-carousel cta-button-white" />
+            <CtaButton
+              label="See All Work"
+              videoSrc="/bg-v-compressed.mp4"
+              href="/projects"
+              className="cta-button-carousel cta-button-white"
+            />
 
             <div className="h2-counter">
               <div className="h2-counter-nums">
@@ -247,7 +254,6 @@ const HomeCarousel = () => {
           <div className="h2-footer-right" />
         </div>
       </section>
-
     </>
   );
 };

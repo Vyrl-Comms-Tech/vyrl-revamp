@@ -4,7 +4,7 @@ import '../../styles/about-img.css'
 const AboutImg = () => {
   return (
     <div className='aboutImg'>
-      <img src="/abouthero.avif" alt="" />
+      <video src="/aboutUsHero.mp4" autoPlay loop muted playsInline />
     </div>
   )
 }
