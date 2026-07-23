@@ -52,6 +52,7 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
   const descRef = useRef(null);
   const tagsRef = useRef(null);
   const numberDigitsRefs = useRef([]);
+  const skipRef = useRef(null);
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
@@ -522,12 +523,43 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
     }
 
     // ------------------------------------------------
+    // Skip button — jumps straight past this section's pin, same target
+    // math as releasePastEdge (mobile edge-release) above, but scrolled
+    // smoothly rather than snapped, since this is a deliberate click
+    // rather than a scroll gesture already in motion.
+    // ------------------------------------------------
+    const handleSkip = () => {
+      // +1 alone only crosses the pin's release threshold, landing
+      // exactly at the top of the next section — adding half a
+      // viewport's worth of extra scroll carries it a bit further so
+      // the next section is already partway up the page once it lands.
+      const targetScroll =
+        mainScrollTrigger.start +
+        (mainScrollTrigger.end - mainScrollTrigger.start) +
+        window.innerHeight * 0.5;
+
+      // Routed through the global Lenis instance (see SmoothScroll.jsx)
+      // rather than window.scrollTo({behavior:"smooth"}) or a GSAP
+      // scrollTo tween — either of those would be a second animation
+      // fighting Lenis for control of the scroll position every frame.
+      if (window.lenis) {
+        window.lenis.scrollTo(targetScroll, { duration: 1.6 });
+      } else {
+        window.scrollTo({ top: targetScroll });
+      }
+    };
+
+    const skipBtn = skipRef.current;
+    skipBtn?.addEventListener("click", handleSkip);
+
+    // ------------------------------------------------
     // Cleanup
     // ------------------------------------------------
     return () => {
       if (handleResize) window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(rafId);
 
+      skipBtn?.removeEventListener("click", handleSkip);
       if (removeStepGestureListeners) removeStepGestureListeners();
       mainScrollTrigger.kill();
 
@@ -571,6 +603,27 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       <div className="services-cta-desktop">
         <CtaButton label="Explore Services" href="/services" />
       </div>
+
+      <button type="button" className="services-skip-btn" ref={skipRef}>
+        <span className="services-skip-icon" aria-hidden="true">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M13 5L20 12L13 19M4 5L11 12L4 19"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+        Skip this section
+      </button>
 
       <div className="right-text-services">
         <div className="service-tags" ref={tagsRef}>

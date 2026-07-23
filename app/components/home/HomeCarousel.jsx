@@ -9,37 +9,59 @@ import "../../styles/home-carousel.css";
 import "swiper/css/effect-coverflow";
 import ChangeTextAnimation from "../layout/ChangeTextAnimation";
 import CtaButton from "../layout/cta";
-
 const slides = [
   {
-    image: "/cr1.avif",
-    title: "Creative Direction",
-    tabs: ["SPLINE", "THREE.JS", "3D"],
-    desc: "A curated collection of projects that showcase our approach to design, storytelling, and innovation—each crafted to elevate brands and create lasting impressions.",
+    image: "/arab1.avif",
+    title: "Arabian Estates",
+    tabs: [
+      "CUSTOM DASHBOARD",
+      "GOOGLE MAPS",
+      // ""
+    ],
+    desc: "A modern real estate platform featuring property listings, advanced search, an admin dashboard, and seamless content management for agents and property owners.",
   },
   {
-    image: "/cr2.avif",
-    title: "Brand Identity",
-    tabs: ["LOGO", "TYPOGRAPHY"],
-    desc: "Distinct visual systems built to give brands a voice that's instantly recognizable, memorable, and consistent across every touchpoint.",
+    image: "/banda4.avif",
+    title: "Banda",
+    tabs: [
+      "GSAP",
+      "RESPONSIVE",
+      "FRAMER MOTION",
+      "THREE.JS",
+    ],
+    desc: " A culturally grounded, visually elevated brand identity and website that capture Banda’s architectural ethos and storytelling approach.",
   },
   {
-    image: "/cr1.avif",
-    title: "Motion & Animation",
-    tabs: ["GSAP", "WEBGL", "3D", "MOTION"],
-    desc: "Fluid, expressive motion design that brings interfaces to life—turning static ideas into experiences people want to keep exploring.",
+    image: "/jeikor4.avif",
+    title: "Jeikor",
+    tabs: [
+      // "WEBGL",
+      "GSAP",
+      "NEXT.JS",
+      // "SHADERS"
+    ],
+    desc: "A sharp, corporate-grade website that builds trust and positions Jeikor as a serious player in the UAE construction sector.",
   },
   {
-    image: "/cr2.avif",
-    title: "Web Experience",
-    tabs: ["NEXT.JS", "REACT"],
-    desc: "Performance-driven websites engineered for speed and scale, without ever compromising on the craft of the design.",
+    image: "/lala1.avif",
+    title: "Lala Darbar",
+    tabs: [
+      "REACT",
+      "SEO",
+      "GSAP"
+    ],
+    desc: " A flavor-loaded rebrand and interactive website that captures the spirit of desi street food in an unforgettable scroll.",
   },
   {
-    image: "/img1.jpg",
-    title: "Product Design",
-    tabs: ["UI/UX", "PROTOTYPING", "RESEARCH"],
-    desc: "End-to-end product thinking that turns complex problems into interfaces that feel simple, intuitive, and effortless to use.",
+    image: "/sanam3.avif",
+    title: "Sanam Cars",
+    tabs: [
+      "NEXT.JS",
+      "FILTERING",
+      "API",
+      "RESPONSIVE"
+    ],
+    desc: "A premium car marketplace with dynamic inventory management, advanced filtering, detailed vehicle pages, and an optimized browsing experience across devices.",
   },
 ];
 

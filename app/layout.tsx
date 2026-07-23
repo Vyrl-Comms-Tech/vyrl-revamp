@@ -2,10 +2,14 @@ import type { Metadata } from "next";
 import Footer from "./components/layout/Footer";
 import { Geist_Mono, Inter } from "next/font/google";
 import localFont from "next/font/local";
+import Script from "next/script";
 import "./globals.css";
 import { ViewTransitions } from "next-view-transitions";
 import Navbar from "@/app/components/layout/Navbar";
 import SmoothScroll from "@/app/components/layout/SmoothScroll";
+import PreloaderGate, {
+  preloaderSkipScript,
+} from "@/app/components/layout/PreloaderGate";
 
 const neueMontreal = localFont({
   src: [
@@ -83,6 +87,18 @@ export default function RootLayout({
         className={`${neueMontreal.variable} ${geistMono.variable} ${inter.variable} h-full antialiased`}
       >
         <body suppressHydrationWarning={true} className="min-h-full">
+          {/* beforeInteractive scripts are always injected into <head>
+              by Next.js regardless of where they're placed — this runs
+              before hydration/paint and stamps a class on <html> if
+              this session already saw the preloader, so globals.css can
+              hide it instantly with zero flash instead of waiting for a
+              client effect to decide that after the page has painted. */}
+          <Script
+            id="preloader-skip-check"
+            strategy="beforeInteractive"
+            dangerouslySetInnerHTML={{ __html: preloaderSkipScript }}
+          />
+          <PreloaderGate />
           <SmoothScroll />
           {/* <Header /> */}
           <Navbar />

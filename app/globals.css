@@ -48,6 +48,18 @@ button,
   cursor: none;
 }
 
+/* Set by PreLoader.tsx while it's mounted and not yet inert — the
+   custom cursor (Navbar's .cursor-follow) sits below the preloader's
+   z-index, so with the native cursor hidden site-wide there'd be no
+   visible pointer at all during load. Restoring it here for that
+   window, then letting the custom cursor take back over once the
+   preloader finishes (class removed), fixes that. The preloader's own
+   "Let's get started" button keeps its own cursor: pointer (see
+   Preloader.module.css), so this only needs to cover the generic case. */
+body.preloader-active {
+  cursor: auto;
+}
+
 /* View Transitions layering fix — pairs with pageTransition.js's
    slideInOut(), which drives the actual old/new keyframes via WAAPI.
    Disables the browser's default cross-fade so only our own animation

@@ -46,7 +46,9 @@ const HomeSecondLast = () => {
 
         {/* Right image panel */}
         <div className="hp-right">
-          <img src="/img2.avif" alt="3D digital sculpture" className="hp-img" />
+      <video src="/secondlast.mp4" autoPlay loop muted playsInline className="hp-img"/>
+
+          {/* <img src="/img2.avif" alt="3D digital sculpture" className="hp-img" /> */}
         </div>
       </div>
     </section>

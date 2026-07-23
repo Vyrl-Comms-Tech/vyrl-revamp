@@ -525,11 +525,19 @@ const CaseStudyInner = ({ slug }) => {
                 </button>
               </div>
             </div>
-            <ul className="cs-services">
-              {c1.services.map((s) => (
-                <li key={s}>{s}</li>
-              ))}
-            </ul>
+            <div className="cs-services-col">
+              {c1.duration && (
+                <div className="cs-duration">
+                  <span className="cs-duration-label">Duration:</span>
+                  <span className="cs-duration-value">{c1.duration}</span>
+                </div>
+              )}
+              <ul className="cs-services">
+                {c1.services.map((s) => (
+                  <li key={s}>{s}</li>
+                ))}
+              </ul>
+            </div>
             <div className="cs-mockup" ref={mockupRef}>
               <img src={c1.images[0]} alt={`${c1.title} mockup`} />
             </div>

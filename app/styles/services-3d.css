@@ -162,6 +162,67 @@
   /* line-height: 1; */
 }
 
+/* ------------------------------
+   Skip-section button (bottom-left)
+------------------------------ */
+.services-skip-btn {
+  position: absolute;
+  left: 2%;
+  bottom: 5%;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  transition:
+    color 0.3s ease,
+    gap 0.3s ease;
+}
+
+.services-skip-btn:hover {
+  color: #000;
+  gap: 0.75rem;
+}
+
+.services-main-section--dark .services-skip-btn {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.services-main-section--dark .services-skip-btn:hover {
+  color: #fff;
+}
+
+.services-skip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  transition: transform 0.3s ease;
+}
+
+.services-skip-btn:hover .services-skip-icon {
+  transform: translateX(3px);
+  rotate: 90deg;
+}
+
+@media (max-width: 700px) {
+  .services-skip-btn {
+    font-size: 0.85rem;
+    bottom: 4%;
+  }
+}
+
 @media (max-width: 1720px) {
   .counter-divs {
     font-size: 4.3rem;

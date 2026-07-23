@@ -281,6 +281,7 @@
 
 import { Fragment, useEffect, useRef } from "react";
 import "../../styles/aboutus-stack.css";
+import CtaButton from "../layout/cta";
 
 /**
  * Card data — swap `video` paths for files placed under /public/assets/*
@@ -663,9 +664,17 @@ export default function AboutUsStack() {
               <source src={card.video} type="video/mp4" />
             </video>
 
-            <p>{card.description}</p>
+            <p className="cardsStack-desc">{card.description}</p>
           </div>
         ))}
+
+        <div className="aboutUsStack-cta">
+          <CtaButton
+            label="Explore Services"
+            href="/services"
+            className="cta-button"
+          />
+        </div>
       </div>
     </>
   );

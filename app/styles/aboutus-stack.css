@@ -55,7 +55,13 @@
   line-height: normal;
 }
 
-.cardsStack p {
+/* Scoped to its own class rather than a bare ".cardsStack p" — the
+   CtaButton's label is also a <p> nested inside .cardsStack (through
+   .cardsStack-cta), so the old broad selector was re-styling it too:
+   forcing the label white (invisible against the white cta-button-white
+   background) and position:absolute (breaking its centering inside the
+   button). */
+.cardsStack-desc {
   color: #fff;
   text-align: right;
   position: absolute;
@@ -66,6 +72,18 @@
   font-size: 18px;
   line-height: 116%;
   z-index: 2;
+}
+
+/* Sits at the bottom-left of the whole pinned section (not any single
+   card) — a fixed reference point that doesn't move with the cards'
+   own enter/exit animation, per the request to have it live outside
+   the card entirely. z-index is above the cards (which go up to
+   cardCount) so it's never covered as they animate. */
+.aboutUsStack-cta {
+  position: absolute;
+  left: 3%;
+  bottom: 5%;
+  z-index: 20;
 }
 
 .counterStack {
@@ -202,7 +220,7 @@
   .upperHeadingStack h1 {
     font-size: 3rem;
   }
-  .cardsStack p {
+  .cardsStack-desc {
   font-size: 17px;
   width: 57%;
   }
@@ -213,9 +231,10 @@
     width: 95vw !important;
     height: 55vh !important;
   }
-.cardsStack p{
+.cardsStack-desc{
   font-size: 15px;
   width: 90%;
+  bottom: 18%;
 }
   .upperHeadingStack h1 {
     font-size: 2.2rem;
@@ -230,5 +249,23 @@ display: none;
     gap: 15px;
     left: 20%;
     bottom: 10%; */
+  }
+
+  /* Sits below the pinned cards' area (not overlapping any card's own
+     text), full-width so it reads clearly on narrow screens. */
+  .aboutUsStack-cta {
+    left: 3%;
+    right: 3%;
+    bottom: 3%;
+    width: auto;
+  }
+
+  .aboutUsStack-cta .cta-btn-container {
+    width: 100%;
+  }
+
+  .aboutUsStack-cta .cta-btn {
+    width: 100%;
+    justify-content: center;
   }
 }

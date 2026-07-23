@@ -16,6 +16,14 @@ function SmoothScroll() {
 
     lenis.on("scroll", ScrollTrigger.update);
 
+    // Exposed so other components (e.g. Services3d.jsx's "skip section"
+    // button) can call window.lenis.scrollTo(...) for a smooth
+    // programmatic scroll that Lenis itself drives — a plain
+    // window.scrollTo({behavior:"smooth"}) or a GSAP scrollTo tween
+    // would both be a second animation fighting this instance for
+    // control of the scroll position every frame.
+    window.lenis = lenis;
+
     const update = (time) => {
       lenis.raf(time * 1000);
     };
@@ -34,6 +42,7 @@ function SmoothScroll() {
       ScrollTrigger.removeEventListener("refresh", handleRefresh);
       gsap.ticker.remove(update);
       lenis.destroy();
+      if (window.lenis === lenis) window.lenis = null;
     };
   }, []);
 

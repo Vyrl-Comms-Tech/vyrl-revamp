@@ -120,8 +120,9 @@
     width: 200px;
     height: 114px;
   }
-.aboutHero {
-  padding: 70px 3% 4rem;}
+  .aboutHero {
+    padding: 100px 3% 4rem;
+  }
   .aboutHero-desc {
     max-width: 520px;
     font-size: 18px;

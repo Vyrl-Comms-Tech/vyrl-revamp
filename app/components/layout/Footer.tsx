@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { caseStudies } from "../caseStudy/caseStudiesData";
 import FooterLogo3D from "./FooterLogo3D";
+import PageTransitionLink from "./PageTransitionLink";
 import "../../styles/footer.css";
+// import PageTransitionLink from "./PageTransitionLink";
 
 const CASE_STUDY_PATHS = Object.values(caseStudies).map((c) => c.href);
 const NO_FOOTER_PATHS = [...CASE_STUDY_PATHS, "/contact-us"];
@@ -149,42 +150,42 @@ function Footer() {
           <div className="footer-inner-link-col">
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Links</h4>
-              <Link href="/" className="footer-nav-link">
+              <PageTransitionLink href="/" className="footer-nav-link">
                 Home
-              </Link>
-              <Link href="/about" className="footer-nav-link">
+              </PageTransitionLink>
+              <PageTransitionLink href="/about" className="footer-nav-link">
                 About
-              </Link>
-              <Link href="/services" className="footer-nav-link">
+              </PageTransitionLink>
+              <PageTransitionLink href="/services" className="footer-nav-link">
                 Services
-              </Link>
-              <Link href="/projects" className="footer-nav-link">
+              </PageTransitionLink>
+              <PageTransitionLink href="/projects" className="footer-nav-link">
                 Work
-              </Link>
-              <Link href="/contact-us" className="footer-nav-link">
+              </PageTransitionLink>
+              <PageTransitionLink href="/contact-us" className="footer-nav-link">
                 Contact
-              </Link>
+              </PageTransitionLink>
             </div>
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Other</h4>
-              <Link href="/projects" className="footer-nav-link">
+              <PageTransitionLink href="/projects" className="footer-nav-link">
                 Case Studies
-              </Link>
-              <Link href="/blogs" className="footer-nav-link">
+              </PageTransitionLink>
+              <PageTransitionLink href="/blogs" className="footer-nav-link">
                 Blog
-              </Link>
-              <Link href="/blogs" className="footer-nav-link">
+              </PageTransitionLink>
+              {/* <PageTransitionLink href="/blogs" className="footer-nav-link">
                 Careers
-              </Link>
+              </PageTransitionLink> */}
             </div>
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Info</h4>
-              <Link href="/privacy" className="footer-nav-link">
+              <PageTransitionLink href="/privacy" className="footer-nav-link">
                 Privacy Policy
-              </Link>
-              <Link href="/terms" className="footer-nav-link">
+              </PageTransitionLink>
+              <PageTransitionLink href="/terms" className="footer-nav-link">
                 Terms Of Service
-              </Link>
+              </PageTransitionLink>
             </div>
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Address</h4>

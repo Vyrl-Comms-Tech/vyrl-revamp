@@ -232,7 +232,7 @@
   border-radius: 50px;
   border: 1px solid rgba(255, 255, 255, 0.35);
   background: transparent;
-  cursor: none;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -242,7 +242,7 @@
 }
 
 .h2-nav-btn * {
-  cursor: none;
+  cursor: pointer;
 }
 
 .h2-nav-btn:hover {

@@ -14,9 +14,35 @@
 
 .centerHeadingProject {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   color: #fff;
+  text-align: center;
+  gap: 0.75rem;
+  padding-inline: 5%;
+}
+
+.pc-mini-head {
+  font-size: 1.5rem;
   font-weight: 400;
-  font-size: 14rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.pc-bigger-head {
+  font-size: clamp(2.5rem, 7vw, 8.5rem);
+  font-weight: 500;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.pc-para {
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 640px;
 }
 
 .filterCtas {
@@ -182,24 +208,18 @@
   color: #fff;
   margin-top: 0.5rem;
 }
-@media (max-width:1620px){
-  .centerHeadingProject{
-    font-size: 12rem;
-  }
-}
-
 @media (max-width: 800px) {
   .seprateDivs {
     flex-direction: column;
   }
-  .centerHeadingProject {
-    font-size: 4rem;
-  }
   .heroProject {
-    height: 45vh;
+    height: 58vh;
   }
   .filterCtas h1 {
     font-size: 1.3rem;
+  }
+  .pc-para {
+    font-size: 0.9rem;
   }
 }
 
@@ -207,10 +227,13 @@
   .cardsSection {
     width: auto;
   }
-  
-.ctaF {
-  padding: 0.2rem 1rem;
+
+.pc-mini-head {
+  font-size: 1.1rem;
 }
+  .ctaF {
+    padding: 0.2rem 1rem;
+  }
   .cardsProject {
     height: 50vh !important;
     width: 93.09vw !important; /* 885 / 1920 * 100 */
@@ -218,7 +241,7 @@
   .imgFollow {
     display: none !important;
   }
-  .ctaF{
-    padding: .2rem 1rem;
+  .ctaF {
+    padding: 0.2rem 1rem;
   }
 }

@@ -1,9 +1,10 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useTransitionRouter } from "next-view-transitions";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { slideInOut } from "../layout/pageTransition";
 import "../../styles/projects-grid.css";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -73,7 +74,7 @@ const PROJECT_ROWS = [
 ];
 
 export default function ProjectsGrid() {
-  const router = useRouter();
+  const router = useTransitionRouter();
   const sectionRef = useRef(null);
   const cardRefs = useRef(new Map()); // id -> card DOM node
   const followerRefs = useRef(new Map()); // id -> follower DOM node
@@ -169,7 +170,9 @@ export default function ProjectsGrid() {
   };
 
   const handleCardClick = (project) => () => {
-    if (project.href) router.push(project.href);
+    if (project.href) {
+      router.push(project.href, { onTransitionReady: slideInOut });
+    }
   };
 
   return (
@@ -191,7 +194,15 @@ export default function ProjectsGrid() {
             ))}
           </div>
         </div>
-        <div className="centerHeadingProject">PROJECTS</div>
+        <div className="centerHeadingProject">
+          <span className="pc-mini-head">Case Studies</span><h1 className="pc-bigger-head">
+            And Digital Insights
+            </h1>
+            <p className="pc-para">
+               A closer look at the work we build, the ideas we believe in, and the digital strategies helping ambitious brands grow smarter.
+
+            </p>
+        </div>
       </div>
 
       <div className="cardsSection">

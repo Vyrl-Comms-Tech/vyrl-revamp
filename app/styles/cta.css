@@ -17,11 +17,11 @@
   z-index: 1;
   gap: 1.5rem;
   background-color: #000;
-  cursor: none;
+  cursor: pointer;
 }
 
 .cta-btn * {
-  cursor: none;
+  cursor: pointer;
 }
 
 .cta-btn-vid {

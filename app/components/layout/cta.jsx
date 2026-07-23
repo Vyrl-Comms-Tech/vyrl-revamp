@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import PageTransitionLink from "./PageTransitionLink";
 import "../../styles/cta.css";
 
 const CtaButton = ({
@@ -91,7 +92,7 @@ const CtaButton = ({
 
   return (
     <div className="cta-btn-container" ref={containerRef}>
-      <a
+      <PageTransitionLink
         className={`cta-btn ${className}`.trim()}
         href={href}
         id={id}
@@ -119,7 +120,7 @@ const CtaButton = ({
           </svg>
         </div>
         <p ref={textRef}>{label}</p>
-      </a>
+      </PageTransitionLink>
     </div>
   );
 };

@@ -201,7 +201,7 @@
 }
 
 .footer-nav-link {
-  cursor: none;
+  cursor: pointer;
   color: #fff8;
   font-size: 17px;
   font-style: normal;
@@ -289,7 +289,7 @@
   font-size: 18px;
   font-weight: 300;
   white-space: nowrap;
-  cursor: none;
+  cursor: pointer;
 }
 
 .footer-subscribe-btn:hover {

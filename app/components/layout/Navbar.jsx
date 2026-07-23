@@ -23,12 +23,10 @@ const underlinePaths = [
 ];
 
 const idleMessages = [
-  "hey... where you go? 👀",
-  "still there? 😭",
-  "stop ignoring me bro",
-  "bro is AFK 💀",
-  "hello??",
-  "I miss your cursor 😔",
+  "Still with us?",
+  "Take your time",
+  "We're here when you're ready",
+  "Feel free to explore",
 ];
 
 const NavLink = ({ label, href }) => {
@@ -457,7 +455,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="cursor-follow" ref={cursorRef} />
+      {/* <div className="cursor-follow" ref={cursorRef} /> */}
 
       <div className="cursor-popup" ref={popupRef}>
         &#128075; yo!
