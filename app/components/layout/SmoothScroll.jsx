@@ -1,5 +1,6 @@
 "use client";
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -7,6 +8,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 function SmoothScroll() {
+  const pathname = usePathname();
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -45,6 +48,21 @@ function SmoothScroll() {
       if (window.lenis === lenis) window.lenis = null;
     };
   }, []);
+
+  // This component lives in the root layout, so it never remounts on
+  // client-side navigation — Lenis's cached scroll height keeps
+  // whatever the previous route measured. Simple pages with no
+  // ScrollTrigger of their own (privacy-policy, terms-and-condition)
+  // never trigger a "refresh" event to correct that, so after
+  // navigating from a shorter page Lenis could still think the page
+  // ends well before its real (much longer) content does — reading as
+  // the page getting "stuck" partway through a scroll. Re-running
+  // refresh on every route change re-measures against the new page's
+  // actual height. rAF delay lets the new route's DOM paint first.
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
+    return () => cancelAnimationFrame(raf);
+  }, [pathname]);
 
   return null;
 }
