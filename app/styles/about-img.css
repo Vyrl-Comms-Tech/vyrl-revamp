@@ -16,6 +16,12 @@
   object-fit: contain;
 }
 
+@media (max-width:1720px){
+  .aboutImg video {
+  height:75vh;
+}
+}
+
 @media (max-width: 900px) {
   /* AboutHero renders its own copy of AboutImg inline (mobileWordmark
      prop) on mobile, so the standalone top-level instance in page.jsx
