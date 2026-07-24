@@ -44,6 +44,8 @@
   position: relative;
   display: flex;
   align-items: center;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .logo svg {
@@ -67,6 +69,30 @@
   margin-top: 0.5rem;
 }
 
+/* Projects and contact-us pages sit on light backgrounds where the
+   navbar/menu-dropdown's default solid black reads too heavy — both share
+   this translucent glass look on those pages instead. Declared after both
+   base rules above so it actually overrides their background-color. */
+.nav-bar--glass,
+.menu-dropdown--glass {
+  background: rgba(246, 246, 246, 0.1);
+  backdrop-filter: blur(22px);
+}
+
+/* Contact page: same glass blur, but a left-to-right gradient (dark on
+   the left, light on the right) instead of the flat whitish tint used on
+   /projects — overrides the flat .nav-bar--glass/.menu-dropdown--glass
+   background above since it's declared after it. */
+.nav-bar--contact,
+.menu-dropdown--contact {
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.6),
+    rgba(246, 246, 246, 0.1)
+  );
+  backdrop-filter: blur(22px);
+}
+
 .right-content ul {
   padding: 2rem;
 }
@@ -81,7 +107,7 @@
   text-decoration: none;
   color: #fff;
   font-family: inherit;
-  cursor: none;
+  /* cursor: none; */
   display: none;
   font-size: 3rem;
   text-transform: uppercase;
@@ -140,6 +166,7 @@
 .box-1 p {
   font-size: 2rem;
   position: absolute;
+  text-transform: uppercase !important;
   bottom: 0;
   padding: 0.5rem;
   z-index: 2;
@@ -212,7 +239,9 @@
   opacity: 0;
   transform: translateY(20px);
 }
-
+.menu-toggle{
+  cursor: pointer;
+}
 @media (max-width: 1770px) {
   .nav-link-item {
     font-size: 2.2rem;

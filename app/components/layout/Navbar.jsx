@@ -6,12 +6,13 @@ import { Link, useTransitionRouter } from "next-view-transitions";
 import gsap from "gsap";
 import { slideInOut, isCaseStudyPath } from "./pageTransition";
 import "../../styles/navbar.css";
+import PageTransitionLink from "./PageTransitionLink";
 
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Services", href: "/services" },
-  { label: "Lab", href: "#" },
+  // { label: "Lab", href: "#" },
   { label: "Work", href: "/projects" },
   { label: "Contact", href: "/contact-us" },
 ];
@@ -224,6 +225,8 @@ const Navbar = () => {
   const [isActive, setIsActive] = useState(false);
   const isActiveRef = useRef(isActive);
   const pathname = usePathname();
+  const isContactPage = pathname === "/contact-us";
+  const isGlassNav = pathname === "/projects" || isContactPage;
 
   const navBarRef = useRef(null);
   const menuDropdownRef = useRef(null);
@@ -462,7 +465,12 @@ const Navbar = () => {
       </div>
 
       <nav className="site-nav">
-        <div className="menu-dropdown" ref={menuDropdownRef}>
+        <div
+          className={`menu-dropdown${isGlassNav ? " menu-dropdown--glass" : ""}${
+            isContactPage ? " menu-dropdown--contact" : ""
+          }`}
+          ref={menuDropdownRef}
+        >
           <div className="right-content">
             <ul ref={rightContentLinksRef}>
               {navLinks.map(({ label, href }) => (
@@ -474,29 +482,48 @@ const Navbar = () => {
           </div>
           <div className="grid-cards" ref={gridCardsRef}>
             <div className="upper-cards">
-              <div className="box-1">
-                <p>Highlighted blogs</p>
-                <Image src="/img1.jpg" alt="" fill sizes="20vw" />
-              </div>
-              <div className="box-1">
-                <p>Highlighted blogs</p>
-                <Image src="/img2.avif" alt="" fill sizes="20vw" />
-              </div>
+              <PageTransitionLink
+                href="/projects?category=real-estate"
+                className="box-1"
+              >
+                <p>Real Estate</p>
+                <Image src="/arab3.avif" alt="" fill sizes="20vw" />
+              </PageTransitionLink>
+              <PageTransitionLink
+                href="/projects?category=restaurant"
+                className="box-1"
+              >
+                <p>Restaurant</p>
+                <Image src="/lala1.avif" alt="" fill sizes="20vw" />
+              </PageTransitionLink>
             </div>
             <div className="upper-cards">
-              <div className="box-1">
-                <p>Highlighted blogs</p>
-                <Image src="/cr1.avif" alt="" fill sizes="20vw" />
-              </div>
+              <PageTransitionLink
+                href="/projects?category=automotive"
+                className="box-1"
+              >
+                <p>Automotive</p>
+                <Image src="/sanam2.avif" alt="" fill sizes="20vw" />
+              </PageTransitionLink>
             </div>
           </div>
         </div>
 
-        <div className="nav-bar" ref={navBarRef}>
+        <div
+          className={`nav-bar${isGlassNav ? " nav-bar--glass" : ""}${
+            isContactPage ? " nav-bar--contact" : ""
+          }`}
+          ref={navBarRef}
+        >
           <div className="bgs" ref={bgsRef}>
             <Image src="/bgs.png" alt="" fill sizes="95vw" />
           </div>
-          <div className="logo" id="mble-nav-logo">
+          <PageTransitionLink
+            href="/"
+            className="logo"
+            id="mble-nav-logo"
+            aria-label="Home"
+          >
             <svg
               ref={(el) => {
                 if (el) upToRef.current = el.querySelectorAll(".up-to");
@@ -549,7 +576,7 @@ const Navbar = () => {
                 fill="white"
               />
             </svg>
-          </div>
+          </PageTransitionLink>
 
           <div className="menu-toggle">
             <div

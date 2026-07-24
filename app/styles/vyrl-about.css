@@ -22,10 +22,10 @@
 .vyrl-service-about-text1,
 .vyrl-service-about-text2 {
   color: #fff;
-  font-size: 3.7rem;
+  font-size: 3rem;
   text-transform: uppercase;
   position: absolute; /* ← KEY: absolute inside wrapper */
-  top: 33%;
+  top: 38%;
   margin: 0;
   /* border: 1px solid blue; */
   padding-block: 20px;
@@ -34,13 +34,13 @@
 }
 
 .vyrl-service-about-text1 {
-  left: 70px; /* starting position — left side */
+  left: 75px; /* starting position — left side */
 }
 
 .vyrl-service-about-text2 {
-  right: 70px; /* starting position — right side */
+  right: 75px; /* starting position — right side */
   /* width: 5  0%; */
-  line-height: 105%;
+  /* line-height: 105%; */
 }
 
 .vyrl-section-about-image {

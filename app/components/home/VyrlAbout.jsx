@@ -135,6 +135,7 @@ function VyrlAbout() {
   const card1Ref = useRef(null);
   const card2Ref = useRef(null);
   const card3Ref = useRef(null);
+  const captionRef = useRef(null);
 
   useEffect(() => {
     // The pinned scroll choreography (image growing, cards fading in,
@@ -179,6 +180,7 @@ function VyrlAbout() {
         {
           x: () => {
             const el = textLeftRef.current;
+            if (!el) return 0;
             const elW = el.offsetWidth;
             const vw = window.innerWidth;
             return vw / 2 - elW - vw * 0.02 - 50;
@@ -193,6 +195,7 @@ function VyrlAbout() {
         {
           x: () => {
             const el = textRightRef.current;
+            if (!el) return 0;
             const elW = el.offsetWidth;
             const vw = window.innerWidth;
             return vw / 2 + vw * 0.02 - (vw - 50 - elW);
@@ -201,6 +204,25 @@ function VyrlAbout() {
         },
         0,
       );
+
+      // Caption sits directly below the image (top: 100%) — as the image
+      // grows during this same window, that pushes the caption down with
+      // it. Left in place, it's still sitting there once the pin
+      // releases, reading as debris left behind at the bottom of the
+      // section. Sliding it further down and fading it out over this
+      // same span means it's fully gone before the pin ever releases.
+      if (captionRef.current) {
+        tl.to(
+          captionRef.current,
+          {
+            y: 60,
+            opacity: 0,
+            ease: "none",
+            duration: 0.6,
+          },
+          0,
+        );
+      }
 
       // The pin's scroll distance is sized off tl.duration() (now that
       // every tween — image grow, card fades, text slides — has been
@@ -249,10 +271,10 @@ function VyrlAbout() {
       <section ref={sectionMainRef} className="vyrl-main-wrapper">
         <div className="vyrl-service-about-container">
           <h1 className="vyrl-service-about-text1" ref={textLeftRef}>
-           Built With Trust.
+          built  With Trust
           </h1>
           <h1 className="vyrl-service-about-text2" ref={textRightRef}>
-          Proven <br /> Through <br /> Experience.
+            Through Experience
           </h1>
           {/* <p>lorem</p> */}
         </div>
@@ -261,10 +283,10 @@ function VyrlAbout() {
           <div className="vyrl-section-about-image-crop">
             <img src="/img1.jpg" alt="" />
           </div>
-          <p className="vyrl-section-about-caption">
+          <p className="vyrl-section-about-caption" ref={captionRef}>
             Our clients work with us for more than deliverables. They come to
-            Vyrl for clarity, execution, creative thinking, and digital
-            systems that help their brands move forward.
+            Vyrl for clarity, execution, creative thinking, and digital systems
+            that help their brands move forward.
           </p>
         </div>
 
@@ -275,19 +297,22 @@ function VyrlAbout() {
               <div className="vyrl-section-card1" ref={card1Ref}>
                 <h1>Think Clearly</h1>
                 <p>
-                  We define the strategy, audience, goals, and digital direction before any creative or technical work begins.
+                   We define the strategy, audience, goals, and digital
+                  direction before any creative or technical work begins.
                 </p>
               </div>
               <div className="vyrl-section-card2" ref={card2Ref}>
                 <h1>Build Boldly</h1>
                 <p>
-                   We design, develop, create, and execute every layer with a balance of creativity, usability, and performance
+                   We design, develop, create, and execute every layer with a
+                  balance of creativity, usability, and performance
                 </p>
               </div>
               <div className="vyrl-section-card3" ref={card3Ref}>
                 <h1>Improve Constantly</h1>
                 <p>
-                  We track, refine, optimize, and evolve the work so your digital ecosystem keeps getting stronger.
+                   We track, refine, optimize, and evolve the work so your
+                  digital ecosystem keeps getting stronger.
                 </p>
               </div>
             </div>

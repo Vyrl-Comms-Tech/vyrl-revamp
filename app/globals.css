@@ -38,15 +38,15 @@ body {
 
 body {
   overflow-x: hidden;
-  cursor: none;
+  /* cursor: none; */
   background-color: var(--bodybg);
 }
-
+/* 
 a,
 button,
 [role="button"] {
   cursor: none;
-}
+} */
 
 /* Set by PreLoader.tsx while it's mounted and not yet inert — the
    custom cursor (Navbar's .cursor-follow) sits below the preloader's

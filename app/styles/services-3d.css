@@ -121,16 +121,21 @@
   fill: #000;
 }
 
+.services-main-section--dark .cta-btn:hover {
+  background-color: #000;
+  color: #fff;
+}
+
 .services-main-section--dark .cta-btn:hover .cta-arrow-box {
-  background-color: #00000033;
+  background-color: rgba(255, 255, 255, 0.35);
 }
 
 .services-main-section--dark .cta-btn:hover .cta-arrow-box svg path {
-  fill: #000;
+  fill: #fff;
 }
 
 .services-main-section--dark .cta-btn:hover p {
-  color: #000;
+  color: #fff;
 }
 
 /* ------------------------------
@@ -219,7 +224,7 @@
 @media (max-width: 700px) {
   .services-skip-btn {
     font-size: 0.85rem;
-    bottom: 4%;
+    bottom: 14%;
   }
 }
 

@@ -21,11 +21,11 @@
   overflow: hidden;
 }
 
-.footer-logo-img {
+/* .footer-logo-img {
   height: 460px;
   object-fit: contain;
   scale: 1.4;
-}
+} */
 
 .footer-logo-3d {
   width: 100%;
@@ -35,6 +35,8 @@
 .footer-logo-3d canvas {
   display: block;
   width: 100%;
+  scale: 1.25;
+  margin-top: 20px;
   height: 100%;
 }
 
@@ -48,7 +50,7 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 36px 40px;
-  gap: 40px;
+  gap: 10px;
 }
 
 /* Left */
@@ -175,7 +177,7 @@
 
 /* Right Nav */
 .footer-nav {
-  width: 44%;
+  width: 50%;
   display: flex;
   gap: 52px;
   padding-top: 4px;
@@ -403,8 +405,11 @@
   .footer-subscribe-input {
     width: 390px;
   }
+  .footer-logo-3d canvas{
+      scale: 1;
+  }
   .footer-connect-title {
-    font-size: 58px;
+    font-size: 52px;
   }
   .footer-mascot video {
     width: 250px;

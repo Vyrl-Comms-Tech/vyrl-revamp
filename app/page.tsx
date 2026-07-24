@@ -18,7 +18,7 @@ export default function Home() {
       <Logos />
       <ClientReviews />
       <Collective />
-      <SimilarPost />
+      {/* <SimilarPost /> */}
       <HomeSecondLast />
     </>
   );

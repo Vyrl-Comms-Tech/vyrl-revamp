@@ -1,5 +1,6 @@
 "use client";
 import { useLayoutEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -46,6 +47,8 @@ const SERVICES = [
 ];
 
 export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
+  const pathname = usePathname();
+  const ctaClassName = pathname === "/services" ? "cta-button-white" : "";
   const sectionRef = useRef(null);
   const cubeMountRef = useRef(null);
   const titleRef = useRef(null);
@@ -601,7 +604,7 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       </div>
 
       <div className="services-cta-desktop">
-        <CtaButton label="Explore Services" href="/services" />
+        <CtaButton label="Explore Services" href="/services" className={ctaClassName} />
       </div>
 
       <button type="button" className="services-skip-btn" ref={skipRef}>
@@ -640,7 +643,7 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
           {SERVICES[0].desc}
         </p>
         <div className="services-cta-mobile">
-          <CtaButton label="Explore Services" href="/services" />
+          <CtaButton label="Explore Services" href="/services" className={ctaClassName} />
         </div>
       </div>
 

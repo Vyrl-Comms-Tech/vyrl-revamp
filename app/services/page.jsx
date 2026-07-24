@@ -11,7 +11,7 @@ const page = () => {
       <Services3d dark />
       <ClientReviews />
       <VyrlAbout />
-      <SimilarPost />
+      {/* <SimilarPost /> */}
       <HomeSecondLast />
     </div>
   );

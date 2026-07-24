@@ -442,18 +442,20 @@ function ClientReviewSection() {
           <img
             src="/sticker1.png"
             alt=""
-            className={`client-review-sticker client-review-sticker-1 ${stickerCorner === "tl-br"
+            className={`client-review-sticker client-review-sticker-1 ${
+              stickerCorner === "tl-br"
                 ? "client-review-sticker--top-left"
                 : "client-review-sticker--top-right"
-              }`}
+            }`}
           />
           <img
             src="/sticker2.png"
             alt=""
-            className={`client-review-sticker client-review-sticker-2 ${stickerCorner === "tl-br"
+            className={`client-review-sticker client-review-sticker-2 ${
+              stickerCorner === "tl-br"
                 ? "client-review-sticker--bottom-right"
                 : "client-review-sticker--bottom-left"
-              }`}
+            }`}
           />
         </div>
 
@@ -463,7 +465,10 @@ function ClientReviewSection() {
             href={active.href}
             className="cta-button-white client-review-cta-btn"
           />
-          <p>Hear from the brands and founders we have partnered with, sharing what it is like to build, launch, and grow with Vyrl.</p>
+          <p>
+            Hear from the brands and founders we have partnered with, sharing
+            what it is like to build, launch, and grow with Vyrl.
+          </p>
         </div>
       </div>
 

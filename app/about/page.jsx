@@ -20,7 +20,7 @@ const page = () => {
       {/* <Logos /> */}
       <AboutLogos />
       <TeamProfile />
-      <SimilarPost />
+      {/* <SimilarPost /> */}
       <HomeSecondLast />
     </div>
   );

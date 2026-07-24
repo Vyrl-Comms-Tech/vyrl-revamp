@@ -26,7 +26,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* cursor: pointer; */
+  cursor: pointer;
   flex-shrink: 0;
 }
 
@@ -57,7 +57,8 @@
   overflow: hidden;
 }
 
-.contactHero-image img {
+.contactHero-image img,
+.contactHero-image video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -132,7 +133,7 @@
 
 .contactHero-newsletter-form button {
   border-radius: 8px;
-
+  cursor: pointer;
   color: #fff;
   border: 1px solid #f6f6f6 !important;
   border: #fff;
@@ -273,6 +274,7 @@
 .contactHero-social-btn {
   width: 60px;
   height: 60px;
+  cursor: pointer;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   display: flex;
@@ -327,10 +329,10 @@
   }
 
   .contactHero-left {
-    height: 60vh;
+    height: 79vh;
     position: relative;
+    padding-bottom: 140px;
   }
-
   .contactHero-right {
     padding: 3rem 5%;
   }
@@ -376,20 +378,27 @@
   .contactHero-tags {
     width: 100%;
   }
+  .contactHero-tag {
+    padding: 0.3rem 0.9rem;
+    font-size: 0.8rem;
+  }
   .contactHero-blurb {
     font-size: 1rem;
   }
   .contactHero-newsletter {
-    padding: 1.3rem;
+    padding: 15px;
+    left: 11px;
+    right: 11px;
   }
   .contactHero-newsletter h3 {
-    font-size: 2rem;
+    font-size: 1.7rem;
   }
   .contactHero-newsletter {
-    left: 1rem;
   }
   .contactHero-newsletter p {
     width: 100%;
+    line-height: 111%;
+    font-size: 1rem;
   }
 
   .contactHero-newsletter-form input {
@@ -400,7 +409,7 @@
 
   .contactHero-newsletter-form button {
     flex-shrink: 0;
-    padding: 0.65rem 1rem;
-    font-size: 0.95rem;
+    padding: 0.55rem 0.9rem;
+    font-size: 0.85rem;
   }
 }

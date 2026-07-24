@@ -208,6 +208,13 @@
   /* box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); */
 }
 
+@media (max-width: 1720px) {
+
+  .tp-section1 h2 {
+    /* font-size: 3.8rem; */
+    top: 34%;
+  }
+}
 @media (max-width: 1550px) {
   .p-tp-detailsbox {
     font-size: clamp(1rem, 1.27vw, 1.3rem);
@@ -219,6 +226,7 @@
   }
   .tp-section1 h2 {
     font-size: 3.8rem;
+    top: 34%;
   }
 }
 

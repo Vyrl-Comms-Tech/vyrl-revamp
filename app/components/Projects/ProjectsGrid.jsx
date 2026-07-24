@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import { useTransitionRouter } from "next-view-transitions";
+import { useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { slideInOut } from "../layout/pageTransition";
@@ -73,13 +74,22 @@ const PROJECT_ROWS = [
   ],
 ];
 
+const FILTER_VALUES = FILTERS.map((f) => f.value);
+
 export default function ProjectsGrid() {
   const router = useTransitionRouter();
+  const searchParams = useSearchParams();
   const sectionRef = useRef(null);
   const cardRefs = useRef(new Map()); // id -> card DOM node
   const followerRefs = useRef(new Map()); // id -> follower DOM node
   const quickToRefs = useRef(new Map()); // id -> { xTo, yTo }
-  const [activeFilter, setActiveFilter] = useState("all");
+  // Lets links elsewhere on the site (e.g. the navbar's category cards)
+  // deep-link straight into a pre-selected filter via ?category=restaurant
+  // etc., instead of always landing on "ALL".
+  const [activeFilter, setActiveFilter] = useState(() => {
+    const category = searchParams.get("category");
+    return category && FILTER_VALUES.includes(category) ? category : "all";
+  });
 
   const setCardRef = (id) => (node) => {
     if (node) cardRefs.current.set(id, node);

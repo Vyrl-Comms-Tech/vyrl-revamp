@@ -8,7 +8,13 @@ export const caseStudies = {
     href: "/lala-darbar",
     title: "Lala Darbar",
     duration: "6 weeks",
-    services: ["Visual identity refresh: new typography, color expansion, and design language", "Website built in React with custom GSAP animations", "Horizontal scroll with pinned content sections—a technically demanding structure that enables a fluid, cinematic experience", "One-of-a-kind section transitions with scroll-based storytelling", "Menu UI with illustrated flavor filters and hover-based dish previews"],
+    services: [
+      "Visual identity refresh: new typography, color expansion, and design language",
+      "Website built in React with custom GSAP animations",
+      "Horizontal scroll with pinned content sections—a technically demanding structure that enables a fluid, cinematic experience",
+      "One-of-a-kind section transitions with scroll-based storytelling",
+      "Menu UI with illustrated flavor filters and hover-based dish previews",
+    ],
     images: [
       "/lala4.avif",
       "/lala2.avif",
@@ -29,8 +35,13 @@ export const caseStudies = {
     slug: "sanam-cars",
     href: "/sanamcars",
     title: "Sanam Cars",
-    duration: "4 weeks",
-    services: ["Development", "UIUX", "Branding"],
+    duration: "1 month",
+    services: [
+      "Modern visual identity with refined typography, a sleek automotive-inspired color palette, and a clean, premium design language.",
+      "Custom car marketplace developed with React and a scalable backend for vehicle inventory, inquiries, and content management.",
+      "Immersive GSAP-powered animations featuring scroll-triggered video reveals, seamless page transitions, and smooth micro-interactions that bring every vehicle to life.",
+      "Intuitive vehicle discovery experience with interactive listings, detailed car showcases, and streamlined inquiry flows designed to maximize user engagement and conversions.",
+    ],
     images: [
       "/sanam3.avif",
       "/sanam2.avif",
@@ -51,8 +62,13 @@ export const caseStudies = {
     slug: "arabian-estate",
     href: "/arabian-estate",
     title: "Arabian Estates",
-    duration: "6 weeks",
-    services: ["Development", "UIUX", "Branding"],
+    duration: "4 months",
+    services: [
+      "Complete visual identity crafted with premium typography, refined color palette, and a luxury-focused design language.",
+      "Custom-built real estate platform developed with React and a robust backend for property management, inquiries, and scalable content administration.",
+      "High-performance architecture featuring optimized loading, responsive design, SEO best practices, and enterprise-level code quality.",
+      "Interactive property showcases and thoughtfully designed user journeys that guide visitors from discovery to inquiry with clarity and elegance.",
+    ],
     images: [
       "/arab1.avif",
       "/arab6.avif",
@@ -61,12 +77,12 @@ export const caseStudies = {
       "/arab4.avif",
     ],
     panel8Image: "/arab3.avif",
-    infoHeading: "information",
+    infoHeading: "About the Company",
     description:
-      "Sanam Cars is a premium car dealership offering a curated selection of new and pre-owned vehicles, backed by transparent pricing and a customer-first buying experience. The brand is known for pairing modern showroom experiences with knowledgeable, no-pressure sales guidance.",
-    creditsTitle: "Credits",
+      "Arabian Estates is a modern real estate agency dedicated to connecting clients with exceptional residential and commercial properties. With a focus on trust, transparency, and personalized service, the company delivers a seamless property-buying, selling, and investment experience. Combining deep market expertise with a client-first approach, Arabian Estates helps individuals and businesses make confident real estate decisions while offering premium properties across the region.",
+    creditsTitle: "Client Testimonial",
     creditsText:
-      "Sanam Cars is a premium car dealership offering a curated selection of new and pre-owned vehicles, backed by transparent pricing and a customer-first buying experience. The brand is known for pairing modern showroom experiences with knowledgeable, no-pressure sales guidance.",
+      "The website exceeded our expectations in every way. From the refined design to the seamless property browsing experience, every detail reflects the quality of our brand. The custom backend has made managing listings effortless, while the performance and responsiveness have elevated the experience for both our team and our clients.",
     next: "jeikor",
   },
   jeikor: {
@@ -74,7 +90,13 @@ export const caseStudies = {
     href: "/jeikor",
     title: "Jeikor",
     duration: "3.5 weeks",
-    services: ["Fully responsive site built with React", "GSAP-driven hero animation and section transitions", "Modular layout system for future scalability", "Chairman’s message and group companies rendered as interactive blocks", "Optimized for bilingual expansion (EN/AR)"],
+    services: [
+      "Fully responsive site built with React",
+      "GSAP-driven hero animation and section transitions",
+      "Modular layout system for future scalability",
+      "Chairman’s message and group companies rendered as interactive blocks",
+      "Optimized for bilingual expansion (EN/AR)",
+    ],
     images: [
       "/jeikor4.avif",
       "/jeikor.avif",
@@ -96,7 +118,11 @@ export const caseStudies = {
     href: "/banda",
     title: "Banda",
     duration: "8 weeks",
-    services: ["Strong visual consistency across investor touchpoints post-launch", "Significant improvement in site engagement and time-on-page", "Brand and website praised by industry peers and partners for originality and execution"],
+    services: [
+      "Strong visual consistency across investor touchpoints post-launch",
+      "Significant improvement in site engagement and time-on-page",
+      "Brand and website praised by industry peers and partners for originality and execution",
+    ],
     images: [
       "/banda4.avif",
       "/banda2.avif",
