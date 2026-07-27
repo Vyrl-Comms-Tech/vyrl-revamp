@@ -90,7 +90,7 @@
   margin-bottom: 0;
   color: #fff;
   font-size: 19px;
-  line-height:115% ;
+  line-height: 115%;
   text-align: center;
   z-index: 2;
 }
@@ -194,7 +194,57 @@
   .vyrl-section-card3 {
     padding: 30px 20px 27px 20px;
   }
+  .vyrl-service-about-text1,
+  .vyrl-service-about-text2 {
+    font-size: 2.2rem;
+    top: 38%;
+    padding-block: 20px;
+  }
+  .vyrl-sections-cards-div {
+    top: 20vh;
+  }
+  .vyrl-section-about-image {
+    width: 482px;
+    height: 274px;
+    top: 23% !important;
+  }
+  .vyrl-service-about-text1 {
+    left: 73px; /* starting position — left side */
+  }
+
+  .vyrl-service-about-text2 {
+    right: 73px; /* starting position — right side */
+    /* width: 5  0%; */
+    /* line-height: 105%; */
+  }
 }
+
+@media (max-width: 1540px) {
+  .vyrl-section-card2 {
+    height: 340px;
+  }
+  .vyrl-section-card1 h1, .vyrl-section-card2 h1, .vyrl-section-card3 h1{
+    font-size: 34px;
+  }
+  .vyrl-section-card1 p, .vyrl-section-card2 p, .vyrl-section-card3 p{
+    font-size: 18px;
+    line-height: 111%;
+  }
+  .vyrl-section-about-image{
+    top: 11%;
+  }
+  .vyrl-section-card3,
+  .vyrl-section-card1 {
+    height: 250px;
+  }
+  .vyrl-section-about-image {
+    top: 21%;
+  }
+      .vyrl-sections-cards-div {
+      top: 31vh;
+      }
+}
+
 @media (max-width: 760px) {
   .vyrl-main-wrapper {
     height: auto;

@@ -67,29 +67,6 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
 
     if (!section || !cubeMount || !title || !desc) return;
 
-    // Some environments (sandboxed browsers, disabled GPU/hardware
-    // acceleration, certain VMs/remote desktops) can't create a WebGL
-    // context at all. THREE.WebGLRenderer still constructs in that case
-    // but logs an unhandled console error and leaves a broken canvas.
-    // Detect it up front and skip ONLY the 3D setup below when
-    // unavailable — the scroll-pin, text-cycling, and counters must
-    // keep working regardless of whether the cube can render.
-    const hasWebGL = (() => {
-      try {
-        // A canvas only ever binds to one context type — once
-        // getContext("webgl2") succeeds or fails, calling getContext
-        // again with a different type on that SAME element always
-        // returns null. Each candidate needs its own fresh canvas.
-        return (
-          !!document.createElement("canvas").getContext("webgl2") ||
-          !!document.createElement("canvas").getContext("webgl") ||
-          !!document.createElement("canvas").getContext("experimental-webgl")
-        );
-      } catch {
-        return false;
-      }
-    })();
-
     const isMobile = window.innerWidth <= 700;
 
     // Scroll progress is written by ScrollTrigger's onUpdate below (always
@@ -104,7 +81,23 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
     // ------------------------------------------------
     let renderer, controls, rafId, dracoLoader;
 
-    if (hasWebGL) {
+    // Some environments (sandboxed browsers, disabled GPU/hardware
+    // acceleration, certain VMs/remote desktops) can't create a WebGL
+    // context at all — THREE.WebGLRenderer's constructor throws in that
+    // case rather than failing silently. A cheap probe on a throwaway
+    // canvas isn't reliable proof either way (it can succeed even when
+    // the real renderer construction below still fails), so the actual
+    // construction itself is the real test, wrapped in try/catch. Only
+    // the 3D setup is skipped when it fails — the scroll-pin,
+    // text-cycling, and counters must keep working regardless of
+    // whether the cube can render.
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch {
+      renderer = null;
+    }
+
+    if (renderer) {
       const scene = new THREE.Scene();
 
       const camera = new THREE.PerspectiveCamera(
@@ -123,7 +116,6 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       };
       updateCameraPosition();
 
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setClearColor(0x000000, 0);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;

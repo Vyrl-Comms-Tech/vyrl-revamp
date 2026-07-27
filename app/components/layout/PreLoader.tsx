@@ -60,11 +60,97 @@ export default function Preloader({
   const [hasRevealed, setHasRevealed] = useState(false);
   const [isInert, setIsInert] = useState(false);
 
-  // The intro's GSAP context (below) is set up once on mount, before
-  // handleReveal exists as a value in that scope — this ref lets the
-  // counter's onComplete call whatever handleReveal currently is without
-  // needing it in the effect's dependency array.
-  const handleRevealRef = useRef<() => void>(() => {});
+  // ---------------------------------------------------------------------
+  // Auto-reveal: once the intro (counter/text) finishes on its own, fade
+  // straight into the dissolve — no click needed. Declared before the
+  // Three.js mount effect below (which calls this directly) since that
+  // effect's no-WebGL branch needs to trigger the reveal immediately, on
+  // the same mount pass — calling through a ref assigned in a *later*
+  // effect would still be the initial no-op placeholder at that point,
+  // and the preloader would never actually reveal the page. Always runs
+  // the full counter/letters animation regardless of the visitor's OS
+  // "reduce motion" setting — this is a deliberate brand intro, not
+  // something to skip for accessibility here.
+  // ---------------------------------------------------------------------
+  const finishReveal = () => {
+    if (!isMountedRef.current) return;
+    setIsInert(true);
+
+    if (ambientSoundSrc) {
+      const ambient = new Audio(ambientSoundSrc);
+      ambient.loop = true;
+      ambient.volume = 0.6;
+      ambient.currentTime = 0;
+      ambient.play().catch(() => {});
+    }
+
+    // Fades .root out (it has its own opacity transition already)
+    // before calling onFinish, which unmounts the whole Preloader in
+    // PreloaderGate.tsx — the shader canvas's render loop never stops
+    // otherwise, and its fragment shader paints solid black wherever
+    // neither the dissolve edge nor noise strength is lit up, which is
+    // what showed as a permanent black rectangle over the real page
+    // instead of the dissolve actually finishing.
+    if (rootRef.current) {
+      gsap.to(rootRef.current, {
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.inOut',
+        onComplete: () => onFinish?.(),
+      });
+    } else {
+      onFinish?.();
+    }
+  };
+
+  const handleReveal = () => {
+    if (hasRevealed) return;
+    setHasRevealed(true);
+
+    gsap.delayedCall(1, () => {
+      if (!isMountedRef.current) return;
+
+      const uniforms = uniformsRef.current;
+
+      // No WebGL (see the mount effect below) means uniforms was never
+      // populated — there's no shader dissolve to run, so just fade
+      // .root's backdrop straight out and finish.
+      if (!uniforms) {
+        if (rootRef.current) {
+          gsap.to(rootRef.current, {
+            backgroundColor: 'rgba(0,0,0,0)',
+            duration: 0.6,
+            ease: 'power2.inOut',
+            onComplete: finishReveal,
+          });
+        } else {
+          finishReveal();
+        }
+        return;
+      }
+
+      // .root's own solid black backdrop (needed to stop the page
+      // flashing through before the dissolve even starts) must clear in
+      // step with the shader's own dissolve, not just at the very end —
+      // otherwise the shader's transparent pixels only ever reveal this
+      // div's opaque black background instead of the real page
+      // underneath for the whole 3s the dissolve is playing.
+      if (rootRef.current) {
+        gsap.to(rootRef.current, {
+          backgroundColor: 'rgba(0,0,0,0)',
+          duration: 3,
+          ease: 'power2.inOut',
+        });
+      }
+
+      gsap.to(uniforms.uTransition, {
+        value: 1,
+        duration: 3,
+        ease: 'power2.inOut',
+        onComplete: finishReveal,
+      });
+    });
+  };
 
   // The whole site hides the native cursor (see globals.css) and relies
   // on Navbar's custom animated cursor instead — but that element sits
@@ -92,20 +178,44 @@ export default function Preloader({
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const prefersReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
+    // Some environments (sandboxed/embedded browsers, GPU disabled via
+    // flags or policy, certain VMs/remote desktops, or a GPU process
+    // that's crashed/exhausted its context limit) can't create a WebGL
+    // context — and a cheap probe on a throwaway canvas isn't reliable
+    // proof either way: it can succeed even when the *real* renderer
+    // below still fails moments later (a second context request hitting
+    // the same broken GPU process). So the actual THREE.WebGLRenderer
+    // construction itself is the real test, wrapped in try/catch — if it
+    // throws, skip Three.js entirely and reveal immediately instead of
+    // letting the whole preloader (and the real page underneath it)
+    // crash.
+    let renderer: THREE.WebGLRenderer | null = null;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        alpha: true,
+      });
+    } catch {
+      renderer = null;
+    }
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: true,
-      alpha: true,
-    });
+    if (!renderer) {
+      gsap.set(loaderTextRef.current, { autoAlpha: 0 });
+      // Deferred a tick — handleReveal calls setHasRevealed, and setting
+      // state synchronously inside an effect body (rather than in
+      // response to an event or a later callback) risks cascading
+      // renders during this same commit.
+      gsap.delayedCall(0, handleReveal);
+      return;
+    }
+
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
     const uniforms = {
       uTransition: { value: 0 },
@@ -133,7 +243,7 @@ export default function Preloader({
     let rafId = 0;
     const tick = () => {
       uniforms.uTime.value = clock.getElapsedTime();
-      renderer.render(scene, camera);
+      renderer!.render(scene, camera);
       rafId = requestAnimationFrame(tick);
     };
     tick();
@@ -141,7 +251,7 @@ export default function Preloader({
     const handleResize = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
-      renderer.setSize(w, h);
+      renderer!.setSize(w, h);
       uniforms.uResolution.value.set(w, h);
     };
     window.addEventListener('resize', handleResize);
@@ -149,12 +259,6 @@ export default function Preloader({
     // gsap.context scopes every tween created inside the callback so a
     // single .revert() on unmount kills them all — no leaked tweens/timers.
     const ctx = gsap.context(() => {
-      if (prefersReducedMotion) {
-        gsap.set(loaderTextRef.current, { autoAlpha: 0 });
-        handleRevealRef.current();
-        return;
-      }
-
       if (counterRef.current) {
         const counterObj = { value: 0 };
         gsap.to(counterObj, {
@@ -168,7 +272,7 @@ export default function Preloader({
               ).padStart(3, '0');
             }
           },
-          onComplete: () => handleRevealRef.current(),
+          onComplete: () => handleReveal(),
         });
       }
 
@@ -194,83 +298,13 @@ export default function Preloader({
       ctx.revert();
       cancelAnimationFrame(rafId);
       window.removeEventListener('resize', handleResize);
-      renderer.dispose();
+      renderer!.dispose();
       geometry.dispose();
       material.dispose();
       uniformsRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // ---------------------------------------------------------------------
-  // Auto-reveal: once the intro (counter/text) finishes on its own, fade
-  // straight into the dissolve — no click needed.
-  // ---------------------------------------------------------------------
-  const handleReveal = () => {
-    if (hasRevealed) return;
-    setHasRevealed(true);
-
-    gsap.delayedCall(1, () => {
-      if (!isMountedRef.current) return;
-
-      const uniforms = uniformsRef.current;
-      if (!uniforms) return;
-
-      // .root's own solid black backdrop (needed to stop the page
-      // flashing through before the dissolve even starts) must clear in
-      // step with the shader's own dissolve, not just at the very end —
-      // otherwise the shader's transparent pixels only ever reveal this
-      // div's opaque black background instead of the real page
-      // underneath for the whole 3s the dissolve is playing.
-      if (rootRef.current) {
-        gsap.to(rootRef.current, {
-          backgroundColor: 'rgba(0,0,0,0)',
-          duration: 3,
-          ease: 'power2.inOut',
-        });
-      }
-
-      gsap.to(uniforms.uTransition, {
-        value: 1,
-        duration: 3,
-        ease: 'power2.inOut',
-        onComplete: () => {
-          if (!isMountedRef.current) return;
-          setIsInert(true);
-
-          if (ambientSoundSrc) {
-            const ambient = new Audio(ambientSoundSrc);
-            ambient.loop = true;
-            ambient.volume = 0.6;
-            ambient.currentTime = 0;
-            ambient.play().catch(() => {});
-          }
-
-          // Fades .root out (it has its own opacity transition already)
-          // before calling onFinish, which unmounts the whole Preloader
-          // in PreloaderGate.tsx — the shader canvas's render loop never
-          // stops otherwise, and its fragment shader paints solid black
-          // wherever neither the dissolve edge nor noise strength is lit
-          // up, which is what showed as a permanent black rectangle over
-          // the real page instead of the dissolve actually finishing.
-          if (rootRef.current) {
-            gsap.to(rootRef.current, {
-              opacity: 0,
-              duration: 0.5,
-              ease: 'power2.inOut',
-              onComplete: () => onFinish?.(),
-            });
-          } else {
-            onFinish?.();
-          }
-        },
-      });
-    });
-  };
-
-  useEffect(() => {
-    handleRevealRef.current = handleReveal;
-  });
 
   return (
     <div

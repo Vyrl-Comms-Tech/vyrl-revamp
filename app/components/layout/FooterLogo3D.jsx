@@ -218,7 +218,7 @@
 //   return <div className="footer-logo-3d" ref={mountRef} />;
 // }
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
@@ -227,25 +227,37 @@ import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 export default function FooterLogo3D({
   modelUrl = "/Vyrl Footer 1.0.glb",
   hdrUrl = "/glasshouse_interior_1k.hdr",
+  fallbackImage = "/footerimg1.avif",
 }) {
   const mountRef = useRef(null);
+  // Some browsers (seen in Chrome specifically, even with WebGL working
+  // fine in Opera/other Chromium browsers on the same machine — GPU
+  // allowlisting is per-browser, not per-OS) refuse to create a WebGL
+  // context. Falls back to a static image of the logo instead of
+  // leaving this whole area blank.
+  const [webglFailed, setWebglFailed] = useState(false);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
 
-    const hasWebGL = (() => {
-      try {
-        return (
-          !!document.createElement("canvas").getContext("webgl2") ||
-          !!document.createElement("canvas").getContext("webgl") ||
-          !!document.createElement("canvas").getContext("experimental-webgl")
-        );
-      } catch {
-        return false;
-      }
-    })();
-    if (!hasWebGL) return;
+    // Some environments (sandboxed browsers, disabled GPU/hardware
+    // acceleration, certain VMs/remote desktops) can't create a WebGL
+    // context at all — THREE.WebGLRenderer's constructor throws in that
+    // case rather than failing silently. A cheap probe on a throwaway
+    // canvas isn't reliable proof either way (it can succeed even when
+    // the real renderer construction below still fails), so the actual
+    // construction itself is the real test, wrapped in try/catch.
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+      });
+    } catch {
+      queueMicrotask(() => setWebglFailed(true));
+      return;
+    }
 
     const scene = new THREE.Scene();
 
@@ -257,10 +269,6 @@ export default function FooterLogo3D({
     );
     camera.position.set(0, 0, 6);
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true,
-    });
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -446,6 +454,15 @@ export default function FooterLogo3D({
       });
     };
   }, [modelUrl, hdrUrl]);
+
+  if (webglFailed) {
+    return (
+      <div className="footer-logo-3d footer-logo-3d--fallback">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={fallbackImage} alt="Vyrl" />
+      </div>
+    );
+  }
 
   return <div className="footer-logo-3d" ref={mountRef} />;
 }

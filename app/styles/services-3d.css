@@ -76,11 +76,11 @@
    Right sticky title/desc
 ------------------------------ */
 .right-text-services {
+  width: 30%;
   position: absolute;
   bottom: 10%;
   text-align: end;
   right: 3%;
-  width: 30%;
   color: #000;
   z-index: 10;
 }
@@ -236,7 +236,9 @@
     font-size: 3.5rem;
     line-height: 1.2;
   }
-
+.right-text-services {
+  width: 35%;
+}
   .service-desc {
     font-size: 17px;
   }

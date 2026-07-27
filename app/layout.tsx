@@ -86,7 +86,7 @@ export default function RootLayout({
         lang="en"
         className={`${neueMontreal.variable} ${geistMono.variable} ${inter.variable} h-full antialiased`}
       >
-        <body suppressHydrationWarning={true} className="min-h-full">
+        <body  className="min-h-full">
           {/* beforeInteractive scripts are always injected into <head>
               by Next.js regardless of where they're placed — this runs
               before hydration/paint and stamps a class on <html> if

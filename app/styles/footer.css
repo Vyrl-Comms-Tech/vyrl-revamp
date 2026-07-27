@@ -40,6 +40,21 @@
   height: 100%;
 }
 
+/* Shown instead of the 3D glass logo when WebGL isn't available in the
+   visitor's browser (see FooterLogo3D.jsx) — sized/positioned to sit
+   roughly where the canvas would. */
+.footer-logo-3d--fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-logo-3d--fallback img {
+  max-width: 70%;
+  max-height: 70%;
+  object-fit: contain;
+}
+
 /* ─── Row 2 – Connect + Nav ──────────────────────────────── */
 .footer-connect-row {
   width: 100%;
