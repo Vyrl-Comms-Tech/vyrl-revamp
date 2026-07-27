@@ -80,6 +80,16 @@ const NavLink = ({ label, href }) => {
       return;
     }
 
+    // A hover-triggered leave animation (handleMouseLeave below) can
+    // still be mid-flight — including its onComplete that sets
+    // opacity:0 — right as this route becomes active (e.g. hovering
+    // "About" then clicking it before the leave tween finished erasing
+    // it). Left un-killed, that leave tween's delayed opacity:0 could
+    // still land after this enter animation finishes, leaving the
+    // active link with no visible underline. Killing every tween on
+    // this path first guarantees only this enter animation controls it.
+    gsap.killTweensOf(path);
+
     if (nextIndexRef.current === null) {
       nextIndexRef.current = Math.floor(Math.random() * underlinePaths.length);
     }
@@ -94,6 +104,7 @@ const NavLink = ({ label, href }) => {
 
     enterTweenRef.current = gsap.to(path, {
       strokeDashoffset: 0,
+      opacity: 1,
       duration: 0.5,
       ease: "power2.inOut",
     });
@@ -244,6 +255,7 @@ const Navbar = () => {
   const isIdleRef = useRef(false);
   const idleTimerRef = useRef(null);
   const idleAnimRef = useRef(null);
+  const menuTimelineRef = useRef(null);
 
   // toggleMenu() flips open/closed; pass forceState to instead drive it
   // to an explicit state (used to force-close on route change below,
@@ -254,6 +266,17 @@ const Navbar = () => {
     isActiveRef.current = nextActive;
     setIsActive(nextActive);
 
+    // A click while the previous open/close timeline was still mid-flight
+    // used to just layer a second timeline on top of it, both animating
+    // the same width/height/opacity — the two fought each other, so the
+    // visible result could look like the click "did nothing," which is
+    // what made it feel like it needed 2-3 clicks to register. Killing
+    // any timeline still running from the previous toggle first means
+    // every click starts a clean, fully deterministic animation.
+    if (menuTimelineRef.current) {
+      menuTimelineRef.current.kill();
+    }
+
     const opacityDots = opacityDotsRef.current.querySelectorAll(".opacity-an");
     const upEls = upToRef.current;
     const dnEls = dnToRef.current;
@@ -261,7 +284,12 @@ const Navbar = () => {
     const cards = gridCardsRef.current.querySelectorAll(".box-1");
     const isMobile = window.innerWidth <= 768;
 
-    const tl = gsap.timeline();
+    const tl = gsap.timeline({
+      onComplete: () => {
+        if (menuTimelineRef.current === tl) menuTimelineRef.current = null;
+      },
+    });
+    menuTimelineRef.current = tl;
 
     tl.to(opacityDots, {
       opacity: nextActive ? 0.1 : 1,

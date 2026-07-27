@@ -16,8 +16,6 @@ export interface PreloaderProps {
   letters?: PreloaderLetter[];
   /** Label rendered above the counter. */
   label?: string;
-  /** One-shot sfx played the instant the user clicks through. */
-  clickSoundSrc?: string;
   /** Looping ambient track started once the reveal completes. */
   ambientSoundSrc?: string;
   /** Tint for the shader's dissolve glow (any CSS color string). */
@@ -39,19 +37,17 @@ const DEFAULT_LETTERS: PreloaderLetter[] = [
 export default function Preloader({
   letters = DEFAULT_LETTERS,
   label = 'Loading Experience',
-  clickSoundSrc = '/loader/audio-1.mp3',
   ambientSoundSrc,
   borderColor = '#ff69b4',
   onFinish,
 }: PreloaderProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const clickPromptRef = useRef<HTMLButtonElement>(null);
   const loaderTextRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLHeadingElement>(null);
   const alphaRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  // Populated inside the Three.js effect, read by the click handler below —
+  // Populated inside the Three.js effect, read by handleReveal below —
   // this is why it needs to be a ref rather than a plain local variable.
   const uniformsRef = useRef<{
     uTransition: { value: number };
@@ -63,6 +59,12 @@ export default function Preloader({
   const isMountedRef = useRef(true);
   const [hasRevealed, setHasRevealed] = useState(false);
   const [isInert, setIsInert] = useState(false);
+
+  // The intro's GSAP context (below) is set up once on mount, before
+  // handleReveal exists as a value in that scope — this ref lets the
+  // counter's onComplete call whatever handleReveal currently is without
+  // needing it in the effect's dependency array.
+  const handleRevealRef = useRef<() => void>(() => {});
 
   // The whole site hides the native cursor (see globals.css) and relies
   // on Navbar's custom animated cursor instead — but that element sits
@@ -148,8 +150,8 @@ export default function Preloader({
     // single .revert() on unmount kills them all — no leaked tweens/timers.
     const ctx = gsap.context(() => {
       if (prefersReducedMotion) {
-        gsap.set(clickPromptRef.current, { display: 'block', opacity: 1 });
         gsap.set(loaderTextRef.current, { autoAlpha: 0 });
+        handleRevealRef.current();
         return;
       }
 
@@ -166,6 +168,7 @@ export default function Preloader({
               ).padStart(3, '0');
             }
           },
+          onComplete: () => handleRevealRef.current(),
         });
       }
 
@@ -174,14 +177,6 @@ export default function Preloader({
         duration: 2,
         ease: 'power2.inOut',
         delay: 2,
-      });
-
-      gsap.to(clickPromptRef.current, {
-        display: 'block',
-        opacity: 1,
-        delay: 3,
-        duration: 0.5,
-        ease: 'power2.inOut',
       });
 
       gsap.to(alphaRefs.current, {
@@ -208,30 +203,15 @@ export default function Preloader({
   }, []);
 
   // ---------------------------------------------------------------------
-  // Click-through: fade the prompt, then dissolve the shader plane
+  // Auto-reveal: once the intro (counter/text) finishes on its own, fade
+  // straight into the dissolve — no click needed.
   // ---------------------------------------------------------------------
   const handleReveal = () => {
     if (hasRevealed) return;
     setHasRevealed(true);
 
-    const clickSound = new Audio(clickSoundSrc);
-    clickSound.volume = 0.8;
-    clickSound.preload = 'auto';
-
-    gsap.to(clickPromptRef.current, {
-      opacity: 0,
-      y: -25,
-      duration: 0.5,
-      ease: 'power2.inOut',
-    });
-
     gsap.delayedCall(1, () => {
       if (!isMountedRef.current) return;
-
-      clickSound.currentTime = 0;
-      clickSound.play().catch(() => {
-        /* Autoplay can be blocked until a user gesture — click already is one, so this is a rare edge case. */
-      });
 
       const uniforms = uniformsRef.current;
       if (!uniforms) return;
@@ -288,6 +268,10 @@ export default function Preloader({
     });
   };
 
+  useEffect(() => {
+    handleRevealRef.current = handleReveal;
+  });
+
   return (
     <div
       ref={rootRef}
@@ -296,15 +280,6 @@ export default function Preloader({
       aria-hidden={isInert || undefined}
     >
       <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
-
-      <button
-        ref={clickPromptRef}
-        type="button"
-        className={styles.clickPrompt}
-        onClick={handleReveal}
-      >
-        Let&rsquo;s get started
-      </button>
 
       <div className={styles.loaderPics} aria-hidden="true">
         {letters.map((letter, index) => (

@@ -2,7 +2,7 @@
 import { forwardRef, MouseEvent } from "react";
 import { Link, useTransitionRouter } from "next-view-transitions";
 import { usePathname } from "next/navigation";
-import { slideInOut } from "./pageTransition";
+import { slideInOut, isCaseStudyPath } from "./pageTransition";
 
 type PageTransitionLinkProps = React.ComponentProps<typeof Link>;
 
@@ -20,6 +20,15 @@ const PageTransitionLink = forwardRef<HTMLAnchorElement, PageTransitionLinkProps
       if (e.defaultPrevented) return;
       const hrefStr = href.toString();
       if (hrefStr === "#" || hrefStr === pathname) return;
+
+      // Case-study pages own their own hand-built transition (heading
+      // clone + overlay + pinned ScrollTrigger, timed against a plain
+      // router.push — see CaseStudyInner.jsx). Navigating away from one
+      // via this component's view-transition instead raced against that
+      // page's own ScrollTrigger teardown/gesture listeners still
+      // tearing down mid-transition, which is what could snap the route
+      // back to the case-study page right after it briefly changed.
+      if (isCaseStudyPath(hrefStr) || isCaseStudyPath(pathname)) return;
 
       e.preventDefault();
       router.push(hrefStr, { onTransitionReady: slideInOut });

@@ -242,6 +242,14 @@
 .menu-toggle{
   cursor: pointer;
 }
+
+/* The visible icon is small (27x24) — padding here enlarges the actual
+   clickable/tap area around it without changing how big it looks,
+   so quick or slightly off-target clicks/taps still register. */
+.menu-box {
+  padding: 10px;
+  margin: -10px;
+}
 @media (max-width: 1770px) {
   .nav-link-item {
     font-size: 2.2rem;
