@@ -203,7 +203,7 @@
   border-radius: 50px;
   border: 1px solid rgba(255, 255, 255, 0.35);
   background: transparent;
-  cursor: none;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -218,7 +218,7 @@
 }
 
 .client-review-nav-btn * {
-  cursor: none;
+  cursor: pointer;
 }
 @media (max-width: 1670px) {
   .client-review-card-container {

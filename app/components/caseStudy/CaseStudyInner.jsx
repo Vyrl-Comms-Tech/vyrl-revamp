@@ -51,6 +51,20 @@ const CaseStudyInner = ({ slug }) => {
 
   // ── reveal: fade out the transition overlay that SPA-nav carries into this page
   useEffect(() => {
+    // Next.js's client-side router keeps whatever scroll position the
+    // previous page (e.g. /projects, scrolled down to reach a later
+    // card) was at — it doesn't reset to the top on navigation the way
+    // a hard page load does. Landing here mid-scroll fed a non-zero
+    // starting position into this page's pinned ScrollTrigger below,
+    // which computes its progress off actual scroll position — so the
+    // pin effectively started partway through instead of at panel 1.
+    // Resetting both native scroll and Lenis's own tracked position
+    // (Lenis persists as a single global instance across routes, see
+    // SmoothScroll.jsx) guarantees every case-study page always opens
+    // at the very top regardless of where the previous page left off.
+    window.scrollTo(0, 0);
+    window.lenis?.scrollTo(0, { immediate: true });
+
     const overlay = document.querySelector(".cs-transition-overlay");
     const clone = document.querySelector(".cs-heading-clone");
     clone?.remove(); // real heading is already here at matching position
