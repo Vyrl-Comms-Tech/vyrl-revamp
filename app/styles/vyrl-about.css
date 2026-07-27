@@ -238,7 +238,7 @@
     height: 250px;
   }
   .vyrl-section-about-image {
-    top: 21%;
+    top: 21% !important;
   }
       .vyrl-sections-cards-div {
       top: 31vh;

@@ -3,20 +3,20 @@ import CtaButton from "../layout/cta";
 import "../../styles/slider.css";
 
 const images = [
-  "ser1.jpeg",
-  "ser2.jpeg",
-  "ser3.jpeg",
-  "ser4.jpeg",
-  "ser5.jpeg",
-  "ser1.jpeg",
-  "ser2.jpeg",
-  "ser3.jpeg",
-  "ser4.jpeg",
-  "ser5.jpeg",
-  "ser1.jpeg",
-  "ser2.jpeg",
-  "ser3.jpeg",
-  "ser4.jpeg",
+  "1 (1) (2).png",
+  "1 (1) (2).png",
+  "1 (1) (2).png",
+  "1 (1) (2).png",
+  "1 (1) (2).png",
+  "1 (1) (2).png",
+  "1 (1) (2).png",
+  "1 (1) (2).png",
+  "1 (1) (2).png",
+  "1 (1) (2).png",
+  "1 (1) (2).png",
+  "1 (1) (2).png",
+  "1 (1) (2).png",
+  "1 (1) (2).png",
 ];
 
 const Slider = () => {
