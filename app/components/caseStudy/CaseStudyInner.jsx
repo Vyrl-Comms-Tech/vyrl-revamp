@@ -34,6 +34,18 @@ const CaseStudyInner = ({ slug }) => {
   const isFlipped = useRef(false);
   const transitionTriggered = useRef(false);
   const ctxRef = useRef(null);
+  // Set synchronously the instant this component starts unmounting (see
+  // the effect cleanup below) — GSAP's ticker/Lenis's raf loop can still
+  // fire ScrollTrigger's onUpdate/onLeave one more time after a route
+  // change is already underway but before React has actually torn this
+  // component's ScrollTrigger down, since ctx.revert() and the
+  // navigation are two independent async processes. Without this guard,
+  // that one extra onUpdate tick could see barProgress >= 1 (very likely
+  // once the user has scrolled through most of the page already) and
+  // fire runTransition's own router.push(nextHref) — which is what made
+  // navigating away via the navbar/logo briefly show the target page,
+  // then snap to the next case study in sequence instead.
+  const isUnmountingRef = useRef(false);
 
   const router = useRouter();
 
@@ -150,6 +162,7 @@ const CaseStudyInner = ({ slug }) => {
       const phase2Dur = maxHorizDist > 0 ? extraForBar / maxHorizDist : 0.1;
 
       const runTransition = () => {
+        if (isUnmountingRef.current) return;
         const headingEl = panel8?.querySelector(".cs-p8-project-name");
 
         if (!headingEl) {
@@ -341,9 +354,11 @@ const CaseStudyInner = ({ slug }) => {
             end: "bottom bottom",
             scrub: 0.3,
             onUpdate: (self) => {
+              if (isUnmountingRef.current) return;
               if (fill) fill.style.width = `${self.progress * 100}%`;
             },
             onLeave: () => {
+              if (isUnmountingRef.current) return;
               if (transitionTriggered.current) return;
               transitionTriggered.current = true;
               if (fill) fill.style.width = "100%";
@@ -370,6 +385,7 @@ const CaseStudyInner = ({ slug }) => {
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
+            if (isUnmountingRef.current) return;
             const curMaxHorizDist = inner.scrollWidth - window.innerWidth;
             const totalDist = curMaxHorizDist + extraForBar;
             const rawScrollPx = self.progress * totalDist;
@@ -478,6 +494,8 @@ const CaseStudyInner = ({ slug }) => {
     ctxRef.current = ctx;
 
     return () => {
+      isUnmountingRef.current = true;
+
       // Restore btn to its original React-rendered parent BEFORE ctx.revert()
       // so React can cleanly removeChild it from the right node.
       if (btn && btnSlotRef.current && btn.parentNode !== btnSlotRef.current) {

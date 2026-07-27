@@ -44,11 +44,13 @@ const NavLink = ({ label, href }) => {
   const handleClick = (e) => {
     if (href === "#" || href === pathname) return;
 
-    // Case-study pages own their own hand-built transition (heading
-    // clone + overlay, timed against a plain router.push in
-    // CaseStudyInner.jsx) — let those navigate normally instead of
-    // layering this view transition on top of that.
-    if (isCaseStudyPath(href) || isCaseStudyPath(pathname)) return;
+    // Entering a case-study page runs its own hand-built transition
+    // (heading clone + overlay, timed against a plain router.push in
+    // CaseStudyInner.jsx) — let that happen normally instead of layering
+    // this view transition on top of it. Leaving a case-study page via
+    // a navbar link is fine to use this transition (see the matching
+    // comment in PageTransitionLink.tsx for why).
+    if (isCaseStudyPath(href)) return;
 
     e.preventDefault();
     router.push(href, { onTransitionReady: slideInOut });

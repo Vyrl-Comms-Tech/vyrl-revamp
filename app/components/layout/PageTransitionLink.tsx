@@ -21,14 +21,17 @@ const PageTransitionLink = forwardRef<HTMLAnchorElement, PageTransitionLinkProps
       const hrefStr = href.toString();
       if (hrefStr === "#" || hrefStr === pathname) return;
 
-      // Case-study pages own their own hand-built transition (heading
-      // clone + overlay + pinned ScrollTrigger, timed against a plain
-      // router.push — see CaseStudyInner.jsx). Navigating away from one
-      // via this component's view-transition instead raced against that
-      // page's own ScrollTrigger teardown/gesture listeners still
-      // tearing down mid-transition, which is what could snap the route
-      // back to the case-study page right after it briefly changed.
-      if (isCaseStudyPath(hrefStr) || isCaseStudyPath(pathname)) return;
+      // Entering a case-study page runs its own hand-built transition
+      // (heading clone + overlay, timed against a plain router.push —
+      // see CaseStudyInner.jsx/ProjectsGrid.jsx), so layering this
+      // view-transition on top of that would fight it. Leaving a
+      // case-study page is fine to use this transition now that
+      // CaseStudyInner guards its own ScrollTrigger callbacks against
+      // firing again once it starts unmounting (isUnmountingRef) — that
+      // guard, not this exclusion, is what actually fixed the earlier
+      // bug where a stray onUpdate tick could snap the route back to
+      // the next case study right after leaving one.
+      if (isCaseStudyPath(hrefStr)) return;
 
       e.preventDefault();
       router.push(hrefStr, { onTransitionReady: slideInOut });
