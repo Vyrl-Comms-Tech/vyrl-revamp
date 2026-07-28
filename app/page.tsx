@@ -14,25 +14,25 @@ export default function Home() {
     <>
       {/* <HomeHero /> */}
       <TextAndCards />
-      <LazySection>
+      {/* <LazySection> */}
         <Services3d />
-      </LazySection>
-      <LazySection>
+      {/* </LazySection> */}
+      {/* <LazySection> */}
         <HomeCarousel />
-      </LazySection>
-      <LazySection>
+      {/* </LazySection> */}
+      {/* <LazySection> */}
         <Logos />
-      </LazySection>
-      <LazySection>
+      {/* </LazySection> */}
+      {/* <LazySection> */}
         <ClientReviews />
-      </LazySection>
-      <LazySection>
+      {/* </LazySection> */}
+      {/* <LazySection> */}
         <Collective />
-      </LazySection>
+      {/* </LazySection> */}
       {/* <SimilarPost /> */}
-      <LazySection>
+      {/* <LazySection> */}
         <HomeSecondLast />
-      </LazySection>
+      {/* </LazySection> */}
     </>
   );
 }
