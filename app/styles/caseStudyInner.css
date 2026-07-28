@@ -529,6 +529,7 @@
   .cs-inner {
     flex-direction: column;
     height: auto;
+    padding-bottom: 60px;
     width: 100%;
   }
 
@@ -703,7 +704,7 @@
   .cs-panel--8 {
     width: calc(100% - 40px);
     height: auto;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 4 / 3;
     margin-inline: 20px;
     margin-bottom: 20px;
   }
@@ -724,6 +725,6 @@
   }
 
   .cs-p8-bottom {
-    padding: 0 16px 16px;
+    padding: 0 16px 46px;
   }
 }

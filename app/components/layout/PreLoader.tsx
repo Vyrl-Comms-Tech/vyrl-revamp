@@ -334,7 +334,7 @@ export default function Preloader({
       </div>
 
       <div className={styles.loaderText} ref={loaderTextRef}>
-        <h1>{label}</h1>
+        <h1 id='mini-loader-text'>{label}</h1>
         <h1 className={styles.bigger} ref={counterRef} aria-live="polite">
           0
         </h1>

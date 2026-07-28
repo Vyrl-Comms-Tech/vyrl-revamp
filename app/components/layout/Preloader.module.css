@@ -133,8 +133,8 @@
 }
 @media (max-width:760px){
   
-.loaderText h1 {
-  display: none;
+#mini-loader-text {
+ display: none;
 }
 .bigger {
   font-size: 3rem !important;

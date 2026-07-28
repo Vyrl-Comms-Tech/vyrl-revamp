@@ -11,15 +11,16 @@ gsap.registerPlugin(Draggable, InertiaPlugin);
 // which uses the same "/team.jpg" + placeholder text pattern) — swap
 // these in once real photos/names/roles are available.
 const TEAM = [
-  { name: "Lorem Ipsum", designation: "Designation", image: "https://cdn.sanity.io/images/vu4lf9wl/production/d57e31b39c590ffc67f420a5f289ed3522849d62-1560x1701.png?w=640&q=100" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "https://cdn.sanity.io/images/vu4lf9wl/production/d57e31b39c590ffc67f420a5f289ed3522849d62-1560x1701.png?w=640&q=100" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "https://cdn.sanity.io/images/vu4lf9wl/production/d57e31b39c590ffc67f420a5f289ed3522849d62-1560x1701.png?w=640&q=100" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "https://cdn.sanity.io/images/vu4lf9wl/production/d57e31b39c590ffc67f420a5f289ed3522849d62-1560x1701.png?w=640&q=100" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "https://cdn.sanity.io/images/vu4lf9wl/production/d57e31b39c590ffc67f420a5f289ed3522849d62-1560x1701.png?w=640&q=100" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "https://cdn.sanity.io/images/vu4lf9wl/production/d57e31b39c590ffc67f420a5f289ed3522849d62-1560x1701.png?w=640&q=100" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "https://cdn.sanity.io/images/vu4lf9wl/production/d57e31b39c590ffc67f420a5f289ed3522849d62-1560x1701.png?w=640&q=100" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "https://cdn.sanity.io/images/vu4lf9wl/production/d57e31b39c590ffc67f420a5f289ed3522849d62-1560x1701.png?w=640&q=100" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "https://cdn.sanity.io/images/vu4lf9wl/production/d57e31b39c590ffc67f420a5f289ed3522849d62-1560x1701.png?w=640&q=100" },
+  { name: "Lorem Ipsum", designation: "Designation", image: "/team1.jpeg" },
+  { name: "Lorem Ipsum", designation: "Designation", image: "/team2.jpeg" },
+  { name: "Lorem Ipsum", designation: "Designation", image: "/team3.jpeg" },
+  { name: "Lorem Ipsum", designation: "Designation", image: "/team4.jpeg" },
+  { name: "Lorem Ipsum", designation: "Designation", image: "/team5.jpeg" },
+  { name: "Lorem Ipsum", designation: "Designation", image: "/team6.jpeg" },
+  { name: "Lorem Ipsum", designation: "Designation", image: "/team7.jpeg" },
+  { name: "Lorem Ipsum", designation: "Designation", image: "/team8.jpeg" },
+  { name: "Lorem Ipsum", designation: "Designation", image: "/team9.jpeg" },
+  { name: "Lorem Ipsum", designation: "Designation", image: "/team10.jpeg" },
 ];
 
 // GSAP's official horizontalLoop helper (https://gsap.com/docs/v3/HelperFunctions/helpers/seamlessLoop/)

@@ -179,7 +179,7 @@
   .banner .slider {
     width: 100px;
     height: 150px;
-    scale: 1;
+    scale: 0.95;
   }
 
   .slider-headingCol h1 {
@@ -195,9 +195,9 @@
   }
 
   .banner {
-    height: 90vh;
+    height: auto;
     min-height: 80vh;
-    padding: 6rem 15px 2rem;
+    padding: 6rem 15px 5rem;
   }
 
   .slider-desc {

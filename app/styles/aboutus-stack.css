@@ -252,20 +252,18 @@ display: none;
   }
 
   /* Sits below the pinned cards' area (not overlapping any card's own
-     text), full-width so it reads clearly on narrow screens. */
+     text). left/right insets give this element itself a full-width
+     box, but centering happens here on .aboutUsStack-cta directly —
+     .cta-btn-container stays at its natural shrink-to-fit size (no
+     width:100%), so the button's own width never changes; it just
+     gets placed in the middle of the available space instead of
+     pinned to the left edge. */
   .aboutUsStack-cta {
     left: 3%;
     right: 3%;
-    bottom: 3%;
+    bottom: 14%;
     width: auto;
-  }
-
-  .aboutUsStack-cta .cta-btn-container {
-    width: 100%;
-  }
-
-  .aboutUsStack-cta .cta-btn {
-    width: 100%;
+    display: flex;
     justify-content: center;
   }
 }

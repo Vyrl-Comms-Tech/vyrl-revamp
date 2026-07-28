@@ -26,7 +26,8 @@ const slides = [
     tabs: [
       "GSAP",
       "RESPONSIVE",
-      "FRAMER MOTION",
+  
+      
       "THREE.JS",
     ],
     desc: " A culturally grounded, visually elevated brand identity and website that capture Banda’s architectural ethos and storytelling approach.",
