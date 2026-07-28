@@ -174,7 +174,7 @@ function Collective() {
         </h2>
         <div className="box" id="tpbox1">
           <Image
-            src="/img1.avif"
+            src="/arab11.avif"
             alt="Collective work"
             fill
             sizes="(max-width: 768px) 120px, (max-width: 1024px) 150px, 200px"
@@ -183,7 +183,7 @@ function Collective() {
         </div>
         <div className="box" id="tpbox2">
           <Image
-            src="/img2.avif"
+            src="/banda4.avif"
             alt="Collective work"
             fill
             sizes="(max-width: 768px) 150px, (max-width: 1024px) 180px, 260px"
@@ -209,7 +209,7 @@ function Collective() {
         </div>
         <div className="box" id="tpbox5">
           <Image
-            src="/cr1.avif"
+            src="/jeikor4.avif"
             alt="Collective work"
             fill
             sizes="260px"
@@ -218,7 +218,7 @@ function Collective() {
         </div>
         <div className="box" id="tpbox6">
           <Image
-            src="/cr2.avif"
+            src="/sanam5.avif"
             alt="Collective work"
             fill
             sizes="150px"
