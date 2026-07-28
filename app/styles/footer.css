@@ -3,23 +3,25 @@
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
   /* overlay:; */
-  width: 100%;
+  width: 100% !important;
   background-color: #000;
   padding: 0 16px 40px;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
   gap: 20px;
 }
 
 /* ─── Row 1 – Logo ───────────────────────────────────────── */
 .footer-logo-row {
-  width: 100%;
+  width: 100% !important;
+
   scale: 1.5;
   height: 460px;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  overflow: hidden !important;
 }
 
 /* .footer-logo-img {
