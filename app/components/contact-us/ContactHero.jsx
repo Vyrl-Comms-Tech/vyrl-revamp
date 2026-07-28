@@ -170,8 +170,8 @@ const ContactHero = () => {
         </button>
 
         <div className="contactHero-image">
-          {/* <img src="/img1.jpg" alt="" /> */}
-          <video src="/contactvideo.mp4" autoPlay loop muted playsInline />
+          {/* <img src="/img1.avif" alt="" /> */}
+          <video src="/contactvideo_compressed.mp4" autoPlay loop muted playsInline />
 
           <div className="contactHero-newsletter">
             <h3>Stay In The Loop</h3>

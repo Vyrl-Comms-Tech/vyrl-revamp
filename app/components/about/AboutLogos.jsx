@@ -30,17 +30,17 @@ const AboutLogos = () => {
         </TextAnimation>
         <div className="logos-left-textcol">
 
-        <TextAnimation animateOnScroll={true} delay={0.3}>
-          <p className="logos-left-desc">
-           We work with businesses that want more than surface-level digital presence. From emerging brands to established companies, our clients come to Vyrl for sharper ideas, stronger execution, and digital systems built to support real growth.
-          </p>
-        </TextAnimation>
+          <TextAnimation animateOnScroll={true} delay={0.3}>
+            <p className="logos-left-desc">
+              We work with businesses that want more than surface-level digital presence. From emerging brands to established companies, our clients come to Vyrl for sharper ideas, stronger execution, and digital systems built to support real growth.
+            </p>
+          </TextAnimation>
           <CtaButton
             label='See Our Work'
             href='/projects'
             className="cta-button-white cta-about-logos"
           />
-        {/* <button>See Our Work</button> */}
+          {/* <button>See Our Work</button> */}
         </div>
       </div>
       <div className="logos-right">
@@ -57,7 +57,7 @@ const AboutLogos = () => {
                 >
                   {/* logo */}
                   <Image
-                    src="/img16.png"
+                    src="/img16.avif"
                     alt=""
                     fill
                     sizes="(max-width: 1780px) 141px, 196px"
@@ -85,5 +85,4 @@ const AboutLogos = () => {
     </div>
   );
 };
-
 export default AboutLogos;

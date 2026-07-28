@@ -174,7 +174,7 @@ function Collective() {
         </h2>
         <div className="box" id="tpbox1">
           <Image
-            src="/img1.jpg"
+            src="/img1.avif"
             alt="Collective work"
             fill
             sizes="(max-width: 768px) 120px, (max-width: 1024px) 150px, 200px"

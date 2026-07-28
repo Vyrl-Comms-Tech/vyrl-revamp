@@ -182,6 +182,7 @@
   transform: translateY(80%);
   font-size: 3rem;
   font-weight: 200;
+  letter-spacing: 2px;
   transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 

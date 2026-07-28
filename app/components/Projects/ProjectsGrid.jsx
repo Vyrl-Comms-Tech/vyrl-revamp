@@ -26,7 +26,7 @@ const PROJECT_ROWS = [
       title: "BANDA",
       category: "real-estate",
       type: "video",
-      src: "/banda -v.mp4",
+      src: "/banda -v_compressed.mp4",
       href: "/banda",
       tags: ["Property Developer", "Luxury Homes"],
     },
@@ -67,13 +67,12 @@ const PROJECT_ROWS = [
       title: "SANAM CARS",
       category: "automotive",
       type: "video",
-      src: "/sanam-v.mp4",
+      src: "/sanam-v_compressed.mp4",
       href: "/sanamcars",
       tags: ["Car Dealership", "Premium Vehicles"],
     },
   ],
 ];
-
 const FILTER_VALUES = FILTERS.map((f) => f.value);
 
 export default function ProjectsGrid() {
@@ -100,6 +99,32 @@ export default function ProjectsGrid() {
     if (node) followerRefs.current.set(id, node);
     else followerRefs.current.delete(id);
   };
+
+  // --- Viewport play/pause: only decode/play video when its card is visible ---
+  useLayoutEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const videos = entry.target.querySelectorAll("video");
+          videos.forEach((video) => {
+            if (entry.isIntersecting) {
+              video.play().catch(() => {});
+            } else {
+              video.pause();
+            }
+          });
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    cardRefs.current.forEach((card, id) => {
+      const project = PROJECT_ROWS.flat().find((p) => p.id === id);
+      if (project?.type === "video") observer.observe(card);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   // --- Mount: cursor-follow quickTo setup + scroll-reveal ---------------
   useLayoutEffect(() => {
@@ -259,7 +284,7 @@ export default function ProjectsGrid() {
 function ProjectMedia({ project }) {
   if (project.type === "video") {
     return (
-      <video muted loop autoPlay playsInline>
+      <video muted loop playsInline preload="metadata">
         <source src={project.src} />
       </video>
     );

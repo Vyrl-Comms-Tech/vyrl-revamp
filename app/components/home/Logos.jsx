@@ -48,7 +48,7 @@ const Logos = () => {
                 >
                   {/* logo */}
                   <Image
-                    src="/img16.png"
+                    src="/img16.avif"
                     alt=""
                     fill
                     sizes="(max-width: 1780px) 141px, 196px"

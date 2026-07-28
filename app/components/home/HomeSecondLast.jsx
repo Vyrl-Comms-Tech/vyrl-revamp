@@ -1,10 +1,31 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import TextAnimation from "./TextAnimation";
 import "../../styles/home-second-last.css";
 import Link from "next/link";
 
 const HomeSecondLast = () => {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section className="hp-section">
       <div className="hp-grid">
@@ -46,7 +67,15 @@ const HomeSecondLast = () => {
 
         {/* Right image panel */}
         <div className="hp-right">
-      <video src="/secondlast.mp4" autoPlay loop muted playsInline className="hp-img"/>
+      <video
+        ref={videoRef}
+        src="/secondlast_compressed.mp4"
+        loop
+        muted
+        playsInline
+        preload="metadata"
+        className="hp-img"
+      />
 
           {/* <img src="/img2.avif" alt="3D digital sculpture" className="hp-img" /> */}
         </div>

@@ -440,7 +440,7 @@ function ClientReviewSection() {
               card — swaps diagonal corners each time an arrow is
               clicked, independent of which review is showing. */}
           <img
-            src="/sticker1.png"
+            src="/sticker1.avif"
             alt=""
             className={`client-review-sticker client-review-sticker-1 ${
               stickerCorner === "tl-br"
@@ -449,7 +449,7 @@ function ClientReviewSection() {
             }`}
           />
           <img
-            src="/sticker2.png"
+            src="/sticker2.avif"
             alt=""
             className={`client-review-sticker client-review-sticker-2 ${
               stickerCorner === "tl-br"

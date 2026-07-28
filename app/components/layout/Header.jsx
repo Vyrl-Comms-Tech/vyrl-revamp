@@ -23,7 +23,7 @@ const Header = () => {
 
         <div className="nav-dropdown">
           <div className="nav-dropdown-image">
-            <Image src="/img1.jpg" alt="" fill className="nav-dropdown-img" />
+            <Image src="/img1.avif" alt="" fill className="nav-dropdown-img" />
             <span className="nav-dropdown-caption">Highlighted Blogs</span>
           </div>
           <div className="nav-dropdown-links">

@@ -25,13 +25,13 @@ export interface PreloaderProps {
 }
 
 const DEFAULT_LETTERS: PreloaderLetter[] = [
-  { src: '/loader/l.jpg' },
-  { src: '/loader/o.png' },
-  { src: '/loader/a.jpg' },
-  { src: '/loader/d.jpg' },
-  { src: '/loader/i.png' },
-  { src: '/loader/n.jpg' },
-  { src: '/loader/g.png' },
+  { src: '/loader/l.avif' },
+  { src: '/loader/o.avif' },
+  { src: '/loader/a.avif' },
+  { src: '/loader/d.avif' },
+  { src: '/loader/i.avif' },
+  { src: '/loader/n.avif' },
+  { src: '/loader/g.avif' },
 ];
 
 export default function Preloader({

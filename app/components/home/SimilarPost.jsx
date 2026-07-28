@@ -42,7 +42,7 @@ function SimilarPost() {
       content:
         "His mastery of GSAP and motion design sets him apart. Our user engagement tripled after implementing his designs.",
       date: "May 02, 2025",
-      image: "/img16.png",
+      image: "/img16.avif",
     },
   ];
 
@@ -164,7 +164,7 @@ function SimilarPost() {
         <div className="reviews-label">
           <span>•</span>
           <h2>Case Studies & Insights
-</h2>
+          </h2>
           <span>•</span>
         </div>
       </div>
@@ -229,7 +229,7 @@ function SimilarPost() {
       <div className="review-mobile-label">
         <span>•</span>
         <h2>Case Studies & Insights
-</h2>
+        </h2>
         <span>•</span>
       </div>
     </section>

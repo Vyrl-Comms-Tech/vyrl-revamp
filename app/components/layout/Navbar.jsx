@@ -546,7 +546,7 @@ const Navbar = () => {
           ref={navBarRef}
         >
           <div className="bgs" ref={bgsRef}>
-            <Image src="/bgs.png" alt="" fill sizes="95vw" />
+            <Image src="/bgs.avif" alt="" fill sizes="95vw" />
           </div>
           <PageTransitionLink
             href="/"

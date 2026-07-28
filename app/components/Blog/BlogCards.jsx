@@ -13,7 +13,7 @@ const cards = [
   {
     id: 1,
     category: "NEW",
-    image: "/pro1.png",
+    image: "/pro1.avif",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -22,7 +22,7 @@ const cards = [
   {
     id: 2,
     category: "NEW",
-    image: "/pro1.png",
+    image: "/pro1.avif",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -31,7 +31,7 @@ const cards = [
   {
     id: 3,
     category: "EDUCATIONAL",
-    image: "/pro1.png",
+    image: "/pro1.avif",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -40,7 +40,7 @@ const cards = [
   {
     id: 4,
     category: "EDUCATIONAL",
-    image: "/pro1.png",
+    image: "/pro1.avif",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -49,7 +49,7 @@ const cards = [
   {
     id: 5,
     category: "REAL ESTATES",
-    image: "/pro1.png",
+    image: "/pro1.avif",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -58,7 +58,7 @@ const cards = [
   {
     id: 6,
     category: "REAL ESTATES",
-    image: "/pro1.png",
+    image: "/pro1.avif",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -67,7 +67,7 @@ const cards = [
   {
     id: 7,
     category: "EDUCATIONAL",
-    image: "/pro1.png",
+    image: "/pro1.avif",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -76,7 +76,7 @@ const cards = [
   {
     id: 8,
     category: "EDUCATIONAL",
-    image: "/pro1.png",
+    image: "/pro1.avif",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -85,7 +85,7 @@ const cards = [
   {
     id: 9,
     category: "REAL ESTATES",
-    image: "/pro1.png",
+    image: "/pro1.avif",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",
@@ -94,7 +94,7 @@ const cards = [
   {
     id: 10,
     category: "REAL ESTATES",
-    image: "/pro1.png",
+    image: "/pro1.avif",
     title: "The Future of Digital Experiences",
     desc: "Explore how emerging technologies are reshaping the way brands connect with their audiences online.",
     readTime: "5 min read",

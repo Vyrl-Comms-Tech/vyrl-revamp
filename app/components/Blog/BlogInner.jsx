@@ -22,7 +22,7 @@ const BlogInner = () => {
   return (
     <div className="bi-container">
       <div className="bi-left-image">
-        <img src="/pro1.png" alt="" />
+        <img src="/pro1.avif" alt="" />
       </div>
       <div className="bi-right">
         <TextAnimation animateOnScroll={true} delay={0.3}>
