@@ -11,7 +11,7 @@ import ChangeTextAnimation from "../layout/ChangeTextAnimation";
 import CtaButton from "../layout/cta";
 const slides = [
   {
-    image: "/arab1.avif",
+    image: "/arab11.avif",
     title: "Arabian Estates",
     tabs: [
       "CUSTOM DASHBOARD",

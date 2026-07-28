@@ -70,7 +70,7 @@ export const caseStudies = {
       "Interactive property showcases and thoughtfully designed user journeys that guide visitors from discovery to inquiry with clarity and elegance.",
     ],
     images: [
-      "/arab1.avif",
+      "/arab11.avif",
       "/arab6.avif",
       "/arab5.avif",
       "/arab2.avif",
