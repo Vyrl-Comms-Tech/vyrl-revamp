@@ -52,7 +52,7 @@
   .aboutImg img,
   .aboutImg video {
     height: 39vh;
-    margin-block: -100px;
+    margin-block: -80px;
     /* margin-bottom: -100px; */
   }
   .aboutHero-desc {

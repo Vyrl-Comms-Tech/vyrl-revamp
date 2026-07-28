@@ -244,6 +244,7 @@ function Footer() {
 
       {/* Row 3 – Subscribe + Mascot + Info */}
 
+  
       <div className="footer-bottom-row">
         <div className="footer-subscribe">
           <h3 className="footer-subscribe-title">Stay In The Loop</h3>
@@ -261,6 +262,16 @@ function Footer() {
           </div>
         </div>
 
+        <div className="footer-mascot">
+          <video
+            className=""
+            autoPlay
+            muted
+            loop
+            playsInline
+            src="/smiley_compressed.mp4"
+          ></video>
+        </div>
 
         <div className="footer-info">
           <div className="footer-time">
