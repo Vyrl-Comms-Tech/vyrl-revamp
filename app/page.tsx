@@ -7,19 +7,32 @@ import Logos from "@/app/components/home/Logos";
 import ClientReviews from "@/app/components/home/ClientReviews";
 import Collective from "@/app/components/home/Collective";
 import Services3d from "@/app/components/home/Services3d";
+import LazySection from "@/app/components/layout/LazySection";
 
 export default function Home() {
   return (
     <>
       <HomeHero />
       <TextAndCards />
-      <Services3d />
-      <HomeCarousel />
-      <Logos />
-      <ClientReviews />
-      <Collective />
+      <LazySection>
+        <Services3d />
+      </LazySection>
+      <LazySection>
+        <HomeCarousel />
+      </LazySection>
+      <LazySection>
+        <Logos />
+      </LazySection>
+      <LazySection>
+        <ClientReviews />
+      </LazySection>
+      <LazySection>
+        <Collective />
+      </LazySection>
       {/* <SimilarPost /> */}
-      <HomeSecondLast />
+      <LazySection>
+        <HomeSecondLast />
+      </LazySection>
     </>
   );
 }

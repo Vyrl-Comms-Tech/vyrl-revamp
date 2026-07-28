@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { caseStudies } from "../caseStudy/caseStudiesData";
 import FooterLogo3D from "./FooterLogo3D";
@@ -14,11 +14,31 @@ const NO_FOOTER_PATHS = [...CASE_STUDY_PATHS, "/contact-us"];
 function Footer() {
   const pathname = usePathname();
   const hideFooter = NO_FOOTER_PATHS.includes(pathname);
+  const mascotVideoRef = useRef<HTMLVideoElement>(null);
 
   const [time, setTime] = useState({
     uae: "",
     usa: "",
   });
+
+  useEffect(() => {
+    const video = mascotVideoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const updateTime = () => {
@@ -235,16 +255,6 @@ function Footer() {
           </div>
         </div>
 
-        <div className="footer-mascot">
-          <video
-            className=""
-            autoPlay
-            muted
-            loop
-            playsInline
-            src="/smiley_compressed.mp4"
-          ></video>
-        </div>
 
         <div className="footer-info">
           <div className="footer-time">

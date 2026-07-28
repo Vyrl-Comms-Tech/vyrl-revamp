@@ -8,6 +8,7 @@ import AboutHero from "../components/about/AboutHero";
 import AboutImg from "../components/about/aboutImg";
 import AboutText from "../components/about/AboutText";
 import AboutLogos from "../components/about/AboutLogos";
+import LazySection from "@/app/components/layout/LazySection";
 const page = () => {
   return (
     <div>
@@ -16,12 +17,20 @@ const page = () => {
       </div>
       <AboutHero mobileWordmark={<AboutImg />} />
       <AboutText />
-      <AboutUsStack />
+      <LazySection>
+        <AboutUsStack />
+      </LazySection>
       {/* <Logos /> */}
-      <AboutLogos />
-      <TeamProfile />
+      <LazySection>
+        <AboutLogos />
+      </LazySection>
+      <LazySection>
+        <TeamProfile />
+      </LazySection>
       {/* <SimilarPost /> */}
-      <HomeSecondLast />
+      <LazySection>
+        <HomeSecondLast />
+      </LazySection>
     </div>
   );
 };
