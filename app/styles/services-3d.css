@@ -224,7 +224,7 @@
 @media (max-width: 700px) {
   .services-skip-btn {
     font-size: 0.85rem;
-    bottom: 14%;
+    bottom: 6%;
   }
 }
 
@@ -246,7 +246,11 @@
     bottom: 50%;
   }
 }
-
+@media (max-width:1400px){
+   .services-cta-desktop {
+    bottom: 55%;
+  }
+}
 @media (max-width: 700px) {
   /* OrbitControls is never attached to the canvas on mobile (see
      Services3d.jsx), so there's nothing for the canvas to be

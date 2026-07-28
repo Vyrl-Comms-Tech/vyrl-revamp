@@ -1,0 +1,212 @@
+.draggable-marquee {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #000;
+  overflow: hidden;
+  cursor: none;
+}
+
+.draggable-marquee-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.draggable-marquee-track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  will-change: transform;
+}
+
+.draggable-marquee-item {
+  position: relative;
+  flex: 0 0 690px;
+  max-height: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transform-origin: center;
+}
+
+/* Gap baked into each item's own box (instead of a flex `gap` on the
+   track) because horizontalLoop's wrap-around math only ever measures
+   the gap that sits *before the very first item* (spaceBefore[0]) and
+   reuses that same distance as the "gap" at the loop's seam — a flex
+   `gap` isn't part of any single item's own width/position, so the
+   helper's seam calculation didn't see it there.
+   Only applied to every item EXCEPT the last: getTotalWidth() sums
+   distance using the last item's own offsetWidth (which never
+   includes margin) plus spaceBefore[0] as the one wrap-seam gap — so
+   the algorithm already expects exactly `length - 1` real gaps to
+   exist between `length` items. Giving the last item a trailing
+   margin too added an extra, untracked gap-width that totalWidth
+   never accounted for, and made exactly one seam collapse to 0px. */
+.draggable-marquee-item {
+  margin-right: 32px;
+  margin-left: 32px;
+}     
+
+/* Only the image itself clips to a fixed aspect-ratio box — the
+   caption below is regular document flow underneath it, not an
+   absolutely-positioned overlay sitting on top of the photo. */
+.draggable-marquee-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 690 / 820;
+  overflow: hidden;
+}
+
+.draggable-marquee-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(1) contrast(1.05);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Per-card name/designation — sits below the image, outside the
+   clipped photo area, each card carrying its own rather than one
+   shared label for whichever card happens to be centered. */
+.draggable-marquee-info {
+  z-index: 5;
+  color: #fff;
+  pointer-events: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  /* background: rgba(255, 255, 255, 0.06); */
+  backdrop-filter: blur(12px);
+  width: fit-content;
+}
+
+.draggable-marquee-name {
+  margin: 0 0 4px;
+  font-size: clamp(1.1rem, 1.4vw, 1.5rem);
+  font-weight: 500;
+}
+
+.draggable-marquee-designation {
+  display: block;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Circular "MEET THE TEAM · Drag" cursor badge ────────────────── */
+/* No filled circle anywhere in this badge — the outer arc text carries
+   its own background (a stroked ring exactly as wide as the text, see
+   .draggable-marquee-badge-ring-band below), which is the only thing
+   that reads as a "circle." The center "Drag" label has no background
+   of its own and simply overlaps the middle, where the ring band
+   doesn't reach. */
+.draggable-marquee-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 180px;
+  height: 180px;
+  margin-left: -82px;
+  margin-top: -82px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  scale: 1.7;
+  transform: scale(0.6);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.draggable-marquee-badge.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.draggable-marquee-badge-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: draggable-marquee-spin 10s linear infinite;
+}
+
+/* Stroke width matches the text's own font-size so the color band sits
+   directly under the letters, edge to edge — wider than that and bare
+   colored ring would peek out above/below the text; narrower and the
+   text would spill past the band's top/bottom edge. */
+.draggable-marquee-badge-ring-band {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 43px;
+}
+
+.draggable-marquee-badge-ring-text {
+  fill: #000;
+  font-size: 23.5px;
+  align-items: center;
+
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+@keyframes draggable-marquee-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.draggable-marquee-badge-inner {
+  position: relative;
+  z-index: 1;
+  width: 62%;
+  height: 62%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #fff;
+}
+
+.draggable-marquee-badge-label {
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.draggable-marquee-badge-arrow {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+@media (max-width: 900px) {
+  .draggable-marquee {
+    height: 67vh;
+    cursor: grab;
+  }
+
+  .draggable-marquee-item {
+    flex-basis: 65vw;
+    transform: none;
+  }
+
+  .draggable-marquee-badge {
+    display: none;
+  }
+
+  .draggable-marquee-name {
+    font-size: 1.2rem;
+  }
+}

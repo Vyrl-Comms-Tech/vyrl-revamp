@@ -122,7 +122,11 @@
     font-size: 22px;
   }
 }
-
+@media (max-width:1500px){
+  .hp-para{
+    font-size: 20px;
+  }
+}
 @media (max-width: 768px) {
   .hp-grid {
     grid-template-columns: 1fr;

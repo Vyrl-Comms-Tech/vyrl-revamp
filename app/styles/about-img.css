@@ -8,7 +8,7 @@
 
 .aboutImg img,
 .aboutImg video {
-  height:80vh;
+  height: 80vh;
   margin-top: 20px;
   width: auto;
   margin-bottom: -260px;
@@ -16,10 +16,22 @@
   object-fit: contain;
 }
 
-@media (max-width:1720px){
+@media (max-width: 1720px) {
   .aboutImg video {
-  height:75vh;
+    height: 75vh;
+  }
 }
+@media (max-width: 1590px) {
+  .aboutImg video {
+    height: 65vh;
+    margin-top: -1%;
+  }
+}
+@media (max-width: 1400px) {
+  .aboutImg video {
+    height: 60vh;
+    margin-top: 1%;
+  }
 }
 
 @media (max-width: 900px) {
@@ -31,14 +43,14 @@
   }
 
   .aboutImg img,
-.aboutImg video {
+  .aboutImg video {
     height: 28vh;
     margin-top: 10px;
   }
 }
 @media (max-width: 760px) {
   .aboutImg img,
-.aboutImg video {
+  .aboutImg video {
     height: 39vh;
     margin-block: -100px;
     /* margin-bottom: -100px; */

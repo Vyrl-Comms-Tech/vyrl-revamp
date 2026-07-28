@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { caseStudies } from "../caseStudy/caseStudiesData";
-import FooterLogo3D from "./FooterLogo3D";
+import UnicornEmbed from "./UnicornEmbed";
 import PageTransitionLink from "./PageTransitionLink";
 import "../../styles/footer.css";
 import Link from "next/link";
@@ -67,7 +67,7 @@ function Footer() {
     <footer className="footer">
       {/* Row 1 – Logo */}
       <div className="footer-logo-row">
-        <FooterLogo3D />
+        <UnicornEmbed projectId="eWb7ceke9RYVHKByTGA5" />
       </div>
 
       {/* Row 2 – Let's Connect + Nav Links */}
@@ -211,10 +211,16 @@ function Footer() {
             </div>
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Info</h4>
-              <PageTransitionLink href="/privacy-policy" className="footer-nav-link">
+              <PageTransitionLink
+                href="/privacy-policy"
+                className="footer-nav-link"
+              >
                 Privacy Policy
               </PageTransitionLink>
-              <PageTransitionLink href="/terms-and-condition" className="footer-nav-link">
+              <PageTransitionLink
+                href="/terms-and-condition"
+                className="footer-nav-link"
+              >
                 Terms Of Service
               </PageTransitionLink>
             </div>

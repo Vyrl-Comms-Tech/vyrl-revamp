@@ -1,4 +1,3 @@
-import TeamProfile from "@/app/components/about/TeamProfie";
 import React from "react";
 import SimilarPost from "@/app/components/home/SimilarPost";
 import HomeSecondLast from "@/app/components/home/HomeSecondLast";
@@ -9,6 +8,7 @@ import AboutImg from "../components/about/aboutImg";
 import AboutText from "../components/about/AboutText";
 import AboutLogos from "../components/about/AboutLogos";
 import LazySection from "@/app/components/layout/LazySection";
+import DraggableMarquee from "../components/about/DraggableMarquee";
 const page = () => {
   return (
     <div>
@@ -25,7 +25,8 @@ const page = () => {
         <AboutLogos />
       </LazySection>
       <LazySection>
-        <TeamProfile />
+        {/* <TeamProfile /> */}
+        <DraggableMarquee/>
       </LazySection>
       {/* <SimilarPost /> */}
       <LazySection>

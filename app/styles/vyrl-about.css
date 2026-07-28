@@ -80,6 +80,8 @@
    moves, it scales and repositions together with the image as one
    unit without ever being clipped by the photo's crop. */
 .vyrl-section-about-caption {
+  font-size: 19px;
+  line-height: 115%;
   position: absolute;
   top: 100%;
   margin-top: 20px;
@@ -89,8 +91,6 @@
   max-width: 550px;
   margin-bottom: 0;
   color: #fff;
-  font-size: 19px;
-  line-height: 115%;
   text-align: center;
   z-index: 2;
 }
@@ -189,6 +189,11 @@
   .vyrl-section-card1 {
     height: 275px;
   }
+  .vyrl-section-about-caption {
+    font-size: 18px;
+    line-height: 112%;
+    color: #ffffffd2;
+  }
   .vyrl-section-card1,
   .vyrl-section-card2,
   .vyrl-section-card3 {
@@ -223,14 +228,18 @@
   .vyrl-section-card2 {
     height: 340px;
   }
-  .vyrl-section-card1 h1, .vyrl-section-card2 h1, .vyrl-section-card3 h1{
+  .vyrl-section-card1 h1,
+  .vyrl-section-card2 h1,
+  .vyrl-section-card3 h1 {
     font-size: 34px;
   }
-  .vyrl-section-card1 p, .vyrl-section-card2 p, .vyrl-section-card3 p{
+  .vyrl-section-card1 p,
+  .vyrl-section-card2 p,
+  .vyrl-section-card3 p {
     font-size: 18px;
     line-height: 111%;
   }
-  .vyrl-section-about-image{
+  .vyrl-section-about-image {
     top: 11%;
   }
   .vyrl-section-card3,
@@ -240,9 +249,18 @@
   .vyrl-section-about-image {
     top: 21% !important;
   }
-      .vyrl-sections-cards-div {
-      top: 31vh;
-      }
+  .vyrl-sections-cards-div {
+    top: 31vh;
+  }
+}
+@media (max-width:1400px){
+   .vyrl-sections-cards-div {
+    top: 29vh;
+  }
+  
+  .vyrl-section-about-image {
+    top: 16% !important;
+  }
 }
 
 @media (max-width: 760px) {

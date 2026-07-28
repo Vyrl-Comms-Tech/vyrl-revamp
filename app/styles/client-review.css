@@ -272,6 +272,10 @@
     right: calc(50% - 107px - 10px);
   }
 }
+@media (max-width:1400px){}
+.client-review-section-container {
+gap: 80px;
+}
 @media (max-width: 760px) {
   .client-review-section-container {
     padding: 70px 15px 32px !important;

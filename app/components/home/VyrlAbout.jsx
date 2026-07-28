@@ -281,7 +281,7 @@ function VyrlAbout() {
 
         <div className="vyrl-section-about-image" ref={imageRef}>
           <div className="vyrl-section-about-image-crop">
-            <img src="/img1.avif" alt="" />
+            <img src="/services1.jpg" alt="" />
           </div>
           <p className="vyrl-section-about-caption" ref={captionRef}>
             Our clients work with us for more than deliverables. They come to
