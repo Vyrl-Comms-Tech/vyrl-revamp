@@ -131,3 +131,12 @@
     transform: none;
   }
 }
+@media (max-width:760px){
+  
+.loaderText h1 {
+  display: none;
+}
+.bigger {
+  font-size: 3rem !important;
+}
+}

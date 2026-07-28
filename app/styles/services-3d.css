@@ -266,12 +266,12 @@
     transform: translateY(-28%);
   }
   .right-text-services {
-    width: 80%;
+    width: 90%;
     bottom: 15%;
     right: 15px;
   }
   .right-text-services h1 {
-    font-size: 2.8rem;
+    font-size: 2.2rem;
   }
   .static-number2 {
     height: 23vw !important;
