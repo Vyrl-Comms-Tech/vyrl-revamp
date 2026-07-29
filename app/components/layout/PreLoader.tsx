@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import styles from "./Preloader.module.css";
+import { loadGLTF } from "@/app/lib/glbCache";
 
 export interface PreloaderLetter {
   src: string;
@@ -136,13 +137,21 @@ export default function Preloader({
 
   // ---------------------------------------------------------------------
   // Warm up heavy below-the-fold assets while the ~4s intro timeline is
-  // running anyway, so they're already in the browser's HTTP cache by
-  // the time LazySection actually mounts the components that need them
-  // (the hero's UnicornStudio background, the services cube's GLB) —
-  // fire-and-forget, never blocks or delays the reveal.
+  // running anyway, so they're ready by the time the user actually
+  // reaches them — fire-and-forget, never blocks or delays the reveal.
+  //
+  // The services cube needs its GLB fully fetched *and* GLTF-parsed
+  // *and* DRACO-decoded, not just downloaded — a plain fetch() only
+  // warms the HTTP cache, but the parse/decode step is what actually
+  // took visible time once the section mounted (especially on
+  // /services, which isn't lazy-loaded at all and starts loading the
+  // instant that page opens). Calling the same loadGLTF() that
+  // Services3d.jsx calls means the shared module-level cache already
+  // holds the fully-parsed model by the time any Services3d instance
+  // mounts, on either page, for the rest of the session.
   // ---------------------------------------------------------------------
   useEffect(() => {
-    fetch('/cube1.glb').catch(() => {});
+    loadGLTF('/cube1.glb').catch(() => {});
 
     const unicornScriptSrc =
       'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.2.8/dist/unicornStudio.umd.js';

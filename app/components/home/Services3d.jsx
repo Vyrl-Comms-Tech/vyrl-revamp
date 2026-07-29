@@ -6,10 +6,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitType from "split-type";
 import "../../styles/services-3d.css";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import CtaButton from "../layout/cta";
+import { loadGLTF } from "@/app/lib/glbCache";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -90,7 +89,8 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
     // ------------------------------------------------
     // Scene / Camera / Renderer (only when WebGL is available)
     // ------------------------------------------------
-    let renderer, controls, rafId, dracoLoader;
+    let renderer, controls, rafId;
+    let cancelled = false;
 
     // Some environments (sandboxed browsers, disabled GPU/hardware
     // acceleration, certain VMs/remote desktops) can't create a WebGL
@@ -192,26 +192,26 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       scene.add(mouseLight);
 
       // ------------------------------------------------
-      // Loaders / Model
+      // Model — loadGLTF shares a single GLTFLoader/DRACOLoader (WASM
+      // decoder) and a module-level cache across every Services3d
+      // instance (home, /services, back/forward nav between them) and
+      // the preloader's own warmup call, so the fetch+parse+decode work
+      // only ever happens once per session; every later mount here
+      // resolves from cache almost instantly.
       // ------------------------------------------------
-      dracoLoader = new DRACOLoader();
-      dracoLoader.setDecoderPath(
-        "https://www.gstatic.com/draco/versioned/decoders/1.5.7/",
-      );
-      // WASM decoder — significantly faster to decode than the JS
-      // fallback, which matters here since this fires the moment the
-      // section scrolls into view.
-
-      const loader = new GLTFLoader();
-      loader.setDRACOLoader(dracoLoader);
-
       const pivot = new THREE.Group();
       scene.add(pivot);
 
       let mixer;
 
-      loader.load(modelUrl, (gltf) => {
-        const model = gltf.scene;
+      loadGLTF(modelUrl).then((gltf) => {
+        if (cancelled) return;
+        // .clone() because the cached gltf.scene is the same object
+        // instance shared with every other consumer (e.g. home and
+        // /services both mounting around the same navigation) — adding
+        // it directly to this pivot would reparent it out of any other
+        // scene graph currently using it.
+        const model = gltf.scene.clone(true);
         pivot.add(model);
 
         mixer = new THREE.AnimationMixer(model);
@@ -611,6 +611,7 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
     // Cleanup
     // ------------------------------------------------
     return () => {
+      cancelled = true;
       if (handleResize) window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(rafId);
       cleanupVisibilityObserver?.();
@@ -630,7 +631,11 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
           cubeMount.removeChild(renderer.domElement);
         }
       }
-      if (dracoLoader) dracoLoader.dispose();
+      // Note: the DRACOLoader/GLTFLoader used to load this model are
+      // owned by the shared cache module (glbCache.js), not this
+      // component — they're intentionally never disposed here, since
+      // other Services3d instances (or a future one) may still need
+      // them for cache hits.
     };
   }, [modelUrl]);
 
