@@ -1,10 +1,11 @@
 import React from 'react'
+import UnicornEmbed from "../layout/UnicornEmbed";
 import '../../styles/about-img.css'
 
 const AboutImg = () => {
   return (
     <div className='aboutImg'>
-      <video src="/aboutUsHero.mp4" autoPlay loop muted playsInline />
+      <UnicornEmbed projectId="49J5vr4fHwsoSv3oeJcM" className="aboutImg-embed" />
     </div>
   )
 }

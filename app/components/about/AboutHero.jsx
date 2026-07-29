@@ -6,11 +6,13 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
 import "../../styles/about-hero.css";
 import CtaButton from "../layout/cta";
+import AboutImg from "./aboutImg";
 
 gsap.registerPlugin(ScrollTrigger, Flip);
 
-const AboutHero = ({ mobileWordmark }) => {
+const AboutHero = () => {
   const containerRef = useRef(null);
+  const topRef = useRef(null);
   const imageWrapRef = useRef(null);
   const placeholderRef = useRef(null);
   const spacerRef = useRef(null);
@@ -18,10 +20,11 @@ const AboutHero = ({ mobileWordmark }) => {
   useGSAP(
     () => {
       const container = containerRef.current;
+      const top = topRef.current;
       const imageWrap = imageWrapRef.current;
       const placeholder = placeholderRef.current;
       const spacer = spacerRef.current;
-      if (!container || !imageWrap || !placeholder || !spacer) return;
+      if (!container || !top || !imageWrap || !placeholder || !spacer) return;
 
       const containerRect = container.getBoundingClientRect();
       const placeholderRect = placeholder.getBoundingClientRect();
@@ -60,12 +63,20 @@ const AboutHero = ({ mobileWordmark }) => {
       // paused tween's progress from a separate ScrollTrigger onUpdate)
       // so GSAP's own scrub interpolation smooths it — the manual
       // progress() relay added an extra frame of lag on top of Lenis.
+      // Starts only once the full 100vh top section has scrolled past
+      // (its own bottom edge reaches the viewport bottom) — not
+      // "container top hits viewport center." .aboutHero-top is a full
+      // 100vh now, so the container's top sits at y=0 on load, already
+      // above viewport-center; using the container (or the in-view
+      // placeholder) as the start trigger meant the tween was already
+      // partway through — imageWrap grown and overlapping the
+      // description — before the user had scrolled at all.
       const tween = gsap.to(imageWrap, {
         ...flip,
         ease: "none",
         scrollTrigger: {
-          trigger: container,
-          start: "top center",
+          trigger: top,
+          start: "bottom bottom",
           endTrigger: spacer,
           end: "bottom bottom",
           scrub: 0.5,
@@ -81,29 +92,31 @@ const AboutHero = ({ mobileWordmark }) => {
 
   return (
     <div className="aboutHero" ref={containerRef}>
-      <div className="aboutHero-top">
-        <div className="aboutHero-imageCol">
-          <div className="aboutHero-imagePlaceholder" ref={placeholderRef} />
-          <p className="aboutHero-desc">
-            We are not here to simply design, post, develop, or advertise. We
-            are here to understand what your brand is trying to become — then
-            build the digital system that helps it get there.
-          </p>
-          <CtaButton label="Lets Get In Touch" href="/contact" />
+      <div className="aboutHero-top" ref={topRef}>
+        <div className="aboutHero-embed">
+          <AboutImg />
         </div>
 
-        <div className="aboutHero-headingCol">
-          <span className="aboutHero-tag">• About</span>
-          <h1>
-            A Creative Partner
-            <br />
-            For The Digital Era
-          </h1>
-        </div>
+        <div className="aboutHero-bottomRow">
+          <div className="aboutHero-imageCol">
+            <div className="aboutHero-imagePlaceholder" ref={placeholderRef} />
+            <p className="aboutHero-desc">
+              We are not here to simply design, post, develop, or advertise.
+              We are here to understand what your brand is trying to become —
+              then build the digital system that helps it get there.
+            </p>
+            <CtaButton label="Lets Get In Touch" href="/contact" />
+          </div>
 
-        {mobileWordmark && (
-          <div className="aboutHero-mobileWordmark">{mobileWordmark}</div>
-        )}
+          <div className="aboutHero-headingCol">
+            <span className="aboutHero-tag">• About</span>
+            <h1>
+              A Creative Partner
+              <br />
+              For The Digital Era
+            </h1>
+          </div>
+        </div>
       </div>
 
       <div className="aboutHero-imageSpacer" ref={spacerRef} />

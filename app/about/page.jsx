@@ -4,7 +4,6 @@ import HomeSecondLast from "@/app/components/home/HomeSecondLast";
 import Logos from "@/app/components/home/Logos";
 import AboutUsStack from "../components/about/AboutusStack";
 import AboutHero from "../components/about/AboutHero";
-import AboutImg from "../components/about/aboutImg";
 import AboutText from "../components/about/AboutText";
 import AboutLogos from "../components/about/AboutLogos";
 import LazySection from "@/app/components/layout/LazySection";
@@ -12,10 +11,7 @@ import DraggableMarquee from "../components/about/DraggableMarquee";
 const page = () => {
   return (
     <div>
-      <div className="aboutImg-desktop-only">
-        <AboutImg />
-      </div>
-      <AboutHero mobileWordmark={<AboutImg />} />
+      <AboutHero />
       <AboutText />
       <LazySection>
         <AboutUsStack />
@@ -26,7 +22,7 @@ const page = () => {
       </LazySection>
       <LazySection>
         {/* <TeamProfile /> */}
-        <DraggableMarquee/>
+        <DraggableMarquee />
       </LazySection>
       {/* <SimilarPost /> */}
       <LazySection>

@@ -11,26 +11,26 @@ gsap.registerPlugin(Draggable, InertiaPlugin);
 // which uses the same "/team.jpg" + placeholder text pattern) — swap
 // these in once real photos/names/roles are available.
 const TEAM = [
-  { name: "Adeel", designation: "Jr Full-stack Developer", image: "/team1.jpeg" },
-  { name: "Arsalan", designation: "Manager", image: "/team2.jpeg" },
+  { name: "Adeel", designation: "Jr. Full Stack Developer", image: "/team1.jpeg" },
+  { name: "Arsalan", designation: "Performance Head", image: "/team2.jpeg" },
   { name: "Daniyal", designation: "Project Manager", image: "/team3.jpeg" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "/team4.jpeg" },
+  { name: "Fatima", designation: "Jr. Designer", image: "/team4.jpeg" },
   { name: "Haris", designation: "Senior Full Stack Developer", image: "/team5.jpeg" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "/team6.jpeg" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "/team7.jpeg" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "/team8.jpeg" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "/team9.jpeg" },
-  // { name: "Lorem Ipsum", designation: "Designation", image: "/team10.jpeg" },
+  { name: "Zain", designation: "3D & AI Specialist", image: "/team6.jpeg" },
+  { name: "Saqib", designation: "Senior Front End Developer", image: "/team10.jpeg" },
+  { name: "Amna", designation: "Account Manager", image: "/team7.jpeg" },
+  { name: "Mohsin", designation: "UI/UX & Design Lead", image: "/team8.jpeg" },
+  { name: "Maaz Ather", designation: "Jr. Frontend Developer", image: "/team9.jpeg" },
 ];
 // Daniyal 
-// Zain 3D & AI Specialist 
-// Saqib Senior Front End Developer 
-// Adeel Junior Full Stack Developer 
-// Maaz Junior Fron end Developer 
-// Amna Account Manager 
-// Fatima Junior Designer 
-// Arsalan Performance Head 
-// Mohsin UI/UX & Design Lead
+//   
+//   
+// Adeel  
+//   
+//  
+//   
+// Arsalan  
+//  
 // GSAP's official horizontalLoop helper (https://gsap.com/docs/v3/HelperFunctions/helpers/seamlessLoop/)
 // — makes a group of elements animate along the x-axis in a seamless,
 // responsive, draggable loop. Unmodified apart from being wrapped as a
@@ -235,7 +235,7 @@ function horizontalLoop(items, config) {
         ratio,
         startProgress,
         draggableInstance,
-        wasPlaying,
+        pressCount = 0,
         initChangeX,
         lastSnap,
         align = () =>
@@ -252,7 +252,15 @@ function horizontalLoop(items, config) {
         onPressInit() {
           let x = this.x;
           gsap.killTweensOf(tl);
-          wasPlaying = !tl.paused();
+          // Not "was it playing before THIS press" — a phantom press (see
+          // below) can start while an earlier phantom press's pause is
+          // still in effect, which would read tl.paused() === true and
+          // wrongly conclude the marquee was never playing to begin with,
+          // permanently losing the resume signal for that whole gesture.
+          // The marquee should always resume once nothing is holding it
+          // down, so this only needs to track "is at least one press
+          // currently active," not the timeline's paused state.
+          pressCount++;
           tl.pause();
           startProgress = tl.progress();
           refresh();
@@ -280,19 +288,21 @@ function horizontalLoop(items, config) {
         onRelease() {
           syncIndex();
           draggableInstance.isThrowing && (indexIsDirty = true);
+          pressCount = Math.max(0, pressCount - 1);
           // If this "press" never actually turned into an inertia throw
-          // (e.g. a scroll/tap gesture that registered as a brief press
-          // on the trigger element rather than a real drag), inertia's
-          // onThrowComplete below never fires — onPressInit had already
-          // paused the timeline by that point, so without this the
-          // marquee stayed frozen forever after any such gesture.
-          if (!draggableInstance.isThrowing) {
-            wasPlaying && tl.play();
+          // (e.g. a scroll/tap gesture — trackpad two-finger scroll can
+          // briefly register as a touch/pointer press on the trigger
+          // element rather than a real drag), inertia's onThrowComplete
+          // below never fires — onPressInit had already paused the
+          // timeline by that point, so without this the marquee stayed
+          // frozen forever after any such gesture.
+          if (!draggableInstance.isThrowing && pressCount === 0) {
+            tl.play();
           }
         },
         onThrowComplete: () => {
           syncIndex();
-          wasPlaying && tl.play();
+          if (pressCount === 0) tl.play();
         },
       })[0];
       tl.draggable = draggableInstance;

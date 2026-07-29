@@ -1,61 +1,12 @@
+/* Sits inside .aboutHero-embed (position:absolute; inset:0; height:100%),
+   so .aboutImg fills that full 100vh viewport-height layer at every
+   breakpoint — no separate per-breakpoint sizing needed anymore now
+   that AboutHero renders this directly instead of a standalone
+   inline wordmark. */
 .aboutImg {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.aboutImg img,
-.aboutImg video {
-  height: 80vh;
-  margin-top: 20px;
-  width: auto;
-  margin-bottom: -260px;
-  max-width: 100%;
-  object-fit: contain;
-}
-
-@media (max-width: 1720px) {
-  .aboutImg video {
-    height: 75vh;
-  }
-}
-@media (max-width: 1590px) {
-  .aboutImg video {
-    height: 65vh;
-    margin-top: -1%;
-  }
-}
-@media (max-width: 1400px) {
-  .aboutImg video {
-    height: 60vh;
-    margin-top: 1%;
-  }
-}
-
-@media (max-width: 900px) {
-  /* AboutHero renders its own copy of AboutImg inline (mobileWordmark
-     prop) on mobile, so the standalone top-level instance in page.jsx
-     is hidden here to avoid showing the wordmark twice. */
-  .aboutImg-desktop-only {
-    display: none;
-  }
-
-  .aboutImg img,
-  .aboutImg video {
-    height: 28vh;
-    margin-top: 10px;
-  }
-}
-@media (max-width: 760px) {
-  .aboutImg img,
-  .aboutImg video {
-    height: 39vh;
-    margin-block: -80px;
-    /* margin-bottom: -100px; */
-  }
-  .aboutHero-desc {
-    display: none;
-  }
 }

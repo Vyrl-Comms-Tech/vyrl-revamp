@@ -24,11 +24,11 @@
 
 .draggable-marquee-item {
   position: relative;
-  flex: 0 0 690px;
+  flex: 0 0 660px;
   max-height: 90%;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  /* gap: 14px; */
   transform-origin: center;
 }
 
@@ -46,26 +46,26 @@
    margin too added an extra, untracked gap-width that totalWidth
    never accounted for, and made exactly one seam collapse to 0px. */
 .draggable-marquee-item {
-  margin-right: 32px;
-  margin-left: 32px;
+  margin-right: 0px;
+  margin-left: 0px;
 }     
 
 /* Only the image itself clips to a fixed aspect-ratio box — the
    caption below is regular document flow underneath it, not an
    absolutely-positioned overlay sitting on top of the photo. */
 .draggable-marquee-image {
+  aspect-ratio: 690 / 820;
   position: relative;
   width: 100%;
-  aspect-ratio: 690 / 820;
   overflow: hidden;
 }
 
 .draggable-marquee-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
-  filter: grayscale(1) contrast(1.05);
+  /* filter: grayscale(1) contrast(1.05); */
   user-select: none;
   -webkit-user-drag: none;
 }
@@ -189,6 +189,52 @@
 .draggable-marquee-badge-arrow {
   font-size: 1rem;
   line-height: 1;
+}
+
+/* Laptop range: .draggable-marquee-item's flex-basis was a flat 660px
+   with no breakpoint below desktop, so laptop-width viewports showed
+   the same desktop card size — cards ran edge-to-edge/cropped instead
+   of scaling down with the viewport. horizontalLoop measures each
+   card's actual rendered width via getBoundingClientRect() at mount
+   (and re-measures on the existing resize listener's refresh()), so
+   shrinking flex-basis here is safe — no JS constant to keep in sync. */
+@media (max-width: 1600px) {
+  .draggable-marquee-item {
+    flex: 0 0 520px;
+  }
+}@media (max-width: 1480px) {
+  .draggable-marquee-item {
+    flex: 0 0 480px;
+  }
+}@media (max-width: 1380px) {
+  .draggable-marquee-item {
+    flex: 0 0 400px;
+  }
+}
+
+@media (max-width: 1300px) {
+  .draggable-marquee {
+    height: 80vh;
+  }
+
+  .draggable-marquee-item {
+    flex: 0 0 420px;
+  }
+
+  .draggable-marquee-badge {
+    width: 130px;
+    height: 130px;
+    margin-left: -60px;
+    margin-top: -60px;
+  }
+
+  .draggable-marquee-badge-ring-band {
+    stroke-width: 32px;
+  }
+
+  .draggable-marquee-badge-ring-text {
+    font-size: 17px;
+  }
 }
 
 @media (max-width: 900px) {

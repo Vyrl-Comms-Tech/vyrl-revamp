@@ -330,7 +330,7 @@ const CARDS = [
   // },
 ];
 
-const COUNTER_LABELS = ["00", "01", "02"];
+const COUNTER_LABELS = ["01", "02", "03"];
 
 export default function AboutUsStack() {
   const containerRef = useRef(null);
