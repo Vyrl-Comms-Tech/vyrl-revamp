@@ -135,8 +135,106 @@
 //   );
 // }
 
+// "use client";
+// import React, { useRef, useEffect } from "react";
+// import gsap from "gsap";
+// import { SplitText } from "gsap/SplitText";
+// import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+// gsap.registerPlugin(SplitText, ScrollTrigger);
+
+// export default function TextAnimation({
+//   children,
+//   animateOnScroll = true,
+//   delay = 0,
+// }) {
+//   const containerRef = useRef(null);
+//   const elementRef = useRef([]);
+//   const splitRef = useRef([]);
+//   const lines = useRef([]);
+
+//   useEffect(() => {
+//     if (!containerRef.current) return;
+
+//     splitRef.current = [];
+//     elementRef.current = [];
+//     lines.current = [];
+
+//     let elements = [];
+//     if (containerRef.current.hasAttribute("data-copy-wrapper")) {
+//       elements = Array.from(containerRef.current.children);
+//     } else {
+//       elements = [containerRef.current];
+//     }
+
+//     elements.forEach((element) => {
+//       elementRef.current.push(element);
+
+//       const split = SplitText.create(element, {
+//         type: "lines",
+//         mask: "lines",
+//         linesClass: "line++",
+//       });
+
+//       splitRef.current.push(split);
+
+//       // Preserve text-indent on the first line
+//       const computedStyle = window.getComputedStyle(element);
+//       const textIndent = computedStyle.textIndent;
+//       if (textIndent && textIndent !== "0px") {
+//         if (split.lines.length > 0) {
+//           split.lines[0].style.paddingLeft = textIndent;
+//         }
+//         element.style.textIndent = "0";
+//       }
+
+//       lines.current.push(...split.lines);
+//     });
+
+//     gsap.set(lines.current, { y: "100%" });
+
+//     const animationProps = {
+//       y: "0%",
+//       duration: 1,
+//       stagger: 0.1,
+//       ease: "power4.out",
+//       delay,
+//     };
+
+//     if (animateOnScroll) {
+//       gsap.to(lines.current, {
+//         ...animationProps,
+//         scrollTrigger: {
+//           trigger: containerRef.current,
+//           start: "top 75%",
+//           once: true,
+//         },
+//       });
+//     } else {
+//       gsap.to(lines.current, animationProps);
+//     }
+
+//     return () => {
+//       splitRef.current.forEach((split) => {
+//         if (split) split.revert();
+//       });
+//     };
+//   }, [animateOnScroll, delay]);
+
+//   if (React.Children.count(children) === 1) {
+//     return React.cloneElement(children, { ref: containerRef });
+//   }
+
+//   return (
+//     <div ref={containerRef} data-copy-wrapper="true">
+//       {children}
+//     </div>
+//   );
+// }
+
 "use client";
-import React, { useRef, useEffect } from "react";
+
+import React, { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -147,86 +245,91 @@ export default function TextAnimation({
   children,
   animateOnScroll = true,
   delay = 0,
+  className = "",
 }) {
   const containerRef = useRef(null);
-  const elementRef = useRef([]);
-  const splitRef = useRef([]);
-  const lines = useRef([]);
 
-  useEffect(() => {
-    if (!containerRef.current) return;
+  useLayoutEffect(() => {
+    const container = containerRef.current;
 
-    splitRef.current = [];
-    elementRef.current = [];
-    lines.current = [];
+    if (!container) return;
 
-    let elements = [];
-    if (containerRef.current.hasAttribute("data-copy-wrapper")) {
-      elements = Array.from(containerRef.current.children);
-    } else {
-      elements = [containerRef.current];
-    }
+    const context = gsap.context(() => {
+      const splitInstances = [];
+      const allLines = [];
 
-    elements.forEach((element) => {
-      elementRef.current.push(element);
+      // Select only the direct children of the wrapper.
+      const elements = Array.from(container.children);
 
-      const split = SplitText.create(element, {
-        type: "lines",
-        mask: "lines",
-        linesClass: "line++",
-      });
+      elements.forEach((element) => {
+        const computedStyle = window.getComputedStyle(element);
+        const textIndent = computedStyle.textIndent;
 
-      splitRef.current.push(split);
+        const split = SplitText.create(element, {
+          type: "lines",
+          mask: "lines",
+          linesClass: "animated-line",
+        });
 
-      // Preserve text-indent on the first line
-      const computedStyle = window.getComputedStyle(element);
-      const textIndent = computedStyle.textIndent;
-      if (textIndent && textIndent !== "0px") {
-        if (split.lines.length > 0) {
+        splitInstances.push(split);
+        allLines.push(...split.lines);
+
+        if (
+          split.lines.length > 0 &&
+          textIndent &&
+          textIndent !== "0px"
+        ) {
           split.lines[0].style.paddingLeft = textIndent;
+          element.style.textIndent = "0px";
         }
-        element.style.textIndent = "0";
-      }
-
-      lines.current.push(...split.lines);
-    });
-
-    gsap.set(lines.current, { y: "100%" });
-
-    const animationProps = {
-      y: "0%",
-      duration: 1,
-      stagger: 0.1,
-      ease: "power4.out",
-      delay,
-    };
-
-    if (animateOnScroll) {
-      gsap.to(lines.current, {
-        ...animationProps,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 75%",
-          once: true,
-        },
       });
-    } else {
-      gsap.to(lines.current, animationProps);
-    }
+
+      if (!allLines.length) return;
+
+      const animation = gsap.fromTo(
+        allLines,
+        {
+          yPercent: 110,
+        },
+        {
+          yPercent: 0,
+          duration: 0.9,
+          stagger: 0.07,
+          ease: "power4.out",
+          delay,
+          force3D: true,
+          clearProps: "transform",
+          overwrite: "auto",
+          scrollTrigger: animateOnScroll
+            ? {
+                trigger: container,
+                start: "top 85%",
+                once: true,
+                fastScrollEnd: true,
+              }
+            : undefined,
+        }
+      );
+
+      return () => {
+        animation.kill();
+
+        splitInstances.forEach((split) => {
+          split.revert();
+        });
+      };
+    }, container);
 
     return () => {
-      splitRef.current.forEach((split) => {
-        if (split) split.revert();
-      });
+      context.revert();
     };
   }, [animateOnScroll, delay]);
 
-  if (React.Children.count(children) === 1) {
-    return React.cloneElement(children, { ref: containerRef });
-  }
-
   return (
-    <div ref={containerRef} data-copy-wrapper="true">
+    <div
+      ref={containerRef}
+      className={`text-animation-wrapper ${className}`}
+    >
       {children}
     </div>
   );

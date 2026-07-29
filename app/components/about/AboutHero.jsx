@@ -101,9 +101,9 @@ const AboutHero = () => {
           <div className="aboutHero-imageCol">
             <div className="aboutHero-imagePlaceholder" ref={placeholderRef} />
             <p className="aboutHero-desc">
-              We are not here to simply design, post, develop, or advertise.
-              We are here to understand what your brand is trying to become —
-              then build the digital system that helps it get there.
+              We are not here to simply design, post, develop, or advertise. We
+              are here to understand what your brand is trying to become — then
+              build the digital system that helps it get there.
             </p>
             <CtaButton label="Lets Get In Touch" href="/contact" />
           </div>
@@ -122,7 +122,10 @@ const AboutHero = () => {
       <div className="aboutHero-imageSpacer" ref={spacerRef} />
 
       <div className="aboutHero-imageWrap" ref={imageWrapRef}>
-        <img src="/img2.avif" alt="" />
+        {/* <img src="/img2.avif" alt="" /> */}
+        <video muted loop autoPlay playsInline>
+          <source src="https://res.cloudinary.com/drwzstxy2/video/upload/v1785318296/From_Klickpin.com-_Bookmark_this_guide_to_budget-friendly_playroom_organization_ideas_that_bring_style_function_and_personality_together_with_real_wawftb.mp4" />
+        </video>
       </div>
     </div>
   );

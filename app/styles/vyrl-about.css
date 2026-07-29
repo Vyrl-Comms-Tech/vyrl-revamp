@@ -261,6 +261,9 @@
   .vyrl-section-about-image {
     top: 16% !important;
   }
+      .vyrl-service-about-text2 {
+        right: 55px;
+      }
 }
 
 @media (max-width: 760px) {

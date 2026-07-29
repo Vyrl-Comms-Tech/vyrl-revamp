@@ -1,4 +1,6 @@
 .draggable-marquee {
+  --marquee-gap: 24px;
+
   position: relative;
   width: 100%;
   height: 100vh;
@@ -6,14 +8,12 @@
   overflow: hidden;
   cursor: none;
 }
-
 .draggable-marquee-viewport {
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
-
 .draggable-marquee-track {
   position: absolute;
   inset: 0;
@@ -26,9 +26,11 @@
   position: relative;
   flex: 0 0 660px;
   max-height: 90%;
-  display: flex;
-  flex-direction: column;
-  /* gap: 14px; */
+
+  /* Gap becomes part of the measured loop item */
+  padding-right: var(--marquee-gap);
+  box-sizing: border-box;
+
   transform-origin: center;
 }
 
@@ -48,16 +50,27 @@
 .draggable-marquee-item {
   margin-right: 0px;
   margin-left: 0px;
-}     
+}
 
 /* Only the image itself clips to a fixed aspect-ratio box — the
    caption below is regular document flow underneath it, not an
    absolutely-positioned overlay sitting on top of the photo. */
+/* Everything belonging to one member stays inside this wrapper */
+.draggable-marquee-card {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
 .draggable-marquee-image {
-  aspect-ratio: 690 / 820;
   position: relative;
   width: 100%;
+  aspect-ratio: 690 / 820;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .draggable-marquee-image img {
@@ -65,39 +78,46 @@
   height: 100%;
   object-fit: contain;
   display: block;
-  /* filter: grayscale(1) contrast(1.05); */
   user-select: none;
   -webkit-user-drag: none;
 }
 
-/* Per-card name/designation — sits below the image, outside the
-   clipped photo area, each card carrying its own rather than one
-   shared label for whichever card happens to be centered. */
 .draggable-marquee-info {
+  position: relative;
   z-index: 5;
+
+  width: 100%;
+  min-width: 0;
+  padding: 14px 14px 10px;
+  box-sizing: border-box;
+
   color: #fff;
   pointer-events: none;
-  padding: 10px 14px;
-  border-radius: 10px;
-  /* background: rgba(255, 255, 255, 0.06); */
-  backdrop-filter: blur(12px);
-  width: fit-content;
 }
 
 .draggable-marquee-name {
+  width: 100%;
   margin: 0 0 4px;
   font-size: clamp(1.1rem, 1.4vw, 1.5rem);
   font-weight: 500;
+  line-height: 1.2;
+  overflow-wrap: break-word;
 }
 
 .draggable-marquee-designation {
   display: block;
+  width: 100%;
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.8rem;
+  line-height: 1.3;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  overflow-wrap: break-word;
 }
 
+/* Per-card name/designation — sits below the image, outside the
+   clipped photo area, each card carrying its own rather than one
+ 
 /* ── Circular "MEET THE TEAM · Drag" cursor badge ────────────────── */
 /* No filled circle anywhere in this badge — the outer arc text carries
    its own background (a stroked ring exactly as wide as the text, see
@@ -200,15 +220,19 @@
    shrinking flex-basis here is safe — no JS constant to keep in sync. */
 @media (max-width: 1600px) {
   .draggable-marquee-item {
-    flex: 0 0 520px;
+    flex-basis: 520px;
   }
-}@media (max-width: 1480px) {
+}
+
+@media (max-width: 1480px) {
   .draggable-marquee-item {
-    flex: 0 0 480px;
+    flex-basis: 480px;
   }
-}@media (max-width: 1380px) {
+}
+
+@media (max-width: 1380px) {
   .draggable-marquee-item {
-    flex: 0 0 400px;
+    flex-basis: 440px;
   }
 }
 
@@ -218,7 +242,7 @@
   }
 
   .draggable-marquee-item {
-    flex: 0 0 420px;
+    flex-basis: 400px;
   }
 
   .draggable-marquee-badge {
@@ -234,6 +258,25 @@
 
   .draggable-marquee-badge-ring-text {
     font-size: 17px;
+  }
+}
+
+@media (max-width: 900px) {
+  .draggable-marquee {
+    height: 67vh;
+    cursor: grab;
+  }
+
+  .draggable-marquee-item {
+    flex-basis: 72vw;
+  }
+
+  .draggable-marquee-badge {
+    display: none;
+  }
+
+  .draggable-marquee-name {
+    font-size: 1.2rem;
   }
 }
 

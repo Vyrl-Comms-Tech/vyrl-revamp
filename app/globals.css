@@ -96,3 +96,12 @@ body.preloader-active {
 ::view-transition-new(root) {
   z-index: 999;
 }
+.text-animation-wrapper {
+  position: relative;
+}
+
+.animated-line {
+  display: block;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}

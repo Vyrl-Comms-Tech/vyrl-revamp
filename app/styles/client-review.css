@@ -251,6 +251,11 @@
     right: calc(50% - 152px - 14px);
   }
 }
+@media (max-width:1400px){
+  .client-review-card-container {
+  max-width: 550px;
+  }
+}
 @media (max-width: 640px) {
   .client-review-sticker {
     width: 50px;

@@ -3,7 +3,27 @@
   width: 100%;
   box-sizing: border-box;
 }
+.aboutHero-top {
+  position: relative;
+  height: 100vh;
 
+  -webkit-mask-image:
+    linear-gradient(
+      to bottom,
+      #000 90%,
+      #000 82%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.938) 100%,
+      #000 0%,
+      #000 85%,
+      rgba(0,0,0,.65) 100%
+    );
+
+  -webkit-mask-composite: source-in;
+}
 /* Full first viewport: the unicorn embed fills it edge-to-edge as a
    background layer, with the description/CTA (left) and heading
    (right) overlapping the bottom 3% on top of it — matching the
@@ -109,11 +129,12 @@
   z-index: 7;
   height: 85vh;
   border-radius: 4px;
+  display: flex;
   overflow: hidden;
   will-change: top, left, width, height;
 }
 
-.aboutHero-imageWrap img {
+.aboutHero-imageWrap video {
   width: 100%;
   height: 100%;
   border-radius: 10px;

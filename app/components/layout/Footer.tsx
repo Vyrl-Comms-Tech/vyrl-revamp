@@ -66,9 +66,9 @@ function Footer() {
   return (
     <footer className="footer">
       {/* Row 1 – Logo */}
-      {/* <div className="footer-logo-row">
+      <div className="footer-logo-row">
         <UnicornEmbed projectId="eWb7ceke9RYVHKByTGA5" />
-      </div> */}
+      </div>
 
       {/* Row 2 – Let's Connect + Nav Links */}
       <div className="footer-connect-row">

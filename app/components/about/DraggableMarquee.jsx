@@ -11,16 +11,16 @@ gsap.registerPlugin(Draggable, InertiaPlugin);
 // which uses the same "/team.jpg" + placeholder text pattern) — swap
 // these in once real photos/names/roles are available.
 const TEAM = [
-  { name: "Adeel", designation: "Jr. Full Stack Developer", image: "/team1.jpeg" },
-  { name: "Arsalan", designation: "Performance Head", image: "/team2.jpeg" },
-  { name: "Daniyal", designation: "Project Manager", image: "/team3.jpeg" },
-  { name: "Fatima", designation: "Jr. Designer", image: "/team4.jpeg" },
-  { name: "Haris", designation: "Senior Full Stack Developer", image: "/team5.jpeg" },
-  { name: "Zain", designation: "3D & AI Specialist", image: "/team6.jpeg" },
-  { name: "Saqib", designation: "Senior Front End Developer", image: "/team10.jpeg" },
-  { name: "Amna", designation: "Account Manager", image: "/team7.jpeg" },
-  { name: "Mohsin", designation: "UI/UX & Design Lead", image: "/team8.jpeg" },
-  { name: "Maaz Ather", designation: "Jr. Frontend Developer", image: "/team9.jpeg" },
+  { name: "Adeel", designation: "Jr. Full Stack Developer", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team1_c0y0vv.jpg" },
+  { name: "Arsalan", designation: "Performance Head", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team2_bb0rwa.jpg" },
+  { name: "Daniyal", designation: "Project Manager", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team3_fvmpqb.jpg" },
+  { name: "Fatima", designation: "Jr. Designer", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team4_yh0c3u.jpg" },
+  { name: "Haris", designation: "Senior Full Stack Developer", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team5_kebi7v.jpg" },
+  { name: "Zain", designation: "3D & AI Specialist", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team6_xvot0o.jpg" },
+  { name: "Saqib", designation: "Senior Front End Developer", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team10_dvdwyi.jpg" },
+  { name: "Amna", designation: "Account Manager", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team7_ahjr4k.jpg" },
+  { name: "Mohsin", designation: "UI/UX & Design Lead", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team8_zkkjqj.jpg" },
+  { name: "Maaz Ather", designation: "Jr. Frontend Developer", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team9_spslj2.jpg" },
 ];
 // Daniyal 
 //   
@@ -409,17 +409,21 @@ export default function DraggableMarquee() {
       <div className="draggable-marquee-viewport">
         <div className="draggable-marquee-track" ref={trackRef}>
           {TEAM.map((member, i) => (
-            <div className="draggable-marquee-item" key={i}>
-              <div className="draggable-marquee-image">
-                <img src={member.image} alt={member.name} />
-              </div>
-              <div className="draggable-marquee-info">
-                <h3 className="draggable-marquee-name">{member.name}</h3>
-                <span className="draggable-marquee-designation">
-                  {member.designation}
-                </span>
-              </div>
-            </div>
+        <div className="draggable-marquee-item" key={i}>
+  <div className="draggable-marquee-card">
+    <div className="draggable-marquee-image">
+      <img src={member.image} alt={member.name} />
+    </div>
+
+    <div className="draggable-marquee-info">
+      <h3 className="draggable-marquee-name">{member.name}</h3>
+
+      <span className="draggable-marquee-designation">
+        {member.designation}
+      </span>
+    </div>
+  </div>
+</div>
           ))}
         </div>
       </div>
