@@ -413,7 +413,21 @@ export default function DraggableMarquee() {
         <div className="draggable-marquee-item" key={i}>
   <div className="draggable-marquee-card">
     <div className="draggable-marquee-image">
-      <Image src={member.image} alt={member.name} fill className="object-contain" sizes="(max-width: 768px) 90vw, 690px" />
+      <Image
+        src={member.image}
+        alt={member.name}
+        fill
+        className="object-contain"
+        sizes="(max-width: 768px) 90vw, 690px"
+        // horizontalLoop (below) measures every card's real layout up
+        // front and only initializes Draggable once all images have
+        // fired load/error — next/image's default lazy loading means
+        // any card still off-screen at mount time never starts
+        // fetching, so that wait never resolved and drag never
+        // initialized at all. priority forces eager loading like the
+        // plain <img> this replaced did.
+        priority
+      />
     </div>
 
     <div className="draggable-marquee-info">
