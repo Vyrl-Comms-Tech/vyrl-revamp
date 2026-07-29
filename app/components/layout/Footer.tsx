@@ -66,9 +66,9 @@ function Footer() {
   return (
     <footer className="footer">
       {/* Row 1 – Logo */}
-      <div className="footer-logo-row">
+      {/* <div className="footer-logo-row">
         <UnicornEmbed projectId="eWb7ceke9RYVHKByTGA5" />
-      </div>
+      </div> */}
 
       {/* Row 2 – Let's Connect + Nav Links */}
       <div className="footer-connect-row">
@@ -94,7 +94,7 @@ function Footer() {
               </svg>
             </button>
 
-            <h2 className="footer-connect-title">Stay In The Loop</h2>
+            <h2 className="footer-connect-title"> Let’s Connect</h2>
 
             <button
               className="footer-arrow-btn footer-arrow-btn--right"
