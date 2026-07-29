@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
 import { InertiaPlugin } from "gsap/InertiaPlugin";
@@ -412,7 +413,7 @@ export default function DraggableMarquee() {
         <div className="draggable-marquee-item" key={i}>
   <div className="draggable-marquee-card">
     <div className="draggable-marquee-image">
-      <img src={member.image} alt={member.name} />
+      <Image src={member.image} alt={member.name} fill className="object-contain" sizes="(max-width: 768px) 90vw, 690px" />
     </div>
 
     <div className="draggable-marquee-info">

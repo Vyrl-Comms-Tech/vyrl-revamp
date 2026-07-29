@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useRef } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -571,14 +572,21 @@ const CaseStudyInner = ({ slug }) => {
               </ul>
             </div>
             <div className="cs-mockup" ref={mockupRef}>
-              <img src={c1.images[0]} alt={`${c1.title} mockup`} />
+              <Image src={c1.images[0]} alt={`${c1.title} mockup`} fill className="object-cover" sizes="64vw" />
             </div>
           </div>
 
           {/* Panel 2 — full-bleed */}
           <div className="cs-panel cs-panel--2">
             <div className="cs-full-img cs-img-parallax-wrap">
-              <img className="cs-img-parallax" src={c1.images[1]} alt="" />
+              <Image
+                className="cs-img-parallax"
+                src={c1.images[1]}
+                alt=""
+                width={1920}
+                height={1080}
+                sizes="90vw"
+              />
             </div>
           </div>
 
@@ -593,21 +601,42 @@ const CaseStudyInner = ({ slug }) => {
           {/* Panel 4 */}
           <div className="cs-panel cs-panel--4">
             <div className="cs-img-80 cs-img-parallax-wrap">
-              <img className="cs-img-parallax" src={c1.images[2]} alt="" />
+              <Image
+                className="cs-img-parallax"
+                src={c1.images[2]}
+                alt=""
+                width={1600}
+                height={1200}
+                sizes="65vw"
+              />
             </div>
           </div>
 
           {/* Panel 5 */}
           <div className="cs-panel cs-panel--5">
             <div className="cs-img-90 cs-img-parallax-wrap">
-              <img className="cs-img-parallax" src={c1.images[3]} alt="" />
+              <Image
+                className="cs-img-parallax"
+                src={c1.images[3]}
+                alt=""
+                width={1600}
+                height={1900}
+                sizes="60vw"
+              />
             </div>
           </div>
 
           {/* Panel 6 */}
           <div className="cs-panel cs-panel--6">
             <div className="cs-img-80 cs-img-parallax-wrap">
-              <img className="cs-img-parallax" src={c1.images[4]} alt="" />
+              <Image
+                className="cs-img-parallax"
+                src={c1.images[4]}
+                alt=""
+                width={1600}
+                height={1200}
+                sizes="65vw"
+              />
             </div>
           </div>
 
@@ -619,7 +648,14 @@ const CaseStudyInner = ({ slug }) => {
 
           {/* Panel 8 — next project */}
           <div className="cs-panel cs-panel--8">
-            <img className="cs-full-img" src={c2.image} alt={c2.title} />
+            <Image
+              className="cs-full-img"
+              src={c2.image}
+              alt={c2.title}
+              width={1920}
+              height={1080}
+              sizes="55vw"
+            />
             <ul className="cs-p8-services">
               {c2.services.map((s) => (
                 <li key={s}>{s}</li>

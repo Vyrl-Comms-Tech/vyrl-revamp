@@ -166,6 +166,7 @@
     width: 100%;
     aspect-ratio: 4 / 4;
     overflow: hidden;
+    position: relative;
   }
 
   .team-mobile-swiper .item-card-image img {

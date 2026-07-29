@@ -133,6 +133,13 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       renderer.toneMappingExposure = 1.2;
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(cubeMount.clientWidth, cubeMount.clientHeight);
+      // Starts hidden and fades in once the model has actually loaded
+      // (see loader.load below) — the GLB is now prefetched during the
+      // preloader (see PreLoader.tsx), so by the time this section is
+      // reached the model can finish loading almost instantly, which
+      // made it hard-pop into view instead of loading in gradually.
+      renderer.domElement.style.opacity = "0";
+      renderer.domElement.style.transition = "opacity 0.6s ease-out";
       cubeMount.appendChild(renderer.domElement);
 
       // ------------------------------------------------
@@ -191,13 +198,9 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       dracoLoader.setDecoderPath(
         "https://www.gstatic.com/draco/versioned/decoders/1.5.7/",
       );
-      // Some browsers (seen in Opera, also possible with certain
-      // extensions/privacy modes elsewhere) cap how much linear memory a
-      // WASM module can request, and Draco's WASM decoder can exceed
-      // that and throw "Cannot allocate Wasm memory for new instance".
-      // Forcing the JS decoder avoids WASM memory allocation entirely —
-      // slightly slower to decode once on load, but works everywhere.
-      dracoLoader.setDecoderConfig({ type: "js" });
+      // WASM decoder — significantly faster to decode than the JS
+      // fallback, which matters here since this fires the moment the
+      // section scrolls into view.
 
       const loader = new GLTFLoader();
       loader.setDRACOLoader(dracoLoader);
@@ -219,6 +222,10 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
         const box = new THREE.Box3().setFromObject(model);
         const center = box.getCenter(new THREE.Vector3());
         model.position.sub(center);
+
+        requestAnimationFrame(() => {
+          renderer.domElement.style.opacity = "1";
+        });
       });
 
       // ------------------------------------------------

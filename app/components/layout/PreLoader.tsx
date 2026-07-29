@@ -47,14 +47,16 @@ export default function Preloader({
   const [isInert, setIsInert] = useState(false);
 
   // ---------------------------------------------------------------------
-  // Reveal: once the intro (counter/letters) finishes, expand a circular
-  // clip-path on revealRef from a point at the center out past the
-  // corners — pure CSS/compositor-driven. No WebGL/Three.js here at all
-  // anymore: the previous shader-based dissolve kept a live WebGL
-  // context and render loop running the whole time the preloader was
-  // mounted (even with the shader material itself removed), which was
-  // real, measurable lag for no visible benefit — plus the WebGL-context
-  // failures that plagued some browsers/environments.
+  // Reveal: once the intro (counter/letters) finishes, scale a circular
+  // div on revealRef up from 0 to past the viewport's corners — a
+  // transform-only animation, so it stays entirely on the compositor
+  // (unlike animating clip-path directly on a full-viewport element,
+  // which forced a repaint of the whole screen on every frame and was
+  // real, measurable jank in the preloader itself). No WebGL/Three.js
+  // here at all anymore either: the previous shader-based dissolve kept
+  // a live WebGL context and render loop running the whole time the
+  // preloader was mounted, which was its own separate source of lag,
+  // plus the WebGL-context failures that plagued some browsers/environments.
   // ---------------------------------------------------------------------
   const finishReveal = () => {
     if (!isMountedRef.current) return;
@@ -95,18 +97,17 @@ export default function Preloader({
         return;
       }
 
-      // circle()'s radius unit accepts plain numbers as px, so a value
-      // comfortably larger than the viewport diagonal (rather than a
-      // percentage, which circle() resolves against a reference box in
-      // ways that vary confusingly by browser) guarantees full coverage
-      // at any aspect ratio.
-      const maxRadius = Math.hypot(window.innerWidth, window.innerHeight);
+      // Diameter comfortably larger than the viewport diagonal guarantees
+      // full coverage at any aspect ratio once scaled up from 0.
+      const diameter = Math.hypot(window.innerWidth, window.innerHeight) * 2;
+      reveal.style.width = `${diameter}px`;
+      reveal.style.height = `${diameter}px`;
 
       gsap.fromTo(
         reveal,
-        { clipPath: "circle(0px at 50% 50%)" },
+        { scale: 0 },
         {
-          clipPath: `circle(${maxRadius}px at 50% 50%)`,
+          scale: 1,
           duration: 1,
           ease: "power3.inOut",
           onComplete: finishReveal,
@@ -132,6 +133,29 @@ export default function Preloader({
       document.body.classList.remove("preloader-active");
     };
   }, [isInert]);
+
+  // ---------------------------------------------------------------------
+  // Warm up heavy below-the-fold assets while the ~4s intro timeline is
+  // running anyway, so they're already in the browser's HTTP cache by
+  // the time LazySection actually mounts the components that need them
+  // (the hero's UnicornStudio background, the services cube's GLB) —
+  // fire-and-forget, never blocks or delays the reveal.
+  // ---------------------------------------------------------------------
+  useEffect(() => {
+    fetch('/cube1.glb').catch(() => {});
+
+    const unicornScriptSrc =
+      'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.2.8/dist/unicornStudio.umd.js';
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'script';
+    link.href = unicornScriptSrc;
+    document.head.appendChild(link);
+
+    return () => {
+      link.remove();
+    };
+  }, []);
 
   // ---------------------------------------------------------------------
   // Intro timeline: counter + flying letters
@@ -190,9 +214,11 @@ export default function Preloader({
       data-inert={isInert || undefined}
       aria-hidden={isInert || undefined}
     >
-      {/* Solid black backdrop that gets circle-clipped away to reveal the
-          real page underneath as it expands from the center. */}
-      <div ref={revealRef} className={styles.reveal} />
+      {/* Solid black backdrop that scales away to reveal the real page
+          underneath as it expands from the center. */}
+      <div className={styles.revealWrap}>
+        <div ref={revealRef} className={styles.reveal} />
+      </div>
 
       <div className={styles.loaderPics} aria-hidden="true">
         {letters.map((letter, index) => (

@@ -35,6 +35,7 @@
   height: 552px;
   overflow: hidden;
   border-radius: 14px;
+  position: relative;
 }
 
 .bc-img img {

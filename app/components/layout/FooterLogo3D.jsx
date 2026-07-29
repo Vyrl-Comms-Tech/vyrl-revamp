@@ -219,6 +219,7 @@
 // }
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
@@ -331,7 +332,6 @@ export default function FooterLogo3D({
     dracoLoader.setDecoderPath(
       "https://www.gstatic.com/draco/versioned/decoders/1.5.7/",
     );
-    dracoLoader.setDecoderConfig({ type: "js" });
 
     const loader = new GLTFLoader();
     loader.setDRACOLoader(dracoLoader);
@@ -458,8 +458,13 @@ export default function FooterLogo3D({
   if (webglFailed) {
     return (
       <div className="footer-logo-3d footer-logo-3d--fallback">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={fallbackImage} alt="Vyrl" />
+        <Image
+          src={fallbackImage}
+          alt="Vyrl"
+          fill
+          className="object-contain"
+          sizes="70vw"
+        />
       </div>
     );
   }

@@ -447,18 +447,24 @@ function ClientReviewSection() {
           {/* Anchored to the center card slot, not any individual review
               card — swaps diagonal corners each time an arrow is
               clicked, independent of which review is showing. */}
-          <img
+          <Image
             src="/sticker1.avif"
             alt=""
+            width={90}
+            height={90}
+            style={{ width: "90px", height: "auto" }}
             className={`client-review-sticker client-review-sticker-1 ${
               stickerCorner === "tl-br"
                 ? "client-review-sticker--top-left"
                 : "client-review-sticker--top-right"
             }`}
           />
-          <img
+          <Image
             src="/sticker2.avif"
             alt=""
+            width={90}
+            height={90}
+            style={{ width: "90px", height: "auto" }}
             className={`client-review-sticker client-review-sticker-2 ${
               stickerCorner === "tl-br"
                 ? "client-review-sticker--bottom-right"

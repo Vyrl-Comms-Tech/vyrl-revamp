@@ -1,5 +1,6 @@
 'use client'
 import React from "react";
+import Image from "next/image";
 import TextAnimation from "../home/TextAnimation";
 import "../../styles/blog-inner.css";
 
@@ -22,7 +23,7 @@ const BlogInner = () => {
   return (
     <div className="bi-container">
       <div className="bi-left-image">
-        <img src="/pro1.avif" alt="" />
+        <Image src="/pro1.avif" alt="" fill className="object-cover" sizes="45vw" />
       </div>
       <div className="bi-right">
         <TextAnimation animateOnScroll={true} delay={0.3}>

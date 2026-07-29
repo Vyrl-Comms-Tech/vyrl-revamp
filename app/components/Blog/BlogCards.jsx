@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useEffect, useLayoutEffect } from "react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { Flip } from "gsap/Flip";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -202,7 +203,7 @@ const BlogCards = ({ active }) => {
           <div key={id} className="bc-card" data-category={category}>
             <article className="bc-card-inner">
               <div className="bc-img">
-                <img src={image} alt={title} />
+                <Image src={image} alt={title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 400px" />
               </div>
               <div className="bc-body">
                 <TextAnimation animateOnScroll={false} delay={0.1}>

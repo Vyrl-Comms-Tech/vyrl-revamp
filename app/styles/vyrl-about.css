@@ -63,6 +63,7 @@
   height: 100%;
   overflow: hidden;
   border-radius: 14px;
+  position: relative;
 }
 
 .vyrl-section-about-image img {

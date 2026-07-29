@@ -120,6 +120,7 @@
 
 "use client";
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "../../styles/vyrl-about.css";
@@ -281,7 +282,7 @@ function VyrlAbout() {
 
         <div className="vyrl-section-about-image" ref={imageRef}>
           <div className="vyrl-section-about-image-crop">
-            <img src="/services1.jpg" alt="" />
+            <Image src="/services1.jpg" alt="" fill className="object-cover" sizes="634px" />
           </div>
           <p className="vyrl-section-about-caption" ref={captionRef}>
             Our clients work with us for more than deliverables. They come to

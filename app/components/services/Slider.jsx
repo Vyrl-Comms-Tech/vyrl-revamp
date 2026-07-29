@@ -1,5 +1,6 @@
 'use client'
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import CtaButton from "../layout/cta";
 import "../../styles/slider.css";
 
@@ -76,7 +77,13 @@ const Slider = () => {
             key={`${image}-${index}`}
             style={{ "--position": index + 1 }}
           >
-            <img src={image} alt={`Service ${index + 1}`} />
+            <Image
+              src={`/${image}`}
+              alt={`Service ${index + 1}`}
+              fill
+              className="object-cover"
+              sizes="(max-width: 760px) 40vw, 20vw"
+            />
           </div>
         ))}
       </div>

@@ -203,6 +203,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import Image from "next/image";
 import Matter from "matter-js";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -417,7 +418,7 @@ export default function TeamProfile() {
             <SwiperSlide key={card.id}>
               <div className="item-card">
                 <div className="item-card-image">
-                  <img src={card.image} alt={card.name} />
+                  <Image src={card.image} alt={card.name} fill className="object-cover" sizes="270px" />
                 </div>
                 <h2 className="item-name">{card.name}</h2>
                 <p className="item-designation">{card.designation}</p>

@@ -50,6 +50,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .footer-logo-3d--fallback img {

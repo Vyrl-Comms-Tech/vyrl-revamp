@@ -8,7 +8,13 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
     ],
+    formats: ["image/avif", "image/webp"],
     qualities: [75, 100],
   },
   async headers() {

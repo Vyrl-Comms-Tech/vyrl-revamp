@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { useTransitionRouter } from "next-view-transitions";
 import { useSearchParams } from "next/navigation";
 import gsap from "gsap";
@@ -289,5 +290,13 @@ function ProjectMedia({ project }) {
       </video>
     );
   }
-  return <img src={project.src} alt={project.title} loading="lazy" />;
+  return (
+    <Image
+      src={project.src}
+      alt={project.title}
+      fill
+      className="object-cover"
+      sizes="(max-width: 768px) 100vw, 50vw"
+    />
+  );
 }

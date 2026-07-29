@@ -1,5 +1,6 @@
 "use client";
 import React, { useRef, useState } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 // import MagneticButton from "./Common/MagneticButton";
 import TextAnimation from "./TextAnimation";
@@ -155,7 +156,7 @@ function SimilarPost() {
                 </div>
               </div>
               <div className="review-card-image">
-                <img src={review.image} alt={review.name} />
+                <Image src={review.image} alt={review.name} fill className="object-cover" sizes="(max-width: 768px) 90vw, 400px" />
               </div>
             </div>
           );
@@ -187,7 +188,7 @@ function SimilarPost() {
             <span>{activeReview.date}</span>
           </div>
           <div className="review-mobile-image">
-            <img src={activeReview.image} alt={activeReview.name} />
+            <Image src={activeReview.image} alt={activeReview.name} fill className="object-cover" sizes="100vw" />
           </div>
         </div>
         <div className="review-mobile-nav">

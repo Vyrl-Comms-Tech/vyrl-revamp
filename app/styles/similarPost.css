@@ -311,6 +311,7 @@
     border-radius: 12px;
     overflow: hidden;
     margin-bottom: 20px;
+    position: relative;
   }
 
   .review-mobile-image img {
