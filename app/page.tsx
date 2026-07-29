@@ -12,11 +12,11 @@ import LazySection from "@/app/components/layout/LazySection";
 export default function Home() {
   return (
     <>
-      <HomeHero />
-      <TextAndCards />
+      {/* <HomeHero /> */}
+     <TextAndCards />
       <LazySection>
         <Services3d />
-      </LazySection>
+      </LazySection> 
       <LazySection>
         <HomeCarousel />
       </LazySection>
@@ -29,10 +29,9 @@ export default function Home() {
       <LazySection>
         <Collective />
       </LazySection>
-      {/* <SimilarPost /> */}
       <LazySection>
         <HomeSecondLast />
-      </LazySection>
+      </LazySection> 
     </>
   );
 }
