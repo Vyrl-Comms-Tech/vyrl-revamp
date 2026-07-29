@@ -112,7 +112,7 @@
   }
   .hp-left,
   .hp-right {
-    height: 700px;
+    height: 90vh;
   }
   .hp-heading {
     font-size: clamp(31px, 3.2vw, 65px);

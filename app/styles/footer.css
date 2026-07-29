@@ -545,14 +545,14 @@
   .footer {
     padding: 0 15px 150px;
     gap: 14px;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
+    /* border-top-left-radius: 20px;
+    border-top-right-radius: 20px; */
   }
 
-  .footer {
+  /* .footer {
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
-  }
+  } */
   .footer-logo-row {
     height: 180px;
   }

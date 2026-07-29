@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import styles from './Preloader.module.css';
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import styles from "./Preloader.module.css";
 
 export interface PreloaderLetter {
   src: string;
@@ -21,18 +21,18 @@ export interface PreloaderProps {
 }
 
 const DEFAULT_LETTERS: PreloaderLetter[] = [
-  { src: '/loader/l.avif' },
-  { src: '/loader/o.avif' },
-  { src: '/loader/a.avif' },
-  { src: '/loader/d.avif' },
-  { src: '/loader/i.avif' },
-  { src: '/loader/n.avif' },
-  { src: '/loader/g.avif' },
+  { src: "/loader/l.avif" },
+  { src: "/loader/o.avif" },
+  { src: "/loader/a.avif" },
+  { src: "/loader/d.avif" },
+  { src: "/loader/i.avif" },
+  { src: "/loader/n.avif" },
+  { src: "/loader/g.avif" },
 ];
 
 export default function Preloader({
   letters = DEFAULT_LETTERS,
-  label = 'Loading Experience',
+  label = "Loading Experience",
   ambientSoundSrc,
   onFinish,
 }: PreloaderProps) {
@@ -74,7 +74,7 @@ export default function Preloader({
       gsap.to(rootRef.current, {
         opacity: 0,
         duration: 0.4,
-        ease: 'power2.inOut',
+        ease: "power2.inOut",
         onComplete: () => onFinish?.(),
       });
     } else {
@@ -104,11 +104,11 @@ export default function Preloader({
 
       gsap.fromTo(
         reveal,
-        { clipPath: 'circle(0px at 50% 50%)' },
+        { clipPath: "circle(0px at 50% 50%)" },
         {
           clipPath: `circle(${maxRadius}px at 50% 50%)`,
           duration: 1,
-          ease: 'power3.inOut',
+          ease: "power3.inOut",
           onComplete: finishReveal,
         },
       );
@@ -124,12 +124,12 @@ export default function Preloader({
   // underneath takes back over) fixes that.
   useEffect(() => {
     if (isInert) {
-      document.body.classList.remove('preloader-active');
+      document.body.classList.remove("preloader-active");
       return;
     }
-    document.body.classList.add('preloader-active');
+    document.body.classList.add("preloader-active");
     return () => {
-      document.body.classList.remove('preloader-active');
+      document.body.classList.remove("preloader-active");
     };
   }, [isInert]);
 
@@ -147,12 +147,12 @@ export default function Preloader({
         gsap.to(counterObj, {
           value: 100,
           duration: 4,
-          ease: 'power2.out',
+          ease: "power2.out",
           onUpdate: () => {
             if (counterRef.current) {
               counterRef.current.textContent = String(
                 Math.floor(counterObj.value),
-              ).padStart(3, '0');
+              ).padStart(3, "0");
             }
           },
           onComplete: () => handleReveal(),
@@ -162,17 +162,17 @@ export default function Preloader({
       gsap.to(loaderTextRef.current, {
         autoAlpha: 0,
         duration: 2,
-        ease: 'power2.inOut',
+        ease: "power2.inOut",
         delay: 2,
       });
 
       gsap.to(alphaRefs.current, {
         y: -800,
-        x: 'random(-120, 120)',
-        rotation: 'random(-15, 15)',
-        duration: 'random(5, 8)',
-        ease: 'sine.out',
-        stagger: { each: 0.2, from: 'random' },
+        x: "random(-120, 120)",
+        rotation: "random(-15, 15)",
+        duration: "random(5, 8)",
+        ease: "sine.out",
+        stagger: { each: 0.2, from: "random" },
       });
     }, rootRef);
 
@@ -207,7 +207,7 @@ export default function Preloader({
                 fighting next/image's required width/height for a purely
                 animated, non-LCP element. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={letter.src} alt={letter.alt ?? ''} />
+            <img src={letter.src} alt={letter.alt ?? ""} />
           </div>
         ))}
       </div>
