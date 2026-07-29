@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -76,6 +76,36 @@ export default function TextAndCards() {
     { scope: cardsRef },
   );
 
+  // This section renders eagerly (right after the hero, not behind
+  // LazySection), so both card videos start decoding/playing the
+  // instant the page loads — and kept playing indefinitely even once
+  // scrolled past, all the way down through Logos/ClientReviews/
+  // Collective. Pausing them once they're off-screen (and resuming on
+  // return) cuts that to only the time they're actually visible.
+  useEffect(() => {
+    const section = cardsRef.current;
+    if (!section) return;
+
+    const videos = Array.from(section.querySelectorAll("video"));
+    if (!videos.length) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        videos.forEach((video) => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
       <div className="hs-spacer" />
@@ -123,6 +153,7 @@ export default function TextAndCards() {
                       muted
                       loop
                       playsInline
+                      preload="metadata"
                     >
                       <source src={card.video} type="video/mp4" />
                     </video>

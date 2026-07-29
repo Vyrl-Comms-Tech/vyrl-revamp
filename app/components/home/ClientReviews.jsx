@@ -294,22 +294,29 @@ function ClientReviewSection() {
       // Recompute geometry on resize (crossing the 1620px/640px
       // breakpoints) and re-snap every card to its current slot at the
       // new scale — without animating, so a resize doesn't look like a
-      // shift.
+      // shift. Debounced: window "resize" fires continuously while a
+      // window is actively being dragged, and this recomputes positions
+      // and re-applies gsap.set to every card on each firing — real,
+      // avoidable work happening dozens of times a second otherwise.
+      let resizeTimeout;
       function onResize() {
-        positionsRef.current = getPositions(window.innerWidth);
-        cardRefs.current.forEach((el, cardIdx) => {
-          const slot = posSlot(cardIdx, offsetRef.current);
-          const p = positionsRef.current[slot];
-          gsap.set(el, {
-            x: p.x,
-            y: p.y,
-            rotation: p.rotate,
-            width: p.width,
-            height: p.height,
-            zIndex: p.zIndex,
-            opacity: p.opacity,
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          positionsRef.current = getPositions(window.innerWidth);
+          cardRefs.current.forEach((el, cardIdx) => {
+            const slot = posSlot(cardIdx, offsetRef.current);
+            const p = positionsRef.current[slot];
+            gsap.set(el, {
+              x: p.x,
+              y: p.y,
+              rotation: p.rotate,
+              width: p.width,
+              height: p.height,
+              zIndex: p.zIndex,
+              opacity: p.opacity,
+            });
           });
-        });
+        }, 150);
       }
 
       container.addEventListener("pointerdown", onPointerDown);
@@ -324,6 +331,7 @@ function ClientReviewSection() {
         window.removeEventListener("pointerup", onPointerUp);
         window.removeEventListener("keydown", onKeyDown);
         window.removeEventListener("resize", onResize);
+        clearTimeout(resizeTimeout);
       };
     }, containerRef);
 

@@ -76,6 +76,17 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
     let scrollProgress = 0;
     let handleResize = null;
 
+    // The render loop below used to run forever via requestAnimationFrame
+    // regardless of whether this section was ever scrolled back into
+    // view — full Three.js render + OrbitControls damping + AnimationMixer
+    // work, every frame, for as long as the page stayed open, even after
+    // scrolling down to Logos/ClientReviews/Collective. Gating actual
+    // frame work behind this flag (kept in sync by the IntersectionObserver
+    // below) means the loop still ticks but does nothing once offscreen.
+    let isVisible = true;
+    let cleanupVisibilityObserver = null;
+    let cleanupResizeTimeout = null;
+
     // ------------------------------------------------
     // Scene / Camera / Renderer (only when WebGL is available)
     // ------------------------------------------------
@@ -213,12 +224,23 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       // ------------------------------------------------
       // Resize
       // ------------------------------------------------
+      // Debounced — window "resize" fires continuously while a window is
+      // being dragged (or on mobile, as browser chrome shows/hides during
+      // scroll), and ScrollTrigger.refresh() alone is a full recompute of
+      // every trigger's position on the entire page, not just this one.
+      // Running that dozens of times a second during a drag-resize was a
+      // real, avoidable cost.
+      let resizeTimeout;
+      cleanupResizeTimeout = () => clearTimeout(resizeTimeout);
       handleResize = () => {
-        camera.aspect = cubeMount.clientWidth / cubeMount.clientHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(cubeMount.clientWidth, cubeMount.clientHeight);
-        updateCameraPosition();
-        ScrollTrigger.refresh();
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          camera.aspect = cubeMount.clientWidth / cubeMount.clientHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(cubeMount.clientWidth, cubeMount.clientHeight);
+          updateCameraPosition();
+          ScrollTrigger.refresh();
+        }, 150);
       };
       window.addEventListener("resize", handleResize);
 
@@ -250,7 +272,30 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
           mixer.setTime(Math.min(scrollProgress * CLIP_DURATION, MAX_TIME));
         renderer.render(scene, camera);
       };
-      animate();
+
+      // Only actually running the loop while the section is visible —
+      // starting it here means it's already active for the initial
+      // render (the IntersectionObserver below hasn't fired its first
+      // callback yet at this exact point), and the observer takes over
+      // stopping/restarting it after that as the section scrolls in
+      // and out of view.
+      if (isVisible) animate();
+
+      const visibilityObserver = new IntersectionObserver(
+        ([entry]) => {
+          isVisible = entry.isIntersecting;
+          if (isVisible) {
+            cancelAnimationFrame(rafId);
+            animate();
+          } else {
+            cancelAnimationFrame(rafId);
+          }
+        },
+        { threshold: 0 },
+      );
+      visibilityObserver.observe(section);
+
+      cleanupVisibilityObserver = () => visibilityObserver.disconnect();
     }
 
     // ------------------------------------------------
@@ -506,13 +551,21 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
 
           let index = Math.floor(self.progress * SERVICES.length);
           index = gsap.utils.clamp(0, SERVICES.length - 1, index);
-          changeService(index);
 
-          gsap.to(numberDigits, {
-            yPercent: -100 * index,
-            duration: 1,
-            overwrite: true,
-          });
+          // changeService no-ops internally once index hasn't changed,
+          // but this counter tween didn't have that same guard — it
+          // created a brand-new tween object on every single scrub tick
+          // (many times a second while scrolling) even though the target
+          // yPercent was identical to the currently-running tween.
+          if (index !== currentIndex) {
+            gsap.to(numberDigits, {
+              yPercent: -100 * index,
+              duration: 1,
+              overwrite: true,
+            });
+          }
+
+          changeService(index);
         },
       });
     }
@@ -553,6 +606,8 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
     return () => {
       if (handleResize) window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(rafId);
+      cleanupVisibilityObserver?.();
+      cleanupResizeTimeout?.();
 
       skipBtn?.removeEventListener("click", handleSkip);
       if (removeStepGestureListeners) removeStepGestureListeners();

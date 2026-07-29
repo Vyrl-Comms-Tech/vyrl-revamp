@@ -11,18 +11,26 @@ gsap.registerPlugin(Draggable, InertiaPlugin);
 // which uses the same "/team.jpg" + placeholder text pattern) — swap
 // these in once real photos/names/roles are available.
 const TEAM = [
-  { name: "Lorem Ipsum", designation: "Designation", image: "/team1.jpeg" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "/team2.jpeg" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "/team3.jpeg" },
+  { name: "Adeel", designation: "Jr Full-stack Developer", image: "/team1.jpeg" },
+  { name: "Arsalan", designation: "Manager", image: "/team2.jpeg" },
+  { name: "Daniyal", designation: "Project Manager", image: "/team3.jpeg" },
   { name: "Lorem Ipsum", designation: "Designation", image: "/team4.jpeg" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "/team5.jpeg" },
+  { name: "Haris", designation: "Senior Full Stack Developer", image: "/team5.jpeg" },
   { name: "Lorem Ipsum", designation: "Designation", image: "/team6.jpeg" },
   { name: "Lorem Ipsum", designation: "Designation", image: "/team7.jpeg" },
   { name: "Lorem Ipsum", designation: "Designation", image: "/team8.jpeg" },
   { name: "Lorem Ipsum", designation: "Designation", image: "/team9.jpeg" },
-  { name: "Lorem Ipsum", designation: "Designation", image: "/team10.jpeg" },
+  // { name: "Lorem Ipsum", designation: "Designation", image: "/team10.jpeg" },
 ];
-
+// Daniyal 
+// Zain 3D & AI Specialist 
+// Saqib Senior Front End Developer 
+// Adeel Junior Full Stack Developer 
+// Maaz Junior Fron end Developer 
+// Amna Account Manager 
+// Fatima Junior Designer 
+// Arsalan Performance Head 
+// Mohsin UI/UX & Design Lead
 // GSAP's official horizontalLoop helper (https://gsap.com/docs/v3/HelperFunctions/helpers/seamlessLoop/)
 // — makes a group of elements animate along the x-axis in a seamless,
 // responsive, draggable loop. Unmodified apart from being wrapped as a

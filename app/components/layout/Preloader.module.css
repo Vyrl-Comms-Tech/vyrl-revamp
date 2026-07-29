@@ -1,6 +1,7 @@
 .root {
   position: fixed;
   inset: 0;
+  background: #000;
   height: 100dvh;
   width: 100%;
   overflow: hidden;
@@ -9,17 +10,12 @@
      (.cursor-follow/.cursor-popup, z-index: 9999/9998 in navbar.css)
      all render above a z-index: 50 preloader, which is what let the
      navbar visibly show through it on the very first frame before the
-     dissolve even started. */
+     reveal even started. */
   z-index: 10000;
-  /* The shader canvas only paints the dissolve noise/particles, not a
-     solid backdrop — without this, the real page behind it (and its
-     own bodybg) was visible bleeding through everywhere the shader
-     itself wasn't actively drawing something. */
-  background-color: #000;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.4s ease-in-out;
 }
 
 /* Set on <html> by a beforeInteractive inline script (see
@@ -32,27 +28,22 @@
 }
 
 /* Once the reveal finishes, the loader stops intercepting clicks/scroll
-   but stays mounted (the dissolved shader plane is intentionally still
-   visible for a moment, matching the original loader.pointerEvents = 'none').
-   background-color must drop to transparent here too — .root's own solid
-   black backdrop (added to stop the page flashing through before the
-   dissolve even starts) would otherwise keep covering the whole site
-   forever, since only the shader's canvas content actually dissolves,
-   not this container itself. */
+   but stays mounted for its own opacity fade-out (see .root's own
+   transition above) before PreLoader.tsx calls onFinish and unmounts it. */
 .root[data-inert='true'] {
   pointer-events: none;
-  background-color: transparent;
 }
 
-.canvas {
+/* Solid backdrop that gets circle-clipped away (see PreLoader.tsx's
+   handleReveal, which tweens clip-path from a 0px circle at the center
+   out past the viewport's corners) — a plain CSS clip-path animation,
+   no WebGL/Three.js render loop running underneath it at all anymore. */
+.reveal {
   position: absolute;
   inset: 0;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: transparent;
+  background-color: #000;
   z-index: 0;
+  clip-path: circle(0px at 50% 50%);
 }
 
 .clickPrompt {
