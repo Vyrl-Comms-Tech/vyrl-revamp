@@ -12,7 +12,7 @@ import LazySection from "@/app/components/layout/LazySection";
 export default function Home() {
   return (
     <>
-      {/* <HomeHero /> */}
+      <HomeHero />
      <TextAndCards />
       <LazySection>
         <Services3d />
