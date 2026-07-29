@@ -115,11 +115,22 @@
 }
 @media (max-width: 1400px) {
   .banner {
-    height: 169vh;
+    height: 139vh;
   }
-  .banner .slider {
+  /* .banner .slider {
     height: 22vw;
     scale: 0.8;
+  } */
+       .banner .slider {
+        height: 25vw;
+        scale: 0.6;
+        margin-top: 0.2rem;
+    }
+  .slider-headingCol h1{
+    font-size: 3.2rem;
+  }
+  .slider-desc {
+  font-size: 1rem;
   }
 }
 @media (max-width: 1023px) {

@@ -224,21 +224,23 @@
   }
 }
 
-@media (max-width: 1480px) {
+@media (max-width: 1520px) {
   .draggable-marquee-item {
     flex-basis: 480px;
   }
 }
 
-@media (max-width: 1380px) {
+@media (max-width: 1420px) {
   .draggable-marquee-item {
     flex-basis: 440px;
+  }  .draggable-marquee {
+    height: 110vh;
   }
 }
 
 @media (max-width: 1300px) {
   .draggable-marquee {
-    height: 80vh;
+    height: 100vh;
   }
 
   .draggable-marquee-item {

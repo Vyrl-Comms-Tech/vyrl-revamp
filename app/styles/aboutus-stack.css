@@ -213,7 +213,10 @@
 }
 
 @media (max-width:1620px){
- 
+ .cardsStack {
+  height: 72vh !important;
+  margin-top: 3%;
+ }
 .upperHeadingStack span {
   font-size: 1.4rem;
 }
@@ -225,7 +228,19 @@
   width: 57%;
   }
 }
-
+@media (max-width:1300px){
+  
+.upperHeadingStack span {
+  font-size: 1.2rem;
+}
+  .upperHeadingStack h1 {
+    font-size: 2.6rem;
+  }
+  .cardsStack-desc {
+  font-size: 16px;
+  width: 62%;
+  }
+}
 @media (max-width: 700px) {
   .cardsStack {
     width: 95vw !important;

@@ -1,6 +1,7 @@
 .cta-btn-container {
   position: relative;
   width: fit-content;
+  scale: 1 !important;
 }
 
 .cta-btn {
@@ -123,6 +124,15 @@
   .cta-arrow-box {
     padding: 0.8rem;
   }
+  .cta-btn-container {
+  scale: 0.9  !important;
+  }
+}
+
+@media (max-width: 1300px) {
+  /* .cta-btn-container {
+  scale: 0.8 !important;
+  } */
 }
 @media (max-width: 760px) {
   /* .cta-btn-container {

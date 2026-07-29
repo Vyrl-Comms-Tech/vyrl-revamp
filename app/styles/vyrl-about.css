@@ -167,7 +167,7 @@
 .vyrl-section-card2 h1,
 .vyrl-section-card3 h1 {
   color: #fff;
-  font-size: 43px;
+  font-size: 43px !important;
   font-weight: 400;
 }
 
@@ -232,7 +232,7 @@
   .vyrl-section-card1 h1,
   .vyrl-section-card2 h1,
   .vyrl-section-card3 h1 {
-    font-size: 34px;
+    font-size: 34px I !important;
   }
   .vyrl-section-card1 p,
   .vyrl-section-card2 p,
@@ -245,7 +245,7 @@
   }
   .vyrl-section-card3,
   .vyrl-section-card1 {
-    height: 250px;
+    height: 220px;
   }
   .vyrl-section-about-image {
     top: 21% !important;
@@ -254,19 +254,40 @@
     top: 31vh;
   }
 }
-@media (max-width:1400px){
-   .vyrl-sections-cards-div {
+@media (max-width: 1400px) {
+  .vyrl-sections-cards-div {
     top: 29vh;
   }
-  
+
   .vyrl-section-about-image {
     top: 16% !important;
   }
-      .vyrl-service-about-text2 {
-        right: 55px;
-      }
+  .vyrl-service-about-text2 {
+    right: 55px;
+  }
 }
-
+@media (max-width: 1300px) {
+  .vyrl-section-about-image {
+    top: 14%;
+  }
+  .vyrl-section-card2 {
+    height: 315px;
+  }
+  .vyrl-section-card1 p,
+  .vyrl-section-card2 p,
+  .vyrl-section-card3 p {
+    font-size: 17px;
+  }
+  .vyrl-section-card3,
+  .vyrl-section-card1 {
+    height: 255px;
+  }
+  .vyrl-section-card1 h1,
+  .vyrl-section-card2 h1,
+  .vyrl-section-card3 h1 {
+    font-size: 29px !important;
+  }
+}
 @media (max-width: 760px) {
   .vyrl-main-wrapper {
     height: auto;
@@ -335,7 +356,7 @@
   .vyrl-section-card1 h1,
   .vyrl-section-card2 h1,
   .vyrl-section-card3 h1 {
-    font-size: 36px;
+    font-size: 36px !important;
   }
 
   .vyrl-section-card1 p,

@@ -98,8 +98,8 @@
 }
 
 .service-desc {
-  overflow: hidden;
   font-size: 18px;
+  overflow: hidden;
   line-height: 1.2;
   color: hsla(0, 4%, 11%, 0.822);
 }
@@ -236,9 +236,9 @@
     font-size: 3.5rem;
     line-height: 1.2;
   }
-.right-text-services {
-  width: 35%;
-}
+  .right-text-services {
+    width: 35%;
+  }
   .service-desc {
     font-size: 17px;
   }
@@ -246,9 +246,23 @@
     bottom: 50%;
   }
 }
-@media (max-width:1400px){
-   .services-cta-desktop {
+@media (max-width: 1400px) {
+  .services-cta-desktop {
     bottom: 55%;
+  }
+  .right-text-services h1 {
+    font-size: 2.9rem;
+  }
+  .service-desc {
+    font-size: 16.5px;
+  }
+  .service-tag {
+    padding: 3px 13px;
+    font-size: 11px;
+  }
+
+  .counter-divs {
+    font-size: 3.4rem;
   }
 }
 @media (max-width: 700px) {

@@ -33,7 +33,7 @@ function Footer() {
           video.pause();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     observer.observe(video);
@@ -244,7 +244,6 @@ function Footer() {
 
       {/* Row 3 – Subscribe + Mascot + Info */}
 
-  
       <div className="footer-bottom-row">
         <div className="footer-subscribe">
           <h3 className="footer-subscribe-title">Stay In The Loop</h3>

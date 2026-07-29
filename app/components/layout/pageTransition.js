@@ -2,6 +2,16 @@
 // The old page fades/slides up slightly while the new page reveals
 // upward over it, matching the reference video's effect.
 export const slideInOut = () => {
+  // document.startViewTransition() swaps in the new route's DOM before
+  // this callback runs, but it doesn't touch scroll position — the
+  // browser just keeps wherever the old (footer-scrolled) page left
+  // off. Next's own scroll-restoration races against that DOM swap, so
+  // depending on timing the new page could land at top, halfway, or at
+  // the bottom (same scrollY the footer link was clicked from). Forcing
+  // it here, once the new DOM is already in place, makes every
+  // transition-linked navigation start at the top consistently.
+  window.scrollTo(0, 0);
+
   document.documentElement.animate(
     [
       { opacity: 1, transform: "translateY(0)" },

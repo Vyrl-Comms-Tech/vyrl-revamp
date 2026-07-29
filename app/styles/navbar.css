@@ -239,7 +239,7 @@
   opacity: 0;
   transform: translateY(20px);
 }
-.menu-toggle{
+.menu-toggle {
   cursor: pointer;
 }
 
@@ -254,8 +254,20 @@
   .nav-link-item {
     font-size: 2.2rem;
   }
-  .box-1 p{
+  .box-1 p {
     font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 1400px) {
+  .right-content ul {
+    padding: 1.2rem;
+  }
+  .nav-link-item {
+    font-size: 2rem;
+  }
+  .box-1 p{
+    font-size: 1.2rem;
   }
 }
 
@@ -290,10 +302,12 @@
     height: auto;
     flex-direction: column;
   }
-  .grid-cards,.cursor-follow,.cursor-popup {
+  .grid-cards,
+  .cursor-follow,
+  .cursor-popup {
     display: none;
   }
-  #mble-nav-logo{
+  #mble-nav-logo {
     scale: 0.85;
   }
 

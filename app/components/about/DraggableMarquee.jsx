@@ -12,26 +12,76 @@ gsap.registerPlugin(Draggable, InertiaPlugin);
 // which uses the same "/team.jpg" + placeholder text pattern) — swap
 // these in once real photos/names/roles are available.
 const TEAM = [
-  { name: "Adeel", designation: "Jr. Full Stack Developer", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team1_c0y0vv.jpg" },
-  { name: "Arsalan", designation: "Performance Head", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team2_bb0rwa.jpg" },
-  { name: "Daniyal", designation: "Project Manager", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team3_fvmpqb.jpg" },
-  { name: "Fatima", designation: "Jr. Designer", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team4_yh0c3u.jpg" },
-  { name: "Haris", designation: "Senior Full Stack Developer", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team5_kebi7v.jpg" },
-  { name: "Zain", designation: "3D & AI Specialist", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team6_xvot0o.jpg" },
-  { name: "Saqib", designation: "Senior Front End Developer", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team10_dvdwyi.jpg" },
-  { name: "Amna", designation: "Account Manager", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team7_ahjr4k.jpg" },
-  { name: "Mohsin", designation: "UI/UX & Design Lead", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team8_zkkjqj.jpg" },
-  { name: "Maaz Ather", designation: "Jr. Frontend Developer", image: "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team9_spslj2.jpg" },
+  {
+    name: "Adeel",
+    designation: "Jr. Full Stack Developer",
+    image:
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team1_c0y0vv.jpg",
+  },
+  {
+    name: "Arsalan",
+    designation: "Performance Head",
+    image:
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team2_bb0rwa.jpg",
+  },
+  {
+    name: "Daniyal",
+    designation: "Project Manager",
+    image:
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team3_fvmpqb.jpg",
+  },
+  {
+    name: "Fatima",
+    designation: "Jr. Designer",
+    image:
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team4_yh0c3u.jpg",
+  },
+  {
+    name: "Haris",
+    designation: "Senior Full Stack Developer",
+    image:
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team5_kebi7v.jpg",
+  },
+  {
+    name: "Zain",
+    designation: "3D & AI Specialist",
+    image:
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team6_xvot0o.jpg",
+  },
+  {
+    name: "Saqib",
+    designation: "Senior Front End Developer",
+    image:
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team10_dvdwyi.jpg",
+  },
+  {
+    name: "Amna",
+    designation: "Account Manager",
+    image:
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team7_ahjr4k.jpg",
+  },
+  {
+    name: "Mohsin",
+    designation: "UI/UX & Design Lead",
+    image:
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team8_zkkjqj.jpg",
+  },
+  {
+    name: "Maaz Ather",
+    designation: "Jr. Frontend Developer",
+    image:
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team9_spslj2.jpg",
+  },
 ];
-// Daniyal 
-//   
-//   
-// Adeel  
-//   
-//  
-//   
-// Arsalan  
-//  
+// Daniyal
+//
+//
+// Adeel
+//
+//
+//
+// Arsalan
+//
 // GSAP's official horizontalLoop helper (https://gsap.com/docs/v3/HelperFunctions/helpers/seamlessLoop/)
 // — makes a group of elements animate along the x-axis in a seamless,
 // responsive, draggable loop. Unmodified apart from being wrapped as a
@@ -70,9 +120,7 @@ function horizontalLoop(items, config) {
       center = config.center,
       pixelsPerSecond = (config.speed || 1) * 100,
       snap =
-        config.snap === false
-          ? (v) => v
-          : gsap.utils.snap(config.snap || 1),
+        config.snap === false ? (v) => v : gsap.utils.snap(config.snap || 1),
       timeOffset = 0,
       container =
         center === true
@@ -148,9 +196,7 @@ function horizontalLoop(items, config) {
           tl.to(
             item,
             {
-              xPercent: snap(
-                ((curX - distanceToLoop) / widths[i]) * 100,
-              ),
+              xPercent: snap(((curX - distanceToLoop) / widths[i]) * 100),
               duration: distanceToLoop / pixelsPerSecond,
             },
             0,
@@ -165,8 +211,7 @@ function horizontalLoop(items, config) {
               {
                 xPercent: xPercents[i],
                 duration:
-                  (curX - distanceToLoop + totalWidth - curX) /
-                  pixelsPerSecond,
+                  (curX - distanceToLoop + totalWidth - curX) / pixelsPerSecond,
                 immediateRender: false,
               },
               distanceToLoop / pixelsPerSecond,
@@ -410,35 +455,21 @@ export default function DraggableMarquee() {
       <div className="draggable-marquee-viewport">
         <div className="draggable-marquee-track" ref={trackRef}>
           {TEAM.map((member, i) => (
-        <div className="draggable-marquee-item" key={i}>
-  <div className="draggable-marquee-card">
-    <div className="draggable-marquee-image">
-      <Image
-        src={member.image}
-        alt={member.name}
-        fill
-        className="object-contain"
-        sizes="(max-width: 768px) 90vw, 690px"
-        // horizontalLoop (below) measures every card's real layout up
-        // front and only initializes Draggable once all images have
-        // fired load/error — next/image's default lazy loading means
-        // any card still off-screen at mount time never starts
-        // fetching, so that wait never resolved and drag never
-        // initialized at all. priority forces eager loading like the
-        // plain <img> this replaced did.
-        priority
-      />
-    </div>
+            <div className="draggable-marquee-item" key={i}>
+              <div className="draggable-marquee-card">
+                <div className="draggable-marquee-image">
+                  <img src={member.image} alt={member.name} />
+                </div>
 
-    <div className="draggable-marquee-info">
-      <h3 className="draggable-marquee-name">{member.name}</h3>
+                <div className="draggable-marquee-info">
+                  <h3 className="draggable-marquee-name">{member.name}</h3>
 
-      <span className="draggable-marquee-designation">
-        {member.designation}
-      </span>
-    </div>
-  </div>
-</div>
+                  <span className="draggable-marquee-designation">
+                    {member.designation}
+                  </span>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>
