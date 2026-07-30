@@ -7,6 +7,7 @@ export const caseStudies = {
     slug: "lala-darbar",
     href: "/lala-darbar",
     title: "Lala Darbar",
+    websiteUrl: "https://laladarbar.com/",
     duration: "6 weeks",
     services: [
       "Visual identity refresh: new typography, color expansion, and design language",
@@ -35,6 +36,7 @@ export const caseStudies = {
     slug: "sanam-cars",
     href: "/sanamcars",
     title: "Sanam Cars",
+    websiteUrl: "https://sanamcars.com/",
     duration: "1 month",
     services: [
       "Modern visual identity with refined typography, a sleek automotive-inspired color palette, and a clean, premium design language.",
@@ -62,6 +64,7 @@ export const caseStudies = {
     slug: "arabian-estate",
     href: "/arabian-estate",
     title: "Arabian Estates",
+    websiteUrl: "https://arabianestates.ae/",
     duration: "4 months",
     services: [
       "Complete visual identity crafted with premium typography, refined color palette, and a luxury-focused design language.",
@@ -89,6 +92,7 @@ export const caseStudies = {
     slug: "jeikor",
     href: "/jeikor",
     title: "Jeikor",
+    websiteUrl: "https://jeikor.com/",
     duration: "3.5 weeks",
     services: [
       "Fully responsive site built with React",
@@ -117,6 +121,7 @@ export const caseStudies = {
     slug: "banda",
     href: "/banda",
     title: "Banda",
+    websiteUrl: "https://banda-vyrl.netlify.app/",
     duration: "8 weeks",
     services: [
       "Strong visual consistency across investor touchpoints post-launch",

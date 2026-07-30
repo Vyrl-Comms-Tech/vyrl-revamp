@@ -249,6 +249,7 @@
 @media (max-width: 1400px) {
   .services-cta-desktop {
     bottom: 55%;
+    z-index: 99;
   }
   .right-text-services h1 {
     font-size: 2.9rem;

@@ -534,28 +534,13 @@ const CaseStudyInner = ({ slug }) => {
             <div className="cs-p1-header">
               <h2 className="cs-title">{c1.title}</h2>
               <div className="cs-btn-slot" ref={btnSlotRef}>
-                <button className="cs-visit-btn" ref={btnRef}>
-                   <CtaButton
-            label='View Website'
-            href='/projects'
-            className="cta-button cta-about-logos"
-          />
-                  {/* View website
-                  <span className="cs-btn-icon">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="19"
-                      viewBox="0 0 15 18"
-                      fill="none"
-                    >
-                      <path
-                        d="M10.3215 -4.76837e-07L0.000134825 4.48818L0.648172 5.93679L8.4792 2.53763L2.70522 17.4251L4.19695 18.0036L9.97093 3.11619L13.4622 10.9066L14.9175 10.2738L10.3215 -4.76837e-07Z"
-                        fill="#E6E6E6"
-                      />
-                    </svg>
-                  </span> */}
-                </button>
+                <CtaButton
+                  ref={btnRef}
+                  label="View website"
+                  href={c1.websiteUrl}
+                  external
+                  className="cs-visit-btn"
+                />
               </div>
             </div>
             <div className="cs-services-col">

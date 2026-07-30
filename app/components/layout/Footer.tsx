@@ -64,7 +64,7 @@ function Footer() {
   if (hideFooter) return null;
 
   return (
-    <footer className="footer">
+    <footer className={`footer${pathname === "/projects" ? " footer--no-radius" : ""}`}>
       {/* Row 1 – Logo */}
       {/* <div className="footer-logo-row">
         <UnicornEmbed projectId="eWb7ceke9RYVHKByTGA5" />

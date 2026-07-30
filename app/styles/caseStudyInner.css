@@ -200,7 +200,7 @@
 }
 
 .cs-p3-content {
-  padding: 0 0px 40px;
+  padding: 0 0px 16%;
 }
 
 .cs-p3-content h3 {
@@ -381,6 +381,7 @@
   }
   .cs-services {
     font-size: 17px;
+    gap: 13px;
   }
   .cs-similar-sub {
     right: 40px;
@@ -405,7 +406,7 @@
 }
 @media (max-width: 1490px) {
   .cs-services-col {
-    top: 60%;
+    top: 58%;
   }
   .cs-p8-next-text {
     font-size: 2.5rem;
@@ -414,6 +415,15 @@
 @media (max-width: 1390px) {
   .cs-services-col {
     /* top: 65%; */
+  }
+  .cs-duration-label {
+    font-size: 17px;
+  }
+  .cs-duration-value {
+    font-size: 15px;
+  }
+  .cs-services-col {
+    top: 55%;
   }
   .cs-services-col {
     width: 40%;
@@ -428,7 +438,7 @@
     font-size: 2rem;
   }
   .cs-services {
-    font-size: 16px;
+    font-size: 15.2px;
   }
   .cs-mockup {
     width: 53%;

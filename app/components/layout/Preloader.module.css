@@ -33,14 +33,12 @@
   pointer-events: none;
 }
 
-/* Solid black backdrop, punched through by a growing circular hole (see
-   PreLoader.tsx's handleReveal). .reveal is a black square with a huge
-   box-shadow standing in for "everything outside the circle" — the
-   circle itself is transparent, so scaling that transparent circle up
-   from 0 reveals more and more of the real page underneath, same as the
-   old clip-path version did, but via transform (compositor-only) instead
-   of clip-path (which forced a full-viewport repaint every frame and was
-   the actual source of the preloader's own jank). */
+/* .reveal is the solid black backdrop covering the whole viewport —
+   PreLoader.tsx's handleReveal animates its clip-path from a single
+   point at center out to a circle past the viewport's corners once the
+   intro finishes, uncovering the real page underneath as it expands.
+   revealWrap just gives it a positioning context; the clip-path itself
+   already contains everything to inset: 0's own bounds. */
 .revealWrap {
   position: absolute;
   inset: 0;
@@ -51,17 +49,9 @@
 
 .reveal {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  border-radius: 50%;
-  background: transparent;
-  box-shadow: 0 0 0 9999px #000;
-  transform: translate(-50%, -50%) scale(0);
-  will-change: transform;
-  /* A soft blurred edge on the growing hole reads as a gentle dissolve
-     instead of a hard graphic-circle cutout, closer in feel to the old
-     shader dissolve without any WebGL/render-loop cost. */
-  filter: blur(24px);
+  inset: 0;
+  background: #000;
+  will-change: clip-path;
 }
 
 .clickPrompt {

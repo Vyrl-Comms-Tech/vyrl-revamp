@@ -158,7 +158,7 @@ function VyrlAbout() {
           scrub: true,
           // markers: true,
           toggleActions: "play none none none",
-          once: true,
+          // once: true,
         },
       });
 
@@ -253,13 +253,7 @@ function VyrlAbout() {
         // markers: true,
 
         onUpdate: (self) => {
-          // 👇 only move forward, never backward
-          const current = tl.progress();
-          const next = self.progress;
-
-          if (next > current) {
-            tl.progress(next);
-          }
+          tl.progress(self.progress);
         },
       });
     });

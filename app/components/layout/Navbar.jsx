@@ -608,11 +608,11 @@ const Navbar = () => {
             </svg>
           </PageTransitionLink>
 
-          <div className="menu-toggle">
+          <div className="menu-toggle"
+            onClick={() => toggleMenu()}
+            ref={opacityDotsRef}>
             <div
               className="menu-box"
-              onClick={() => toggleMenu()}
-              ref={opacityDotsRef}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

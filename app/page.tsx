@@ -13,10 +13,10 @@ export default function Home() {
   return (
     <>
       <HomeHero />
-     <TextAndCards />
+      <TextAndCards />
       <LazySection>
         <Services3d />
-      </LazySection> 
+      </LazySection>
       <LazySection>
         <HomeCarousel />
       </LazySection>
@@ -31,7 +31,7 @@ export default function Home() {
       </LazySection>
       <LazySection>
         <HomeSecondLast />
-      </LazySection> 
+      </LazySection>
     </>
   );
 }

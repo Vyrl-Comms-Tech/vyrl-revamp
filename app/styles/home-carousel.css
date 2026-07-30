@@ -53,6 +53,7 @@
 /* ── Slider ── */
 
 .h2-slider-wrapper {
+  position: relative;
   padding-top: 30px;
   padding-bottom: 30px;
   /* flex: 1; */
@@ -61,6 +62,34 @@
   overflow: hidden;
   min-height: 0;
 }
+
+/* The left/right-most slides in the coverflow only show half — these
+   two edge overlays fade them into the section's own black background
+   so they blend instead of cutting off sharply. Sits above the slides
+   (Swiper's own layers are un-stacked, so no z-index war) but
+   pointer-events:none keeps drag/swipe interaction reaching the
+   slides underneath. */
+/* .h2-slider-wrapper::before,
+.h2-slider-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 18vw;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.h2-slider-wrapper::before {
+  left: -12%;
+  background: linear-gradient(166deg, rgba(0, 0, 0, 0) 7.57%, #000 110.86%);
+  transform: scaleX(-1);
+}
+
+.h2-slider-wrapper::after {
+  right: -12%;
+  background: linear-gradient(166deg, rgba(0, 0, 0, 0) 7.57%, #000 110.86%);
+} */
 
 .simple-swiper {
   width: 100%;
@@ -85,6 +114,23 @@
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+/* The coverflow's peeking side slides sit rotated/scaled right next to
+   the centered one, so their inner edge (facing center) meets it in a
+   hard image-to-image seam instead of blending — this fades each side
+   slide's own inner edge toward transparent (revealing .h2-section's
+   black background underneath) so it blends instead of cutting off.
+   Swiper applies swiper-slide-prev/next automatically to whichever
+   slides sit immediately left/right of center. */
+.swiper-slide-prev .slider-card {
+  -webkit-mask-image: linear-gradient(to left, #000 55%, transparent 100%);
+  mask-image: linear-gradient(to left, #000 55%, transparent 100%);
+}
+
+.swiper-slide-next .slider-card {
+  -webkit-mask-image: linear-gradient(to right, #000 55%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 55%, transparent 100%);
 }
 
 /* ── Footer ── */
@@ -296,7 +342,7 @@
     line-height: 1.1;
   }
   .simple-swiper {
-    padding: 0right-text-services h1;
+    padding: 0;
   }
 }
 @media (max-width: 1280px) {

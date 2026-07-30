@@ -53,16 +53,16 @@ export default function Preloader({
   const [isInert, setIsInert] = useState(false);
 
   // ---------------------------------------------------------------------
-  // Reveal: once the intro (counter/letters) finishes, scale a circular
-  // div on revealRef up from 0 to past the viewport's corners — a
-  // transform-only animation, so it stays entirely on the compositor
-  // (unlike animating clip-path directly on a full-viewport element,
-  // which forced a repaint of the whole screen on every frame and was
-  // real, measurable jank in the preloader itself). No WebGL/Three.js
-  // here at all anymore either: the previous shader-based dissolve kept
-  // a live WebGL context and render loop running the whole time the
-  // preloader was mounted, which was its own separate source of lag,
-  // plus the WebGL-context failures that plagued some browsers/environments.
+  // Reveal: once the intro (counter/letters) finishes, a circular
+  // clip-path on the black backdrop (revealRef) grows from a single
+  // point at center out past the viewport's corners, uncovering the
+  // real page underneath as it expands — CSS/GSAP only, no WebGL or
+  // Three.js (the original shader-based dissolve was too heavy and got
+  // removed entirely). This animates clip-path directly rather than a
+  // scaled transform: GSAP's transform-based tweens (x/y/scale) replace
+  // the *entire* transform property, which silently discarded this
+  // element's own translate(-50%,-50%) centering the moment a scale
+  // tween started — clip-path has no such conflict.
   // ---------------------------------------------------------------------
   const finishReveal = () => {
     if (!isMountedRef.current) return;
@@ -103,18 +103,16 @@ export default function Preloader({
         return;
       }
 
-      // Diameter comfortably larger than the viewport diagonal guarantees
-      // full coverage at any aspect ratio once scaled up from 0.
-      const diameter = Math.hypot(window.innerWidth, window.innerHeight) * 2;
-      reveal.style.width = `${diameter}px`;
-      reveal.style.height = `${diameter}px`;
+      // Radius comfortably larger than the viewport diagonal guarantees
+      // full coverage at any aspect ratio once the circle finishes growing.
+      const maxRadius = Math.hypot(window.innerWidth, window.innerHeight);
 
       gsap.fromTo(
         reveal,
-        { scale: 0 },
+        { clipPath: "circle(0px at 50% 50%)" },
         {
-          scale: 1,
-          duration: 1,
+          clipPath: `circle(${maxRadius}px at 50% 50%)`,
+          duration: 1.4,
           ease: "power3.inOut",
           onComplete: finishReveal,
         },
@@ -205,7 +203,7 @@ export default function Preloader({
       if (counterRef.current) {
         const counterObj = { value: 0 };
         gsap.to(counterObj, {
-          value: 100,
+          value: 101,
           duration: 4,
           ease: "power2.out",
           onUpdate: () => {
@@ -250,8 +248,8 @@ export default function Preloader({
       data-inert={isInert || undefined}
       aria-hidden={isInert || undefined}
     >
-      {/* Solid black backdrop that scales away to reveal the real page
-          underneath as it expands from the center. */}
+      {/* Solid black backdrop that slides up and off-screen to reveal
+          the real page underneath. */}
       <div className={styles.revealWrap}>
         <div ref={revealRef} className={styles.reveal} />
       </div>

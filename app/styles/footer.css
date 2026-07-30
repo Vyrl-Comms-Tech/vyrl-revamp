@@ -12,6 +12,11 @@
   gap: 20px;
 }
 
+.footer--no-radius {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
 /* ─── Row 1 – Logo ───────────────────────────────────────── */
 .footer-logo-row {
   width: 100% !important;
@@ -466,8 +471,20 @@
   }
   .footer-subscribe-input{
     width: 330px;
-  }
+  }   .footer-mascot video {
+      width: 210px;
+      }
 }
+@media (max-width:1300px){
+  .footer-nav-link{
+    font-size: 14.5px;
+  }
+  .footer-subscribe-input{
+    width: 290px;
+  }
+   
+}
+
 @media (max-width: 1100px) {
   .footer-logo-row {
     height: 280px;

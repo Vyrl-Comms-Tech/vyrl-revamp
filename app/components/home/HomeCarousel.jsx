@@ -23,13 +23,7 @@ const slides = [
   {
     image: "/banda4.avif",
     title: "Banda",
-    tabs: [
-      "GSAP",
-      "RESPONSIVE",
-  
-      
-      "THREE.JS",
-    ],
+    tabs: ["GSAP", "RESPONSIVE", "THREE.JS"],
     desc: " A culturally grounded, visually elevated brand identity and website that capture Banda’s architectural ethos and storytelling approach.",
   },
   {
@@ -46,22 +40,13 @@ const slides = [
   {
     image: "/lala1.avif",
     title: "Lala Darbar",
-    tabs: [
-      "REACT",
-      "SEO",
-      "GSAP"
-    ],
+    tabs: ["REACT", "SEO", "GSAP"],
     desc: " A flavor-loaded rebrand and interactive website that captures the spirit of desi street food in an unforgettable scroll.",
   },
   {
     image: "/sanam3.avif",
     title: "Sanam Cars",
-    tabs: [
-      "NEXT.JS",
-      "FILTERING",
-      "API",
-      "RESPONSIVE"
-    ],
+    tabs: ["NEXT.JS", "FILTERING", "API", "RESPONSIVE"],
     desc: "A premium car marketplace with dynamic inventory management, advanced filtering, detailed vehicle pages, and an optimized browsing experience across devices.",
   },
 ];
@@ -240,7 +225,7 @@ const HomeCarousel = () => {
               animateOnScroll={false}
             >
               <p className="h2-description">{activeSlide.desc}</p>
-            </ChangeTextAnimation>
+            </ChangeTextAnimation>  
             <div className="h2-nav">
               <button
                 className="h2-nav-btn"
