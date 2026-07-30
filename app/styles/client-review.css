@@ -8,7 +8,7 @@
   justify-content: center;
   overflow: hidden;
   padding: 60px 40px 40px;
-  gap: 40px;
+  gap: 90px ;
 }
 
 .client-review-section-text {
@@ -45,10 +45,13 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 14px;
+  width: 80%;
 }
 
 .client-review-name {
   color: #fff;
+
+  line-height: 111%;
   font-size: 43px;
   font-weight: 500;
   text-transform: uppercase;
@@ -74,7 +77,7 @@
 /* ── Center: card stack (unchanged) ── */
 
 .client-review-card-container {
-  height: 60vh;
+  height: 55vh;
   position: relative;
   width: 640px;
   max-width: 100%;
@@ -107,6 +110,33 @@
   object-fit: cover;
   pointer-events: none;
   user-select: none;
+}
+
+.client-review-mute-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 6;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.client-review-mute-btn:hover {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.client-review-mute-btn svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* ── Stickers ──
@@ -226,8 +256,8 @@
     /* height: 70vh; */
   }
   .client-review-name {
-  font-size: 39px;
-  line-height: 111%;
+    font-size: 39px;
+    line-height: 111%;
   }
 }
 /* Sticker offsets are anchored to the center card's actual on-screen
@@ -239,7 +269,7 @@
   .client-review-sticker {
     width: 70px;
   }
-  .client-review-card{
+  .client-review-card {
     scale: 0.95 !important;
   }
   .client-review-sticker--top-left,
@@ -259,9 +289,9 @@
     right: calc(50% - 152px - 14px);
   }
 }
-@media (max-width:1400px){
+@media (max-width: 1400px) {
   .client-review-card-container {
-  max-width: 550px;
+    max-width: 550px;
   }
 }
 @media (max-width: 640px) {
@@ -285,15 +315,21 @@
     right: calc(50% - 107px - 10px);
   }
 }
-@media (max-width:1400px){}
+@media (max-width: 1700px) {
+  .client-review-section-container {
+    gap: 40px !important;
+  }
+}
+@media (max-width: 1400px) {
+}
 .client-review-section-container {
-gap: 80px;
+  gap: 90px !important;
 }
 @media (max-width: 760px) {
   .client-review-section-container {
     padding: 70px 15px 32px !important;
     min-height: auto;
-    gap: 8px;
+    gap: 8px !important;
   }
 
   .client-review-heading-line-1 {

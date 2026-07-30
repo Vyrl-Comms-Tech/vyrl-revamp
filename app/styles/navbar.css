@@ -248,6 +248,8 @@
    so quick or slightly off-target clicks/taps still register. */
 .menu-box {
   padding: 10px;
+  position: relative;
+  z-index: 99999999999 !important;
   margin: -10px;
 }
 @media (max-width: 1770px) {

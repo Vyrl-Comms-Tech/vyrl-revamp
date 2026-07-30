@@ -17,7 +17,7 @@ const BASE_POSITIONS = [
     rotate: -14,
     zIndex: 1,
     width: 280,
-    height: 440,
+    height: 470,
     opacity: 1,
   },
   {
@@ -26,17 +26,17 @@ const BASE_POSITIONS = [
     rotate: -9,
     zIndex: 2,
     width: 330,
-    height: 490,
+    height: 520,
     opacity: 1,
   },
-  { x: 0, y: 0, rotate: 0, zIndex: 5, width: 390, height: 540, opacity: 1 },
-  { x: 100, y: 20, rotate: 9, zIndex: 2, width: 330, height: 490, opacity: 1 },
-  { x: 200, y: 40, rotate: 14, zIndex: 1, width: 280, height: 440, opacity: 1 },
+  { x: 0, y: 0, rotate: 0, zIndex: 5, width: 390, height: 600, opacity: 1 },
+  { x: 100, y: 20, rotate: 9, zIndex: 2, width: 330, height: 520, opacity: 1 },
+  { x: 200, y: 40, rotate: 14, zIndex: 1, width: 280, height: 470, opacity: 1 },
 ];
 
 function getResponsiveScale(viewportWidth) {
   if (viewportWidth <= 640) return 0.55;
-  if (viewportWidth <= 1620) return 0.78;
+  if (viewportWidth <= 1720) return 0.78;
   return 1;
 }
 
@@ -65,43 +65,48 @@ function getPositions(viewportWidth) {
 const REVIEWS = [
   {
     id: 1,
-    video: "https://res.cloudinary.com/drwzstxy2/video/upload/v1785398725/Zeds_sntnxk.mov",
-    name: "Sanam Cars",
+    video: "https://res.cloudinary.com/drwzstxy2/video/upload/f_mp4,vc_h264/v1785398725/Zeds_sntnxk.mp4",
+    name: "Zeds Perfumes",
     tags: ["SPLINE", "THREE.JS", "3D"],
     ctaLabel: "Watch Testimonials",
-    href: "#",
+    href: "https://zedsperfumes.com/",
+    poster: "#",
   },
   {
     id: 2,
-    video: "https://res.cloudinary.com/drwzstxy2/video/upload/v1785398721/Metro_ptqald.mov",
-    name: "Nova Fitness",
+    video: "https://res.cloudinary.com/drwzstxy2/video/upload/f_mp4,vc_h264/v1785398721/Metro_ptqald.mp4",
+    name: "Metro Jewellers",
     tags: ["BRANDING", "WEB"],
     ctaLabel: "Watch Testimonials",
     href: "#",
+    poster: "#",
   },
   {
     id: 3,
-    video: "https://res.cloudinary.com/drwzstxy2/video/upload/v1785398729/SanamCars_b5fusl.mov",
+    video: "https://res.cloudinary.com/drwzstxy2/video/upload/f_mp4,vc_h264/v1785398729/SanamCars_b5fusl.mp4",
     name: "Sanam Cars",
     tags: ["MOTION", "GSAP", "3D"],
     ctaLabel: "Watch Testimonials",
-    href: "#",
+    href: "https://sanamcars.com/",
+    poster: "#",
   },
   {
     id: 4,
-    video: "https://res.cloudinary.com/drwzstxy2/video/upload/v1785398737/Wellington_ekjlbp.mov",
-    name: "Orbit Foods",
+    video: "https://res.cloudinary.com/drwzstxy2/video/upload/f_mp4,vc_h264/v1785398737/Wellington_ekjlbp.mp4",
+    name: "Wellington Properties",
     tags: ["UI/UX", "NEXT.JS"],
     ctaLabel: "Watch Testimonials",
-    href: "#",
+    href: "https://wellingtonre.com/",
+    poster: "#",
   },
   {
     id: 5,
-    video: "https://res.cloudinary.com/drwzstxy2/video/upload/v1785398744/AFY_mwo6mu.mov",
-    name: "Halcyon Wear",
+    video: "https://res.cloudinary.com/drwzstxy2/video/upload/f_mp4,vc_h264/v1785398744/AFY_mwo6mu.mp4",
+    name: "AFY Realty",
     tags: ["ECOMMERCE", "BRANDING", "3D"],
     ctaLabel: "Watch Testimonials",
-    href: "#",
+    href: "https://afygroup.ae/",
+    poster: "#",
   },
 ];
 
@@ -109,6 +114,7 @@ const N = 5;
 
 function ClientReviewSection() {
   const cardRefs = useRef([]);
+  const videoRefs = useRef([]);
   const offsetRef = useRef(0);
   const animating = useRef(false);
   const dragStartX = useRef(0);
@@ -132,10 +138,37 @@ function ClientReviewSection() {
   // textContent swap, since reviews here have varying tag counts (2-3).
   const [tagsIndex, setTagsIndex] = useState(2);
   const tagsRef = useRef(null);
+  // One shared muted flag, not per-card — muting/unmuting is a "sound on
+  // or off" toggle for whichever review is currently centered, and that
+  // same choice carries over to the next one that rotates into center
+  // (rather than each card remembering its own separate mute state).
+  const [isMuted, setIsMuted] = useState(true);
 
   function posSlot(cardIdx, offset) {
     return (((cardIdx - offset) % N) + N) % N;
   }
+
+  // Only the centered card (activeIndex) actually plays — every other
+  // slot just shows a still frame. Runs on mount and every time the
+  // center changes (shift() updates activeIndex).
+  useEffect(() => {
+    videoRefs.current.forEach((video, i) => {
+      if (!video) return;
+      if (i === activeIndex) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      } else {
+        // A <video> that's never played and has no (real) poster paints
+        // nothing at all — briefly playing then immediately pausing
+        // forces the browser to decode and display its first frame, so
+        // the side cards show that instead of a blank box until a real
+        // poster is set per review.
+        video.play()
+          .then(() => video.pause())
+          .catch(() => {});
+      }
+    });
+  }, [activeIndex]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -423,14 +456,51 @@ function ClientReviewSection() {
               }}
             >
               {item.video ? (
-                <video
-                  src={item.video}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  draggable={false}
-                />
+                <>
+                  <video
+                    ref={(el) => {
+                      videoRefs.current[i] = el;
+                    }}
+                    src={item.video}
+                    poster={item.poster}
+                    // Only the centered card autoplays — the effect above
+                    // (keyed on activeIndex) pauses/plays every card
+                    // explicitly, but autoPlay here also covers this
+                    // exact card's first render as the initial center
+                    // (i === activeIndex on mount), before that effect's
+                    // first run would otherwise be the only thing to
+                    // start it.
+                    autoPlay={i === activeIndex}
+                    muted={isMuted}
+                    loop
+                    playsInline
+                    draggable={false}
+                  />
+                  {i === activeIndex && (
+                    <button
+                      type="button"
+                      className="client-review-mute-btn"
+                      aria-label={isMuted ? "Unmute video" : "Mute video"}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsMuted((m) => !m);
+                      }}
+                    >
+                      {isMuted ? (
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M4 9v6h4l5 5V4L8 9H4z" fill="white" />
+                          <path d="M16 8.5L21 15.5M21 8.5L16 15.5" stroke="white" strokeWidth="1.6" strokeLinecap="round" />
+                        </svg>
+                      ) : (
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M4 9v6h4l5 5V4L8 9H4z" fill="white" />
+                          <path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="white" strokeWidth="1.6" strokeLinecap="round" />
+                          <path d="M19 6a8.5 8.5 0 0 1 0 12" stroke="white" strokeWidth="1.6" strokeLinecap="round" />
+                        </svg>
+                      )}
+                    </button>
+                  )}
+                </>
               ) : (
                 <Image
                   src={item.image}
@@ -489,7 +559,7 @@ function ClientReviewSection() {
       <div className="client-review-nav">
         <button
           className="client-review-nav-btn"
-          onClick={() => shiftRef.current?.(1)}
+          onClick={() => shiftRef.current?.(-1)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -508,7 +578,7 @@ function ClientReviewSection() {
         </button>
         <button
           className="client-review-nav-btn"
-          onClick={() => shiftRef.current?.(-1)}
+          onClick={() => shiftRef.current?.(1)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

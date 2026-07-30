@@ -213,6 +213,7 @@
   .tp-section1 h2 {
     /* font-size: 3.8rem; */
     top: 34%;
+    line-height: 1.2;
   }
 }
 @media (max-width: 1550px) {
