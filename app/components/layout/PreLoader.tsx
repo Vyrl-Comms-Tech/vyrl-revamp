@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import styles from "./Preloader.module.css";
-import { loadGLTF } from "@/app/lib/glbCache";
+import { warmUpServices3d } from "@/app/lib/services3dRenderer";
 
 // Read by PreloaderGate.tsx's beforeInteractive skip-script (stamped on
 // <html> before hydration/paint) — kept here so both files can import it
@@ -170,13 +170,15 @@ export default function Preloader({
   // warms the HTTP cache, but the parse/decode step is what actually
   // took visible time once the section mounted (especially on
   // /services, which isn't lazy-loaded at all and starts loading the
-  // instant that page opens). Calling the same loadGLTF() that
-  // Services3d.jsx calls means the shared module-level cache already
-  // holds the fully-parsed model by the time any Services3d instance
-  // mounts, on either page, for the rest of the session.
+  // instant that page opens). warmUpServices3d() does that fetch/parse/
+  // decode *and* also compiles the cube's shaders once, hidden, on a
+  // shared offscreen renderer (see services3dRenderer.js) — the actual
+  // GPU-driver compile cost is a separate, much bigger stall than the
+  // asset loading alone, and this is what lets it land here instead of
+  // mid-scroll once any Services3d instance (home or /services) mounts.
   // ---------------------------------------------------------------------
   useEffect(() => {
-    loadGLTF('/cube1.glb').catch(() => {});
+    warmUpServices3d('/cube1.glb');
 
     const unicornScriptSrc =
       'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.2.8/dist/unicornStudio.umd.js';

@@ -9,6 +9,7 @@ import "../../styles/services-3d.css";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import CtaButton from "../layout/cta";
 import { loadGLTF } from "@/app/lib/glbCache";
+import { getSharedRenderer } from "@/app/lib/services3dRenderer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -103,21 +104,19 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
     let renderer, controls, rafId;
     let cancelled = false;
 
-    // Some environments (sandboxed browsers, disabled GPU/hardware
-    // acceleration, certain VMs/remote desktops) can't create a WebGL
-    // context at all — THREE.WebGLRenderer's constructor throws in that
-    // case rather than failing silently. A cheap probe on a throwaway
-    // canvas isn't reliable proof either way (it can succeed even when
-    // the real renderer construction below still fails), so the actual
-    // construction itself is the real test, wrapped in try/catch. Only
-    // the 3D setup is skipped when it fails — the scroll-pin,
-    // text-cycling, and counters must keep working regardless of
-    // whether the cube can render.
-    try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    } catch {
-      renderer = null;
-    }
+    // Shared across every Services3d mount (home, /services, and
+    // back-and-forth navigation between them) instead of a fresh
+    // `new THREE.WebGLRenderer()` per mount — see services3dRenderer.js
+    // for why: reusing one renderer keeps its compiled shader program
+    // cache warm, so only the very first compile in a session ever pays
+    // the real GPU-driver cost (which PreLoader.tsx's warmUpServices3d()
+    // call already pays hidden, during the preloader). getSharedRenderer()
+    // itself wraps construction in try/catch — some environments (sandboxed
+    // browsers, disabled GPU acceleration, certain VMs) can't create a
+    // WebGL context at all, and returns null there. Only the 3D setup is
+    // skipped when it does — the scroll-pin, text-cycling, and counters
+    // must keep working regardless of whether the cube can render.
+    renderer = getSharedRenderer();
 
     if (renderer) {
       const scene = new THREE.Scene();
@@ -640,11 +639,15 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       if (descSplit) descSplit.revert();
 
       if (controls) controls.dispose();
-      if (renderer) {
-        renderer.dispose();
-        if (cubeMount.contains(renderer.domElement)) {
-          cubeMount.removeChild(renderer.domElement);
-        }
+      // renderer is the shared singleton from services3dRenderer.js, not
+      // owned by this mount — disposing it here would tear down its
+      // compiled shader program cache and WebGL context along with it,
+      // undoing the whole point of sharing it (the next mount, home <->
+      // /services or scrolling back up, would have to recompile from
+      // scratch again). Only detach this mount's canvas; the renderer and
+      // its warmed-up programs stay alive for whoever mounts next.
+      if (renderer && cubeMount.contains(renderer.domElement)) {
+        cubeMount.removeChild(renderer.domElement);
       }
       // Note: the DRACOLoader/GLTFLoader used to load this model are
       // owned by the shared cache module (glbCache.js), not this
