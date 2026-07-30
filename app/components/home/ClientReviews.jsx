@@ -65,7 +65,7 @@ function getPositions(viewportWidth) {
 const REVIEWS = [
   {
     id: 1,
-    img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=600&fit=crop&crop=face",
+    video: "https://res.cloudinary.com/drwzstxy2/video/upload/v1785398725/Zeds_sntnxk.mov",
     name: "Sanam Cars",
     tags: ["SPLINE", "THREE.JS", "3D"],
     ctaLabel: "Watch Testimonials",
@@ -73,7 +73,7 @@ const REVIEWS = [
   },
   {
     id: 2,
-    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=face",
+    video: "https://res.cloudinary.com/drwzstxy2/video/upload/v1785398721/Metro_ptqald.mov",
     name: "Nova Fitness",
     tags: ["BRANDING", "WEB"],
     ctaLabel: "Watch Testimonials",
@@ -81,15 +81,15 @@ const REVIEWS = [
   },
   {
     id: 3,
-    img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=600&fit=crop&crop=face",
-    name: "Lumen Studio",
+    video: "https://res.cloudinary.com/drwzstxy2/video/upload/v1785398729/SanamCars_b5fusl.mov",
+    name: "Sanam Cars",
     tags: ["MOTION", "GSAP", "3D"],
     ctaLabel: "Watch Testimonials",
     href: "#",
   },
   {
     id: 4,
-    img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=600&fit=crop&crop=face",
+    video: "https://res.cloudinary.com/drwzstxy2/video/upload/v1785398737/Wellington_ekjlbp.mov",
     name: "Orbit Foods",
     tags: ["UI/UX", "NEXT.JS"],
     ctaLabel: "Watch Testimonials",
@@ -97,7 +97,7 @@ const REVIEWS = [
   },
   {
     id: 5,
-    img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=600&fit=crop&crop=face",
+    video: "https://res.cloudinary.com/drwzstxy2/video/upload/v1785398744/AFY_mwo6mu.mov",
     name: "Halcyon Wear",
     tags: ["ECOMMERCE", "BRANDING", "3D"],
     ctaLabel: "Watch Testimonials",
@@ -433,7 +433,7 @@ function ClientReviewSection() {
                 />
               ) : (
                 <Image
-                  src={item.img}
+                  src={item.image}
                   alt="review"
                   draggable={false}
                   fill
@@ -447,7 +447,7 @@ function ClientReviewSection() {
           {/* Anchored to the center card slot, not any individual review
               card — swaps diagonal corners each time an arrow is
               clicked, independent of which review is showing. */}
-          <Image
+          {/* <Image
             src="/sticker1.avif"
             alt=""
             width={90}
@@ -470,7 +470,7 @@ function ClientReviewSection() {
                 ? "client-review-sticker--bottom-right"
                 : "client-review-sticker--bottom-left"
             }`}
-          />
+          /> */}
         </div>
 
         <div className="client-review-cta" key={`cta-${active.id}`}>
