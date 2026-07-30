@@ -61,6 +61,20 @@ body.preloader-active {
   cursor: auto;
 }
 
+/* Locks the real, scrollable page in place for as long as the preloader's
+   overlay is actually visible (see PreLoader.tsx, which only adds this
+   class when it isn't skipped via PRELOADER_SKIP_CLASS). The overlay
+   itself only ever blocked things visually — without this, the page
+   underneath stayed fully scrollable the whole intro, so scrolling during
+   it left you wherever you'd scrolled to (footer, even) the instant the
+   overlay faded, instead of at the hero. Paired with SmoothScroll.jsx
+   calling lenis.stop() for the same window, which stops Lenis's own
+   scroll handling independent of native overflow. */
+html.preloader-active {
+  overflow: hidden;
+  height: 100%;
+}
+
 /* View Transitions layering fix — pairs with pageTransition.js's
    slideInOut(), which drives the actual old/new keyframes via WAAPI.
    Disables the browser's default cross-fade so only our own animation

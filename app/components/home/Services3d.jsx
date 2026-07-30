@@ -86,6 +86,17 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
     let cleanupVisibilityObserver = null;
     let cleanupResizeTimeout = null;
 
+    // Compiling a material's shader program is a real, synchronous,
+    // driver-level cost — profiling this section showed the page
+    // completely frozen (no scroll, no paint) for several seconds the
+    // first time the render loop actually drew the cube, because
+    // renderer.render() only compiles a material's program lazily, on
+    // the same call that then immediately tries to draw with it. Gating
+    // real rendering behind this flag, and only flipping it once
+    // renderer.compileAsync() (below) confirms the cube's shaders are
+    // ready, moves that cost off the main render path.
+    let shadersReady = false;
+
     // ------------------------------------------------
     // Scene / Camera / Renderer (only when WebGL is available)
     // ------------------------------------------------
@@ -223,8 +234,12 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
         const center = box.getCenter(new THREE.Vector3());
         model.position.sub(center);
 
-        requestAnimationFrame(() => {
-          renderer.domElement.style.opacity = "1";
+        renderer.compileAsync(scene, camera).then(() => {
+          if (cancelled) return;
+          shadersReady = true;
+          requestAnimationFrame(() => {
+            renderer.domElement.style.opacity = "1";
+          });
         });
       });
 
@@ -277,7 +292,7 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
         if (controls) controls.update();
         if (mixer)
           mixer.setTime(Math.min(scrollProgress * CLIP_DURATION, MAX_TIME));
-        renderer.render(scene, camera);
+        if (shadersReady) renderer.render(scene, camera);
       };
 
       // Only actually running the loop while the section is visible —

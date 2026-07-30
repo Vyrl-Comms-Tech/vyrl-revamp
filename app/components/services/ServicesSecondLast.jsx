@@ -72,6 +72,7 @@ const ServicesSecondLast = () => {
       <video
         ref={videoRef}
         src="/secondlast_compressed.mp4"
+        poster="/secondlast_compressed.jpg"
         loop
         muted
         playsInline

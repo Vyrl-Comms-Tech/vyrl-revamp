@@ -17,6 +17,17 @@ function SmoothScroll() {
       wheelMultiplier: 1,
     });
 
+    // PreLoader.tsx adds this class to <html> for as long as its overlay
+    // is actually visible (see globals.css's matching html.preloader-active
+    // overflow:hidden). That CSS blocks native/scrollbar scrolling, but
+    // Lenis drives scroll itself independent of overflow — without also
+    // stopping Lenis here, wheel/touch input during the intro still moved
+    // the page, so whatever the user scrolled to during the ~4s preloader
+    // showed the instant it faded, instead of the hero at the top.
+    if (document.documentElement.classList.contains("preloader-active")) {
+      lenis.stop();
+    }
+
     lenis.on("scroll", ScrollTrigger.update);
 
     // Exposed so other components (e.g. Services3d.jsx's "skip section"
@@ -41,8 +52,24 @@ function SmoothScroll() {
     ScrollTrigger.addEventListener("refresh", handleRefresh);
     ScrollTrigger.refresh();
 
+    // Every section mounts and measures itself (ScrollTrigger pins,
+    // viewport-unit-sized elements like the navbar) while the Preloader's
+    // fixed, full-viewport overlay is still up and fonts/images are still
+    // settling underneath it. The only other refresh trigger is the
+    // pathname effect below, which never fires on first load — so without
+    // this, those stale measurements stuck around until the user's first
+    // scroll forced a reflow, which read as a broken/frozen layout
+    // (e.g. a shrunk navbar) that only "fixed itself" once you scrolled.
+    const handlePreloaderFinish = () => {
+      lenis.start();
+      lenis.scrollTo(0, { immediate: true });
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+    };
+    window.addEventListener("preloader:finish", handlePreloaderFinish);
+
     return () => {
       ScrollTrigger.removeEventListener("refresh", handleRefresh);
+      window.removeEventListener("preloader:finish", handlePreloaderFinish);
       gsap.ticker.remove(update);
       lenis.destroy();
       if (window.lenis === lenis) window.lenis = null;

@@ -412,6 +412,7 @@ const CARDS = [
     title: "Strategy",
     dark: true,
     video: "/video02_compressed.mp4",
+    poster: "/video02_compressed.avif",
     desc: "Direction that connects brand, audience, and business goals.",
   },
   {
@@ -426,6 +427,7 @@ const CARDS = [
     title: "Performance",
     dark: true,
     video: "/video01_compressed.mp4",
+    poster: "/video01_compressed.avif",
     desc: "Content, campaigns, and media systems designed to drive measurable growth.",
   },
 ];
@@ -604,6 +606,7 @@ export default function TextAndCards() {
                   <video
                     className="hs-card-media-el"
                     data-src={card.video}
+                    poster={card.poster}
                     muted
                     loop
                     playsInline

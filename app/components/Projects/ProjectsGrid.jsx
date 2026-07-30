@@ -28,6 +28,7 @@ const PROJECT_ROWS = [
       category: "real-estate",
       type: "video",
       src: "/banda -v_compressed.mp4",
+      poster: "/banda -v_compressed.avif",
       href: "/banda",
       tags: ["Property Developer", "Luxury Homes"],
     },
@@ -69,6 +70,7 @@ const PROJECT_ROWS = [
       category: "automotive",
       type: "video",
       src: "/sanam-v_compressed.mp4",
+      poster: "/sanam-v_compressed.avif",
       href: "/sanamcars",
       tags: ["Car Dealership", "Premium Vehicles"],
     },
@@ -285,7 +287,7 @@ export default function ProjectsGrid() {
 function ProjectMedia({ project }) {
   if (project.type === "video") {
     return (
-      <video muted loop playsInline preload="metadata">
+      <video muted loop playsInline preload="metadata" poster={project.poster}>
         <source src={project.src} />
       </video>
     );

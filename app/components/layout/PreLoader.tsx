@@ -5,6 +5,11 @@ import gsap from "gsap";
 import styles from "./Preloader.module.css";
 import { loadGLTF } from "@/app/lib/glbCache";
 
+// Read by PreloaderGate.tsx's beforeInteractive skip-script (stamped on
+// <html> before hydration/paint) — kept here so both files can import it
+// without an import cycle between PreLoader.tsx and PreloaderGate.tsx.
+export const PRELOADER_SKIP_CLASS = "preloader-skip";
+
 export interface PreloaderLetter {
   src: string;
   alt?: string;
@@ -124,13 +129,33 @@ export default function Preloader({
   // long as the preloader is actually interactive (i.e. until isInert
   // flips true, meaning the reveal has finished and the custom cursor
   // underneath takes back over) fixes that.
+  // Also drives the scroll lock (html.preloader-active in globals.css,
+  // plus SmoothScroll.jsx stopping Lenis). The preloader's overlay only
+  // ever blocked things visually — the real page underneath stayed fully
+  // scrollable the whole ~4s intro, so a user who scrolled during that
+  // window ended up wherever they'd scrolled to (footer, even) the
+  // instant the overlay faded, instead of at the hero. This component
+  // still mounts and runs its full timeline even when the beforeInteractive
+  // script has already hidden it via PRELOADER_SKIP_CLASS (see
+  // PreloaderGate.tsx) on repeat page loads within the same session — so
+  // without this check, every one of those invisible replays would also
+  // lock scrolling for ~4s on an otherwise-ready page.
   useEffect(() => {
-    if (isInert) {
+    const skipped = document.documentElement.classList.contains(
+      PRELOADER_SKIP_CLASS,
+    );
+
+    if (isInert || skipped) {
+      document.documentElement.classList.remove("preloader-active");
       document.body.classList.remove("preloader-active");
       return;
     }
+
+    window.scrollTo(0, 0);
+    document.documentElement.classList.add("preloader-active");
     document.body.classList.add("preloader-active");
     return () => {
+      document.documentElement.classList.remove("preloader-active");
       document.body.classList.remove("preloader-active");
     };
   }, [isInert]);

@@ -293,6 +293,7 @@ const CARDS = [
     tag: "Purpose",
     title: "Impact Comes First",
     video: "/video02_compressed.mp4",
+    poster: "/video02_compressed.avif",
     description:
       "We care about what the work does, not just how it looks. Every idea, interface, campaign, and system is built with a clear reason behind it — to help your brand earn attention, build trust, and move people toward action",
   },
@@ -301,6 +302,7 @@ const CARDS = [
     tag: "Tailored",
     title: "Built Around The Client",
     video: "/stack1_compressed.mp4",
+    poster: "/stack1_compressed.avif",
     description:
       "No two brands need the same path. We take time to understand your business, audience, challenges, and goals before shaping the strategy — so the final output feels aligned, useful, and made for your next stage of growth.",
   },
@@ -308,7 +310,8 @@ const CARDS = [
     id: "video-3",
     tag: "Evolution",
     title: "Always Getting Sharper",
-    video: "/stack2_compressed.mp4", 
+    video: "/stack2_compressed.mp4",
+    poster: "/stack2_compressed.avif",
     description:
       "The digital world changes fast, and we believe our thinking should move faster. We keep refining our process, testing new tools, studying what works, and improving how we create so every client gets the benefit of what we learn next.",
   },
@@ -660,7 +663,7 @@ export default function AboutUsStack() {
               <h1>{card.title}</h1>
             </div>
 
-            <video muted loop autoPlay playsInline preload="metadata">
+            <video muted loop autoPlay playsInline preload="metadata" poster={card.poster}>
               <source src={card.video} type="video/mp4" />
             </video>
 

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Preloader from "./PreLoader";
+import Preloader, { PRELOADER_SKIP_CLASS } from "./PreLoader";
 
+export { PRELOADER_SKIP_CLASS };
 export const PRELOADER_SESSION_KEY = "vyrl-preloader-shown";
-export const PRELOADER_SKIP_CLASS = "preloader-skip";
 
 // Always renders the Preloader — whether it should actually play or be
 // skipped this session is decided by a blocking inline script in
@@ -31,6 +31,16 @@ export default function PreloaderGate() {
       onFinish={() => {
         sessionStorage.setItem(PRELOADER_SESSION_KEY, "1");
         setIsDone(true);
+
+        // Every section mounted underneath while the preloader covered the
+        // screen, so their ScrollTrigger/Lenis measurements were taken
+        // against a DOM that was still settling (images/fonts loading,
+        // layout shifting under the fixed overlay). SmoothScroll only ever
+        // re-measures on pathname change, so on first load nothing corrects
+        // those stale values until the user's first scroll forces a reflow
+        // — which is what showed up as a tiny/broken navbar and a frozen
+        // page until scrolling into the second section.
+        window.dispatchEvent(new Event("preloader:finish"));
       }}
     />
   );

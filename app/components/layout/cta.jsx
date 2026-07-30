@@ -7,6 +7,7 @@ import "../../styles/cta.css";
 const CtaButton = ({
   label = "SERVICES",
   videoSrc = "/bg-v-compressed.mp4",
+  posterSrc = "/bg-v-compressed.avif",
   href = "#",
   className = "",
   id,
@@ -100,7 +101,7 @@ const CtaButton = ({
       >
         <div className="cta-btn-vid">
           {shouldLoad && (
-            <video muted loop autoPlay playsInline preload="none">
+            <video muted loop autoPlay playsInline preload="none" poster={posterSrc}>
               <source src={videoSrc} />
             </video>
           )}
