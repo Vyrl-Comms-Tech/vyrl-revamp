@@ -30,25 +30,32 @@ export function getSharedRenderer() {
   return sharedRenderer;
 }
 
-let warmedUp = false;
+let warmUpPromise = null;
 
-// Called once, during the preloader's own ~4-5s idle window (see
-// PreLoader.tsx) while the user is already looking at a loading screen —
-// building the exact same lights + model Services3d itself uses and
-// compiling them here means that one unavoidable first-ever compile lands
+// Called once — from PreLoader.tsx during its ~4-5s idle window, and again
+// (idempotently, see below) from Services3d.jsx itself as a fallback —
+// building the exact same lights + model Services3d uses and rendering
+// them once here means the one unavoidable first-ever compile lands
 // hidden, before the user can scroll anywhere, instead of mid-scroll later.
-// This must mirror Services3d.jsx's own lights setup exactly: Three.js's
-// program cache key includes the lighting configuration, so any mismatch
-// (a missing light, a different type/intensity) produces a different cache
-// key and the real mount would still recompile from scratch.
+//
+// Returns the *same* promise to every caller (module-scope cache), which
+// matters for correctness, not just efficiency: Services3d.jsx awaits this
+// exact promise before doing its own first real render (see there for why
+// racing two independent compiles was unreliable). Must mirror
+// Services3d.jsx's own lights setup exactly — Three.js's program cache key
+// includes the lighting configuration, so any mismatch (a missing light, a
+// different type/intensity) produces a different cache key and Services3d
+// would still recompile from scratch on its own first frame.
 export function warmUpServices3d(modelUrl = "/cube1.glb") {
-  if (warmedUp) return;
-  warmedUp = true;
+  if (warmUpPromise) return warmUpPromise;
 
   const renderer = getSharedRenderer();
-  if (!renderer) return;
+  if (!renderer) {
+    warmUpPromise = Promise.resolve();
+    return warmUpPromise;
+  }
 
-  loadGLTF(modelUrl)
+  warmUpPromise = loadGLTF(modelUrl)
     .then((gltf) => {
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
@@ -83,14 +90,14 @@ export function warmUpServices3d(modelUrl = "/cube1.glb") {
       // Deliberately not calling renderer.setSize() here — this is the
       // SAME shared renderer/canvas any Services3d instance later reuses,
       // and setSize is renderer-wide state, not scene-specific. Since this
-      // warm-up runs concurrently with the preloader while a real
-      // Services3d mount can already be setting its own real size (e.g. on
-      // /services, which isn't lazy and mounts immediately), whichever
-      // setSize call happened to run last would win — and this warm-up
-      // finishing after Services3d's own setup silently shrank the shared
-      // canvas to whatever tiny size it used, breaking the real cube.
-      // Rendering at the renderer's existing (default) size compiles the
-      // exact same program regardless of target resolution.
+      // warm-up can run concurrently with a Services3d instance that's
+      // already setting its own real size (e.g. on /services, which isn't
+      // lazy and mounts immediately), whichever setSize call happened to
+      // run last would win — this warm-up finishing after Services3d's own
+      // setup previously shrank the shared canvas to whatever tiny size it
+      // used here, breaking the real cube. Rendering at the renderer's
+      // existing (default) size compiles the exact same program regardless
+      // of target resolution.
       return renderer.compileAsync(scene, camera).then(() => {
         // compileAsync() only truly avoids a stall when the
         // KHR_parallel_shader_compile extension is available — without it
@@ -103,15 +110,10 @@ export function warmUpServices3d(modelUrl = "/cube1.glb") {
         // that program. Calling render() here — once, hidden, never
         // attached to the visible DOM — is what forces that real cost to
         // happen now instead of during Services3d's own first real frame.
-        // Because this reuses the shared renderer singleton (see
-        // getSharedRenderer above) and the model's materials are the same
-        // shared objects every Services3d instance renders (Object3D.clone
-        // copies the material by reference, not a deep copy), Three's own
-        // program cache — keyed by that material/lighting configuration —
-        // already holds a fully linked-and-used program by the time any
-        // real Services3d mounts, on either page.
         renderer.render(scene, camera);
       });
     })
     .catch(() => {});
+
+  return warmUpPromise;
 }

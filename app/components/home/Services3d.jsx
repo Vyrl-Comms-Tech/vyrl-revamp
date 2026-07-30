@@ -9,7 +9,10 @@ import "../../styles/services-3d.css";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import CtaButton from "../layout/cta";
 import { loadGLTF } from "@/app/lib/glbCache";
-import { getSharedRenderer } from "@/app/lib/services3dRenderer";
+import {
+  getSharedRenderer,
+  warmUpServices3d,
+} from "@/app/lib/services3dRenderer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -233,7 +236,21 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
         const center = box.getCenter(new THREE.Vector3());
         model.position.sub(center);
 
-        renderer.compileAsync(scene, camera).then(() => {
+        // Waits on the *shared* warm-up promise (see services3dRenderer.js)
+        // rather than calling this scene's own renderer.compileAsync() —
+        // on /services, which isn't lazy and mounts immediately, this
+        // effect's useLayoutEffect runs before PreLoader.tsx's warm-up
+        // useEffect even fires (React runs every layout effect in the tree
+        // before any passive effect), so racing two independent compiles
+        // here was unreliable: whichever one happened to reach the
+        // renderer's first real render() call first paid the multi-second
+        // stall visibly, and it wasn't always the hidden warm-up one.
+        // warmUpServices3d() is idempotent (module-scope cached promise),
+        // so calling it again here just returns the same in-flight/settled
+        // promise PreLoader.tsx already kicked off — guaranteeing the
+        // shared renderer's program cache is warm before this scene's own
+        // first render() call, no matter which mounts first.
+        warmUpServices3d(modelUrl).then(() => {
           if (cancelled) return;
           shadersReady = true;
           requestAnimationFrame(() => {
