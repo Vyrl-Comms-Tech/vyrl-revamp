@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { caseStudies } from "../caseStudy/caseStudiesData";
 import UnicornEmbed from "./UnicornEmbed";
 import PageTransitionLink from "./PageTransitionLink";
+import { isKnownRoute } from "./knownRoutes";
 import "../../styles/footer.css";
 import Link from "next/link";
 // import PageTransitionLink from "./PageTransitionLink";
@@ -13,7 +14,7 @@ const NO_FOOTER_PATHS = [...CASE_STUDY_PATHS, "/contact-us"];
 
 function Footer() {
   const pathname = usePathname();
-  const hideFooter = NO_FOOTER_PATHS.includes(pathname);
+  const hideFooter = NO_FOOTER_PATHS.includes(pathname) || !isKnownRoute(pathname);
   const mascotVideoRef = useRef<HTMLVideoElement>(null);
 
   const [time, setTime] = useState({
@@ -298,7 +299,7 @@ function Footer() {
           </div>
 
           <div className="footer-next">
-            <h3 className="footer-next-title">Next Page</h3>
+            <h3 className="footer-next-title">Show Reel</h3>
             <div className="footer-next-bar">
               <div className="footer-next-line" />
               <svg

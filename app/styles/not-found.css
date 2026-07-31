@@ -1,0 +1,132 @@
+.notfound {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 8rem 3% 6rem;
+  box-sizing: border-box;
+}
+
+/* Cursor-following glow — quickTo (not-found.jsx) writes --x/--y as the
+   pointer moves; a plain radial-gradient positioned off those custom
+   properties is far cheaper than a WebGL shader for this kind of subtle
+   ambient light, and matches the restrained, no-render-loop approach
+   already used for the preloader's own CSS-only reveal. */
+.notfound-glow {
+  position: absolute;
+  inset: 0;
+  --x: 50%;
+  --y: 40%;
+  background: radial-gradient(
+    600px circle at var(--x) var(--y),
+    rgba(255, 255, 255, 0.08),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.notfound-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(
+    ellipse at center,
+    #000 0%,
+    transparent 75%
+  );
+  pointer-events: none;
+}
+
+.notfound-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+  max-width: 640px;
+}
+
+.notfound-eyebrow {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.notfound-digits {
+  display: flex;
+  line-height: 0.85;
+  color: #fff;
+  font-size: clamp(6rem, 18vw, 13rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  will-change: transform;
+}
+
+.notfound-digit {
+  display: inline-block;
+  will-change: transform;
+}
+
+.notfound-heading {
+  color: #fff;
+  font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.15;
+  margin: 0.5rem 0 0;
+}
+
+.notfound-desc {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.05rem;
+  line-height: 1.4;
+  max-width: 460px;
+}
+
+.notfound-cta {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.notfound-cta-secondary {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff !important;
+}
+
+.notfound-cta-secondary:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.notfound-cta-secondary .cta-arrow-box svg path {
+  fill: #fff;
+}
+
+@media (max-width: 640px) {
+  .notfound {
+    padding: 6rem 5% 4rem;
+  }
+
+  .notfound-desc {
+    font-size: 0.95rem;
+  }
+
+  .notfound-cta {
+    flex-direction: column;
+    width: 100%;
+  }
+}

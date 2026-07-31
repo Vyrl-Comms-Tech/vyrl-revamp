@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Link, useTransitionRouter } from "next-view-transitions";
 import gsap from "gsap";
 import { slideInOut, isCaseStudyPath } from "./pageTransition";
+import { isKnownRoute } from "./knownRoutes";
 import "../../styles/navbar.css";
 import PageTransitionLink from "./PageTransitionLink";
 
@@ -485,6 +486,11 @@ const Navbar = () => {
       if (idleAnimRef.current) idleAnimRef.current.kill();
     };
   }, []);
+
+  // Every hook above still runs regardless (React's rules-of-hooks
+  // forbid an early return before them) — this only gates the actual
+  // markup, so the 404 page renders with no navbar at all.
+  if (!isKnownRoute(pathname)) return null;
 
   return (
     <>
