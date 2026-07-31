@@ -109,17 +109,11 @@ const BlogCards = ({ active }) => {
   useEffect(() => {
     const lenis = new Lenis();
     lenis.on("scroll", ScrollTrigger.update);
-    // Passing an anonymous function to ticker.add() with no reference
-    // kept meant gsap.ticker.remove() could never actually target it —
-    // the cleanup below only ever called lenis.destroy(), so this
-    // callback (and its lenis.raf() call) kept running on gsap's global
-    // ticker forever after unmount, once per every time this component
-    // had ever mounted.
-    const update = (time) => lenis.raf(time * 1000);
-    gsap.ticker.add(update);
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
     gsap.ticker.lagSmoothing(0);
     return () => {
-      gsap.ticker.remove(update);
       lenis.destroy();
     };
   }, []);

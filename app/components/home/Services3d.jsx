@@ -301,18 +301,6 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
 
       const animate = () => {
         rafId = requestAnimationFrame(animate);
-        // isVisible (kept in sync by the IntersectionObserver below) was
-        // only ever gating the render() call — the rotation/controls/
-        // mixer work above it still ran every single frame regardless,
-        // including on the very first frame(s) before that observer's
-        // first callback has even landed. Since Services3d sits right
-        // after the fold, LazySection mounts it at page load rather than
-        // deferring it, so this loop was doing full per-frame work
-        // (OrbitControls damping, AnimationMixer re-seek, and — worse —
-        // a full Three.js render call) from the instant the page loaded,
-        // which is exactly the kind of runaway per-frame cost Lighthouse
-        // flagged as CPU time with barely any script-eval time to match.
-        if (!isVisible) return;
         // Moderate idle drift on both axes — visible motion, but
         // about a third of the original speed so it doesn't tumble.
         pivot.rotation.y += 0.004;
