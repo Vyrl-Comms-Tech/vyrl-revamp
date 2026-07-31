@@ -108,9 +108,8 @@ const NotFound = () => {
 
         <TextAnimation animateOnScroll={false} delay={0.85}>
           <p className="notfound-desc">
-            The page you&apos;re looking for doesn&apos;t exist, was
-            renamed, or never made it to launch. Let&apos;s get you back
-            to somewhere real.
+            The page you&apos;re looking for doesn&apos;t exist, was renamed, or
+            never made it to launch. Let&apos;s get you back to somewhere real.
           </p>
         </TextAnimation>
 
