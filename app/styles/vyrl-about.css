@@ -327,6 +327,7 @@
   .vyrl-service-about-text1,
   .vyrl-service-about-text2 {
     position: static;
+    line-height: 111%;
     padding-block: 0;
     font-size: 32px;
     text-align: center;
@@ -372,7 +373,8 @@
   .vyrl-section-card1 h1,
   .vyrl-section-card2 h1,
   .vyrl-section-card3 h1 {
-    font-size: 36px !important;
+    font-size: 30px !important;
+    line-height: 111%;
   }
 
   .vyrl-section-card1 p,

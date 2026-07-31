@@ -217,8 +217,16 @@
   .hs-cards-grid {
     flex-direction: column;
     align-items: stretch;
-  } 
+  }
   .hs-card {
+    /* .hs-card's base rule sets flex: 1 1 0 for the desktop row layout.
+       In a column flex container that flex-basis:0 controls the MAIN
+       axis (height here), so it kept overriding height:300px below and
+       shrinking every card down to whatever sliver of space the
+       flex-grow/shrink algorithm distributed — that's what collapsed
+       them to ~48px instead of the intended 300px. flex: none lets the
+       explicit height actually govern sizing again. */
+    flex: none;
     width: 100%;
     height: 300px;
     transform: none !important;

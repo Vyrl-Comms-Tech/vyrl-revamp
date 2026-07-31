@@ -189,7 +189,8 @@
 @media (max-width: 760px) {
   .banner .slider {
     width: 100px;
-    height: 150px;
+    height: 130px;
+    margin-top: 2.4rem;
     scale: 0.95;
   }
 

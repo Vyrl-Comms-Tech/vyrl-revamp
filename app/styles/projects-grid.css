@@ -178,9 +178,9 @@
 }
 
 .contentProject h1 {
+  font-size: 3rem;
   color: #fff;
   transform: translateY(80%);
-  font-size: 3rem;
   font-weight: 400;
   letter-spacing: 2px;
   transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -215,13 +215,21 @@
     flex-direction: column;
   }
   .heroProject {
-    height: 58vh;
+    height: 72vh;
   }
   .filterCtas h1 {
     font-size: 1.3rem;
   }
+  .tagP {
+    padding: 0.2rem 0.4rem;
+  }
   .pc-para {
     font-size: 0.9rem;
+  }
+
+  .contentProject h1 {
+    font-size: 2rem;
+    line-height: 111%;
   }
 }
 
@@ -230,9 +238,9 @@
     width: auto;
   }
 
-.pc-mini-head {
-  font-size: 1.1rem;
-}
+  .pc-mini-head {
+    font-size: 1.1rem;
+  }
   .ctaF {
     padding: 0.2rem 1rem;
   }

@@ -35,3 +35,21 @@
 .homehero-tag svg {
     flex-shrink: 0;
 }
+@media (max-width:766px){
+    /* Figma reference: tag + heading stack at the TOP-left on mobile,
+       instead of the desktop layout (heading bottom-left, tag bottom-
+       center) — bottom must be explicitly cleared here or it keeps
+       fighting top, since an absolutely-positioned element with both
+       set just stretches between them instead of moving to top. */
+    .homehero-heading{
+        top: 9%;
+        bottom: auto;
+        font-size: 1.4rem;
+    }
+    .homehero-tag{
+        top: 5%;
+        bottom: auto;
+        left: 3%;
+        transform: none;
+    }
+}
