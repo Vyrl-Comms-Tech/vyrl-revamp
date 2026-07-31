@@ -37,7 +37,7 @@
   /* Must outrank .aboutHero-imageWrap (z-index: 7) — that's the
      Flip-animated growing video/image, and while it scales up on
      scroll it can visually pass under this bottom text row otherwise. */
-  z-index: 18 I !important;
+  /* z-index: 18 I !important; */
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -189,5 +189,27 @@
      silently overrides that inline animation and freezes the scale. */
   .aboutHero-imageWrap {
     border-radius: 12px;
+  }
+
+  /* .aboutImg's -100px margin-top (about-img.css) shifts the embed's
+     visible content up within this same box — the desktop fade band
+     (82%-100%) sits too low to still cover it afterward, which is why
+     the bottom edge looked like a hard cut instead of blending into
+     the page background here. Starting the fade earlier (65%) and
+     softening it (lower opacity midpoint) covers the shifted content
+     with a gentler blend, closer to a blur than a sharp line. */
+  .aboutHero-embed {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 65%,
+      rgba(0, 0, 0, 0.4) 85%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      #000 65%,
+      rgba(0, 0, 0, 0.4) 85%,
+      transparent 100%
+    );
   }
 }

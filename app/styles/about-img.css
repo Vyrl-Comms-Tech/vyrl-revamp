@@ -10,3 +10,18 @@
   align-items: center;
   justify-content: center;
 }
+@media (max-width:760px){
+  .aboutImg{
+    /* margin-top alone shifted the whole box up, so its BOTTOM edge
+       also moved up by the same 100px — leaving a 100px gap of nothing
+       (just .aboutHero-embed's plain background) between where the
+       video now ends and the section's real bottom edge, which is
+       what showed as a hard white cut instead of a blended fade: the
+       mask on .aboutHero-embed never got a chance to fade the video
+       itself, because the video had already stopped 100px early.
+       Growing height by the same amount the top shifted keeps the
+       bottom edge anchored at the container's true bottom. */
+    margin-top: -100px;
+    height: calc(100% + 100px);
+  }
+}
