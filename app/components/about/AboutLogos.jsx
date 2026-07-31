@@ -8,9 +8,14 @@ import CtaButton from "../layout/cta";
 
 const blankPositions = [3, 0, 3];
 
+// Real client logos in /public — filenames aren't sequential (lo10/lo11
+// don't exist, lo12 does), so this is an explicit list rather than a
+// numeric range.
+const LOGOS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 12].map((n) => `/lo${n}.avif`);
+
 // Base marquee logo set — duplicated once below so the CSS animation
 // (translateX(-50%)) loops seamlessly with no visible seam/jump.
-const marqueeLogos = [1, 2, 3, 4];
+const marqueeLogos = LOGOS;
 
 const handleLogoMouseMove = (e) => {
   const box = e.currentTarget;
@@ -44,30 +49,39 @@ const AboutLogos = () => {
         </div>
       </div>
       <div className="logos-right">
-        {blankPositions.map((blankIndex, rowIdx) => (
-          <div className="logos-row" key={rowIdx}>
-            {Array.from({ length: 4 }).map((_, colIdx) =>
-              colIdx === blankIndex ? (
-                <div className="logo-box logo-blank" key={colIdx} />
-              ) : (
-                <div
-                  className="logo-box logo-cursor-tracking"
-                  key={colIdx}
-                  onMouseMove={handleLogoMouseMove}
-                >
-                  {/* logo */}
-                  <Image
-                    src="/img16.avif"
-                    alt=""
-                    fill
-                    sizes="(max-width: 1780px) 141px, 196px"
-                    style={{ objectFit: "contain" }}
-                  />
-                </div>
-              ),
-            )}
-          </div>
-        ))}
+        {(() => {
+          // Only non-blank slots consume a logo, so the counter advances
+          // once per real logo box rather than once per grid cell — 9
+          // slots total across the 3 rows (blankPositions), pulled from
+          // the 10 available in LOGOS.
+          let logoIndex = 0;
+          return blankPositions.map((blankIndex, rowIdx) => (
+            <div className="logos-row" key={rowIdx}>
+              {Array.from({ length: 4 }).map((_, colIdx) => {
+                if (colIdx === blankIndex) {
+                  return <div className="logo-box logo-blank" key={colIdx} />;
+                }
+                const src = LOGOS[logoIndex % LOGOS.length];
+                logoIndex += 1;
+                return (
+                  <div
+                    className="logo-box logo-cursor-tracking"
+                    key={colIdx}
+                    onMouseMove={handleLogoMouseMove}
+                  >
+                    <Image
+                      src={src}
+                      alt=""
+                      fill
+                      sizes="(max-width: 1780px) 141px, 196px"
+                      style={{ objectFit: "contain" }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          ));
+        })()}
       </div>
 
       {/* Mobile-only: simplified logo strip that marquees, replacing the
@@ -77,7 +91,13 @@ const AboutLogos = () => {
         <div className="logos-marquee-track">
           {[...marqueeLogos, ...marqueeLogos].map((logo, i) => (
             <div className="logos-marquee-item" key={i}>
-              logo
+              <Image
+                src={logo}
+                alt=""
+                fill
+                sizes="120px"
+                style={{ objectFit: "contain" }}
+              />
             </div>
           ))}
         </div>

@@ -215,13 +215,11 @@
     top: 23% !important;
   }
   .vyrl-service-about-text1 {
-    left: 73px; /* starting position — left side */
+    left: 73px;
   }
 
   .vyrl-service-about-text2 {
-    right: 73px; /* starting position — right side */
-    /* width: 5  0%; */
-    /* line-height: 105%; */
+    right: 73px;
   }
 }
 
@@ -232,7 +230,7 @@
   .vyrl-section-card1 h1,
   .vyrl-section-card2 h1,
   .vyrl-section-card3 h1 {
-    font-size: 34px  !important;
+    font-size: 34px !important;
   }
   .vyrl-section-card1 p,
   .vyrl-section-card2 p,
@@ -265,10 +263,28 @@
   .vyrl-service-about-text2 {
     right: 55px;
   }
+  .vyrl-service-about-text1 {
+    left: 77px;
+  }
+
+  .vyrl-service-about-text2 {
+    right: 77px;
+  }
 }
 @media (max-width: 1300px) {
   .vyrl-section-about-image {
     top: 14%;
+  }
+  .vyrl-service-about-text1,
+  .vyrl-service-about-text2 {
+    font-size: 1.9rem;
+  }
+  .vyrl-service-about-text1 {
+    left: 73px;
+  }
+
+  .vyrl-service-about-text2 {
+    right: 73px;
   }
   .vyrl-section-card2 {
     height: 315px;

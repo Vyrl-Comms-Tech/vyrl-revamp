@@ -33,7 +33,22 @@ const PageTransitionLink = forwardRef<HTMLAnchorElement, PageTransitionLinkProps
       // the next case study right after leaving one.
       if (isCaseStudyPath(hrefStr)) return;
 
+      // pathname (from usePathname()) never includes the query string,
+      // so e.g. "/projects?category=restaurant" === "/projects" is
+      // always false even when already on that exact page — the navbar's
+      // category cards (?category=real-estate etc.) kept firing the full
+      // slideInOut view-transition on every click, animating a "new"
+      // page in over the one already showing, with nothing actually
+      // changing underneath since it's the same route. Comparing just
+      // the path portion (stripping the query) catches that case and
+      // does a plain query-only navigation with no transition instead.
       e.preventDefault();
+      const hrefPath = hrefStr.split("?")[0].split("#")[0];
+      if (hrefPath === pathname) {
+        router.push(hrefStr);
+        return;
+      }
+
       router.push(hrefStr, { onTransitionReady: slideInOut });
     };
 

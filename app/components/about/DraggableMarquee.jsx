@@ -34,9 +34,9 @@ const TEAM = [
     name: "Daniyal",
     designation: "Project Manager",
     image:
-      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785397361/WhatsApp_Image_2026-07-30_at_12.23.46_PM_kzqktx.jpg",
+      "/t1.png",
   },
- 
+
   {
     name: "Haris",
     designation: "Senior Full Stack Developer",
@@ -67,11 +67,12 @@ const TEAM = [
     designation: "Senior Graphic Designer",
     image:
       "https://res.cloudinary.com/drwzstxy2/image/upload/v1785397361/WhatsApp_Image_2026-07-30_at_12.20.17_PM_mzq8rn.jpg",
-  }, {
-    name: "Maaz Ather",
+  },
+  {
+    name: "Maaz",
     designation: "Jr. Frontend Developer",
     image:
-      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team9_spslj2.jpg",
+      "/t2.png",
   },
   {
     name: "Mohsin",
@@ -80,15 +81,7 @@ const TEAM = [
       "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team8_zkkjqj.jpg",
   },
 ];
-// Daniyal
-//
-//
-// Adeel
-//
-//
-//
-// Arsalan
-//
+
 // GSAP's official horizontalLoop helper (https://gsap.com/docs/v3/HelperFunctions/helpers/seamlessLoop/)
 // — makes a group of elements animate along the x-axis in a seamless,
 // responsive, draggable loop. Unmodified apart from being wrapped as a
@@ -402,8 +395,22 @@ export default function DraggableMarquee() {
             img.addEventListener("error", resolve, { once: true });
           });
 
+    // Same problem as the images above, but for the name/designation
+    // text: document.fonts.ready only resolves once whatever custom
+    // font this text uses has actually finished loading. Measuring
+    // before that swap happens (fallback font in the meantime, per
+    // font-display: swap) bakes in whatever width/height the FALLBACK
+    // font produced — once the real font swaps in and reflows that
+    // text, some cards' info block ends up sized/positioned differently
+    // than what the loop recorded, which is what read as a specific
+    // card's name/designation sitting outside its own card.
+    const fontsReady =
+      typeof document !== "undefined" && document.fonts?.ready
+        ? document.fonts.ready
+        : Promise.resolve();
+
     let loop;
-    Promise.all(images.map(whenLoaded)).then(() => {
+    Promise.all([...images.map(whenLoaded), fontsReady]).then(() => {
       if (cancelled) return;
       const cards = gsap.utils.toArray(".draggable-marquee-item", track);
       loop = horizontalLoop(cards, {

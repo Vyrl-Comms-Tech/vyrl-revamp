@@ -85,13 +85,35 @@ export default function ProjectsGrid() {
   const cardRefs = useRef(new Map()); // id -> card DOM node
   const followerRefs = useRef(new Map()); // id -> follower DOM node
   const quickToRefs = useRef(new Map()); // id -> { xTo, yTo }
+  const categoryParam = searchParams.get("category");
+  const categoryFromUrl =
+    categoryParam && FILTER_VALUES.includes(categoryParam)
+      ? categoryParam
+      : "all";
+
   // Lets links elsewhere on the site (e.g. the navbar's category cards)
   // deep-link straight into a pre-selected filter via ?category=restaurant
-  // etc., instead of always landing on "ALL".
-  const [activeFilter, setActiveFilter] = useState(() => {
-    const category = searchParams.get("category");
-    return category && FILTER_VALUES.includes(category) ? category : "all";
-  });
+  // etc. — but the in-page filter buttons below can also change this
+  // independently of the URL, so it can't be purely derived from
+  // searchParams on every render either.
+  //
+  // Clicking a navbar category card while ALREADY on /projects doesn't
+  // remount this component (same route, just a different query string),
+  // so a useState initializer alone only ever picks up categoryFromUrl
+  // once, on first mount — later clicks played a pointless
+  // view-transition with nothing visibly changing underneath, which read
+  // as a glitch. Comparing against the last-seen URL value during
+  // render (React's documented pattern for "reset state when a prop
+  // changes" without needing a key remount) re-syncs activeFilter
+  // exactly when the URL itself changes, while still leaving room for
+  // the filter buttons to set it independently in between.
+  const [activeFilter, setActiveFilter] = useState(categoryFromUrl);
+  const [lastCategoryFromUrl, setLastCategoryFromUrl] =
+    useState(categoryFromUrl);
+  if (categoryFromUrl !== lastCategoryFromUrl) {
+    setLastCategoryFromUrl(categoryFromUrl);
+    setActiveFilter(categoryFromUrl);
+  }
 
   const setCardRef = (id) => (node) => {
     if (node) cardRefs.current.set(id, node);
@@ -118,7 +140,7 @@ export default function ProjectsGrid() {
           });
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     cardRefs.current.forEach((card, id) => {
@@ -233,13 +255,12 @@ export default function ProjectsGrid() {
           </div>
         </div>
         <div className="centerHeadingProject">
-          <span className="pc-mini-head">Case Studies</span><h1 className="pc-bigger-head">
-            And Digital Insights
-            </h1>
-            <p className="pc-para">
-               A closer look at the work we build, the ideas we believe in, and the digital strategies helping ambitious brands grow smarter.
-
-            </p>
+          <span className="pc-mini-head">Case Studies</span>
+          <h1 className="pc-bigger-head">And Digital Insights</h1>
+          <p className="pc-para">
+             A closer look at the work we build, the ideas we believe in, and
+            the digital strategies helping ambitious brands grow smarter.
+          </p>
         </div>
       </div>
 

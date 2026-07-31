@@ -179,6 +179,7 @@
 }
 
 .footer-social-btn {
+  position: relative;
   width: 60px;
   height: 60px;
   border-radius: 10px;
@@ -187,16 +188,41 @@
   justify-content: center;
   align-items: center;
   text-decoration: none;
-  transition: background 0.2s;
+  overflow: hidden;
+}
+
+/* Fills up from the bottom on hover instead of a flat background swap —
+   the icon itself sits above it (z-index) so it stays visible the
+   whole time the fill rises underneath. */
+.footer-social-btn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 0;
+  background: #fff;
+  transition: height 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.footer-social-btn:hover::before {
+  height: 100%;
 }
 
 .footer-social-icon {
+  position: relative;
+  z-index: 1;
   width: 25px;
   height: 23px;
+  transition: filter 0.2s ease;
 }
 
-.footer-social-btn:hover {
-  background: rgba(255, 255, 255, 0.14);
+/* Icon paths are hardcoded fill="#E6E6E6" in the SVG markup, so a CSS
+   fill override can't reach them — invert to black via filter instead
+   once the white fill rises behind on hover, or the icon would
+   disappear into it. */
+.footer-social-btn:hover .footer-social-icon {
+  filter: brightness(0);
 }
 
 /* Right Nav */
@@ -465,24 +491,24 @@
     scale: 0.9;
   }
 }
-@media (max-width:1400px){
-  .footer-nav-link{
+@media (max-width: 1400px) {
+  .footer-nav-link {
     font-size: 15.5px;
   }
-  .footer-subscribe-input{
+  .footer-subscribe-input {
     width: 330px;
-  }   .footer-mascot video {
-      width: 210px;
-      }
+  }
+  .footer-mascot video {
+    width: 210px;
+  }
 }
-@media (max-width:1300px){
-  .footer-nav-link{
+@media (max-width: 1300px) {
+  .footer-nav-link {
     font-size: 14.5px;
   }
-  .footer-subscribe-input{
+  .footer-subscribe-input {
     width: 290px;
   }
-   
 }
 
 @media (max-width: 1100px) {

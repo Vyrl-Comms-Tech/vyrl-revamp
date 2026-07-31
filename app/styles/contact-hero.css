@@ -272,6 +272,7 @@
 }
 
 .contactHero-social-btn {
+  position: relative;
   width: 60px;
   height: 60px;
   cursor: pointer;
@@ -280,11 +281,41 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+/* Same fill-up-from-bottom hover as .footer-social-btn (footer.css) —
+   the icon sits above it (z-index) so it stays visible the whole time
+   the fill rises underneath. */
+.contactHero-social-btn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 0;
+  background: #fff;
+  transition: height 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.contactHero-social-btn:hover::before {
+  height: 100%;
 }
 
 .contactHero-social-btn svg {
+  position: relative;
+  z-index: 1;
   width: 26px;
   height: auto;
+  transition: filter 0.2s ease;
+}
+
+/* Icon paths are hardcoded fill="#F6F6F6" in the SVG markup, so a CSS
+   fill override can't reach them — invert to black via filter instead
+   once the white fill rises behind on hover, or the icon would
+   disappear into it. */
+.contactHero-social-btn:hover svg {
+  filter: brightness(0);
 }
 
 @media (max-width: 1670px) {

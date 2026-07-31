@@ -512,9 +512,15 @@ const Navbar = () => {
           </div>
           <div className="grid-cards" ref={gridCardsRef}>
             <div className="upper-cards">
+              {/* Clicking these while already on /projects only changes
+                  the query string — pathname itself never changes, so
+                  the route-change effect below (which force-closes the
+                  menu) never fires. Closing it explicitly here covers
+                  that same-page case too. */}
               <PageTransitionLink
                 href="/projects?category=real-estate"
                 className="box-1"
+                onClick={() => toggleMenu(false)}
               >
                 <p>Real Estate</p>
                 <Image src="/arab3.avif" alt="" fill sizes="20vw" />
@@ -522,6 +528,7 @@ const Navbar = () => {
               <PageTransitionLink
                 href="/projects?category=restaurant"
                 className="box-1"
+                onClick={() => toggleMenu(false)}
               >
                 <p>Restaurant</p>
                 <Image src="/lala1.avif" alt="" fill sizes="20vw" />
@@ -531,6 +538,7 @@ const Navbar = () => {
               <PageTransitionLink
                 href="/projects?category=automotive"
                 className="box-1"
+                onClick={() => toggleMenu(false)}
               >
                 <p>Automotive</p>
                 <Image src="/sanam2.avif" alt="" fill sizes="20vw" />
@@ -608,12 +616,12 @@ const Navbar = () => {
             </svg>
           </PageTransitionLink>
 
-          <div className="menu-toggle"
+          <div
+            className="menu-toggle"
             onClick={() => toggleMenu()}
-            ref={opacityDotsRef}>
-            <div
-              className="menu-box"
-            >
+            ref={opacityDotsRef}
+          >
+            <div className="menu-box">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="27"

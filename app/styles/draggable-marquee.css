@@ -218,7 +218,7 @@
    card's actual rendered width via getBoundingClientRect() at mount
    (and re-measures on the existing resize listener's refresh()), so
    shrinking flex-basis here is safe — no JS constant to keep in sync. */
-@media (max-width: 1600px) {
+@media (max-width: 1700px) {
   .draggable-marquee-item {
     flex-basis: 520px;
   }

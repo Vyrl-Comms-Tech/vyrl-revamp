@@ -9,6 +9,7 @@ import "../../styles/home-carousel.css";
 import "swiper/css/effect-coverflow";
 import ChangeTextAnimation from "../layout/ChangeTextAnimation";
 import CtaButton from "../layout/cta";
+import TextAnimation from "./TextAnimation";
 const slides = [
   {
     image: "/arab11.avif",
@@ -113,14 +114,20 @@ const HomeCarousel = () => {
       <section className="h2-section">
         <>
           <div className="h2-section-main-heading">
+              <TextAnimation animateOnScroll={true} delay={0.3}>
+
             <h2>
               Work That Moves <br id="remove-br" /> Brands Forward
             </h2>
+              </TextAnimation>
+                <TextAnimation animateOnScroll={true} delay={0.3}>
+
             <p>
               A glimpse into the websites, campaigns, platforms, content
               systems, and digital experiences we have built for ambitious
               brands across the world.
             </p>
+                </TextAnimation>
           </div>
         </>
 

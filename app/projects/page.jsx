@@ -11,7 +11,7 @@ const page = () => {
         <ProjectsGrid />
       </Suspense>
       <ClientReviews />
-      <ServicesSecondLast/>
+      <ServicesSecondLast />
       {/* <HomeSecondLast /> */}
     </div>
   );
