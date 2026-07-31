@@ -267,7 +267,7 @@ export default function Preloader({
                 fighting next/image's required width/height for a purely
                 animated, non-LCP element. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={letter.src} alt={letter.alt ?? ""} height={228} width={193}/>
+            <img src={letter.src} alt={letter.alt ?? ""} />
           </div>
         ))}
       </div>
