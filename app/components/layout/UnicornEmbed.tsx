@@ -192,7 +192,7 @@ useEffect(() => {
     });
   };
 
-  if ("requestIdleCallback" in window) {
+  if (typeof window.requestIdleCallback === "function") {
     const idleId = window.requestIdleCallback(start, {
       timeout: 2000,
     });
