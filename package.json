@@ -20,7 +20,8 @@
     "react-dom": "19.2.4",
     "split-type": "^0.3.4",
     "swiper": "^12.2.0",
-    "three": "^0.185.1"
+    "three": "^0.185.1",
+    "vanilla-tilt": "^1.8.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

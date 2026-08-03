@@ -1,11 +1,9 @@
 "use client";
-import React from "react";
 import Image from "next/image";
 // import TextAnimation from "./TextAnimation";
 import "../../styles/logos.css";
 import TextAnimation from "../home/TextAnimation";
 import CtaButton from "../layout/cta";
-
 const blankPositions = [3, 0, 3];
 
 // Real client logos in /public — filenames aren't sequential (lo10/lo11
@@ -18,6 +16,7 @@ const LOGOS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 12].map((n) => `/lo${n}.avif`);
 const marqueeLogos = LOGOS;
 
 const handleLogoMouseMove = (e) => {
+
   const box = e.currentTarget;
   const rect = box.getBoundingClientRect();
   const x = e.clientX - rect.left;
@@ -28,21 +27,23 @@ const handleLogoMouseMove = (e) => {
 
 const AboutLogos = () => {
   return (
-    <div className="logos-container">
+    <div className="logos-container" >
       <div className="logos-left" id="about-logos-left">
         <TextAnimation animateOnScroll={true} delay={0.3}>
           <h2>Trusted By Brands With Bigger Ambitions</h2>
         </TextAnimation>
         <div className="logos-left-textcol">
-
           <TextAnimation animateOnScroll={true} delay={0.3}>
             <p className="logos-left-desc">
-              We work with businesses that want more than surface-level digital presence. From emerging brands to established companies, our clients come to Vyrl for sharper ideas, stronger execution, and digital systems built to support real growth.
+              We work with businesses that want more than surface-level digital
+              presence. From emerging brands to established companies, our
+              clients come to Vyrl for sharper ideas, stronger execution, and
+              digital systems built to support real growth.
             </p>
           </TextAnimation>
           <CtaButton
-            label='See Our Work'
-            href='/projects'
+            label="See Our Work"
+            href="/projects"
             className="cta-button-white cta-about-logos"
           />
           {/* <button>See Our Work</button> */}

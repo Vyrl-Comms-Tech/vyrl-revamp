@@ -399,6 +399,7 @@ import React, { useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import VanillaTilt from "vanilla-tilt";
 
 import TextAnimation from "./TextAnimation";
 import "../../styles/text-and-cards.css";
@@ -515,6 +516,33 @@ export default function TextAndCards() {
       scope: cardsRef,
     },
   );
+
+  useEffect(() => {
+    const section = cardsRef.current;
+
+    if (!section) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    const cards = Array.from(section.querySelectorAll(".hs-card"));
+
+    VanillaTilt.init(cards, {
+      max: 10,
+      speed: 400,
+      perspective: 1000,
+      easing: "cubic-bezier(.03,.98,.52,.99)",
+      reverse: true,
+      glare: true,
+      "max-glare": 0.1,
+      gyroscope: false,
+    });
+
+    return () => {
+      cards.forEach((card) => card.vanillaTilt?.destroy());
+    };
+  }, []);
 
   useEffect(() => {
     const section = cardsRef.current;

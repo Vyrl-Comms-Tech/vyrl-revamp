@@ -1,8 +1,23 @@
-.hp-section {
+.hp-section-parent{
   padding: 50px 130px;
+  /* background: #fff !important; */
+  position: relative;
+  z-index: 20;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+.hp-section {
   width: 100%;
-  background: #fefefe;
   box-sizing: border-box;
+  /* Rotate + glide-over entrance (see HomeSecondLast.jsx's useGSAP) —
+     position:relative + a positive z-index above the preceding section
+     is what makes it visually glide OVER that section as it slides up,
+     rather than just appearing below it in normal document flow. A
+     solid background (already set above) is what it occludes with. */
+  position: relative;
+  z-index: 20;
+  transform-origin: left bottom;
+  will-change: transform;
 }
 
 .hp-grid {

@@ -4,6 +4,27 @@
     position: relative;
 }
 
+/* The unicorn embed's own box just ends sharply at 100vh against the
+   page's white background below it — this overlay fades the embed's
+   bottom edge into that same background color so the two blend instead
+   of showing a hard line. Kept short (6%) and weighted toward the very
+   bottom (gradient stop at 60%, not 0%) so it stays well clear of
+   .homehero-tag at bottom:5% — white tag text would go unreadable if
+   the fade reached far enough to turn the background white behind it.
+   Sits above the embed but below the heading/tag text (z-index: 2),
+   and pointer-events:none so it never blocks interaction with the
+   embed underneath it. */
+.homehero-fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3%;
+    z-index: 1;
+    background: linear-gradient(to bottom, transparent 0%, var(--bodybg, #fcfcfc) 60%);
+    pointer-events: none;
+}
+
 .homehero-heading {
     position: absolute;
     left: 3%;

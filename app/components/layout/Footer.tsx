@@ -14,7 +14,8 @@ const NO_FOOTER_PATHS = [...CASE_STUDY_PATHS, "/contact-us"];
 
 function Footer() {
   const pathname = usePathname();
-  const hideFooter = NO_FOOTER_PATHS.includes(pathname) || !isKnownRoute(pathname);
+  const hideFooter =
+    NO_FOOTER_PATHS.includes(pathname) || !isKnownRoute(pathname);
   const mascotVideoRef = useRef<HTMLVideoElement>(null);
 
   const [time, setTime] = useState({
@@ -65,7 +66,9 @@ function Footer() {
   if (hideFooter) return null;
 
   return (
-    <footer className={`footer${pathname === "/projects" ? " footer--no-radius" : ""}`}>
+    <footer
+      className={`footer${pathname === "/projects" ? " footer--no-radius" : ""}`}
+    >
       {/* Row 1 – Logo */}
       {/* <div className="footer-logo-row">
         <UnicornEmbed projectId="eWb7ceke9RYVHKByTGA5" />
@@ -235,8 +238,11 @@ function Footer() {
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Contact us</h4>
               <span className="footer-nav-link">
-                {" "}
-                +971 58 535 5134 <br /> +971 58 513 4999
+                {/* {" "} */}
+                <a href="tel:+971585355134"> +971 58 535 5134 </a>
+              </span>
+              <span className="footer-nav-link">
+               <a href="tel:+971585134999">+971 58 513 4999</a>
               </span>
             </div>
           </div>
@@ -247,7 +253,9 @@ function Footer() {
 
       <div className="footer-bottom-row">
         <div className="footer-subscribe">
-          <h3 className="footer-subscribe-title">Stay In The Loop</h3>
+          <h3 className="footer-subscribe-title">
+            <a href="mailto:vyrlcommstech@gmail.com">Stay In The Loop</a>
+          </h3>
           <p className="footer-subscribe-subtitle">
             Stay updated with the latest news, insights, and updates from
             Vyrl—delivered straight to your inbox.

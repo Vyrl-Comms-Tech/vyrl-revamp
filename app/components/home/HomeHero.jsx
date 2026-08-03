@@ -6,10 +6,22 @@ import TextAnimation from "./TextAnimation";
 const HomeHero = () => {
   return (
     <div className="homehero">
-      <UnicornEmbed projectId="hTmImmClFTsnrs3vLhd0" />
+      {/* <UnicornEmbed projectId="hTmImmClFTsnrs3vLhd0" /> */}
+      <div className="relative h-full w-full overflow-hidden">
+        <img
+          src="/fall1.png"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+
+        <UnicornEmbed
+          projectId="hTmImmClFTsnrs3vLhd0"
+          className="absolute inset-0"
+        />
+      </div>
+      <div className="homehero-fade" aria-hidden="true" />
 
       <h1 className="homehero-heading">
-        
         Modern Digital Experiences
         <br />
         Built For Brands That Move Different
