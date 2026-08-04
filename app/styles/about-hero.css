@@ -146,7 +146,25 @@
   }
 }
 @media (max-width: 900px) {
+  /* Desktop reserves a full 100vh so the embed fills the viewport
+     behind the absolutely-positioned bottom text row. On mobile the
+     text stacks in normal flow instead (see .aboutHero-bottomRow
+     below), so the 100vh height is no longer needed to contain
+     anything — without shrinking it, that reserved viewport height
+     shows as blank space above the stacked content. Kept plain
+     auto-height (no min-height / justify-end) — inflating THIS
+     element's height for scroll-scrub room pushes the text content
+     down from the top, which is the "too much padding at top" bug.
+     The scroll distance the Flip animation (AboutHero.jsx) needs
+     instead comes from .aboutHero-imageSpacer's margin-top below,
+     since that gap sits after the visible content, not before it. */
+  .aboutHero-top {
+    height: auto;
+    padding-top: 3.5rem;
+  }
+
   .aboutHero-bottomRow {
+    position: static;
     flex-direction: column;
     align-items: center;
     text-align: center;
@@ -160,6 +178,35 @@
     text-align: center;
   }
 
+  /* Mobile order: About tag + heading first, then the CTA button,
+     then the description, then the placeholder (video/image) —
+     flex `order` re-sequences these without touching DOM order
+     (the JS reads .aboutHero-imagePlaceholder's rect for GSAP
+     Flip, so it must stay put in the DOM). .aboutHero-headingCol
+     holds the tag+heading; .aboutHero-imageCol holds the
+     placeholder+desc+button in that DOM order, so each child gets
+     its own order to resequence: button, then desc, then
+     placeholder. */
+  .aboutHero-headingCol {
+    order: 1;
+  }
+
+  .aboutHero-imageCol {
+    order: 2;
+  }
+
+  .aboutHero-imageCol .cta-btn-container {
+    order: 1;
+  }
+
+  .aboutHero-desc {
+    order: 2;
+  }
+
+  .aboutHero-imagePlaceholder {
+    order: 3;
+  }
+
   .aboutHero-headingCol h1 {
     text-align: center;
   }
@@ -169,17 +216,17 @@
      this box's actual width/height IS the animation's start size. */
   .aboutHero-imagePlaceholder {
     width: 200px;
-    height: 114px;
+    height: 74px;
   }
 
   /* Final size the image scales up to — the JS reads this element's
      rect as the "after" snapshot for GSAP Flip, so this box's
      width/height IS the animation's end size. */
   .aboutHero-imageSpacer {
-    width: 410px;
-    max-width: 88vw;
-    height: 581px;
-    margin-top: 2.6rem;
+    width: 340px;
+    max-width: 80vw;
+    height: 420px;
+    margin-top: 1.2rem;
     margin-inline: auto;
   }
 
@@ -198,7 +245,7 @@
      the page background here. Starting the fade earlier (65%) and
      softening it (lower opacity midpoint) covers the shifted content
      with a gentler blend, closer to a blur than a sharp line. */
-  .aboutHero-embed {
+  /* .aboutHero-embed {
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 65%,
@@ -211,5 +258,6 @@
       rgba(0, 0, 0, 0.4) 85%,
       transparent 100%
     );
-  }
+  } */
+  
 }

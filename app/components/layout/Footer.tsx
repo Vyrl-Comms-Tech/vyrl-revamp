@@ -12,6 +12,45 @@ import Link from "next/link";
 const CASE_STUDY_PATHS = Object.values(caseStudies).map((c) => c.href);
 const NO_FOOTER_PATHS = [...CASE_STUDY_PATHS, "/contact-us"];
 
+// Renders the real PageTransitionLink normally, or a disabled, non-
+// clickable version (dimmed via .footer-nav-link--disabled, no
+// navigation) when the current page is already that link's
+// destination. matchPaths lets "Work" and "Case Studies" both
+// disable together on /projects since they share that one href.
+function FooterNavLink({
+  href,
+  pathname,
+  className,
+  matchPaths,
+  children,
+}: {
+  href: string;
+  pathname: string;
+  className?: string;
+  matchPaths?: string[];
+  children: React.ReactNode;
+}) {
+  const isActive = (matchPaths ?? [href]).includes(pathname);
+
+  if (isActive) {
+    return (
+      <span
+        className={`${className ?? ""} footer-nav-link--disabled`.trim()}
+        aria-disabled="true"
+        aria-current="page"
+      >
+        {children}
+      </span>
+    );
+  }
+
+  return (
+    <PageTransitionLink href={href} className={className}>
+      {children}
+    </PageTransitionLink>
+  );
+}
+
 function Footer() {
   const pathname = usePathname();
   const hideFooter =
@@ -182,30 +221,41 @@ function Footer() {
           <div className="footer-inner-link-col">
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Links</h4>
-              <PageTransitionLink href="/" className="footer-nav-link">
+              <FooterNavLink href="/" pathname={pathname} className="footer-nav-link">
                 Home
-              </PageTransitionLink>
-              <PageTransitionLink href="/about" className="footer-nav-link">
+              </FooterNavLink>
+              <FooterNavLink href="/about" pathname={pathname} className="footer-nav-link">
                 About
-              </PageTransitionLink>
-              <PageTransitionLink href="/services" className="footer-nav-link">
+              </FooterNavLink>
+              <FooterNavLink href="/services" pathname={pathname} className="footer-nav-link">
                 Services
-              </PageTransitionLink>
-              <PageTransitionLink href="/projects" className="footer-nav-link">
+              </FooterNavLink>
+              <FooterNavLink
+                href="/projects"
+                pathname={pathname}
+                matchPaths={["/projects"]}
+                className="footer-nav-link"
+              >
                 Work
-              </PageTransitionLink>
-              <PageTransitionLink
+              </FooterNavLink>
+              <FooterNavLink
                 href="/contact-us"
+                pathname={pathname}
                 className="footer-nav-link"
               >
                 Contact
-              </PageTransitionLink>
+              </FooterNavLink>
             </div>
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Other</h4>
-              <PageTransitionLink href="/projects" className="footer-nav-link">
+              <FooterNavLink
+                href="/projects"
+                pathname={pathname}
+                matchPaths={["/projects"]}
+                className="footer-nav-link"
+              >
                 Case Studies
-              </PageTransitionLink>
+              </FooterNavLink>
               {/* <PageTransitionLink href="/blogs" className="footer-nav-link">
                 Blog
               </PageTransitionLink> */}
@@ -215,34 +265,54 @@ function Footer() {
             </div>
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Info</h4>
-              <PageTransitionLink
+              <FooterNavLink
                 href="/privacy-policy"
+                pathname={pathname}
                 className="footer-nav-link"
               >
                 Privacy Policy
-              </PageTransitionLink>
-              <PageTransitionLink
+              </FooterNavLink>
+              <FooterNavLink
                 href="/terms-and-condition"
+                pathname={pathname}
                 className="footer-nav-link"
               >
                 Terms Of Service
-              </PageTransitionLink>
+              </FooterNavLink>
             </div>
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Address</h4>
-              <span className="footer-nav-link">
-                {" "}
+              <a
+                href="https://www.google.com/maps/dir/?api=1&destination=International+Business+Tower+-+Al+Amal+St+-+Business+Bay+-+Dubai+-+United+Arab+Emirates"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-nav-link"
+              >
                 International Business Tower, <br /> Business Bay, Dubai, UAE
-              </span>
+              </a>
             </div>{" "}
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Contact us</h4>
               <span className="footer-nav-link">
                 {/* {" "} */}
-                <a href="tel:+971585355134"> +971 58 535 5134 </a>
+                <a
+                  href="https://wa.me/971585355134"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {" "}
+                  +971 58 535 5134{" "}
+                </a>
               </span>
               <span className="footer-nav-link">
-               <a href="tel:+971585134999">+971 58 513 4999</a>
+                <a
+                  href="https://wa.me/971585134999"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  +971 58 513 4999
+                </a>
+
               </span>
             </div>
           </div>

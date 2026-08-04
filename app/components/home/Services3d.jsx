@@ -20,22 +20,22 @@ const SERVICES = [
   {
     title: "Strategy & Consultancy",
     desc: "Direction before execution. We define the roadmap, audience, positioning, and digital approach your brand needs to grow with clarity.",
-    tags: ["STRATEGY", "RESEARCH", "CONSULTING"],
+    tags: ["ROADMAP", "RESEARCH", "POSITIONING"],
   },
   {
     title: "Branding & Creative Direction",
     desc: " Visual identities, campaign concepts, and creative systems designed to make your brand recognizable, consistent, and memorable.",
-    tags: ["BRANDING", "LOGO", "IDENTITY"],
+    tags: ["LOGO", "IDENTITY", "VISUAL SYSTEMS"],
   },
   {
     title: "Web & App Development",
     desc: "High performing websites, apps, and platforms built for speed, usability, scale, and a digital presence that feels premium.",
-    tags: ["UI/UX", "FIGMA", "PROTOTYPING"],
+    tags: ["3D", "CUSTOM DASHBOARDS", "SCALABLE PLATFORMS"],
   },
   {
     title: "Content & Social Media",
     desc: "Content strategies, social storytelling, reels, campaigns, and always on creative built to keep your brand visible and relevant.",
-    tags: ["SPLINE", "THREE.JS", "3D"],
+    tags: ["REELS", "STORYTELLING", "ALWAYS-ON CREATIVE"],
   },
   {
     title: "Performance Marketing",
@@ -45,7 +45,7 @@ const SERVICES = [
   {
     title: "AI Automation & Tech Solutions",
     desc: "Smart workflows, CRM systems, lead automation, and custom tech solutions that help your business move faster and work smarter.",
-    tags: ["BRANDING", "LOGO", "IDENTITY"],
+    tags: ["WORKFLOWS", "CRM", "SMART TECH"],
   },
 ];
 

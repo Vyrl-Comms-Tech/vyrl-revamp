@@ -258,10 +258,23 @@
   font-size: 17px;
   font-style: normal;
   font-weight: 400;
+  text-decoration: none;
 }
 
 .footer-nav-link:hover {
   color: #fff;
+}
+
+/* Current page's own footer link — non-clickable, dimmed instead of
+   the normal hover-brightens-to-white affordance. */
+.footer-nav-link--disabled {
+  cursor: default;
+  color: #fff5;
+  pointer-events: none;
+}
+
+.footer-nav-link--disabled:hover {
+  color: #fff5;
 }
 
 /* ─── Bottom Row ─────────────────────────────────────────── */

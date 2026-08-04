@@ -75,6 +75,7 @@ const HomeCarousel = () => {
       return;
     }
 
+    
     gsap.killTweensOf(tagEls);
     gsap.to(tagEls, {
       scale: 0,

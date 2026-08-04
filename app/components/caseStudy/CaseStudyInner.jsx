@@ -539,7 +539,7 @@ const CaseStudyInner = ({ slug }) => {
                   label="View website"
                   href={c1.websiteUrl}
                   external
-                  className="cs-visit-btn"
+                  // className="cs-visit-btn"
                 />
               </div>
             </div>

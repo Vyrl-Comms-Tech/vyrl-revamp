@@ -184,7 +184,7 @@
   border-radius: 50px;
   padding: 0.6rem 1.25rem;
   font-size: 1.1rem;
-  /* cursor: pointer; */
+  cursor: pointer;
   transition:
     background-color 0.2s ease,
     color 0.2s ease;

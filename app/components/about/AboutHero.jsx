@@ -78,7 +78,15 @@ const AboutHero = () => {
           trigger: top,
           start: "bottom bottom",
           endTrigger: spacer,
-          end: "bottom bottom",
+          // Was end: "bottom bottom" — on narrow viewports where
+          // .aboutHero-top hugs its content (see about-hero.css's
+          // ≤900px block) instead of a fixed 100vh, that leaves very
+          // little scroll distance between the two trigger points, so
+          // the grow finished in a couple hundred px of scroll and
+          // read as broken/instant. The +=250 stretches the scrub
+          // range further past the spacer without needing extra
+          // visual gap in the CSS.
+          end: "bottom+=250 bottom",
           scrub: 0.5,
         },
       });
@@ -102,10 +110,10 @@ const AboutHero = () => {
             <div className="aboutHero-imagePlaceholder" ref={placeholderRef} />
             <p className="aboutHero-desc">
               We are not here to simply design, post, develop, or advertise. We
-              are here to understand what your brand is trying to become — then
+              are here to understand what your brand is trying to become  then
               build the digital system that helps it get there.
             </p>
-            <CtaButton label="Lets Get In Touch" href="/contact" />
+            <CtaButton label="Lets Get In Touch" href="/contact-us" />
           </div>
 
           <div className="aboutHero-headingCol">

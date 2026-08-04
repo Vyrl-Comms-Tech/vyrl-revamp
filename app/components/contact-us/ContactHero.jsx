@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import gsap from "gsap";
 import "../../styles/contact-hero.css";
 import "../../styles/cta.css";
 import Link from "next/link";
@@ -92,56 +91,13 @@ const BackArrow = () => (
 
 const ContactHero = () => {
   const router = useRouter();
-  const submitBtnRef = useRef(null);
-  const submitArrowBoxRef = useRef(null);
-  const submitTextRef = useRef(null);
+  const [selectedTags, setSelectedTags] = useState([]);
 
-  useEffect(() => {
-    const btn = submitBtnRef.current;
-    const arrowBox = submitArrowBoxRef.current;
-    const text = submitTextRef.current;
-    if (!btn || !arrowBox || !text) return;
-
-    const handleEnter = () => {
-      const btnRect = btn.getBoundingClientRect();
-      const arrowRect = arrowBox.getBoundingClientRect();
-      const paddingRight = parseFloat(getComputedStyle(btn).paddingRight) || 0;
-
-      const rotateRad = (70 * Math.PI) / 180;
-      const rotatedWidth =
-        Math.abs(arrowRect.width * Math.cos(rotateRad)) +
-        Math.abs(arrowRect.height * Math.sin(rotateRad));
-      const rotationGrowth = (rotatedWidth - arrowRect.width) / 2;
-
-      const travel =
-        btnRect.right - paddingRight * 0.3 - arrowRect.right - rotationGrowth;
-
-      gsap.to(arrowBox, {
-        x: travel,
-        rotate: 70,
-        duration: 0.5,
-        ease: "power3.out",
-      });
-      gsap.to(text, {
-        x: -arrowRect.width * 1.3,
-        duration: 0.5,
-        ease: "power3.out",
-      });
-    };
-
-    const handleLeave = () => {
-      gsap.to(arrowBox, { x: 0, rotate: 0, duration: 0.5, ease: "power3.out" });
-      gsap.to(text, { x: 0, duration: 0.5, ease: "power3.out" });
-    };
-
-    btn.addEventListener("mouseenter", handleEnter);
-    btn.addEventListener("mouseleave", handleLeave);
-
-    return () => {
-      btn.removeEventListener("mouseenter", handleEnter);
-      btn.removeEventListener("mouseleave", handleLeave);
-    };
-  }, []);
+  const toggleTag = (tag) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
+    );
+  };
 
   // router.back() silently does nothing if there's no history to go
   // back to — e.g. this page was opened directly (typed URL, refresh,
@@ -203,10 +159,18 @@ const ContactHero = () => {
         </div>
 
         <div className="contactHero-field-group">
-          <span className="contactHero-label">Chose services</span>
+          <span className="contactHero-label">Choose services</span>
           <div className="contactHero-tags">
             {SERVICE_TAGS.map((tag) => (
-              <button type="button" className="contactHero-tag" key={tag}>
+              <button
+                type="button"
+                className={`contactHero-tag ${
+                  selectedTags.includes(tag) ? "is-active" : ""
+                }`}
+                aria-pressed={selectedTags.includes(tag)}
+                onClick={() => toggleTag(tag)}
+                key={tag}
+              >
                 {tag}
               </button>
             ))}
@@ -229,17 +193,13 @@ const ContactHero = () => {
             </div>
 
             <div className="cta-btn-container">
-              <button
-                type="submit"
-                className="cta-btn cta-button-white"
-                ref={submitBtnRef}
-              >
+              <button type="submit" className="cta-btn cta-button-white">
                 <div className="cta-btn-vid">
                   <video muted loop autoPlay playsInline>
                     <source src="/bg-v-compressed.mp4" />
                   </video>
                 </div>
-                <div className="cta-arrow-box" ref={submitArrowBoxRef}>
+                <div className="cta-arrow-box cta-arrow-box--before">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="15"
@@ -253,7 +213,21 @@ const ContactHero = () => {
                     />
                   </svg>
                 </div>
-                <p ref={submitTextRef}>Send Now</p>
+                <p className="cta-btn-label">Send Now</p>
+                <div className="cta-arrow-box cta-arrow-box--after">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="15"
+                    height="18"
+                    viewBox="0 0 15 18"
+                    fill="none"
+                  >
+                    <path
+                      d="M10.3213 0.000213146L1.27547e-05 4.4884L0.64805 5.937L8.47908 2.53785L2.7051 17.4253L4.19683 18.0038L9.97081 3.11641L13.462 10.9068L14.9174 10.274L10.3213 0.000213146Z"
+                      fill="#000"
+                    />
+                  </svg>
+                </div>
               </button>
             </div>
           </form>

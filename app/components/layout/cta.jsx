@@ -6,7 +6,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import gsap from "gsap";
 import PageTransitionLink from "./PageTransitionLink";
 import "../../styles/cta.css";
 
@@ -28,9 +27,6 @@ const CtaButton = forwardRef(function CtaButton(
 ) {
   const containerRef = useRef(null);
   useImperativeHandle(forwardedRef, () => containerRef.current, []);
-  const btnRef = useRef(null);
-  const arrowBoxRef = useRef(null);
-  const textRef = useRef(null);
   const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
@@ -50,62 +46,29 @@ const CtaButton = forwardRef(function CtaButton(
     return () => observer.disconnect();
   }, [shouldLoad]);
 
-  useEffect(() => {
-    const btn = btnRef.current;
-    const arrowBox = arrowBoxRef.current;
-    const text = textRef.current;
-    if (!btn || !arrowBox || !text) return;
+  const arrowIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="15"
+      height="18"
+      viewBox="0 0 15 18"
+      fill="none"
+    >
+      <path
+        d="M10.3213 0.000213146L1.27547e-05 4.4884L0.64805 5.937L8.47908 2.53785L2.7051 17.4253L4.19683 18.0038L9.97081 3.11641L13.462 10.9068L14.9174 10.274L10.3213 0.000213146Z"
+        fill="white"
+      />
+    </svg>
+  );
 
-    const handleEnter = () => {
-      const btnRect = btn.getBoundingClientRect();
-      const arrowRect = arrowBox.getBoundingClientRect();
-      const paddingRight = parseFloat(getComputedStyle(btn).paddingRight) || 0;
-
-      const rotateRad = (70 * Math.PI) / 180;
-      const rotatedWidth =
-        Math.abs(arrowRect.width * Math.cos(rotateRad)) +
-        Math.abs(arrowRect.height * Math.sin(rotateRad));
-      const rotationGrowth = (rotatedWidth - arrowRect.width) / 2;
-
-      const travel =
-        btnRect.right - paddingRight * 0.3 - arrowRect.right - rotationGrowth;
-
-      gsap.to(arrowBox, {
-        x: travel,
-        rotate: 70,
-        duration: 0.5,
-        ease: "power3.out",
-      });
-      gsap.to(text, {
-        x: -arrowRect.width * 1.3,
-        duration: 0.5,
-        ease: "power3.out",
-      });
-    };
-
-    const handleLeave = () => {
-      gsap.to(arrowBox, {
-        x: 0,
-        rotate: 0,
-        duration: 0.5,
-        ease: "power3.out",
-      });
-      gsap.to(text, {
-        x: 0,
-        duration: 0.5,
-        ease: "power3.out",
-      });
-    };
-
-    btn.addEventListener("mouseenter", handleEnter);
-    btn.addEventListener("mouseleave", handleLeave);
-
-    return () => {
-      btn.removeEventListener("mouseenter", handleEnter);
-      btn.removeEventListener("mouseleave", handleLeave);
-    };
-  }, []);
-
+  // Pure-CSS hover (see cta.css): two arrow badges, "before" resting
+  // in place near the label and "after" pre-positioned off past the
+  // right edge — on hover, "before" slides out to the left while
+  // "after" slides in from the right, and the label shifts left to
+  // make room. No JS-measured travel distance needed (the previous
+  // GSAP version kept landing short of the button's edges depending
+  // on padding/text width), since every position here is a fixed CSS
+  // transform the browser applies natively.
   const content = (
     <>
       <div className="cta-btn-vid">
@@ -115,21 +78,9 @@ const CtaButton = forwardRef(function CtaButton(
           </video>
         )}
       </div>
-      <div className="cta-arrow-box" ref={arrowBoxRef}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="15"
-          height="18"
-          viewBox="0 0 15 18"
-          fill="none"
-        >
-          <path
-            d="M10.3213 0.000213146L1.27547e-05 4.4884L0.64805 5.937L8.47908 2.53785L2.7051 17.4253L4.19683 18.0038L9.97081 3.11641L13.462 10.9068L14.9174 10.274L10.3213 0.000213146Z"
-            fill="white"
-          />
-        </svg>
-      </div>
-      <p ref={textRef}>{label}</p>
+      <div className="cta-arrow-box cta-arrow-box--before">{arrowIcon}</div>
+      <p className="cta-btn-label">{label}</p>
+      <div className="cta-arrow-box cta-arrow-box--after">{arrowIcon}</div>
     </>
   );
 
@@ -140,7 +91,6 @@ const CtaButton = forwardRef(function CtaButton(
           className={`cta-btn ${className}`.trim()}
           href={href}
           id={id}
-          ref={btnRef}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -151,7 +101,6 @@ const CtaButton = forwardRef(function CtaButton(
           className={`cta-btn ${className}`.trim()}
           href={href}
           id={id}
-          ref={btnRef}
         >
           {content}
         </PageTransitionLink>

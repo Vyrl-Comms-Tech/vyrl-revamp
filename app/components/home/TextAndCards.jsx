@@ -461,6 +461,24 @@ export default function TextAndCards() {
             return;
           }
 
+          // A client-side route navigation (nav link away and back to
+          // "/") remounts this component and creates a fresh
+          // ScrollTrigger — but GSAP keeps a global registry of every
+          // ScrollTrigger instance ever created, keyed loosely by
+          // trigger element. If the PREVIOUS instance's cleanup
+          // (mm.revert() below) didn't fully unregister its old
+          // ScrollTrigger before this new one is created — plausible
+          // given the view-transition's own async DOM swap timing —
+          // the new trigger can end up shadowed/conflicting with a
+          // dead one still watching the same element, so it never
+          // fires (reproduced: cards stuck at opacity 0 after
+          // navigating away and back via a nav link). Killing any
+          // pre-existing ScrollTriggers on this exact section before
+          // creating the new one guarantees a clean slate every mount.
+          ScrollTrigger.getAll()
+            .filter((st) => st.trigger === section)
+            .forEach((st) => st.kill());
+
           const animation = gsap.fromTo(
             cards,
             {
@@ -516,6 +534,32 @@ export default function TextAndCards() {
       scope: cardsRef,
     },
   );
+
+  // Back/forward navigation (Chrome's back button) can restore this page
+  // from bfcache instead of remounting it — React effects don't re-run,
+  // so if the entrance tween above was caught mid-flight when the page
+  // was frozen (GSAP's ticker pauses along with everything else), the
+  // cards come back frozen at whatever half-finished opacity/transform
+  // they were at, instead of their resolved resting state. `pageshow`'s
+  // `persisted` flag is what tells us this was a bfcache restore (a
+  // normal load fires pageshow too, but with persisted: false); snapping
+  // every card to its final CSS state and refreshing ScrollTrigger's
+  // measurements covers it without needing to resume the exact tween.
+  useEffect(() => {
+    const handlePageShow = (event) => {
+      if (!event.persisted) return;
+
+      const section = cardsRef.current;
+      if (!section) return;
+
+      const cards = gsap.utils.toArray(".hs-card", section);
+      gsap.set(cards, { clearProps: "transform,opacity,willChange" });
+      ScrollTrigger.refresh();
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
 
   useEffect(() => {
     const section = cardsRef.current;
@@ -627,8 +671,6 @@ export default function TextAndCards() {
                 .filter(Boolean)
                 .join(" ")}
             >
-              <h2 className="hs-card-title">{card.title}</h2>
-
               {card.video && (
                 <div className="hs-card-media">
                   <video
@@ -645,7 +687,10 @@ export default function TextAndCards() {
                 </div>
               )}
 
-              <p className="hs-card-desc">{card.desc}</p>
+              <div className="hs-card-content">
+                <h2 className="hs-card-title">{card.title}</h2>
+                <p className="hs-card-desc">{card.desc}</p>
+              </div>
             </article>
           ))}
         </div>

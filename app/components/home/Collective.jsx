@@ -201,7 +201,7 @@ function Collective() {
           <div className="buttonsrow">
             <CtaButton
               href="/about"
-              className="sale-button"
+              // className="sale-button"
               variant="dark"
               label="About us"
             />

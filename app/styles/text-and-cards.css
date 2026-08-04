@@ -59,12 +59,10 @@
   display: flex;
   flex: 1 1 0;
   flex-direction: column;
-  justify-content: space-between;
 
   min-width: 0;
   height: 437px;
   padding: 30px 60px 30px 23px;
-  gap: 10px;
 
   border-radius: 16px;
   overflow: hidden;
@@ -74,6 +72,25 @@
    * GSAP enables it only while animating.
    */
   backface-visibility: hidden;
+}
+
+/* Title + description live in one wrapper so justify-content:
+   space-between (title pinned top, desc pinned bottom) only ever
+   applies to these two — .hs-card-media is position:absolute and out
+   of flex flow, but when it used to sit here as a THIRD flex child
+   between title/desc, cards without a video (only 2 flex children:
+   title, desc) got the same space-between treatment as cards with
+   one, which is fine — the actual bug this fixes is structural: it
+   no longer depends on .hs-card always having exactly 2 in-flow
+   children for the spacing to come out right. */
+.hs-card-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 

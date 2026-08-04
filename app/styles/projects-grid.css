@@ -89,21 +89,23 @@
   color: #000;
 }
 
+/* Flat flex-wrap grid — the Flip filter (ProjectsGrid.jsx) reorders
+   cards across the whole set via each card's own `order`, so every
+   card lives directly here instead of being grouped into separate
+   row wrappers (which would have capped reordering to within each
+   row). Each card's own width (46.09vw, or 94.5vw for `.cardStrech`)
+   is what reproduces the original two-up / full-width / two-up
+   layout via wrapping, same as before. */
 .cardsSection {
   height: fit-content;
   width: 100vw;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 2rem;
-  flex-direction: column;
+  gap: 2.5rem;
   background-color: #000;
   padding: 2rem 0;
-}
-
-.seprateDivs {
-  display: flex;
-  gap: 2.5rem;
 }
 
 .cardsProject {
@@ -115,7 +117,6 @@
   overflow: hidden;
   justify-content: center;
   align-items: center;
-  transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
   cursor: pointer;
 }
 
@@ -211,9 +212,6 @@
   margin-top: 0.5rem;
 }
 @media (max-width: 800px) {
-  .seprateDivs {
-    flex-direction: column;
-  }
   .heroProject {
     height: 72vh;
   }

@@ -147,10 +147,10 @@
     align-items: center;
     width: 100%;
   }
-#about-logos-left h2{
-  font-size: 40px;
-  line-height: 111%;
-}
+  #about-logos-left h2 {
+    font-size: 40px;
+    line-height: 111%;
+  }
   .logos-left h2 {
     font-size: 32px;
   }
@@ -185,11 +185,11 @@
       transparent 100%
     );
   }
-.cta-about-logos{
-align-items: center;
-justify-content: center;
-display: flex;
-}
+  .cta-about-logos {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
   .logos-marquee-track {
     display: flex;
     width: max-content;

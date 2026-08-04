@@ -92,7 +92,6 @@ const SCRIPT_SRC =
   "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.2.8/dist/unicornStudio.umd.js";
 
 let scriptPromise: Promise<void> | null = null;
-let initPromise: Promise<void> | null = null;
 
 function loadUnicornScript(): Promise<void> {
   if (typeof window === "undefined") {
@@ -154,20 +153,21 @@ function loadUnicornScript(): Promise<void> {
   return scriptPromise;
 }
 
+// Was gated behind `if (isInitialized) return` plus a module-scope
+// initPromise that, once resolved, was reused forever — so init()
+// only ever ran once for the whole page's lifetime. UnicornStudio
+// scans the DOM for every [data-us-project] element still needing
+// setup each time init() runs, so on a client-side route change
+// (nav link) a newly-mounted UnicornEmbed's div is a real, un-
+// initialized DOM node that this old guard skipped entirely,
+// leaving it blank — reproduced by navigating Home -> About -> Home
+// via nav links. init() itself is safe to call repeatedly (that's
+// how it's designed to pick up new elements), so this now just
+// makes sure the script is loaded once and then always calls
+// init() again for whichever embed(s) just mounted.
 async function initializeUnicornStudio(): Promise<void> {
   await loadUnicornScript();
-
-  if (window.UnicornStudio?.isInitialized) {
-    return;
-  }
-
-  if (!initPromise) {
-    initPromise = Promise.resolve(
-      window.UnicornStudio?.init(),
-    ).then(() => undefined);
-  }
-
-  return initPromise;
+  await window.UnicornStudio?.init();
 }
 
 type UnicornEmbedProps = {

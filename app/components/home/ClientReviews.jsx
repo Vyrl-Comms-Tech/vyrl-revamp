@@ -547,7 +547,8 @@ function ClientReviewSection() {
           <CtaButton
             label={active.ctaLabel}
             href={active.href}
-            className="cta-button-white client-review-cta-btn"
+            external={active.href !== "#"}
+            className="cta-button-white"
           />
           <p>
             Hear from the brands and founders we have partnered with, sharing

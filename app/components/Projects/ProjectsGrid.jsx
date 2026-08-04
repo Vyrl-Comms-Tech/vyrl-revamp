@@ -6,10 +6,11 @@ import { useTransitionRouter } from "next-view-transitions";
 import { useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Flip } from "gsap/Flip";
 import { slideInOut } from "../layout/pageTransition";
 import "../../styles/projects-grid.css";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, Flip);
 
 const FILTERS = [
   { label: "ALL", value: "all" },
@@ -18,63 +19,60 @@ const FILTERS = [
   { label: "AUTOMOTIVE", value: "automotive" },
 ];
 
-// Row-grouped so the "stretched" single-card row renders exactly like the
-// original markup (two cards / one full-width card / two cards).
-const PROJECT_ROWS = [
-  [
-    {
-      id: "banda",
-      title: "BANDA",
-      category: "real-estate",
-      type: "video",
-      src: "/banda -v_compressed.mp4",
-      poster: "/banda -v_compressed.avif",
-      href: "/banda",
-      tags: ["Property Developer", "Luxury Homes"],
-    },
-    {
-      id: "lala-darbar",
-      title: "LALA DARBAR",
-      category: "restaurant",
-      type: "image",
-      src: "/lala1.avif",
-      href: "/lala-darbar",
-      tags: ["Traditional Cuisine", "Fine Dining"],
-    },
-  ],
-  [
-    {
-      id: "arabian-estate",
-      title: "ARABIAN ESTATE",
-      category: "real-estate",
-      type: "image",
-      src: "/arab3.avif",
-      stretch: true,
-      href: "/arabian-estate",
-      tags: ["Property Developer", "Residential & Commercial"],
-    },
-  ],
-  [
-    {
-      id: "jeikor",
-      title: "JEIKOR",
-      category: "real-estate",
-      type: "image",
-      src: "/jeikor4.avif",
-      href: "/jeikor",
-      tags: ["Property Developer", "Urban Living"],
-    },
-    {
-      id: "sanam-cars",
-      title: "SANAM CARS",
-      category: "automotive",
-      type: "video",
-      src: "/sanam-v_compressed.mp4",
-      poster: "/sanam-v_compressed.avif",
-      href: "/sanamcars",
-      tags: ["Car Dealership", "Premium Vehicles"],
-    },
-  ],
+// Flat list (not row-grouped) so the Flip filter below can reorder any
+// card to any position across the whole grid — each card's own width
+// (46.09vw, or 94.5vw for `stretch`) plus flex-wrap on the container
+// reproduces the original two-up / full-width / two-up layout without
+// needing separate row wrappers.
+const PROJECTS = [
+  {
+    id: "banda",
+    title: "BANDA",
+    category: "real-estate",
+    type: "video",
+    src: "/banda -v_compressed.mp4",
+    poster: "/banda -v_compressed.avif",
+    href: "/banda",
+    tags: ["Property Developer", "Luxury Homes"],
+  },
+  {
+    id: "lala-darbar",
+    title: "LALA DARBAR",
+    category: "restaurant",
+    type: "image",
+    src: "/lala1.avif",
+    href: "/lala-darbar",
+    tags: ["Traditional Cuisine", "Fine Dining"],
+  },
+  {
+    id: "arabian-estate",
+    title: "ARABIAN ESTATE",
+    category: "real-estate",
+    type: "image",
+    src: "/arab3.avif",
+    stretch: true,
+    href: "/arabian-estate",
+    tags: ["Property Developer", "Residential & Commercial"],
+  },
+  {
+    id: "jeikor",
+    title: "JEIKOR",
+    category: "real-estate",
+    type: "image",
+    src: "/jeikor4.avif",
+    href: "/jeikor",
+    tags: ["Property Developer", "Urban Living"],
+  },
+  {
+    id: "sanam-cars",
+    title: "SANAM CARS",
+    category: "automotive",
+    type: "video",
+    src: "/sanam-v_compressed.mp4",
+    poster: "/sanam-v_compressed.avif",
+    href: "/sanamcars",
+    tags: ["Car Dealership", "Premium Vehicles"],
+  },
 ];
 const FILTER_VALUES = FILTERS.map((f) => f.value);
 
@@ -144,7 +142,7 @@ export default function ProjectsGrid() {
     );
 
     cardRefs.current.forEach((card, id) => {
-      const project = PROJECT_ROWS.flat().find((p) => p.id === id);
+      const project = PROJECTS.find((p) => p.id === id);
       if (project?.type === "video") observer.observe(card);
     });
 
@@ -189,25 +187,60 @@ export default function ProjectsGrid() {
   }, []);
 
   // --- Filter: re-run whenever the active category changes --------------
+  // Matching cards flip to the front of the grid and reflow into place
+  // (via Flip.getState -> mutate order/opacity -> Flip.from) instead of
+  // just fading in place, same pattern as BlogCards.jsx's filter.
   useLayoutEffect(() => {
-    cardRefs.current.forEach((card, id) => {
-      const project = PROJECT_ROWS.flat().find((p) => p.id === id);
-      if (!project) return;
+    const cardEls = gsap.utils.toArray(".cardsProject", sectionRef.current);
+    if (!cardEls.length) return;
 
-      const isVisible =
-        activeFilter === "all" || project.category === activeFilter;
+    gsap.killTweensOf(cardEls);
 
-      gsap.to(card, {
-        opacity: isVisible ? 1 : 0.2,
-        scale: isVisible ? 1 : 0.88,
-        filter: isVisible ? "brightness(1)" : "brightness(0.3)",
-        duration: 0.6,
-        ease: "power3.out",
-        overwrite: "auto",
-      });
+    const cardIsActive = (card) =>
+      activeFilter === "all" || card.dataset.category === activeFilter;
 
+    // Regular (non-stretch) active cards go first so they pair up two
+    // to a row; the stretch (full-width) card is placed after the
+    // first pair so it always lands in its own row rather than
+    // possibly ending up as the lone card in a row by itself (which
+    // pushed a regular card into that slot instead and read as a
+    // stray centered card — the reported glitch). Was previously a
+    // single flat "-1" for every active card, which left cards in
+    // their original DOM order (regular, stretch, regular) instead
+    // of this regular/regular/stretch shape.
+    const activeRegular = cardEls.filter(
+      (c) => cardIsActive(c) && !c.classList.contains("cardStrech"),
+    );
+    const activeStretch = cardEls.filter(
+      (c) => cardIsActive(c) && c.classList.contains("cardStrech"),
+    );
+    const inactiveCards = cardEls.filter((c) => !cardIsActive(c));
+
+    const orderedActive = [
+      ...activeRegular.slice(0, 2),
+      ...activeStretch,
+      ...activeRegular.slice(2),
+    ];
+    const sortedEls = [...orderedActive, ...inactiveCards];
+
+    const state = Flip.getState(sortedEls, { props: "opacity" });
+
+    const orderMap = new Map(orderedActive.map((card, i) => [card, i]));
+
+    cardEls.forEach((card) => {
+      const isVisible = cardIsActive(card);
+      card.style.order =
+        activeFilter === "all" ? "0" : isVisible ? String(orderMap.get(card)) : "999";
+      card.style.opacity = isVisible ? "1" : "0.3";
       card.style.pointerEvents = isVisible ? "auto" : "none";
       card.style.cursor = isVisible ? "pointer" : "default";
+    });
+
+    Flip.from(state, {
+      duration: 1,
+      ease: "power2.inOut",
+      stagger: 0.05,
+      onComplete: () => ScrollTrigger.refresh(),
     });
   }, [activeFilter]);
 
@@ -265,39 +298,35 @@ export default function ProjectsGrid() {
       </div>
 
       <div className="cardsSection">
-        {PROJECT_ROWS.map((row, rowIndex) => (
-          <div className="seprateDivs" key={`row-${rowIndex}`}>
-            {row.map((project) => (
-              <div
-                key={project.id}
-                ref={setCardRef(project.id)}
-                className={`cardsProject ${project.stretch ? "cardStrech" : ""}`}
-                data-category={project.category}
-                onMouseMove={handleMouseMove(project.id)}
-                onMouseEnter={handleMouseEnter(project.id)}
-                onMouseLeave={handleMouseLeave(project.id)}
-                onClick={handleCardClick(project)}
-              >
-                <div className="imageBgContainer">
-                  <ProjectMedia project={project} />
-                </div>
+        {PROJECTS.map((project) => (
+          <div
+            key={project.id}
+            ref={setCardRef(project.id)}
+            className={`cardsProject ${project.stretch ? "cardStrech" : ""}`}
+            data-category={project.category}
+            onMouseMove={handleMouseMove(project.id)}
+            onMouseEnter={handleMouseEnter(project.id)}
+            onMouseLeave={handleMouseLeave(project.id)}
+            onClick={handleCardClick(project)}
+          >
+            <div className="imageBgContainer">
+              <ProjectMedia project={project} />
+            </div>
 
-                <div className="imgFollow" ref={setFollowerRef(project.id)}>
-                  <ProjectMedia project={project} />
-                </div>
+            <div className="imgFollow" ref={setFollowerRef(project.id)}>
+              <ProjectMedia project={project} />
+            </div>
 
-                <div className="contentProject">
-                  <h1>{project.title}</h1>
-                  <div className="tagsProject">
-                    {project.tags.map((tag, i) => (
-                      <div className="tagP" key={`${project.id}-tag-${i}`}>
-                        {tag}
-                      </div>
-                    ))}
+            <div className="contentProject">
+              <h1>{project.title}</h1>
+              <div className="tagsProject">
+                {project.tags.map((tag, i) => (
+                  <div className="tagP" key={`${project.id}-tag-${i}`}>
+                    {tag}
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         ))}
       </div>

@@ -5,18 +5,16 @@
 }
 
 .cta-btn {
-  padding: 0.4rem 1rem 0.4rem 0.5rem;
+  padding: .4rem .9rem .4rem .9rem;
   width: fit-content;
   border-radius: 70px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   text-decoration: none;
   color: #fff;
   overflow: hidden;
   position: relative;
   z-index: 1;
-  gap: 1.5rem;
   background-color: #000;
   cursor: pointer;
 }
@@ -30,12 +28,10 @@
   display: flex;
   inset: 0;
   width: 0%;
-  transition:
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    letter-spacing 0.4s ease,
-    width 0.4s ease;
+  transition: width 0.4s ease;
   justify-content: center;
   align-items: center;
+  z-index: 0;
 }
 
 .cta-btn-vid video {
@@ -44,32 +40,70 @@
   object-fit: cover;
 }
 
+/* Pure-CSS hover: two arrow badges instead of one JS-measured tween.
+   "before" sits in normal flow right after the padding, in view at
+   rest; "after" is absolutely positioned off past the button's right
+   edge, invisible at rest. On hover they trade places — "before"
+   slides left and fades out, "after" slides in from the right and
+   fades in — while the label shifts left by a fixed amount to make
+   room. Every position is a plain CSS transform, so there's no
+   runtime geometry math to get wrong (unlike the previous version,
+   which computed each side's travel from live getBoundingClientRect()
+   and kept landing short of the button's true edges). */
 .cta-arrow-box {
-  /* padding: 0.8rem; */
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  transform: translateX(0%);
+  flex-shrink: 0;
   border-radius: 50%;
   background-color: #ffffff27;
   backdrop-filter: blur(10px);
-  transition:
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 0.4s ease,
-    box-shadow 0.4s ease;
   width: 40px;
   height: 40px;
+  position: relative;
+  z-index: 1;
+  transition:
+    transform 0.5s cubic-bezier(0.86, 0, 0.07, 1),
+    opacity 0.4s cubic-bezier(0.86, 0, 0.07, 1),
+    background-color 0.4s ease,
+    box-shadow 0.4s ease;
 }
 
-.cta-btn p {
+.cta-arrow-box--before {
+  margin-right: 0.75rem;
+  transform-origin: left center;
+}
+
+.cta-arrow-box--after {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  margin-top: -20px;
+  opacity: 0;
+  transform: translateX(75%) scale(0.1);
+  transform-origin: right center;
+}
+
+.cta-btn:hover .cta-arrow-box--before {
+  opacity: 0;
+  transform: translateX(-75%) scale(0.1);
+}
+
+.cta-btn:hover .cta-arrow-box--after {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.cta-btn-label {
   font-size: 1.1rem;
   position: relative;
-  transform: translateX(0%);
-  transition:
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    letter-spacing 0.4s ease,
-    color 0.4s ease;
+  z-index: 1;
+  transform: translateX(0);
+  transition: transform 0.5s cubic-bezier(0.86, 0, 0.07, 1);
+}
+
+.cta-btn:hover .cta-btn-label {
+  transform: translateX(-52px);
 }
 
 .cta-btn:hover .cta-arrow-box {
@@ -83,7 +117,7 @@
   fill: #fff;
 }
 
-.cta-btn:hover p {
+.cta-btn:hover .cta-btn-label {
   color: #fff;
 }
 
@@ -94,7 +128,7 @@
 /* ── White variant ── */
 .cta-button-white {
   background-color: #fff;
-  color: black ;
+  color: black;
   opacity: 1;
 }
 
@@ -108,37 +142,24 @@
 
 .cta-button-white:hover .cta-arrow-box {
   background-color: #fff;
-  /* box-shadow:
-    0 0 20px rgba(255, 255, 255, 0.4),
-    0 0 60px rgba(255, 255, 255, 0.15); */
 }
 
 .cta-button-white:hover .cta-arrow-box svg path {
   fill: #000;
 }
 
-.cta-button-white:hover p {
-  /* color: #000; */
-}
 @media (max-width: 1760px) {
-  .cta-arrow-box {
-    padding: 0.8rem;
-  }
+  /* .cta-arrow-box {
+    width: 36px;
+    height: 36px;
+  } */
   .cta-btn-container {
-  scale: 0.9  !important;
+    scale: 0.9 !important;
   }
 }
 
-@media (max-width: 1300px) {
-  /* .cta-btn-container {
-  scale: 0.8 !important;
-  } */
-}
 @media (max-width: 760px) {
-  /* .cta-btn-container {
-    margin-top: -20px;
-  } */
   .cta-btn {
-    padding: 0.2rem 1rem 0.2rem 0.2rem;
+    padding: 0.2rem 0.5rem 0.2rem 1rem;
   }
 }
