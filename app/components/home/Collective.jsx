@@ -164,14 +164,6 @@ function Collective() {
   return (
     <div className="collective" ref={containerRef}>
       <div className="tp-section1">
-        <h2>
-          <TextAnimation animateOnScroll={true} delay={0.3}>
-            <span>
-              {" "}
-              The Collective Behind <br /> Every Experience
-            </span>
-          </TextAnimation>
-        </h2>
         <div className="box" id="tpbox1">
           <Image
             src="/arab11.avif"
@@ -192,21 +184,6 @@ function Collective() {
         </div>
       </div>
       <div className="tp-section2">
-        <div className="tp-detailsbox">
-          <p className="p-tp-detailsbox">
-            Built by a collective of thinkers, makers, developers, creators, and
-            growth specialists, all working together to turn bold ideas into
-            digital systems that perform.
-          </p>
-          <div className="buttonsrow">
-            <CtaButton
-              href="/about"
-              // className="sale-button"
-              variant="dark"
-              label="About us"
-            />
-          </div>
-        </div>
         <div className="box" id="tpbox5">
           <Image
             src="/jeikor4.avif"
@@ -224,6 +201,34 @@ function Collective() {
             sizes="150px"
             style={{ objectFit: "cover" }}
           />
+        </div>
+      </div>
+
+      {/* Single centered content block — heading, paragraph, and button
+          together, so it's trivially centered on screen at every size
+          instead of being split across the two half-width image columns. */}
+      <div className="tp-content">
+        <h2>
+          <TextAnimation animateOnScroll={true} delay={0.3}>
+            <span>
+              {" "}
+              The Collective Behind <br /> Every Experience
+            </span>
+          </TextAnimation>
+        </h2>
+        <div className="tp-detailsbox">
+          <p className="p-tp-detailsbox">
+            Built by a collective of thinkers, makers, developers, creators, and
+            growth specialists, all working together to turn bold ideas into
+            digital systems that perform.
+          </p>
+          <div className="buttonsrow">
+            <CtaButton
+              href="/about"
+              variant="dark"
+              label="About us"
+            />
+          </div>
         </div>
       </div>
     </div>

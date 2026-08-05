@@ -123,7 +123,27 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1168px) {
+  .hp-right {
+    width: 100%;
+  }
+  .hp-left{
+    width: 42vw;
+  }
+   .hp-left,
+  .hp-right {
+    height: 500px;
+  }
+  .hp-para{
+    font-size: 19px;
+    line-height: 111%;
+  }
+  .hp-btn{
+    padding:5px 7px 5px 12px;
+    font-size:19px
+  }
+}
+@media (max-width: 868px) {
   .hp-grid {
     grid-template-columns: 1fr;
     display: flex;

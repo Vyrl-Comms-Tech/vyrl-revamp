@@ -150,6 +150,20 @@
   will-change: transform, opacity;
 }
 
+/* Resting position for the not-yet-active cards, before GSAP takes over
+   on scroll — kept as a class (rather than an inline style) so it can be
+   tuned per breakpoint. 150% of the card's own height pushed the next
+   card's top edge back into view on mobile (where the stack container is
+   shorter relative to the card), which read as the cards overlapping
+   instead of the next one waiting fully off-screen below. */
+.cardsStack-first {
+  transform: translateY(0%);
+}
+
+.cardsStack-offscreen {
+  transform: translateY(150%);
+}
+
 .cardsStack video {
   width: 35%;
   position: absolute;
@@ -244,8 +258,19 @@
 @media (max-width: 700px) {
   .cardsStack {
     width: 95vw !important;
-    height: 55vh !important;
+    height: 45vh !important;
   }
+
+  /* Container is 90vh and the card is centered within it, so a
+     translateY(150%) of the card's own (45vh) height only pushed the
+     next card down by ~67.5vh from center — not far enough below the
+     centered card to clear the viewport, which is what showed as the
+     next card's top edge overlapping the active one. Pushed further so
+     the incoming card rests fully below the visible area with a gap. */
+  .cardsStack-offscreen {
+    transform: translateY(220%);
+  }
+
 .cardsStack-desc{
   font-size: 14px;
   width: 90%;

@@ -653,10 +653,9 @@ export default function AboutUsStack() {
           <div
             key={card.id}
             ref={setCardRef}
-            className="cardsStack"
-            style={{
-              transform: index === 0 ? "translateY(0%)" : "translateY(150%)",
-            }}
+            className={
+              index === 0 ? "cardsStack cardsStack-first" : "cardsStack cardsStack-offscreen"
+            }
           >
             <div className="upperHeadingStack">
               <span>{card.tag}</span>

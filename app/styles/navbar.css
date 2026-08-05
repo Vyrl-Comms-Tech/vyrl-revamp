@@ -277,16 +277,27 @@
   .menu-dropdown {
     align-items: center;
     position: fixed;
+    top: 15%;
+  }
+      .nav-bar {
+        width: 31%;
+        height: 8vw;
+        padding: 1.6vw;
+    }
+}
+
+@media (max-width: 700px) {
+   .menu-dropdown {
+    align-items: center;
+    position: fixed;
     bottom: 15%;
+    top: auto;
   }
   .nav-bar {
     width: 80%;
     height: 15vw;
     padding: 4.6vw;
   }
-}
-
-@media (max-width: 700px) {
   .nav-link-item {
     font-size: 2.3rem;
     width: 70vw;

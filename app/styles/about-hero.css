@@ -201,6 +201,7 @@
 
   .aboutHero-desc {
     order: 2;
+    padding: 0 15px;
   }
 
   .aboutHero-imagePlaceholder {

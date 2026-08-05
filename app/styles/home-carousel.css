@@ -349,8 +349,11 @@
   .h2-section-main-heading {
     display: none;
   }
+  .h2-description{
+    width: 450px;
+  }
 }
-@media (max-width: 769px) {
+@media (max-width: 889px) {
   .h2-section {
     min-height: auto;
     padding-top: 0 !important;

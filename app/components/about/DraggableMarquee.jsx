@@ -16,69 +16,69 @@ const TEAM = [
     name: "Adeel",
     designation: "Jr. Full Stack Developer",
     image:
-      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team1_c0y0vv.jpg",
+      "/team/adeel.avif",
   },
   {
     name: "Arsalan",
     designation: "Performance Head",
     image:
-      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team2_bb0rwa.jpg",
+      "/team/arsalan.avif",
   },
   {
     name: "Fatima",
     designation: "Jr. Designer",
     image:
-      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team4_yh0c3u.jpg",
+      "/team/fatima.avif",
   },
   {
     name: "Daniyal",
     designation: "Project Manager",
     image:
-      "/t1.png",
+      "/team/daniyal.avif",
   },
 
   {
     name: "Haris",
-    designation: "Senior Full Stack Developer",
+    designation: "Sr. Full Stack Developer",
     image:
-      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team5_kebi7v.jpg",
+      "/team/haris.avif",
   },
   {
     name: "Zain",
     designation: "3D & AI Specialist",
     image:
-      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team6_xvot0o.jpg",
+      "/team/zain.avif",
   },
   {
     name: "Saqib",
-    designation: "Senior Front End Developer",
+    designation: "Sr. Front End Developer",
     image:
-      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team10_dvdwyi.jpg",
+      "/team/saqib.avif",
   },
   {
     name: "Amna",
     designation: "Account Manager",
     image:
-      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team7_ahjr4k.jpg",
+      "/team/amna.avif",
   },
 
   {
     name: "Fuad",
-    designation: "Senior Graphic Designer",
+    designation: "Sr. Graphic Designer",
     image:
-      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785397361/WhatsApp_Image_2026-07-30_at_12.20.17_PM_mzq8rn.jpg",
+      "/team/fuad.avif",
   },
   {
     name: "Maaz",
     designation: "Jr. Frontend Developer",
     image:
-      "/t2.png",
+      "/team/maaz.avif",
   },
   {
     name: "Mohsin",
     designation: "UI/UX & Design Lead",
     image:
-      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team8_zkkjqj.jpg",
+      "/team/mohsin.avif",
   },
 ];
 

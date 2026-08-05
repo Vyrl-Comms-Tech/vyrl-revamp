@@ -5,7 +5,7 @@
 }
 
 .cta-btn {
-  padding: .4rem .9rem .4rem .9rem;
+  padding: .2rem .5rem .2rem .4rem;
   width: fit-content;
   border-radius: 70px;
   display: flex;
@@ -103,7 +103,7 @@
 }
 
 .cta-btn:hover .cta-btn-label {
-  transform: translateX(-52px);
+  transform: translateX(-50px);
 }
 
 .cta-btn:hover .cta-arrow-box {
@@ -160,6 +160,6 @@
 
 @media (max-width: 760px) {
   .cta-btn {
-    padding: 0.2rem 0.5rem 0.2rem 1rem;
+    /* padding: 0.2rem 0.5rem 0.2rem 1rem; */
   }
 }

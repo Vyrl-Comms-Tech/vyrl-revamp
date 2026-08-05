@@ -1,28 +1,49 @@
 .logos-container {
-  gap: 340px;
-  display: flex;
+  display: block;
   width: 100%;
   background: #000;
   color: #fff;
   padding: 150px 48px;
+  text-align: left;
 }
 
 .logos-left {
-  flex-direction: column;
-  width: 40%;
   display: flex;
+  flex-direction: row;
+  align-items: center;
   justify-content: space-between;
+  gap: 48px;
+  width: 100%;
 }
 #about-logos-left h2 {
   font-size: 45px;
   line-height: 111%;
 }
+/* TextAnimation wraps its child (the h2) in a div.text-animation-wrapper,
+   which is the actual flex child here — sizing constraints have to go on
+   that wrapper, not the h2, or the wrapper stays content-sized and the
+   heading overflows/gets clipped by the marquee's mask below it. */
+.logos-left > .text-animation-wrapper {
+  width: 45%;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
 .logos-left h2 {
   font-size: 65px;
   font-weight: 500;
 }
 .cta-about-logos {
   margin-top: 20px;
+}
+
+/* Same TextAnimation-wrapper issue as the heading above — on the home
+   page .logos-left-desc's <p> is also a direct-child TextAnimation
+   wrapper, so width has to land there, not on the <p>. */
+.logos-left > .text-animation-wrapper:last-child {
+  width: 45%;
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 /* Targets the description paragraph's own class instead of a broad
@@ -37,69 +58,7 @@
   color: #999;
 }
 
-.logos-right {
-  width: 60%;
-  display: flex;
-  flex-direction: column;
-  gap: 11px;
-}
-
-.logos-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 13px;
-}
-
-.logo-box {
-  background: #161616;
-  border-radius: 8px;
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-blank {
-  background: transparent;
-}
-
-.logo-cursor-tracking {
-  position: relative;
-  overflow: hidden;
-  transition: box-shadow 0.5s ease;
-}
-
-.logo-cursor-tracking img {
-  position: relative;
-  z-index: 1;
-}
-
-.logo-cursor-tracking::before {
-  --size: 0%;
-  content: "";
-  position: absolute;
-  left: var(--x);
-  top: var(--y);
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(
-    ellipse 60% 60% at center,
-    rgba(255, 255, 255, 0.16),
-    transparent 70%
-  );
-  transform: translate(-50%, -50%) scale(var(--size));
-  transition: transform 0.3s ease;
-  pointer-events: none;
-}
-
-.logo-cursor-tracking:hover::before {
-  --size: 1;
-}
 @media (max-width: 1780px) {
-  .logos-container {
-    gap: 140px;
-  }
-
   .logos-left h2 {
     font-size: 62px;
   }
@@ -108,33 +67,114 @@
     font-size: 18px;
     line-height: 111%;
   }
-  .logos-left {
-    width: 55%;
+}
+
+/* ---------- About Us variant: heading left, desc+button right ---------- */
+.about-logos-container .logos-left-textcol {
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+  flex-shrink: 0;
+}
+
+@media (max-width: 760px) {
+  .about-logos-container .logos-left {
+    flex-direction: column;
+    align-items: center;
   }
 
-  .logos-right {
-    /* width: auto; */
+  .about-logos-container .logos-left-textcol {
+    width: 100%;
+    align-items: center;
   }
 }
-/* ---------- Mobile marquee (hidden on desktop) ---------- */
+
+/* ---------- Marquee logo strip (all screen sizes) ---------- */
+/* Two rows scrolling in opposite directions, full width. */
 .logos-marquee {
-  display: none;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+  margin-top: 60px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+}
+
+.logos-marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 13px;
+}
+
+.logos-marquee-track-left {
+  animation: logos-marquee-scroll-left 22s linear infinite;
+}
+
+.logos-marquee-track-right {
+  animation: logos-marquee-scroll-right 22s linear infinite;
+}
+
+.logos-marquee-item {
+  position: relative;
+  flex: 0 0 auto;
+  width: 141px;
+  aspect-ratio: 1;
+  background: #161616;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  padding: 16px;
+}
+
+@keyframes logos-marquee-scroll-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* Half the track is the duplicated set, so shifting by 50% loops
+       seamlessly. */
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes logos-marquee-scroll-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 @media (max-width: 760px) {
   .logos-container {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
     gap: 24px;
     padding: 34px 0px;
+    text-align: center;
   }
 
   .logos-left {
-    width: 100%;
+    flex-direction: column;
+    align-items: center;
     padding-inline: 15px;
     gap: 20px;
-    align-items: center;
   }
 
   /* .logos-left's own align-items: center only centers this wrapper
@@ -155,72 +195,25 @@
     font-size: 32px;
   }
 
+  .logos-left > .text-animation-wrapper,
+  .logos-left > .text-animation-wrapper:last-child {
+    width: 100%;
+  }
+
   .logos-left-desc {
     font-size: 16px;
     line-height: 111%;
     color: rgba(255, 255, 255, 0.7);
   }
 
-  /* Hide the desktop hover-glow grid; show the marquee instead. */
-  .logos-right {
-    display: none;
-  }
-
-  .logos-marquee {
-    display: block;
-    width: 100%;
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(
-      90deg,
-      transparent 0%,
-      #000 8%,
-      #000 92%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      90deg,
-      transparent 0%,
-      #000 8%,
-      #000 92%,
-      transparent 100%
-    );
-  }
   .cta-about-logos {
     align-items: center;
     justify-content: center;
     display: flex;
   }
-  .logos-marquee-track {
-    display: flex;
-    width: max-content;
-    gap: 13px;
-    animation: logos-marquee-scroll 18s linear infinite;
-  }
 
   .logos-marquee-item {
-    position: relative;
-    flex: 0 0 auto;
     width: 42vw;
-    max-width: 200px;
-    aspect-ratio: 1;
-    background: #161616;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 14px;
-    padding: 16px;
-  }
-
-  @keyframes logos-marquee-scroll {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      /* Half the track is the duplicated set (8 items = 2x4), so
-         shifting by 50% loops seamlessly. */
-      transform: translateX(-50%);
-    }
+    max-width: 130px;
   }
 }

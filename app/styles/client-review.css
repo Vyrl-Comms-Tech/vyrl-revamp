@@ -8,7 +8,7 @@
   justify-content: center;
   overflow: hidden;
   padding: 60px 40px 40px;
-  gap: 90px ;
+  gap: 90px;
 }
 
 .client-review-section-text {
@@ -317,19 +317,14 @@
 }
 @media (max-width: 1700px) {
   .client-review-section-container {
-    gap: 40px !important;
+    gap: 60px;
   }
 }
-@media (max-width: 1400px) {
-}
-.client-review-section-container {
-  gap: 90px !important;
-}
-@media (max-width: 760px) {
+@media (max-width: 1260px) {
   .client-review-section-container {
-    padding: 70px 15px 32px !important;
+    padding: 70px 15px 32px;
     min-height: auto;
-    gap: 8px !important;
+    gap: 32px;
   }
 
   .client-review-heading-line-1 {

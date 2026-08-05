@@ -622,7 +622,7 @@
   }
 
   .footer-connect-row {
-    padding: 40px 7px;
+    padding: 30px 7px;
     gap: 22px;
     border-radius: 16px;
   }
@@ -662,7 +662,7 @@
   }
 
   .footer-inner-link-col {
-    gap: 24px 20px;
+    gap: 14px 20px;
   }
 
   .footer-nav-col {
@@ -670,7 +670,7 @@
     width: calc(50% - 10px);
     min-width: 0;
     box-sizing: border-box;
-    gap: 8px;
+    gap: 3px;
   }
 
   .footer-nav-title {

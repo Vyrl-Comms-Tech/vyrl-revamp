@@ -26,6 +26,7 @@ export default function Home() {
       <LazySection>
         <ClientReviews />
       </LazySection>
+
       <LazySection>
         <Collective />
       </LazySection>
