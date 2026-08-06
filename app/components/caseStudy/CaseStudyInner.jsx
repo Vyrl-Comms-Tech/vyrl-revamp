@@ -133,20 +133,20 @@ const CaseStudyInner = ({ slug }) => {
       Flip.from(state, { duration: 0.75, ease: "power3.inOut", scale: true });
     };
 
-    // ctx.revert() kills the pinned ScrollTrigger and removes its
-    // pin-spacer — which collapses that spacer's large reserved height
-    // back down immediately. Since the page is still scrolled deep into
-    // it at this point, the browser has to clamp window.scrollY to the
-    // new (much shorter) document height, and that scroll-position snap
-    // is what read as the heading clone "landing, then jumping" even
-    // though the clone's own `top` never changed — it's position:fixed,
-    // so it only *looks* like it moved relative to the newly-scrolled page.
-    // Locking scroll to 0 in the same frame as the revert keeps nothing
-    // visibly shifting underneath the clone before navigation takes over.
-    const revertAndPreserveScroll = () => {
-      ctxRef.current?.revert();
-      window.scrollTo(0, 0);
-    };
+    // router.push() must fire *before* any of this page's own DOM/scroll
+    // state is touched. Previously this reverted the pinned ScrollTrigger
+    // (collapsing its pin-spacer) and reset scroll to 0 first, then
+    // pushed — but that revert+reset happens on this still-visible page,
+    // so the browser paints that jump-to-top snap on lala-darbar itself
+    // for a frame before the route swap ever starts, reading as "goes to
+    // top, then changes route" instead of a clean cut to the next page.
+    // Pushing first lets the route change begin immediately; the pinned
+    // ScrollTrigger and pin-spacer get torn down for free moments later
+    // as a side effect of this component's own unmount cleanup (below),
+    // by which point the incoming page is what's actually driving what's
+    // on screen — so the collapse/scroll-reset never has a visible frame
+    // to show through on the outgoing page.
+    const goToNext = () => router.push(nextHref);
 
     const textPanels = [
       { sel: ".cs-panel--1", items: [".cs-title", ".cs-services li"] },
@@ -225,10 +225,7 @@ const CaseStudyInner = ({ slug }) => {
           opacity: 1,
           duration: 0.4,
           ease: "power2.in",
-          onComplete: () => {
-            revertAndPreserveScroll();
-            router.push(nextHref);
-          },
+          onComplete: goToNext,
         });
       };
 
@@ -240,8 +237,7 @@ const CaseStudyInner = ({ slug }) => {
         const headingEl = panel8?.querySelector(".cs-p8-project-name");
 
         if (!headingEl) {
-          revertAndPreserveScroll();
-          router.push(nextHref);
+          goToNext();
           return;
         }
 
@@ -324,10 +320,7 @@ const CaseStudyInner = ({ slug }) => {
 
         // ── Two-phase path: glide left, then settle vertically
         const flyTl = gsap.timeline({
-          onComplete: () => {
-            revertAndPreserveScroll();
-            router.push(nextHref);
-          },
+          onComplete: goToNext,
         });
 
         // Phase 1 — long horizontal glide to panel-1 left edge
@@ -423,13 +416,33 @@ const CaseStudyInner = ({ slug }) => {
           // anchoring `end` to the panel's own bottom edge only gave
           // the bar a very short scroll distance to fill across — it
           // reached 100% within essentially one scroll gesture, reading
-          // as "instant" rather than something scrubbed. Using a fixed
-          // extra-scroll distance past the start point instead (same
-          // idea as desktop's extraForBar) guarantees a real multi-
-          // scroll distance to fill it regardless of the panel's own
-          // height, then pauses briefly once full before navigating so
-          // the completed bar actually registers.
-          const barScrollDistance = 700;
+          // as "instant" rather than something scrubbed.
+          //
+          // A flat extra-scroll distance past the start point doesn't
+          // work either though: panel 8 is the last thing in .cs-inner,
+          // so the only scroll room past its "bottom 90%" start point is
+          // whatever the Footer (mounted right after {children} in the
+          // root layout) happens to add below it — on mobile that's
+          // often less than a fixed desired distance, so ScrollTrigger
+          // clamps `end` to the page's real max scroll and the bar got
+          // stuck partway (e.g. ~25%) because self.progress could never
+          // reach 1 no matter how much further the user scrolled.
+          //
+          // Measuring the real remaining document height at creation
+          // time and using the smaller of "what we'd like" vs. "what
+          // actually exists below the start point" guarantees the bar
+          // can always reach 100% by the time the user hits the bottom
+          // of the page, on any viewport/footer-height combination.
+          const desiredBarScrollDistance = 700;
+          const startY =
+            panel8.getBoundingClientRect().bottom +
+            window.scrollY -
+            window.innerHeight * 0.9;
+          const availableBelow = document.documentElement.scrollHeight - startY;
+          const barScrollDistance = Math.max(
+            120,
+            Math.min(desiredBarScrollDistance, availableBelow),
+          );
           if (fill) fill.style.width = "0%";
           ScrollTrigger.create({
             trigger: panel8,

@@ -219,7 +219,7 @@
 }
 @media (max-width: 800px) {
   .heroProject {
-    height: 72vh;
+    height: 52vh;
   }
   .filterCtas h1 {
     font-size: 1.3rem;
