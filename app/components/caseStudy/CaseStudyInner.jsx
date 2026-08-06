@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
@@ -51,7 +51,15 @@ const CaseStudyInner = ({ slug }) => {
   const router = useRouter();
 
   // ── reveal: fade out the transition overlay that SPA-nav carries into this page
-  useEffect(() => {
+  // useLayoutEffect (not useEffect) so this runs BEFORE the browser paints
+  // this page's first frame, not after. With useEffect there was a real
+  // gap between "new page mounts and paints" and "this effect actually
+  // runs" — the browser could show one frame of the new page's default
+  // scroll position / pre-fade overlay state before this code got a
+  // chance to reset scroll and start the fade, which is what read as a
+  // jitter (old content, then a flash of the next page's raw state,
+  // before it visually settled).
+  useLayoutEffect(() => {
     // Next.js's client-side router keeps whatever scroll position the
     // previous page (e.g. /projects, scrolled down to reach a later
     // card) was at — it doesn't reset to the top on navigation the way
@@ -417,7 +425,7 @@ const CaseStudyInner = ({ slug }) => {
               // transition kicking off read as almost simultaneous on
               // mobile before, not leaving enough time to actually
               // register the completed bar before the page changed.
-              gsap.delayedCall(1, runMobileTransition);
+              gsap.delayedCall(2 , runMobileTransition);
             },
           });
         }
