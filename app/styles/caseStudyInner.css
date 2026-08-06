@@ -287,6 +287,18 @@
   cursor: pointer;
 }
 
+/* Exists purely as a mobile pin target (see CaseStudyInner.jsx and the
+   max-width: 900px override below) — on desktop, display: contents
+   removes it from the box tree entirely so .cs-panel--8 stays a direct
+   flex item of .cs-inner's horizontal-scroll row, exactly as if this
+   wrapper weren't there. Without this, the wrapper itself (not its
+   child) would become the flex item — defaulting to shrink-to-fit
+   content with no width rules of its own — which would break the
+   scrollWidth math the desktop horizontal-scroll timeline depends on. */
+.cs-panel--8-pin-wrap {
+  display: contents;
+}
+
 /* Reserved scroll room for the mobile loading-bar scrub (see
    CaseStudyInner.jsx) — no-op on desktop, which pins/reserves its own
    extra scroll distance via the horizontal timeline instead. */
@@ -766,17 +778,32 @@
     margin-top: 8px;
   }
 
+  /* Pin target for the loading-bar ScrollTrigger (see CaseStudyInner.jsx)
+     — GSAP pins this wrapper instead of .cs-panel--8 directly. Pinning
+     .cs-panel--8 itself fought its own width: calc(100% - 40px)
+     !important: that's a %-width, only meaningful in normal flow, and
+     GSAP's pin repeatedly reasserts its own inline position/width
+     styles on whatever it's pinning — which is what read as the panel
+     flickering/vanishing. This wrapper carries no width rules of its
+     own to conflict with, so GSAP's pin styles land clean; a plain
+     block with no margin/padding of its own so it's invisible to
+     layout otherwise. */
+  .cs-panel--8-pin-wrap {
+    display: block;
+  }
+
   /* panel 8 — next-project card, centered content-sized image */
   .cs-panel--8 {
     width: calc(100% - 40px) !important;
     height: auto;
     aspect-ratio: 4 / 3;
-    /* margin-inline: 20px; */
-    /* No margin-bottom: this panel is pinned (position: fixed while
-       active, see CaseStudyInner.jsx) and .cs-panel--8-spacer right
-       after it already supplies the scroll room for the loading-bar
-       fill — any margin here just stacks as extra empty space once
-       panel 8 unpins, on top of that spacer. */
+    margin-inline: 20px;
+    /* No margin-bottom: .cs-panel--8-pin-wrap (this panel's parent) is
+       what actually gets pinned (see CaseStudyInner.jsx), and
+       .cs-panel--8-spacer right after the wrapper already supplies the
+       scroll room for the loading-bar fill — any margin-bottom here
+       just stacks as extra empty space on top of that spacer once it
+       unpins. */
   }
 
   .cs-p8-project-name {
