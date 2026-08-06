@@ -580,7 +580,6 @@
   .cs-inner {
     flex-direction: column;
     height: auto;
-    padding-bottom: 60px;
     width: 100%;
   }
 
@@ -589,8 +588,15 @@
     /* Pure scroll room, no visible content — the loading bar's
        ScrollTrigger below scrubs its fill against this height, so
        raising/lowering it directly controls how much scrolling it
-       takes to go from 0% to 100%. */
-    height: 70vh;
+       takes to go from 0% to 100%. Panel 8 is pinned (position: fixed,
+       pinSpacing: false — see CaseStudyInner.jsx) for exactly this
+       height's worth of scroll; this element is the *only* scroll room
+       reserved for that range (GSAP isn't inserting its own spacer on
+       top), so raising/lowering this number is the one place that
+       controls both "how long panel 8 stays pinned" and "how much
+       scroll happens before the Footer" — no separate leftover gap to
+       account for once it unpins. */
+    height: 12vh;
   }
 
   .cs-panel {
@@ -766,7 +772,11 @@
     height: auto;
     aspect-ratio: 4 / 3;
     /* margin-inline: 20px; */
-    margin-bottom: 20px;
+    /* No margin-bottom: this panel is pinned (position: fixed while
+       active, see CaseStudyInner.jsx) and .cs-panel--8-spacer right
+       after it already supplies the scroll room for the loading-bar
+       fill — any margin here just stacks as extra empty space once
+       panel 8 unpins, on top of that spacer. */
   }
 
   .cs-p8-project-name {

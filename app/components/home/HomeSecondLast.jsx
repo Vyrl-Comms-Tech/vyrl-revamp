@@ -2,7 +2,7 @@
 import React from "react";
 import TextAnimation from "./TextAnimation";
 import "../../styles/home-second-last.css";
-import Link from "next/link";
+import PageTransitionLink from "../layout/PageTransitionLink";
 
 const HomeSecondLast = () => {
   return (
@@ -25,7 +25,7 @@ const HomeSecondLast = () => {
             </TextAnimation>
           </div>
 
-          <Link href="/contact-us" className="hp-btn">
+          <PageTransitionLink href="/contact-us" className="hp-btn">
             Start a Project
             <span className="hp-btn-icon">
               <svg
@@ -41,7 +41,7 @@ const HomeSecondLast = () => {
                 />
               </svg>
             </span>
-          </Link>
+          </PageTransitionLink>
         </div>
 
         {/* Right image panel */}

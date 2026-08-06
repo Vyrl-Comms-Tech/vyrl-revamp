@@ -429,6 +429,27 @@ const CaseStudyInner = ({ slug }) => {
             start: "bottom bottom",
             endTrigger: panel8Spacer,
             end: "bottom bottom",
+            // Without pinning, panel 8 just scrolls up and out of view
+            // like any normal element while the user scrolls through
+            // the spacer below it — the loading bar was filling
+            // correctly, but panel 8 itself visibly slid away instead
+            // of staying put while it filled. Pinning holds panel 8 in
+            // place for this trigger's whole range (i.e. exactly as
+            // long as the spacer takes to scroll through), then
+            // releases it right as the bar hits 100% and the page
+            // transitions away.
+            //
+            // pinSpacing: false — panel8Spacer (a real DOM sibling,
+            // see .cs-panel--8-spacer in the CSS) already supplies the
+            // scroll room this trigger needs. GSAP's default pinSpacing
+            // would additionally insert its *own* spacer around panel 8
+            // sized to the same distance, double-reserving the height
+            // and leaving a large empty gap after unpin once that
+            // spacer collapsed back down. With it off, nothing gets
+            // double-booked — panel 8 unpins right where panel8Spacer
+            // ends, no leftover gap before the Footer.
+            pin: true,
+            pinSpacing: false,
             scrub: 0.3,
             onUpdate: (self) => {
               if (isUnmountingRef.current) return;

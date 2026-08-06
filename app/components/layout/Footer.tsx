@@ -62,6 +62,28 @@ function Footer() {
     usa: "",
   });
 
+  const [isReelOpen, setIsReelOpen] = useState(false);
+  // Drives the actual CSS transition. Kept separate from isReelOpen
+  // (which controls mount/unmount) because the modal has to render once
+  // in its closed visual state first, then flip to open on the very
+  // next frame — flipping the class in the same render that mounts the
+  // element means the browser never gets a "before" frame to transition
+  // away from, so it would just appear instantly instead of animating in.
+  const [isReelVisible, setIsReelVisible] = useState(false);
+
+  const openReel = () => {
+    setIsReelOpen(true);
+    requestAnimationFrame(() => requestAnimationFrame(() => setIsReelVisible(true)));
+  };
+
+  const closeReel = () => {
+    // Reverse of opening: drop the "open" class first so the closing
+    // transition actually plays, then unmount once it's finished
+    // instead of cutting the animation off by unmounting immediately.
+    setIsReelVisible(false);
+    setTimeout(() => setIsReelOpen(false), 350);
+  };
+
   useEffect(() => {
     const video = mascotVideoRef.current;
     if (!video) return;
@@ -101,6 +123,39 @@ function Footer() {
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  // Escape-to-close, and lock page scroll while the modal is open so
+  // scrolling the page underneath doesn't fight the modal being open.
+  useEffect(() => {
+    if (!isReelOpen) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeReel();
+    };
+    window.addEventListener("keydown", onKeyDown);
+
+    // The site uses Lenis for smooth scrolling (see SmoothScroll.jsx) —
+    // it drives scroll itself via its own rAF loop, so plain
+    // body { overflow: hidden } alone doesn't stop it (Lenis keeps
+    // scrolling the page underneath regardless of native overflow).
+    // window.lenis is the same global instance CaseStudyInner.jsx
+    // already reaches for; overflow:hidden is kept too as a fallback for
+    // the brief moment before Lenis has initialized. Its declared type
+    // (inferred from wherever it's first assigned, in untyped
+    // SmoothScroll.jsx) doesn't carry the real Lenis instance shape, so
+    // TS doesn't know about .stop()/.start() without this cast.
+    const lenis = (window as unknown as { lenis?: { stop: () => void; start: () => void } }).lenis;
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    lenis?.stop();
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+      lenis?.start();
+    };
+  }, [isReelOpen]);
 
   if (hideFooter) return null;
 
@@ -376,7 +431,18 @@ function Footer() {
             </div>
           </div>
 
-          <div className="footer-next">
+          <div
+            className="footer-next"
+            role="button"
+            tabIndex={0}
+            onClick={openReel}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                openReel();
+              }
+            }}
+          >
             <h3 className="footer-next-title">Show Reel</h3>
             <div className="footer-next-bar">
               <div className="footer-next-line" />
@@ -396,6 +462,56 @@ function Footer() {
           </div>
         </div>
       </div>
+
+      {/* Show Reel modal — mounted only while isReelOpen so the video
+          element (and its network request) doesn't exist at all until
+          the user actually asks for it. It first renders in its closed
+          visual state; isReelVisible flips true a frame later (see
+          openReel above) so the browser has a real "before" frame to
+          transition away from, which is what makes the open read as a
+          smooth fade + scale-in instead of an instant appear. Closing
+          reverses that — isReelVisible drops first so the CSS
+          transition plays, then isReelOpen unmounts once it's done. */}
+      {isReelOpen && (
+        <div
+          className={`reel-modal-overlay${isReelVisible ? " reel-modal-overlay--open" : ""}`}
+          onClick={closeReel}
+        >
+          <div
+            className={`reel-modal-panel${isReelVisible ? " reel-modal-panel--open" : ""}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="reel-modal-close"
+              aria-label="Close show reel"
+              onClick={closeReel}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
+              >
+                <path
+                  d="M1 1L17 17M17 1L1 17"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+            <video
+              className="reel-modal-video"
+              src="/showreel.mp4"
+              autoPlay
+              controls
+              playsInline
+            />
+          </div>
+        </div>
+      )}
     </footer>
   );
 }

@@ -755,3 +755,89 @@
     font-size: 26px;
   }
 }
+
+/* ─── Show Reel modal ────────────────────────────────────────────
+   Opacity/scale-driven, not display:none-driven, so the open/close
+   is an actual transition — Footer.tsx mounts this in its closed
+   state first, then flips the --open modifier a frame later (and
+   drops it before unmounting), giving both directions a real "from"
+   frame to animate from/to instead of an instant show/hide. */
+.reel-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(0px);
+  opacity: 0;
+  transition:
+    opacity 0.35s ease,
+    background 0.35s ease,
+    backdrop-filter 0.35s ease;
+}
+
+.reel-modal-overlay--open {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+}
+
+.reel-modal-panel {
+  position: relative;
+  width: min(90vw, 124vh); /* 70vh tall panel at a 16:9 ratio is ~124vh wide */
+  height: 70vh;
+  max-width: 92vw;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: scale(0.92);
+  transition:
+    opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reel-modal-panel--open {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.reel-modal-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  display: block;
+}
+
+.reel-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.reel-modal-close:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+@media (max-width: 768px) {
+  .reel-modal-panel {
+    width: 92vw;
+    height: 45vh;
+  }
+}

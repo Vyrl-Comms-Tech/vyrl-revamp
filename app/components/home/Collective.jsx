@@ -111,12 +111,22 @@ function Collective() {
       // firing while the section was still entering — reading as
       // "images move before I've even reached it." Pinning again fixes
       // that: nothing animates until the section is fully in place, then
-      // it holds through a short, deliberately small scroll distance
-      // (roughly one scroll gesture per image) before releasing to the
-      // next section, instead of desktop's much longer 4-image sequence.
+      // it holds while the 2 images animate in one after another, before
+      // releasing to the next section.
+      //
+      // 0.9x container height (roughly one scroll gesture total) made
+      // each image's whole animation resolve almost instantly once
+      // scrubbed - a single scroll's worth of raw progress covered each
+      // box's entire 0.45-wide window in one go. Stretching the pin
+      // distance out (1.8x, same ballpark as desktop's 2x) means the
+      // same 0-to-1 progress now needs noticeably more physical
+      // scrolling to reach, which is what actually slows the perceived
+      // motion - scrub alone (a smoothing lag, not a speed cap) can't
+      // fix that on its own since a fast flick still reaches the same
+      // target progress just as quickly, only smoothed on the way there.
       const containerHeight = container.getBoundingClientRect().height;
       const pinEnd = isMobile
-        ? `+=${containerHeight * 0.9}`
+        ? `+=${containerHeight * 1.8}`
         : `+=${containerHeight * 2}`;
 
       trackScrollTrigger(
@@ -125,7 +135,7 @@ function Collective() {
           start: "top top",
           end: pinEnd,
           pin: true,
-          scrub: isMobile ? 1.2 : 1,
+          scrub: isMobile ? 1.6 : 1,
           id: "collective-main",
           onUpdate: (self) => {
             const progress = self.progress;

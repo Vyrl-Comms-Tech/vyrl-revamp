@@ -164,5 +164,6 @@
        lower this further to tighten the gap even more, or raise it back
        toward 2.39 to widen it. */
     --ring-multiplier: 1.7;
+    scale:.85;
   }
 }
