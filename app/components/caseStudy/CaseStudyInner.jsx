@@ -195,7 +195,19 @@ const CaseStudyInner = ({ slug }) => {
       // A plain fade-to-white-then-navigate sidesteps the mismatched math
       // entirely instead of trying to recompute it for a different layout.
       const runMobileTransition = () => {
-        if (isUnmountingRef.current) return;
+        // isUnmountingRef only flips once React has actually torn this
+        // component down, which happens on the *next* render commit —
+        // with next-view-transitions, that commit is deferred behind
+        // document.startViewTransition() taking its DOM snapshot first,
+        // so there's a real window (worse on a slow route/data fetch)
+        // where this delayed call can still fire after the user already
+        // clicked away to a different route. Comparing against the
+        // live URL closes that gap regardless of how long the other
+        // navigation's commit takes — if we're not even on this case
+        // study's own path anymore, some other navigation already won
+        // and this one must not stomp it with its own router.push.
+        if (isUnmountingRef.current || window.location.pathname !== c1.href)
+          return;
 
         const overlay = document.createElement("div");
         overlay.className = "cs-transition-overlay";
@@ -221,7 +233,10 @@ const CaseStudyInner = ({ slug }) => {
       };
 
       const runTransition = () => {
-        if (isUnmountingRef.current) return;
+        // See the matching comment in runMobileTransition above — same
+        // race, same fix.
+        if (isUnmountingRef.current || window.location.pathname !== c1.href)
+          return;
         const headingEl = panel8?.querySelector(".cs-p8-project-name");
 
         if (!headingEl) {
@@ -401,15 +416,18 @@ const CaseStudyInner = ({ slug }) => {
 
         if (panel8) {
           // Bar width is scrubbed directly off how far the user has
-          // actually scrolled through panel 8 (start: panel enters the
-          // viewport, end: panel's bottom reaches the viewport bottom) —
-          // not a fixed timer — so it only reaches 100% once genuinely
-          // scrolled all the way through, then pauses briefly before
-          // navigating so the completed bar actually registers.
+          // actually scrolled through panel 8 (start: panel's bottom
+          // section has scrolled into view, end: panel's bottom reaches
+          // the viewport bottom) — not a fixed timer — so it only starts
+          // once panel 8 is actually showing (not the instant its top
+          // edge appears at the bottom of the screen) and only reaches
+          // 100% once genuinely scrolled all the way through, then
+          // pauses briefly before navigating so the completed bar
+          // actually registers.
           if (fill) fill.style.width = "0%";
           ScrollTrigger.create({
             trigger: panel8,
-            start: "top 90%",
+            start: "bottom 90%",
             end: "bottom bottom",
             scrub: 0.3,
             onUpdate: (self) => {
