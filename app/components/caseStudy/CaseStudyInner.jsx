@@ -408,19 +408,8 @@ const CaseStudyInner = ({ slug }) => {
           });
 
         const panel8Spacer = inner.querySelector(".cs-panel--8-spacer");
-        // Pin target is the wrapper, not panel8 itself — panel8 carries
-        // width: calc(100% - 40px) !important, a %-width that's only
-        // meaningful in normal flow. GSAP's pin switches its trigger
-        // element to position: fixed and writes its own inline
-        // top/width styles on it directly; fighting that with a class
-        // (tried first) still lost since GSAP's inline styles keep
-        // getting reasserted on every pin recalculation, which is what
-        // read as flickering/vanishing. The wrapper has no width rules
-        // of its own to conflict with, so GSAP's pin styles land clean
-        // and panel8 inside it just fills it via ordinary CSS.
-        const panel8PinWrap = inner.querySelector(".cs-panel--8-pin-wrap");
 
-        if (panel8PinWrap && panel8Spacer) {
+        if (panel8 && panel8Spacer) {
           // Bar width is scrubbed against a dedicated spacer reserved
           // right after panel 8 (see .cs-panel--8-spacer in the CSS),
           // not against panel 8's own height or whatever's left of the
@@ -436,31 +425,10 @@ const CaseStudyInner = ({ slug }) => {
           // "parked" on panel 8 while filling, not racing ahead of it.
           if (fill) fill.style.width = "0%";
           ScrollTrigger.create({
-            trigger: panel8PinWrap,
+            trigger: panel8,
             start: "bottom bottom",
             endTrigger: panel8Spacer,
             end: "bottom bottom",
-            // Without pinning, panel 8 just scrolls up and out of view
-            // like any normal element while the user scrolls through
-            // the spacer below it — the loading bar was filling
-            // correctly, but panel 8 itself visibly slid away instead
-            // of staying put while it filled. Pinning holds it in
-            // place for this trigger's whole range (i.e. exactly as
-            // long as the spacer takes to scroll through), then
-            // releases it right as the bar hits 100% and the page
-            // transitions away.
-            //
-            // pinSpacing: false — panel8Spacer (a real DOM sibling,
-            // see .cs-panel--8-spacer in the CSS) already supplies the
-            // scroll room this trigger needs. GSAP's default pinSpacing
-            // would additionally insert its *own* spacer around the
-            // wrapper sized to the same distance, double-reserving the
-            // height and leaving a large empty gap after unpin once
-            // that spacer collapsed back down. With it off, nothing
-            // gets double-booked — it unpins right where panel8Spacer
-            // ends, no leftover gap before the Footer.
-            pin: true,
-            pinSpacing: false,
             scrub: 0.3,
             onUpdate: (self) => {
               if (isUnmountingRef.current) return;
@@ -729,16 +697,7 @@ const CaseStudyInner = ({ slug }) => {
             <p className="cs-similar-sub">{c1.creditsText}</p>
           </div>
 
-          {/* Panel 8 — next project. Wrapped in .cs-panel--8-pin-wrap
-              purely so the mobile ScrollTrigger below has something
-              clean to pin: pinning .cs-panel--8 directly fought its own
-              width: calc(100% - 40px) !important (a %-width, only
-              meaningful in normal flow — once GSAP's pin switches it to
-              position: fixed, that stopped resolving sanely and read as
-              the panel flickering/vanishing). The wrapper carries no
-              width rules of its own to conflict with, so GSAP's pin
-              styles land on an element with nothing fighting them. */}
-          <div className="cs-panel--8-pin-wrap">
+          {/* Panel 8 — next project */}
           <div className="cs-panel cs-panel--8">
             <Image
               className="cs-full-img"
@@ -776,7 +735,6 @@ const CaseStudyInner = ({ slug }) => {
                 </span>
               </div>
             </div>
-          </div>
           </div>
 
           {/* Mobile-only spacer reserved purely for the panel-8 loading
