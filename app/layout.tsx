@@ -47,6 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <ViewTransitions>
+      
       <html
         lang="en"
         className={`${neueMontreal.variable} h-full antialiased`}

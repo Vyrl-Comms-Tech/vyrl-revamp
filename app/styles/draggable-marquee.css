@@ -1,9 +1,21 @@
 .draggable-marquee {
-  --marquee-gap: 24px;
+  /* Fluid instead of a handful of fixed-px steps at each breakpoint —
+     scales smoothly with viewport width so the gap never looks
+     disproportionately large/small relative to the card next to it,
+     the way jumping between fixed px tiers could at in-between widths. */
+  --marquee-gap: clamp(14px, 2vw, 34px);
 
   position: relative;
   width: 100%;
-  height: 100vh;
+  /* Was a flat 100vh (with breakpoint overrides up to 110vh) regardless
+     of how tall the cards actually rendered — cards size their image by
+     aspect-ratio off a fluid, narrower-than-100vh-implies width (see
+     .draggable-marquee-item below), so most of that reserved viewport
+     height sat empty beneath the text. Sizing the section off the
+     item's own natural height keeps the section only as tall as the
+     content actually needs. */
+  height: fit-content;
+  padding: 60px 0;
   background: #000;
   overflow: hidden;
   cursor: none;
@@ -11,12 +23,21 @@
 .draggable-marquee-viewport {
   position: relative;
   width: 100%;
-  height: 100%;
   overflow: hidden;
 }
 .draggable-marquee-track {
-  position: absolute;
-  inset: 0;
+  /* Was position: absolute; inset: 0, sized entirely by its (fixed-
+     height) ancestor. Now that the section sizes itself off the
+     track's own content instead (height: fit-content, see
+     .draggable-marquee above), the track needs to be a normal-flow
+     element whose own height comes from its children — an absolutely
+     positioned box can't hand its content height back up the chain,
+     which is exactly the "section stays tall regardless of content"
+     problem this is fixing. GSAP's horizontalLoop only ever animates
+     x/xPercent on this element, so removing positioning here doesn't
+     affect the drag/scroll mechanic itself. */
+  position: relative;
+  width: 100%;
   display: flex;
   align-items: center;
   will-change: transform;
@@ -24,8 +45,10 @@
 
 .draggable-marquee-item {
   position: relative;
-  flex: 0 0 660px;
-  max-height: 90%;
+  /* Fluid card width instead of fixed-px steps per breakpoint — see
+     --marquee-gap above for the same reasoning. Scales continuously
+     between a floor and ceiling rather than jumping at each tier. */
+  flex: 0 0 clamp(280px, 33vw, 640px);
 
   /* Gap becomes part of the measured loop item */
   padding-right: var(--marquee-gap);
@@ -55,22 +78,31 @@
 /* Only the image itself clips to a fixed aspect-ratio box — the
    caption below is regular document flow underneath it, not an
    absolutely-positioned overlay sitting on top of the photo. */
-/* Everything belonging to one member stays inside this wrapper */
+/* Everything belonging to one member stays inside this wrapper. Height
+   is no longer forced to 100% of a tall fixed-height item — the card
+   (and the section around it) now sizes off its own content: the
+   image's aspect-ratio box plus the text below, so there's no leftover
+   empty space the way there was when the item was pinned to 90% of a
+   100vh section regardless of how tall the content actually was. */
 .draggable-marquee-card {
   width: 100%;
   min-width: 0;
   display: flex;
   flex-direction: column;
+  gap: 12px;
   overflow: hidden;
   box-sizing: border-box;
 }
 
+/* Sized by its own aspect-ratio — the box's edge IS the photo's edge,
+   so object-fit: contain on the <img> below can't letterbox inside a
+   taller box the way it did when this used to flex-grow to fill
+   leftover space in a fixed-height item. */
 .draggable-marquee-image {
   position: relative;
   width: 100%;
-  aspect-ratio: 690 / 820;
+  aspect-ratio: 690 / 900;
   overflow: hidden;
-  flex-shrink: 0;
 }
 
 .draggable-marquee-image img {
@@ -85,10 +117,13 @@
 .draggable-marquee-info {
   position: relative;
   z-index: 5;
+  flex-shrink: 0;
 
   width: 100%;
   min-width: 0;
-  padding: 14px 14px 10px;
+  /* Top spacing now comes from .draggable-marquee-card's own gap, not
+     here — having both compounded into a bigger gap than intended. */
+  padding: 0 0 10px;
   box-sizing: border-box;
 
   color: #fff;
@@ -211,42 +246,14 @@
   line-height: 1;
 }
 
-/* Laptop range: .draggable-marquee-item's flex-basis was a flat 660px
-   with no breakpoint below desktop, so laptop-width viewports showed
-   the same desktop card size — cards ran edge-to-edge/cropped instead
-   of scaling down with the viewport. horizontalLoop measures each
-   card's actual rendered width via getBoundingClientRect() at mount
-   (and re-measures on the existing resize listener's refresh()), so
-   shrinking flex-basis here is safe — no JS constant to keep in sync. */
-@media (max-width: 1700px) {
-  .draggable-marquee-item {
-    flex-basis: 520px;
-  }
-}
-
-@media (max-width: 1520px) {
-  .draggable-marquee-item {
-    flex-basis: 480px;
-  }
-}
-
-@media (max-width: 1420px) {
-  .draggable-marquee-item {
-    flex-basis: 440px;
-  }  .draggable-marquee {
-    height: 110vh;
-  }
-}
-
+/* Card width now scales continuously via the clamp() on
+   .draggable-marquee-item's flex-basis above — horizontalLoop measures
+   each card's actual rendered width via getBoundingClientRect() at
+   mount (and re-measures on the existing resize listener's refresh()),
+   so these breakpoints only need to adjust badge sizing, not flex-basis
+   or section height (the section now sizes off its content, see
+   .draggable-marquee above). */
 @media (max-width: 1300px) {
-  .draggable-marquee {
-    height: 100vh;
-  }
-
-  .draggable-marquee-item {
-    flex-basis: 400px;
-  }
-
   .draggable-marquee-badge {
     width: 130px;
     height: 130px;
@@ -265,31 +272,11 @@
 
 @media (max-width: 900px) {
   .draggable-marquee {
-    height: 67vh;
     cursor: grab;
+    padding: 40px 0;
   }
 
   .draggable-marquee-item {
-    flex-basis: 72vw;
-  }
-
-  .draggable-marquee-badge {
-    display: none;
-  }
-
-  .draggable-marquee-name {
-    font-size: 1.2rem;
-  }
-}
-
-@media (max-width: 900px) {
-  .draggable-marquee {
-    height: 55vh;
-    cursor: grab;
-  }
-
-  .draggable-marquee-item {
-    flex-basis: 65vw;
     transform: none;
   }
 

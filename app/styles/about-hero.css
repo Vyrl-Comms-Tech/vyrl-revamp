@@ -214,10 +214,15 @@
 
   /* Starting size for the scroll-driven scale-up — the JS reads this
      element's rect as the small "before" snapshot for GSAP Flip, so
-     this box's actual width/height IS the animation's start size. */
+     this box's actual width/height IS the animation's start size.
+     Negative margin-top pulls it closer to the description above:
+     .aboutHero-bottomRow's 1rem gap plus this box's own height plus
+     .aboutHero-imageSpacer's margin-top below were stacking into a
+     bigger visual gap than intended before the video underneath. */
   .aboutHero-imagePlaceholder {
     width: 200px;
-    height: 74px;
+    height: 124px;
+    margin-top: -0.5rem ;
   }
 
   /* Final size the image scales up to — the JS reads this element's
@@ -227,7 +232,7 @@
     width: 340px;
     max-width: 80vw;
     height: 420px;
-    margin-top: 1.2rem;
+    margin-top: 0.5rem;
     margin-inline: auto;
   }
 

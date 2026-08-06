@@ -11,7 +11,13 @@
   display: flex;
   align-items: center;
   background: #fff;
-  padding: 150px 240px 40px;
+  /* Fluid horizontal padding instead of a fixed 240px (with fixed-px
+     step-downs per breakpoint below) — a flat 240px stayed disproportio-
+     nately large as the viewport narrowed, pushing the heading further
+     in from the edge than content elsewhere on the page (e.g. the
+     marquee below, which sizes off vw), reading as "off to one side."
+     Scales continuously between a floor and ceiling instead. */
+  padding: 150px clamp(24px, 8vw, 240px) 40px;
 }
 
 .hs-text-inner {
@@ -187,7 +193,7 @@
 
 @media (max-width: 1860px) {
   .hs-text-section {
-    padding: 100px 136px 40px;
+    padding-top: 100px;
   }
   .hs-cards-section {
     padding: 2rem 3rem 5rem;
@@ -231,7 +237,8 @@
 }
 @media (max-width: 840px) {
   .hs-text-section {
-    padding: 2rem 15px 2.7rem 1.6rem;
+    padding-top: 2rem;
+    padding-bottom: 2.7rem;
     min-height: auto;
   }
   .hs-cards-section {

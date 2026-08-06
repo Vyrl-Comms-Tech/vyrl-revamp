@@ -26,73 +26,127 @@ const AboutHero = () => {
       const spacer = spacerRef.current;
       if (!container || !top || !imageWrap || !placeholder || !spacer) return;
 
-      const containerRect = container.getBoundingClientRect();
-      const placeholderRect = placeholder.getBoundingClientRect();
-      const spacerRect = spacer.getBoundingClientRect();
+      let tween;
+      let cancelled = false;
 
-      // Natural (final) rect — where the image should sit once fully
-      // scrolled through, matching the spacer's reserved position/size.
+      // Snap the image to the placeholder's box immediately (synchronously,
+      // same frame) so there's no flash of it sitting at its unstyled
+      // top:0/left:0 default before the deferred measurement below runs.
+      const initialPlaceholderRect = placeholder.getBoundingClientRect();
+      const initialContainerRect = container.getBoundingClientRect();
       gsap.set(imageWrap, {
-        top: spacerRect.top - containerRect.top,
-        left: spacerRect.left - containerRect.left,
-        width: spacerRect.width,
-        height: spacerRect.height,
-      });
-      const naturalState = Flip.getState(imageWrap);
-
-      // Small starting rect — snapped onto the placeholder box.
-      gsap.set(imageWrap, {
-        top: placeholderRect.top - containerRect.top,
-        left: placeholderRect.left - containerRect.left,
-        width: placeholderRect.width,
-        height: placeholderRect.height,
+        top: initialPlaceholderRect.top - initialContainerRect.top,
+        left: initialPlaceholderRect.left - initialContainerRect.left,
+        width: initialPlaceholderRect.width,
+        height: initialPlaceholderRect.height,
       });
 
-      const flip = Flip.fit(imageWrap, naturalState, {
-        getVars: true,
-      });
+      // On client-side navigation into this page (e.g. clicking "About"
+      // from the navbar), this effect can run before the new route's
+      // layout has actually settled — fonts still swapping in, the embed
+      // background image not yet loaded, or the page not yet scrolled
+      // back to top. Measuring container/placeholder/spacer rects at
+      // that moment bakes in wrong values into both the Flip states AND
+      // the tween's target ("flip") vars, not just the ScrollTrigger's
+      // start/end — a later ScrollTrigger.refresh() (SmoothScroll.jsx
+      // runs one on every route change) only fixes the trigger's scroll
+      // position, not these already-computed Flip vars, so the image sat
+      // wrong/overlapping the description until something else (like the
+      // user's own scroll) forced a full re-measure. Waiting for fonts
+      // and a couple of paint frames before measuring avoids that stale
+      // snapshot in the first place — the cheap snap above keeps the
+      // image correctly placed in the meantime.
+      const fontsReady =
+        typeof document !== "undefined" && document.fonts?.ready
+          ? document.fonts.ready
+          : Promise.resolve();
 
-      // No pinning — the image simply grows/moves as a normal part of
-      // the page's scroll. The animation spans exactly the natural
-      // distance between the top row (where the small placeholder
-      // sits) and the spacer (where the full-size image settles), so
-      // it finishes right as that content scrolls into place — no
-      // pin, no leftover blank gap.
-      //
-      // scrub is passed straight to the tween (rather than driving a
-      // paused tween's progress from a separate ScrollTrigger onUpdate)
-      // so GSAP's own scrub interpolation smooths it — the manual
-      // progress() relay added an extra frame of lag on top of Lenis.
-      // Starts only once the full 100vh top section has scrolled past
-      // (its own bottom edge reaches the viewport bottom) — not
-      // "container top hits viewport center." .aboutHero-top is a full
-      // 100vh now, so the container's top sits at y=0 on load, already
-      // above viewport-center; using the container (or the in-view
-      // placeholder) as the start trigger meant the tween was already
-      // partway through — imageWrap grown and overlapping the
-      // description — before the user had scrolled at all.
-      const tween = gsap.to(imageWrap, {
-        ...flip,
-        ease: "none",
-        scrollTrigger: {
-          trigger: top,
-          start: "bottom bottom",
-          endTrigger: spacer,
-          // Was end: "bottom bottom" — on narrow viewports where
-          // .aboutHero-top hugs its content (see about-hero.css's
-          // ≤900px block) instead of a fixed 100vh, that leaves very
-          // little scroll distance between the two trigger points, so
-          // the grow finished in a couple hundred px of scroll and
-          // read as broken/instant. The +=250 stretches the scrub
-          // range further past the spacer without needing extra
-          // visual gap in the CSS.
-          end: "bottom+=250 bottom",
-          scrub: 0.5,
-        },
+      fontsReady.then(() => {
+        if (cancelled) return;
+        requestAnimationFrame(() => {
+          if (cancelled) return;
+          requestAnimationFrame(() => {
+            if (cancelled) return;
+
+            ScrollTrigger.refresh();
+
+            const containerRect = container.getBoundingClientRect();
+            const placeholderRect = placeholder.getBoundingClientRect();
+            const spacerRect = spacer.getBoundingClientRect();
+
+            // Natural (final) rect — where the image should sit once fully
+            // scrolled through, matching the spacer's reserved position/size.
+            gsap.set(imageWrap, {
+              top: spacerRect.top - containerRect.top,
+              left: spacerRect.left - containerRect.left,
+              width: spacerRect.width,
+              height: spacerRect.height,
+            });
+            const naturalState = Flip.getState(imageWrap);
+
+            // Small starting rect — snapped onto the placeholder box.
+            gsap.set(imageWrap, {
+              top: placeholderRect.top - containerRect.top,
+              left: placeholderRect.left - containerRect.left,
+              width: placeholderRect.width,
+              height: placeholderRect.height,
+            });
+
+            const flip = Flip.fit(imageWrap, naturalState, {
+              getVars: true,
+            });
+
+            // No pinning — the image simply grows/moves as a normal part of
+            // the page's scroll. Starts once .aboutHero-top's own bottom
+            // edge hits the viewport bottom — desktop's existing "wait for
+            // the hero text to pass, then grow" trigger point, left as-is
+            // since desktop already works correctly.
+            //
+            // scrub is passed straight to the tween (rather than driving a
+            // paused tween's progress from a separate ScrollTrigger onUpdate)
+            // so GSAP's own scrub interpolation smooths it — the manual
+            // progress() relay added an extra frame of lag on top of Lenis.
+            //
+            // Mobile gets its own fixed-distance trigger instead of reusing
+            // desktop's layout-derived endTrigger/spacer math. On mobile
+            // .aboutHero-top is short (auto-height, hugging its stacked
+            // text — see about-hero.css's ≤900px block), so the real
+            // distance between "top's bottom hits viewport bottom" and the
+            // spacer could end up tiny or even already behind the initial
+            // scroll position by the time this deferred setup runs — which
+            // is what showed as the video already sitting full-size with no
+            // visible grow, and nothing left to scrub through afterward.
+            // A trigger anchored to the container's own top, scrubbing over
+            // a fixed viewport-relative distance, can't collapse like that.
+            const isMobile = window.innerWidth <= 900;
+
+            tween = gsap.to(imageWrap, {
+              ...flip,
+              ease: "none",
+              scrollTrigger: isMobile
+                ? {
+                    trigger: container,
+                    start: "top top",
+                    end: `+=${window.innerHeight * 0.2}`,
+                    scrub: 0.5,
+                  }
+                : {
+                    trigger: top,
+                    start: "bottom bottom",
+                    endTrigger: spacer,
+                    end: "bottom-=30 bottom",
+                    scrub: 0.5,
+                  },
+            });
+
+            ScrollTrigger.refresh();
+          });
+        });
       });
 
       return () => {
-        tween.kill();
+        cancelled = true;
+        tween?.kill();
       };
     },
     { scope: containerRef, dependencies: [] },

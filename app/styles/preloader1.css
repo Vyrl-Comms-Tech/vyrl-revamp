@@ -1,0 +1,120 @@
+/* ==========================================================================
+   Preloader.css
+   Scoped styles for <Preloader />. Every selector is namespaced under
+   .pre-loader so importing this file globally in Next.js won't bleed
+   into the rest of the app.
+   ========================================================================== */
+
+.pre-loader {
+  width: 100vw;
+  height: 100vh;
+  background-color: #ffffff;
+  overflow: hidden;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.pre-loader * {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.pre-loader--exiting {
+  pointer-events: none;
+}
+
+.pre-loader svg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+}
+
+@media (max-width: 800px) {
+  .pre-loader svg {
+    scale: 0.3;
+    left: -2%;
+    top: 38%;
+  }
+}
+
+.pre-loader .first-path {
+  transform: translateX(35%);
+  fill: transparent;
+  stroke: #000000;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pre-loader .hide {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.pre-loader .bgs {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+
+.pre-loader .counters {
+  position: absolute;
+  bottom: 3%;
+  left: 3%;
+  font-size: 2rem;
+  line-height: 1;
+  color: #000000;
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+  Respect reduced-motion users: skip the elaborate draw/morph and just
+  fade the loader out fast. GSAP timelines above still run (JS doesn't
+  read this media query), so if you want a *true* reduced-motion path,
+  branch in Preloader.jsx using:
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  and skip straight to the exit fade when true.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .pre-loader {
+    transition-duration: 0.15s;
+  }
+}
+
+/*
+  NOTE on the original `html { font-size: 0.83333333vw }` rule:
+  That rewrote the base rem unit for the *entire document*, not just the
+  preloader. I intentionally did NOT bring it into this file, because
+  importing it here would silently resize every `rem`-based element in
+  your whole Next.js app for as long as this stylesheet is loaded.
+
+  If your site's overall type scale is actually built on that vw-based
+  rem (common in Locomotive/GSAP agency sites), it belongs in your
+  global stylesheet (e.g. app/globals.css) as an intentional, app-wide
+  decision — not smuggled in via the preloader component:
+
+    html {
+      font-size: 0.83333333vw;
+    }
+
+    @media (max-width: 800px) {
+      html {
+        font-size: 2.6vw; // pick a sane mobile equivalent
+      }
+    }
+*/

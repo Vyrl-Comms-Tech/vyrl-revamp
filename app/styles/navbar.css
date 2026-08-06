@@ -46,10 +46,22 @@
   align-items: center;
   cursor: pointer;
   text-decoration: none;
+  /* Clips the .dn-to logo copy (see below) to this box's own bounds
+     regardless of .nav-bar's height — .nav-bar used to be the only
+     thing clipping it (overflow: hidden there), which worked at its
+     desktop height (4vw) but not once .nav-bar grows to 15vw on mobile
+     (≤700px breakpoint): that taller box gave the translateY(100%)
+     copy room to become visible below the real logo instead of staying
+     clipped out of view, which is what showed as the logo twice. */
+  overflow: hidden;
+  height: 37px;
+  width: 84px;
 }
 
 .logo svg {
   position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .dn-to {
