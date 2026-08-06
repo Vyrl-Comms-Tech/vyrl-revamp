@@ -418,36 +418,29 @@ const CaseStudyInner = ({ slug }) => {
           // reached 100% within essentially one scroll gesture, reading
           // as "instant" rather than something scrubbed.
           //
-          // A flat extra-scroll distance past the start point doesn't
+          // A flat extra-scroll distance past a fixed start point doesn't
           // work either though: panel 8 is the last thing in .cs-inner,
-          // so the only scroll room past its "bottom 90%" start point is
+          // so the only scroll room past a "bottom 90%"-style start is
           // whatever the Footer (mounted right after {children} in the
           // root layout) happens to add below it — on mobile that's
           // often less than a fixed desired distance, so ScrollTrigger
-          // clamps `end` to the page's real max scroll and the bar got
+          // clamped `end` to the page's real max scroll and the bar got
           // stuck partway (e.g. ~25%) because self.progress could never
           // reach 1 no matter how much further the user scrolled.
           //
-          // Measuring the real remaining document height at creation
-          // time and using the smaller of "what we'd like" vs. "what
-          // actually exists below the start point" guarantees the bar
-          // can always reach 100% by the time the user hits the bottom
-          // of the page, on any viewport/footer-height combination.
-          const desiredBarScrollDistance = 700;
-          const startY =
-            panel8.getBoundingClientRect().bottom +
-            window.scrollY -
-            window.innerHeight * 0.9;
-          const availableBelow = document.documentElement.scrollHeight - startY;
-          const barScrollDistance = Math.max(
-            120,
-            Math.min(desiredBarScrollDistance, availableBelow),
-          );
+          // "bottom bottom" is the fix for that half — it's always
+          // exactly the real last scrollable pixel, so it's always
+          // reachable. To get a real multi-scroll distance out of that
+          // (not "instant" like it was with start: "top 90%"/panel 8's
+          // own short height), start is pulled earlier — "top center"
+          // (panel 8 arrives at mid-viewport) instead of near its own
+          // bottom — so there's meaningfully more scroll between start
+          // and end regardless of how tall the Footer happens to be.
           if (fill) fill.style.width = "0%";
           ScrollTrigger.create({
             trigger: panel8,
-            start: "bottom 90%",
-            end: `+=${barScrollDistance}`,
+            start: "top center",
+            end: "bottom bottom",
             scrub: 0.3,
             onUpdate: (self) => {
               if (isUnmountingRef.current) return;
