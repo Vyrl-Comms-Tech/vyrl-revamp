@@ -10,7 +10,10 @@ const page = () => {
       <Suspense fallback={null}>
         <ProjectsGrid />
       </Suspense>
+
+      <div className="client-review-section-container-project">
       <ClientReviews />
+      </div>
       <ServicesSecondLast />
       {/* <HomeSecondLast /> */}
     </div>

@@ -183,7 +183,22 @@ export default function ProjectsGrid() {
       });
     }, sectionRef);
 
-    return () => ctx.revert();
+    // Each card's ScrollTrigger caches its "top 75%" start position
+    // against whatever the DOM layout is at the moment it's created.
+    // Card heights here are responsive (clamp()-based, changing per
+    // breakpoint), and media/fonts can still be loading in — if that
+    // settles after this effect runs, the cached trigger points go
+    // stale relative to the final layout. That let cards (especially
+    // the last row, e.g. JEIKOR/SANAM CARS) fire late or land mid-
+    // animation, reading as overlapping the section below instead of
+    // cleanly finishing before it. Refreshing on the next frame
+    // recalculates every trigger against the settled layout.
+    const refreshId = requestAnimationFrame(() => ScrollTrigger.refresh());
+
+    return () => {
+      cancelAnimationFrame(refreshId);
+      ctx.revert();
+    };
   }, []);
 
   // --- Filter: re-run whenever the active category changes --------------

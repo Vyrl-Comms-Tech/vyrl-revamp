@@ -119,3 +119,9 @@ html.preloader-active {
   backface-visibility: hidden;
   transform: translateZ(0);
 }
+
+.client-review-section-container-project{
+  position: relative
+  ;
+  padding-top: 200px;
+}

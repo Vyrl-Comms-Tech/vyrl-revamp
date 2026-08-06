@@ -1,7 +1,21 @@
 .banner {
-  padding: 10rem 3% 6rem;
+  /* height: auto everywhere — the box sizes itself to its actual content
+     (heading + text + carousel) instead of a per-breakpoint vh/min-height
+     guess. Those guesses assumed a content height that didn't actually
+     match at every width, which is what cut cards off on some screens
+     and left huge empty padding on others. Vertical rhythm is controlled
+     entirely by the padding below, which scales smoothly with viewport
+     via clamp() instead of jumping between fixed values per breakpoint. */
+  height: auto;
+  /* Bottom padding is bigger than the top: the cards are absolutely
+     positioned and 3D-tilted (rotateX + large translateZ), so they
+     visually extend well past .slider's own small flat layout box —
+     height: auto only accounts for that flat box, not how far the
+     tilted cards actually render below it. Without this extra room the
+     cards get cut right at the container edge with no breathing space
+     underneath. */
+  padding: clamp(4rem, 9vw, 10rem) 3% clamp(11rem, 24vw, 24rem);
   width: 100%;
-  min-height: 120vh;
   text-align: center;
   overflow: hidden;
   position: relative;
@@ -33,7 +47,7 @@
 
 .slider-headingCol h1 {
   color: #011825;
-  font-size: clamp(44px, 4.5rem, 5.6rem);
+  font-size: clamp(2.75rem, 4.5vw, 5.6rem);
   font-weight: 500;
   line-height: 1.15;
 }
@@ -58,15 +72,30 @@
   margin-bottom: 1.5rem;
 }
 
+/* Carousel sizing: clamp()-based so it scales continuously with viewport
+   width instead of the old patchwork of fixed px/vw values plus a
+   separate `scale` transform re-tuned at each breakpoint. One formula
+   that behaves consistently at every width in between, not just at the
+   handful of widths someone happened to test. */
 .banner .slider {
+  /* --card-w drives both the card's own width AND the ring radius
+     (translateZ) below from the same single value, so their ratio is
+     locked at every viewport size. Previously width used one clamp()
+     and translateZ used a separate, independently-tuned clamp() — their
+     min/max/vw-coefficients didn't shrink at the same rate, so the ring
+     radius could shrink faster than the card width at some in-between
+     sizes, pulling adjacent cards inward until they overlapped instead
+     of sitting edge-to-edge. */
+  --card-w: clamp(100px, 16vw, 230px);
   position: relative;
-  width: 230px;
-  height: 16vw;
-  margin: 6rem auto 0;
+  width: var(--card-w);
+  height: clamp(130px, 22vw, 320px);
+  margin: clamp(2rem, 5vw, 6rem) auto 0;
   transform-style: preserve-3d;
   transform: perspective(1000px);
   animation: autoRun 40s linear infinite;
   z-index: 2;
+  /* scale:0.7 !important; */
   flex-shrink: 0;
 }
 @keyframes autoRun {
@@ -78,59 +107,38 @@
   }
 }
 
+.banner .slider {
+  /* Ring radius multiplier as its own variable so it can be overridden
+     per-breakpoint (see mobile media query below) without touching the
+     translateZ calc() itself. Lowering it pulls every card on the ring
+     closer together — smaller radius relative to card width means less
+     visible gap between adjacent cards. */
+  --ring-multiplier: 2.39;
+}
+
 .banner .slider .item {
   position: absolute;
   inset: 0 0 0 0;
+  /* translateZ is a fixed multiple of --card-w (the same variable that
+     drives the card's own width) instead of its own independent clamp().
+     2.39x matches the original desktop ratio (550px radius / 230px card
+     width) and now holds at every viewport size, so the ring radius
+     always shrinks/grows in lockstep with the card width — cards stay
+     edge-to-edge instead of overlapping when the layout shrinks. */
   transform: rotateY(
       calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
     )
-    translateZ(550px);
+    translateZ(calc(var(--card-w) * var(--ring-multiplier)));
 }
 .banner .slider .item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-@media (max-width: 1720px) {
-  .banner {
-    height: 150vh;
-  }
 
-  .banner .slider {
-    /* position: relative; */
-    /* width: 230px; */
-    height: 18vw;
-  }
-}
-@media (max-width: 1620px) {
-  .banner {
-    padding: 7rem 3% 6rem;
-    height: 150vh;
-  }
-
+@media (max-width: 1623px) {
   .banner .slider {
     scale: 0.9;
-    height: 21vw;
-  }
-}
-@media (max-width: 1400px) {
-  .banner {
-    height: 139vh;
-  }
-  /* .banner .slider {
-    height: 22vw;
-    scale: 0.8;
-  } */
-       .banner .slider {
-        height: 25vw;
-        scale: 0.6;
-        margin-top: 0.2rem;
-    }
-  .slider-headingCol h1{
-    font-size: 3.2rem;
-  }
-  .slider-desc {
-  font-size: 1rem;
   }
 }
 @media (max-width: 1023px) {
@@ -143,80 +151,18 @@
     text-align: left;
     max-width: unset;
   }
-
-  .banner .slider {
-    width: 160px;
-    height: 280px;
-  }
-  .banner .slider .item {
-    transform: rotateY(
-        calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
-      )
-      translateZ(300px);
-  }
 }
+
 @media (max-width: 767px) {
-  /* .banner .slider {
-    width: 100px;
-    height: 150px;
-  }
-  .slider-headingCol h1 {
-    font-size: 3rem;
-  }
-  .banner .slider .item {
-    transform: rotateY(
-        calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
-      )
-      translateZ(180px);
-  }
   .banner {
-    height: 90vh;
-    min-height: 80vh;
-    padding: 6rem 15px 2rem;
+    padding: clamp(4rem, 9vw, 10rem) 3% clamp(8rem, 20vw, 20rem);
   }
-  .slider-desc {
-    font-size: 18px;
-  }
-  .slider-top {
-    gap: 1rem;
-  }
-
-  .slider-desc {
-    font-size: 18px;
-  } */
-   
-}
-@media (max-width: 760px) {
   .banner .slider {
-    width: 100px;
-    height: 130px;
-    margin-top: 2.4rem;
-    scale: 0.95;
-  }
-
-  .slider-headingCol h1 {
-    font-size: 3rem;
-  }
-
-  .banner .slider .item {
-    transform:
-      rotateY(
-        calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
-      )
-      translateZ(180px);
-  }
-
-  .banner {
-    height: auto;
-    min-height: 80vh;
-    padding: 6rem 15px 5rem;
-  }
-
-  .slider-desc {
-    font-size: 18px;
-  }
-
-  .slider-top {
-    gap: 1rem;
+    --card-w: clamp(110px, 19vw, 236px);
+    height: clamp(150px, 24vw, 360px);
+    /* Smaller ring radius so cards sit closer together on mobile —
+       lower this further to tighten the gap even more, or raise it back
+       toward 2.39 to widen it. */
+    --ring-multiplier: 1.7;
   }
 }

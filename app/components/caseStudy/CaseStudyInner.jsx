@@ -176,6 +176,42 @@ const CaseStudyInner = ({ slug }) => {
       const maxHorizDist = isMobile ? 0 : inner.scrollWidth - window.innerWidth;
       const phase2Dur = maxHorizDist > 0 ? extraForBar / maxHorizDist : 0.1;
 
+      // Mobile equivalent of runTransition below, minus the heading-fly
+      // animation. That fly effect computes its target position from
+      // getBoundingClientRect() math written for the desktop horizontal-
+      // scroll layout (panels side by side, pinned section) — on mobile,
+      // panels stack vertically in normal document flow, so those same
+      // coordinates land in the wrong place. That mismatch is what
+      // produced the "shows current project, then next project's heading
+      // flies to the wrong spot, then jumps to top" glitch on mobile.
+      // A plain fade-to-white-then-navigate sidesteps the mismatched math
+      // entirely instead of trying to recompute it for a different layout.
+      const runMobileTransition = () => {
+        if (isUnmountingRef.current) return;
+
+        const overlay = document.createElement("div");
+        overlay.className = "cs-transition-overlay";
+        Object.assign(overlay.style, {
+          position: "fixed",
+          inset: "0",
+          background: "#fff",
+          zIndex: "99998",
+          opacity: "0",
+          pointerEvents: "none",
+        });
+        document.body.appendChild(overlay);
+
+        gsap.to(overlay, {
+          opacity: 1,
+          duration: 0.4,
+          ease: "power2.in",
+          onComplete: () => {
+            revertAndPreserveScroll();
+            router.push(nextHref);
+          },
+        });
+      };
+
       const runTransition = () => {
         if (isUnmountingRef.current) return;
         const headingEl = panel8?.querySelector(".cs-p8-project-name");
@@ -377,7 +413,11 @@ const CaseStudyInner = ({ slug }) => {
               if (transitionTriggered.current) return;
               transitionTriggered.current = true;
               if (fill) fill.style.width = "100%";
-              gsap.delayedCall(0.5, runTransition);
+              // Doubled vs. desktop's 0.5s: the bar filling and the
+              // transition kicking off read as almost simultaneous on
+              // mobile before, not leaving enough time to actually
+              // register the completed bar before the page changed.
+              gsap.delayedCall(1, runMobileTransition);
             },
           });
         }

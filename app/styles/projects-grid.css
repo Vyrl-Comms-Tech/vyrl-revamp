@@ -111,7 +111,13 @@
 .cardsProject {
   position: relative;
   width: 46.09vw; /* 885 / 1920 * 100 */
-  height: 67.04vh; /* 724 / 1080 * 100 */
+  /* min/max must be fixed units (px), not vh — a vh min against a vh
+     preferred value scales at the same rate as the preferred value, so
+     it can never actually act as a floor/ceiling; the clamp() becomes a
+     no-op and you just see the raw 67.04vh at every height, which is
+     what was happening here. Fixed px bounds actually stop the growth/
+     shrink once the vh value crosses them. */
+  height: clamp(320px, 67.04vh, 724px);
   display: flex;
   border-radius: 5px;
   overflow: hidden;
@@ -231,6 +237,15 @@
   }
 }
 
+@media (max-width: 1420px) {
+  .cardsProject{
+    height: clamp(220px, 47vh, 500px);
+  }
+}@media (max-width: 1120px) {
+  .cardsProject{
+    height: clamp(220px, 37vh, 500px);
+  }
+}
 @media (max-width: 720px) {
   .cardsSection {
     width: auto;
@@ -243,8 +258,14 @@
     padding: 0.2rem 1rem;
   }
   .cardsProject {
-    height: 50vh !important;
-    width: 93.09vw !important; /* 885 / 1920 * 100 */
+    /* Was a rigid `50vh !important`, which fully overrode the base
+       clamp() regardless of viewport height — that's why the height
+       looked "stuck" and non-shrinking here specifically (below 720px),
+       even after the base rule was fixed. Using clamp() here too keeps
+       it responsive to short/tall mobile viewports instead of being
+       locked to one fixed vh value. */
+    height: clamp(220px, 50vh, 500px);
+    width: 93.09vw; /* 885 / 1920 * 100 */
   }
   .imgFollow {
     display: none !important;

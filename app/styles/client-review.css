@@ -324,7 +324,7 @@
   .client-review-section-container {
     padding: 70px 15px 32px;
     min-height: auto;
-    gap: 32px;
+    gap: 2px;
   }
 
   .client-review-heading-line-1 {
