@@ -41,19 +41,21 @@ function Collective() {
       ScrollTrigger.refresh();
 
       // Pin distance driven off the container's actual measured pixel
-      // height (not a guessed "+=X%" string) so it tracks exactly how
-      // much scroll the 4-image stagger animation below actually needs,
-      // self-correcting per device instead of us hand-picking a fraction
-      // that happens to fit one screen size and leaves a dead scroll gap
-      // (too long) or breaks the sticky/stagger feel (too short) on
-      // others. 2x container height matches the original desktop feel;
-      // that's still exactly "+=200%" on desktop since .collective is
-      // 100vh there, but on mobile it's computed the same way rather than
-      // guessed, so it stays proportionate to *this* device's own layout.
-      const containerHeight = container.getBoundingClientRect().height;
-      const pinEnd = `+=${containerHeight * 2}`;
-
+      // height. NOTE: since .collective is 100vh on every device, "2x
+      // container height" was still exactly 2 full viewport-heights of
+      // scroll everywhere — mathematically identical to the original
+      // "+=200%", not actually shorter. That's why mobile stayed sticky
+      // for 3-4 scrolls after the last image landed even after this was
+      // "fixed" to be measured instead of guessed: measuring the number
+      // doesn't help if the multiplier applied to it is still the
+      // desktop-tuned one. Mobile now uses 1x container height instead
+      // of 2x, roughly halving the pinned scroll distance so it releases
+      // close to when the 4th image actually finishes animating out.
       const isMobile = window.matchMedia("(max-width: 768px)").matches;
+      const containerHeight = container.getBoundingClientRect().height;
+      const pinMultiplier = isMobile ? 1 : 2;
+      const pinEnd = `+=${containerHeight * pinMultiplier}`;
+
       // The sideways "exit" throw below was a fixed 800px, tuned for
       // desktop-width screens. Even scaled to 60% of viewport width it
       // still flung images most of the way across a narrow phone almost
@@ -80,9 +82,18 @@ function Collective() {
       const rightBoxes = ["tpbox5", "tpbox6"];
       const leftBoxes = ["tpbox1", "tpbox2"];
 
+      // This random per-box vertical drift was a flat ±200px on every
+      // device — on mobile's much shorter, tightly-spaced 4-corner
+      // layout that's large enough to throw whichever box drew a value
+      // near an extreme (e.g. tpbox1 near +200 / tpbox6 near -200) well
+      // outside its intended corner, reading as "1st image at the very
+      // top, 4th at the very bottom" instead of a subtle wobble. Scaling
+      // the range down on mobile keeps a little organic drift without
+      // overpowering the balanced corner positions from the CSS.
+      const yOffsetRange = isMobile ? 60 : 200;
       const yOffsetMap = {};
       animationPattern.forEach((id) => {
-        yOffsetMap[id] = gsap.utils.random(-200, 200);
+        yOffsetMap[id] = gsap.utils.random(-yOffsetRange, yOffsetRange);
       });
 
       gsap.set(boxes, {
