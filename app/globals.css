@@ -120,8 +120,26 @@ html.preloader-active {
   transform: translateZ(0);
 }
 
-.client-review-section-container-project{
-  position: relative
-  ;
+.client-review-section-container-project {
+  position: relative;
   padding-top: 200px;
+  /* ClientReviews' own root (.client-review-section-container, no
+     "-project" suffix — a different class) is black, but that's the
+     inner component; this wrapper's own 200px top padding sat above
+     it with no background of its own, showing the page's white
+     background through as a gap between .cardsSection (black, on
+     /projects) and ClientReviews' black box. Matching the background
+     here closes that gap seamlessly. */
+  background: #000;
+}
+
+@media (max-width: 1468px) {
+  .client-review-section-container-project {
+    padding-top: 50px;
+  }
+}
+@media (max-width: 768px) {
+  .client-review-section-container-project {
+    padding-top: 0px;
+  }
 }

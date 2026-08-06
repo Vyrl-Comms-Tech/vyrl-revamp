@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 // import TextAnimation from "./TextAnimation";
 import "../../styles/home-second-last.css";
 import "../../styles/services-second-last.css";
-import Link from "next/link";
+import PageTransitionLink from "../layout/PageTransitionLink";
 import TextAnimation from "../home/TextAnimation";
 
 const ServicesSecondLast = () => {
@@ -48,7 +48,7 @@ const ServicesSecondLast = () => {
             </TextAnimation>
           </div>
 
-          <Link href="/contact-us" className="hp-btn" id="sp-btn">
+          <PageTransitionLink href="/contact-us" className="hp-btn" id="sp-btn">
             Start a Project
             <span className="hp-btn-icon" id="sp-btn-icon">
               <svg
@@ -64,7 +64,7 @@ const ServicesSecondLast = () => {
                 />
               </svg>
             </span>
-          </Link>
+          </PageTransitionLink>
         </div>
 
         {/* Right image panel */}

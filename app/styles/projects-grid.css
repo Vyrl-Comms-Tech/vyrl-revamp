@@ -31,7 +31,7 @@
 }
 
 .pc-bigger-head {
-  font-size: clamp(2.5rem, 7vw, 8.5rem);
+  font-size: clamp(2.3rem, 7vw, 8.5rem);
   font-weight: 500;
   line-height: 1.05;
   margin: 0;
@@ -219,13 +219,44 @@
 }
 @media (max-width: 800px) {
   .heroProject {
-    height: 72vh;
+    /* 72vh with align-items: center left a large empty gap above
+       "CASE STUDIES" on tall phone screens — the content was centered
+       within a box far taller than the content itself needed. A
+       shorter, content-fit height (clamp floor keeps it from ever
+       collapsing below a sane minimum) removes that dead space instead
+       of just shrinking the vh number, which still scales with however
+       tall the viewport happens to be. */
+    height: auto;
+    min-height: unset;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 100px 5% 40px;
   }
+
+  /* .filterCtas is position: absolute on desktop (bottom: 3%), which
+     relied on .heroProject being a tall 80vh box so it landed safely
+     below the vertically-centered heading content. Once the hero box
+     shrank to content-height above, that same absolute positioning
+     made "FILTER" + the buttons overlap directly on top of the
+     paragraph/button text instead of sitting below it. Static + order
+     puts it back in normal document flow as the second stacked block,
+     same as .centerHeadingProject right above it. */
+  .filterCtas {
+    position: static;
+    order: 2;
+    width: 100%;
+  }
+
+  .centerHeadingProject {
+    order: 1;
+  }
+
   .filterCtas h1 {
     font-size: 1.3rem;
   }
   .tagP {
-    padding: 0.2rem 0.4rem;
+    padding: 0.2rem 0.6rem;
+    font-size: 14px;
   }
   .pc-para {
     font-size: 0.9rem;
@@ -238,11 +269,12 @@
 }
 
 @media (max-width: 1420px) {
-  .cardsProject{
+  .cardsProject {
     height: clamp(220px, 47vh, 500px);
   }
-}@media (max-width: 1120px) {
-  .cardsProject{
+}
+@media (max-width: 1120px) {
+  .cardsProject {
     height: clamp(220px, 37vh, 500px);
   }
 }
@@ -272,5 +304,20 @@
   }
   .ctaF {
     padding: 0.2rem 1rem;
+    font-size: 14px;
+  }
+
+  /* Desktop reveals the title and tags on :hover — on touch devices
+     there's no real hover, so .tagsProject (translateY(200%), fully
+     off-screen by default) never showed at all, while .contentProject
+     h1 (only translateY(80%)) happened to still peek into view since an
+     80% offset doesn't fully clear a text block — that's why title
+     looked "visible" and tags didn't, not because of any rule actually
+     targeting mobile. Overriding both transforms to their :hover end
+     state by default here shows them plainly on mobile instead of
+     relying on a hover that mobile can't reliably trigger. */
+  .contentProject h1,
+  .tagsProject {
+    transform: translateY(0%);
   }
 }

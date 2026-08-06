@@ -591,7 +591,7 @@
        takes to go from 0% to 100%. This is also the space that shows
        between panel 8 and the Footer once the bar completes, so keep
        it modest rather than a full extra screen's worth. */
-    height: 25vh;
+    height: 10vh;
   }
 
   .cs-panel {
@@ -767,7 +767,6 @@
     height: auto;
     aspect-ratio: 4 / 3;
     /* margin-inline: 20px; */
-    margin-bottom: 20px;
   }
 
   .cs-p8-project-name {
