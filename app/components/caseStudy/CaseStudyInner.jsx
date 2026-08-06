@@ -416,19 +416,25 @@ const CaseStudyInner = ({ slug }) => {
 
         if (panel8) {
           // Bar width is scrubbed directly off how far the user has
-          // actually scrolled through panel 8 (start: panel's bottom
-          // section has scrolled into view, end: panel's bottom reaches
-          // the viewport bottom) — not a fixed timer — so it only starts
-          // once panel 8 is actually showing (not the instant its top
-          // edge appears at the bottom of the screen) and only reaches
-          // 100% once genuinely scrolled all the way through, then
-          // pauses briefly before navigating so the completed bar
-          // actually registers.
+          // actually scrolled since panel 8's bottom section came into
+          // view — not a fixed timer, and not just "panel 8's own
+          // height" either. Panel 8 is a modest aspect-ratio card
+          // (see .cs-panel--8's aspect-ratio: 4/3 in the CSS), so
+          // anchoring `end` to the panel's own bottom edge only gave
+          // the bar a very short scroll distance to fill across — it
+          // reached 100% within essentially one scroll gesture, reading
+          // as "instant" rather than something scrubbed. Using a fixed
+          // extra-scroll distance past the start point instead (same
+          // idea as desktop's extraForBar) guarantees a real multi-
+          // scroll distance to fill it regardless of the panel's own
+          // height, then pauses briefly once full before navigating so
+          // the completed bar actually registers.
+          const barScrollDistance = 700;
           if (fill) fill.style.width = "0%";
           ScrollTrigger.create({
             trigger: panel8,
             start: "bottom 90%",
-            end: "bottom bottom",
+            end: `+=${barScrollDistance}`,
             scrub: 0.3,
             onUpdate: (self) => {
               if (isUnmountingRef.current) return;
