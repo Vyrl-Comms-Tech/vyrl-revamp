@@ -35,27 +35,16 @@ export default function Preloader1({ onComplete }) {
       strokeDashoffset: length,
     });
 
-    // The resting/re-entry offset below (translateX 35%) is choreographed
-    // against the path's own bounding box, not the viewport — at full
-    // desktop scale that 35% still lands inside the visible centered
-    // container, but shrunk down at mobile widths it pushes the artwork
-    // mostly or fully off the right edge instead. Scaling this percentage
-    // down on mobile keeps the same left-right beat of the animation
-    // without the path drifting outside the visible frame.
-    const isMobile = window.matchMedia('(max-width: 800px)').matches;
-    const restOffset = isMobile ? '12%' : '35%';
+    // Counter: 1 -> 100, ~45ms per tick (matches original timing/feel)
+    let count = 1;
+    const interval = setInterval(() => {
+      count += 1;
+      if (counterEl) counterEl.textContent = String(count);
+      if (count >= 100) clearInterval(interval);
+    }, 45);
 
     const tl = gsap.timeline({
       onComplete: () => {
-        // Force the counter to its final value the instant the timeline
-        // actually finishes, rather than trusting the interval below to
-        // land on 100 by then — setInterval's own timing (browser tick
-        // delays, drift at small tickMs) isn't tied to this onComplete
-        // firing, so the interval could still be short of 100 (e.g. 92)
-        // when the animation is already done and starting its exit fade.
-        clearInterval(interval);
-        if (counterEl) counterEl.textContent = '100';
-
         // Short fade before unmount so the reveal doesn't hard-cut
         setIsExiting(true);
         gsap.to(containerRef.current, {
@@ -79,7 +68,7 @@ export default function Preloader1({ onComplete }) {
         '4.8'
       )
       .to(path, {
-        transform: `translateX(${restOffset})`,
+        transform: 'translateX(35%)',
         duration: 1.1,
         ease: 'power4.inOut',
         onComplete: () => {
@@ -98,46 +87,6 @@ export default function Preloader1({ onComplete }) {
         duration: 1,
         ease: 'power4.inOut',
       });
-
-    // Scales every tween's timing uniformly (GSAP timeScale, not
-    // per-tween duration edits) so the whole intro plays faster while
-    // keeping every step's relative pacing/feel identical.
-    const timeScale = 1.35;
-    tl.timeScale(timeScale);
-
-    // Counter: 1 -> 100, paced against the timeline's ACTUAL wall-clock
-    // playback duration (not a hardcoded guess) so it reaches 100 exactly
-    // as the animation finishes instead of running out early and sitting
-    // at "100" while the preloader keeps playing underneath it.
-    // tl.duration() always returns the UNSCALED total regardless of
-    // timeScale — dividing by timeScale converts it back to real
-    // wall-clock time, or the counter would run at the old, slower pace
-    // while the animation itself plays faster.
-    //
-    // Driven off actual elapsed time (Date.now()) each tick rather than
-    // just counting fixed-size steps: setInterval doesn't fire with
-    // perfect precision — the browser can delay/clamp each tick, and at
-    // the smaller tickMs values a higher timeScale produces, that drift
-    // adds up across ~98 ticks. Counting ticks alone meant real elapsed
-    // time could pass totalMs before all 98 ticks had actually fired,
-    // landing short of 100 (e.g. 92) even though the animation itself
-    // was already done. Recomputing count from elapsed/totalMs instead
-    // self-corrects for that drift every tick.
-    // Counter is intentionally paced to finish well BEFORE the timeline
-    // does (70% of total wall-clock time) rather than racing it to the
-    // wire. That leaves real headroom against setInterval drift/clamping,
-    // so "reaches 100 early and holds" replaces "might land on 92 right
-    // as the animation ends".
-    const totalMs = (tl.duration() / timeScale) * 1000;
-    const counterMs = totalMs * 0.8;
-    const tickMs = counterMs / 99;
-    const startTime = Date.now();
-    const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const count = Math.min(100, 1 + Math.round((elapsed / counterMs) * 99));
-      if (counterEl) counterEl.textContent = String(count);
-      if (count >= 100) clearInterval(interval);
-    }, tickMs);
 
     return () => {
       tl.kill();

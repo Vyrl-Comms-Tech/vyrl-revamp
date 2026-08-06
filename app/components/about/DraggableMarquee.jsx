@@ -22,7 +22,7 @@ const TEAM = [
     name: "Arsalan",
     designation: "Performance Head",
     image:
-      "/team/arsalan.avif",
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team2_bb0rwa.jpg",
   },
   {
     name: "Fatima",
@@ -41,38 +41,38 @@ const TEAM = [
     name: "Haris",
     designation: "Sr. Full Stack Developer",
     image:
-      "/team/haris.avif",
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team5_kebi7v.jpg",
   },
   {
     name: "Zain",
     designation: "3D & AI Specialist",
     image:
-      "/team/zain.avif",
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team6_xvot0o.jpg",
   },
   {
     name: "Saqib",
     designation: "Sr. Front End Developer",
     image:
-      "/team/saqib.avif",
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team10_dvdwyi.jpg",
   },
   {
     name: "Amna",
     designation: "Account Manager",
     image:
-      "/team/amna.avif",
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team7_ahjr4k.jpg",
   },
 
   {
     name: "Fuad",
     designation: "Sr. Graphic Designer",
     image:
-      "/team/fuad.avif",
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785397361/WhatsApp_Image_2026-07-30_at_12.20.17_PM_mzq8rn.jpg",
   },
   {
     name: "Maaz",
     designation: "Jr. Frontend Developer",
     image:
-      "/team/maaz.avif",
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785475202/ghjfg_gpeymd.png",
   },
   {
     name: "Mohsin",

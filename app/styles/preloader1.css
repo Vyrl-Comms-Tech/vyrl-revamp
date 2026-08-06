@@ -33,43 +33,22 @@
   pointer-events: none;
 }
 
-/* Wrapper had no rules of its own, so it fell back to being a plain
-   block sized to the fixed 652px SVG inside it and sitting left-aligned
-   — that's what read as "pushed to the right" with a dark page edge
-   visible next to it. Making it an explicit full-size flex-centering
-   box guarantees the SVG centers regardless of its own fixed
-   width/height or how the parent's flex context resolves it. */
-.pre-loader .svg-fill-path {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
 .pre-loader svg {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
+  transform: translate(-50%, -50%);
   transform-origin: center center;
-  max-width: 100%;
-  height: auto;
 }
 
 @media (max-width: 800px) {
   .pre-loader svg {
-    /* .svg-fill-path's flex centering handles positioning; scale alone
-       keeps it centered at any size since transform-origin is center
-       center — no left/top offsets needed here. */
-    scale: 0.45;
-  }
-}
-
-@media (max-width: 480px) {
-  .pre-loader svg {
     scale: 0.3;
+    left: -2%;
+    top: 38%;
   }
 }
 
@@ -80,17 +59,6 @@
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
-
-@media (max-width: 800px) {
-  /* Matches the mobile-scaled restOffset in PreLoader1.jsx's GSAP
-     timeline — this initial value (before JS runs) is what the path
-     briefly renders as on first paint/hydration, so it needs to agree
-     with the JS-driven value or there'd be a visible jump once the
-     timeline takes over. */
-  .pre-loader .first-path {
-    transform: translateX(12%);
-  }
 }
 
 .pre-loader .hide {
