@@ -279,12 +279,19 @@
 
 /* panel 8 */
 .cs-panel--8 {
-  width: 55vw;
+  width: 55vw !important;
   height: 90vh;
   align-self: center;
   border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
+}
+
+/* Reserved scroll room for the mobile loading-bar scrub (see
+   CaseStudyInner.jsx) — no-op on desktop, which pins/reserves its own
+   extra scroll distance via the horizontal timeline instead. */
+.cs-panel--8-spacer {
+  display: none;
 }
 
 /* Services list — top right of image (image is 90% wide, so offset by the 10% gap) */
@@ -540,7 +547,7 @@
   }
 
   .cs-panel--8 {
-    width: 82vw;
+    width: 82vw !important;
     height: 78vh;
   }
 
@@ -575,6 +582,15 @@
     height: auto;
     padding-bottom: 60px;
     width: 100%;
+  }
+
+  .cs-panel--8-spacer {
+    display: block;
+    /* Pure scroll room, no visible content — the loading bar's
+       ScrollTrigger below scrubs its fill against this height, so
+       raising/lowering it directly controls how much scrolling it
+       takes to go from 0% to 100%. */
+    height: 70vh;
   }
 
   .cs-panel {
@@ -746,10 +762,10 @@
 
   /* panel 8 — next-project card, centered content-sized image */
   .cs-panel--8 {
-    width: calc(100% - 40px);
+    width: calc(100% - 40px) !important;
     height: auto;
     aspect-ratio: 4 / 3;
-    margin-inline: 20px;
+    /* margin-inline: 20px; */
     margin-bottom: 20px;
   }
 

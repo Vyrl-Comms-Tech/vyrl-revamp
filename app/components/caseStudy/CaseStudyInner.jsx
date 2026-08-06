@@ -407,39 +407,27 @@ const CaseStudyInner = ({ slug }) => {
             );
           });
 
-        if (panel8) {
-          // Bar width is scrubbed directly off how far the user has
-          // actually scrolled since panel 8's bottom section came into
-          // view — not a fixed timer, and not just "panel 8's own
-          // height" either. Panel 8 is a modest aspect-ratio card
-          // (see .cs-panel--8's aspect-ratio: 4/3 in the CSS), so
-          // anchoring `end` to the panel's own bottom edge only gave
-          // the bar a very short scroll distance to fill across — it
-          // reached 100% within essentially one scroll gesture, reading
-          // as "instant" rather than something scrubbed.
-          //
-          // A flat extra-scroll distance past a fixed start point doesn't
-          // work either though: panel 8 is the last thing in .cs-inner,
-          // so the only scroll room past a "bottom 90%"-style start is
-          // whatever the Footer (mounted right after {children} in the
-          // root layout) happens to add below it — on mobile that's
-          // often less than a fixed desired distance, so ScrollTrigger
-          // clamped `end` to the page's real max scroll and the bar got
-          // stuck partway (e.g. ~25%) because self.progress could never
-          // reach 1 no matter how much further the user scrolled.
-          //
-          // "bottom bottom" is the fix for that half — it's always
-          // exactly the real last scrollable pixel, so it's always
-          // reachable. To get a real multi-scroll distance out of that
-          // (not "instant" like it was with start: "top 90%"/panel 8's
-          // own short height), start is pulled earlier — "top center"
-          // (panel 8 arrives at mid-viewport) instead of near its own
-          // bottom — so there's meaningfully more scroll between start
-          // and end regardless of how tall the Footer happens to be.
+        const panel8Spacer = inner.querySelector(".cs-panel--8-spacer");
+
+        if (panel8 && panel8Spacer) {
+          // Bar width is scrubbed against a dedicated spacer reserved
+          // right after panel 8 (see .cs-panel--8-spacer in the CSS),
+          // not against panel 8's own height or whatever's left of the
+          // page below it — both of those were tried and both broke:
+          // panel 8's own height gave too little scroll room (bar filled
+          // in ~one gesture), and borrowing space from the Footer meant
+          // the fill speed depended on Footer height and could clamp
+          // before ever reaching 100% on short footers. A spacer with a
+          // known, fixed height gives an exact, guaranteed-reachable
+          // scroll distance: 0% right as panel 8 finishes arriving
+          // (start), 100% only once the user has scrolled all the way
+          // through the spacer (end) — i.e. scroll position stays
+          // "parked" on panel 8 while filling, not racing ahead of it.
           if (fill) fill.style.width = "0%";
           ScrollTrigger.create({
             trigger: panel8,
-            start: "top center",
+            start: "bottom bottom",
+            endTrigger: panel8Spacer,
             end: "bottom bottom",
             scrub: 0.3,
             onUpdate: (self) => {
@@ -748,6 +736,17 @@ const CaseStudyInner = ({ slug }) => {
               </div>
             </div>
           </div>
+
+          {/* Mobile-only spacer reserved purely for the panel-8 loading
+              bar to scrub against (see the ScrollTrigger in the effect
+              above) — gives it real, dedicated scroll room independent
+              of the Footer's height instead of borrowing whatever's left
+              after panel 8, which is what made the bar's fill speed vs.
+              "how far the page has actually scrolled" depend on Footer
+              height. Hidden on desktop (.cs-panel--8-spacer in the CSS)
+              where the pinned horizontal timeline's own extraForBar
+              already does this job. */}
+          <div className="cs-panel--8-spacer" />
         </div>
       </div>
     </>

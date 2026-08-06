@@ -216,8 +216,15 @@
     font-size: 2rem;
   }
 
-  #tpbox1 {
-    height: 110px;
+  /* Only the 2 "center" images (tpbox5, tpbox2) show on mobile —
+     tpbox1 (arrives from the top) and tpbox6 (lands at the bottom) are
+     dropped so there's less to scroll/animate through. Collective.jsx's
+     isMobile check (also max-width: 768px) matches these boxes out of
+     its animation list too, so this is purely about not reserving
+     layout space for elements that are never animated in. */
+  #tpbox1,
+  #tpbox6 {
+    display: none;
   }
 
   #tpbox2 {
@@ -226,10 +233,6 @@
 
   #tpbox5 {
     width: 150px;
-  }
-
-  #tpbox6 {
-    height: 110px;
   }
 
   .p-tp-detailsbox {

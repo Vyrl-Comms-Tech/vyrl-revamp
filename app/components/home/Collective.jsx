@@ -40,21 +40,7 @@ function Collective() {
       // against final layout.
       ScrollTrigger.refresh();
 
-      // Pin distance driven off the container's actual measured pixel
-      // height. NOTE: since .collective is 100vh on every device, "2x
-      // container height" was still exactly 2 full viewport-heights of
-      // scroll everywhere — mathematically identical to the original
-      // "+=200%", not actually shorter. That's why mobile stayed sticky
-      // for 3-4 scrolls after the last image landed even after this was
-      // "fixed" to be measured instead of guessed: measuring the number
-      // doesn't help if the multiplier applied to it is still the
-      // desktop-tuned one. Mobile now uses 1x container height instead
-      // of 2x, roughly halving the pinned scroll distance so it releases
-      // close to when the 4th image actually finishes animating out.
       const isMobile = window.matchMedia("(max-width: 768px)").matches;
-      const containerHeight = container.getBoundingClientRect().height;
-      const pinMultiplier = isMobile ? 1 : 2;
-      const pinEnd = `+=${containerHeight * pinMultiplier}`;
 
       // The sideways "exit" throw below was a fixed 800px, tuned for
       // desktop-width screens. Even scaled to 60% of viewport width it
@@ -69,9 +55,24 @@ function Collective() {
       // every device. On mobile that compressed into a much shorter
       // physical scroll, so the same window read as noticeably faster/
       // snappier. Widening it stretches the motion out more gradually.
-      const animationWindow = isMobile ? 0.95 : 0.8;
+      //
+      // Mobile now only has 2 boxes instead of 4, and wants them to
+      // read as "one, then the other" rather than overlapping — a
+      // narrower window (so each box fully finishes well before the
+      // next one starts) paired with a bigger per-box delay stagger
+      // (below) is what actually produces that one-by-one feel.
+      const animationWindow = isMobile ? 0.45 : 0.8;
+      const boxDelayStep = isMobile ? 0.45 : 0.1;
 
-      const animationPattern = ["tpbox1", "tpbox5", "tpbox2", "tpbox6"];
+      // Mobile only shows the 2 "center" images (tpbox5 top-right,
+      // tpbox2 bottom-left, in the visual arrival order the user
+      // actually sees) — tpbox1 (arrives from the very top) and tpbox6
+      // (lands at the very bottom) are dropped entirely so there's less
+      // to scroll/pin through. Also hidden via CSS (see collective.css)
+      // so they never occupy layout space or intercept taps.
+      const animationPattern = isMobile
+        ? ["tpbox5", "tpbox2"]
+        : ["tpbox1", "tpbox5", "tpbox2", "tpbox6"];
 
       const boxes = animationPattern
         .map((id) => container.querySelector(`#${id}`))
@@ -101,13 +102,30 @@ function Collective() {
         opacity: 0,
       });
 
+      // Both desktop and mobile pin the section at "top top" — i.e. the
+      // section only locks in place once it's actually reached the top
+      // of the viewport (centered/settled), not while it's still
+      // scrolling in from below. A plain (unpinned) "top bottom" →
+      // "bottom top" range was tried on mobile so it would just scroll
+      // past into the next section, but that let the animation start
+      // firing while the section was still entering — reading as
+      // "images move before I've even reached it." Pinning again fixes
+      // that: nothing animates until the section is fully in place, then
+      // it holds through a short, deliberately small scroll distance
+      // (roughly one scroll gesture per image) before releasing to the
+      // next section, instead of desktop's much longer 4-image sequence.
+      const containerHeight = container.getBoundingClientRect().height;
+      const pinEnd = isMobile
+        ? `+=${containerHeight * 0.9}`
+        : `+=${containerHeight * 2}`;
+
       trackScrollTrigger(
         ScrollTrigger.create({
           trigger: container,
           start: "top top",
           end: pinEnd,
           pin: true,
-          scrub: 1,
+          scrub: isMobile ? 1.2 : 1,
           id: "collective-main",
           onUpdate: (self) => {
             const progress = self.progress;
@@ -115,7 +133,7 @@ function Collective() {
             boxes.forEach((box, index) => {
               if (!box) return;
 
-              const delay = index * 0.1;
+              const delay = index * boxDelayStep;
               const adjustedProgress = Math.max(
                 0,
                 Math.min(1, (progress - delay) / animationWindow),

@@ -314,6 +314,9 @@
   .client-review-sticker--bottom-right {
     right: calc(50% - 107px - 10px);
   }
+  .client-review-cta {
+  padding-bottom: 10px;
+  }
 }
 @media (max-width: 1700px) {
   .client-review-section-container {
