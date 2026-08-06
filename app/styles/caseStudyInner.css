@@ -580,7 +580,6 @@
   .cs-inner {
     flex-direction: column;
     height: auto;
-    padding-bottom: 60px;
     width: 100%;
   }
 
@@ -589,8 +588,10 @@
     /* Pure scroll room, no visible content — the loading bar's
        ScrollTrigger below scrubs its fill against this height, so
        raising/lowering it directly controls how much scrolling it
-       takes to go from 0% to 100%. */
-    height: 70vh;
+       takes to go from 0% to 100%. This is also the space that shows
+       between panel 8 and the Footer once the bar completes, so keep
+       it modest rather than a full extra screen's worth. */
+    height: 25vh;
   }
 
   .cs-panel {
