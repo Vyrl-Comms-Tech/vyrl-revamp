@@ -35,6 +35,16 @@ export default function Preloader1({ onComplete }) {
       strokeDashoffset: length,
     });
 
+    // The resting/re-entry offset below (translateX 35%) is choreographed
+    // against the path's own bounding box, not the viewport — at full
+    // desktop scale that 35% still lands inside the visible centered
+    // container, but shrunk down at mobile widths it pushes the artwork
+    // mostly or fully off the right edge instead. Scaling this percentage
+    // down on mobile keeps the same left-right beat of the animation
+    // without the path drifting outside the visible frame.
+    const isMobile = window.matchMedia('(max-width: 800px)').matches;
+    const restOffset = isMobile ? '12%' : '35%';
+
     const tl = gsap.timeline({
       onComplete: () => {
         // Force the counter to its final value the instant the timeline
@@ -69,7 +79,7 @@ export default function Preloader1({ onComplete }) {
         '4.8'
       )
       .to(path, {
-        transform: 'translateX(35%)',
+        transform: `translateX(${restOffset})`,
         duration: 1.1,
         ease: 'power4.inOut',
         onComplete: () => {

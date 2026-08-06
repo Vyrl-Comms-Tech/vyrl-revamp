@@ -40,6 +40,35 @@ function Collective() {
       // against final layout.
       ScrollTrigger.refresh();
 
+      // Pin distance driven off the container's actual measured pixel
+      // height (not a guessed "+=X%" string) so it tracks exactly how
+      // much scroll the 4-image stagger animation below actually needs,
+      // self-correcting per device instead of us hand-picking a fraction
+      // that happens to fit one screen size and leaves a dead scroll gap
+      // (too long) or breaks the sticky/stagger feel (too short) on
+      // others. 2x container height matches the original desktop feel;
+      // that's still exactly "+=200%" on desktop since .collective is
+      // 100vh there, but on mobile it's computed the same way rather than
+      // guessed, so it stays proportionate to *this* device's own layout.
+      const containerHeight = container.getBoundingClientRect().height;
+      const pinEnd = `+=${containerHeight * 2}`;
+
+      const isMobile = window.matchMedia("(max-width: 768px)").matches;
+      // The sideways "exit" throw below was a fixed 800px, tuned for
+      // desktop-width screens. Even scaled to 60% of viewport width it
+      // still flung images most of the way across a narrow phone almost
+      // immediately, on top of already starting close to the screen
+      // edges — reading as images shooting way off left/right too fast.
+      // 30% keeps the same "exits toward the edge" direction/feel but
+      // covers much less distance.
+      const exitDistance = isMobile ? window.innerWidth * 0.3 : 800;
+      // Each box's animation window (how much of the scroll progress it
+      // takes to go from "landed" to "fully exited") was the same 0.8 on
+      // every device. On mobile that compressed into a much shorter
+      // physical scroll, so the same window read as noticeably faster/
+      // snappier. Widening it stretches the motion out more gradually.
+      const animationWindow = isMobile ? 0.95 : 0.8;
+
       const animationPattern = ["tpbox1", "tpbox5", "tpbox2", "tpbox6"];
 
       const boxes = animationPattern
@@ -65,7 +94,7 @@ function Collective() {
         ScrollTrigger.create({
           trigger: container,
           start: "top top",
-          end: "+=200%",
+          end: pinEnd,
           pin: true,
           scrub: 1,
           id: "collective-main",
@@ -78,7 +107,7 @@ function Collective() {
               const delay = index * 0.1;
               const adjustedProgress = Math.max(
                 0,
-                Math.min(1, (progress - delay) / 0.8),
+                Math.min(1, (progress - delay) / animationWindow),
               );
 
               const boxId = box.id;
@@ -88,9 +117,9 @@ function Collective() {
               let exitY = customYOffset * adjustedProgress;
 
               if (leftBoxes.includes(boxId)) {
-                exitX = -800 * adjustedProgress;
+                exitX = -exitDistance * adjustedProgress;
               } else if (rightBoxes.includes(boxId)) {
-                exitX = 800 * adjustedProgress;
+                exitX = exitDistance * adjustedProgress;
               }
 
               const scaleValue = 1 + 3 * adjustedProgress;

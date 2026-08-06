@@ -160,26 +160,42 @@
     top: 50%;
   }
 
+  /* Balanced 4-corner frame: one image anchored near each corner of the
+     viewport so they read as evenly framing the centered text block,
+     instead of the desktop layout's two boxes bunched toward one side
+     of each half-height row.
+     tpbox1/tpbox2 live inside .tp-section1 (viewport's top half);
+     tpbox5/tpbox6 live inside .tp-section2 (viewport's bottom half) —
+     top/% below is relative to each box's own section, not the viewport.
+     Pulled inward from the edges (was 6-8%, now ~16-18%) so each image
+     starts with more visible room to travel before it exits, instead of
+     already sitting almost at the edge and shooting off-screen fast. */
   #tpbox1 {
+    /* top-left corner */
     height: 150px;
-    left: 60%;
+    top: 12%;
+    left: 16%;
   }
 
   #tpbox2 {
+    /* bottom-left corner (still within section1's bottom half) */
     width: 200px;
-    left: 55%;
-    top: 55%;
+    left: 16%;
+    top: 60%;
   }
 
   #tpbox5 {
+    /* top-right corner (within section2's top half) */
     width: 200px;
-    right: 60%;
+    top: 12%;
+    right: 14%;
   }
 
   #tpbox6 {
+    /* bottom-right corner */
     height: 150px;
-    right: 90%;
-    top: 45%;
+    right: 14%;
+    top: 60%;
   }
 
   .tp-content h2 {
