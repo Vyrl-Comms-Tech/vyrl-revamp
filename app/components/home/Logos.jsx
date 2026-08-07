@@ -32,7 +32,15 @@ const Logos = () => {
           scrolling in opposite directions. Each row's set is duplicated so
           translateX(-50%) loops seamlessly. */}
       <div className="logos-marquee" aria-hidden="true">
-        <div className="logos-marquee-track logos-marquee-track-left">
+        {/* --logos-marquee-count drives the loop-stride math in logos.css
+            (translateX has to shift by exactly one set's width, not 50% of
+            the doubled track — see the comment there) — set inline from the
+            real logo count so the two can never drift out of sync if this
+            list is ever resized. */}
+        <div
+          className="logos-marquee-track logos-marquee-track-left"
+          style={{ "--logos-marquee-count": marqueeLogos.length }}
+        >
           {[...marqueeLogos, ...marqueeLogos].map((logo, i) => (
             <div className="logos-marquee-item" key={i}>
               <Image
@@ -45,7 +53,10 @@ const Logos = () => {
             </div>
           ))}
         </div>
-        <div className="logos-marquee-track logos-marquee-track-right">
+        <div
+          className="logos-marquee-track logos-marquee-track-right"
+          style={{ "--logos-marquee-count": marqueeLogos.length }}
+        >
           {[...marqueeLogos, ...marqueeLogos].map((logo, i) => (
             <div className="logos-marquee-item" key={i}>
               <Image

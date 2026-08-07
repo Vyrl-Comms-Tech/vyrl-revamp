@@ -145,23 +145,47 @@
   padding: 16px;
 }
 
+/* The track is [...logos, ...logos] (10 items each), so the second set
+   starts exactly one item-width + one gap after the last item of the
+   first set — i.e. at (10 * 141px) + (10 * 13px) = 1540px, NOT at 50%
+   of the full 20-item track's width. flex `gap` only sits *between*
+   items, so the track's total width (19 gaps across 20 items) doesn't
+   split evenly in half at the set boundary — translateX(-50%) landed
+   6.5px short of it, which read as a widening/narrowing gap flashing
+   into the row every loop. Anchoring the animation to the actual
+   per-set stride instead of the track's midpoint removes that seam. */
+.logos-marquee-track {
+  --logos-marquee-item: 141px;
+  --logos-marquee-gap: 13px;
+  /* --logos-marquee-count is set inline per-track from marqueeLogos.length
+     (see Logos.jsx) so it can't drift out of sync with the real list. */
+  --logos-marquee-stride: calc(
+    (var(--logos-marquee-item) + var(--logos-marquee-gap)) *
+      var(--logos-marquee-count)
+  );
+}
+
 @keyframes logos-marquee-scroll-left {
   from {
     transform: translateX(0);
   }
   to {
-    /* Half the track is the duplicated set, so shifting by 50% loops
-       seamlessly. */
-    transform: translateX(-50%);
+    transform: translateX(calc(var(--logos-marquee-stride) * -1));
   }
 }
 
 @keyframes logos-marquee-scroll-right {
   from {
-    transform: translateX(-50%);
+    transform: translateX(calc(var(--logos-marquee-stride) * -1));
   }
   to {
     transform: translateX(0);
+  }
+}
+
+@media (max-width: 760px) {
+  .logos-marquee-track {
+    --logos-marquee-item: min(42vw, 130px);
   }
 }
 
