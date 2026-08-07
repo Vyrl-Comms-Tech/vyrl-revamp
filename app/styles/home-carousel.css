@@ -6,6 +6,8 @@
   flex-direction: column;
   overflow: hidden;
   padding-top: 50px;
+  position: relative;
+  z-index: 3;
   font-family: var(--font-primary);
 }
 

@@ -1,5 +1,8 @@
 .client-review-section-container {
-  width: 100%;
+position: relative;
+
+z-index: 3;
+width: 100%;
   min-height: 100vh;
   background-color: black;
   display: flex;

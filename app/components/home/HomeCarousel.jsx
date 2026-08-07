@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from "swiper/modules";
@@ -10,6 +12,9 @@ import "swiper/css/effect-coverflow";
 import ChangeTextAnimation from "../layout/ChangeTextAnimation";
 import CtaButton from "../layout/cta";
 import TextAnimation from "./TextAnimation";
+
+gsap.registerPlugin(ScrollTrigger);
+
 const slides = [
   {
     image: "/arab11.avif",
@@ -64,8 +69,50 @@ const HomeCarousel = () => {
   // 3, so it can reuse fixed DOM elements).
   const [tagsIndex, setTagsIndex] = useState(0);
   const tagsRef = useRef(null);
+  const sectionRef = useRef(null);
   const activeSlide = slides[activeIndex];
   const displayedTagsSlide = slides[tagsIndex];
+
+  // Was a flat `background: #000` in CSS (see home-carousel.css) — the
+  // section just snapped straight to black the instant it entered the
+  // viewport, no transition. Scrubbing backgroundColor against scroll
+  // position instead makes the black fade in smoothly as the section
+  // arrives, matching the "receding/settling" feel used elsewhere on
+  // this page (see HomeHero.jsx's scroll-scrubbed brightness fade).
+  useGSAP(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    // gsap.fromTo (not .from) — plain .from would compute the "from"
+    // background by reading the section's CURRENT computed style at
+    // creation time, which is already #000 from the CSS rule (see
+    // home-carousel.css), so there'd be nothing to visibly animate
+    // from. Stating both ends explicitly (page bg → black) is what
+    // actually gives the scrub something to interpolate.
+    const tween = gsap.fromTo(
+      section,
+      { backgroundColor: "#fcfcfc" },
+      {
+        backgroundColor: "#000000",
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          // "top bottom" (section's top just reaching the viewport's
+          // bottom edge, i.e. barely starting to enter) rather than
+          // "bottom bottom" — starting the fade the instant the
+          // section is merely visible at all reads as it arriving
+          // already-dark; beginning right as it first peeks into view
+          // gives the fade itself something to visibly do as it
+          // scrolls further in.
+          start: "top bottom",
+          end: "top top",
+          scrub: true,
+        },
+      },
+    );
+
+    return () => tween.scrollTrigger?.kill();
+  }, []);
 
   useEffect(() => {
     if (tagsIndex === activeIndex) return;
@@ -112,7 +159,7 @@ const HomeCarousel = () => {
 
   return (
     <>
-      <section className="h2-section">
+      <section className="h2-section" ref={sectionRef}>
         <>
           <div className="h2-section-main-heading">
               <TextAnimation animateOnScroll={true} delay={0.3}>

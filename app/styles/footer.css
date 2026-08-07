@@ -1,5 +1,7 @@
 /* ─── Footer ─────────────────────────────────────────────── */
 .footer {
+  position: relative;
+  z-index: 3;
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
   /* overlay:; */

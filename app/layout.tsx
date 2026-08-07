@@ -59,12 +59,12 @@ export default function RootLayout({
               this session already saw the preloader, so globals.css can
               hide it instantly with zero flash instead of waiting for a
               client effect to decide that after the page has painted. */}
-          <Script
+          {/* <Script
             id="preloader-skip-check"
             strategy="beforeInteractive"
             dangerouslySetInnerHTML={{ __html: preloaderSkipScript }}
-          />
-          <PreloaderGate />
+          /> */}
+          {/* <PreloaderGate /> */}
           <SmoothScroll />
           {/* <Header /> */}
           <Navbar />

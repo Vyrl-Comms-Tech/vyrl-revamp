@@ -1,4 +1,7 @@
 .hp-section {
+position: relative;
+
+z-index: 3;
   padding: 50px 130px;
   width: 100%;
   background: #fefefe;

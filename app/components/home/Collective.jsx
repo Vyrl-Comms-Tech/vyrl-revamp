@@ -40,6 +40,30 @@ function Collective() {
       // against final layout.
       ScrollTrigger.refresh();
 
+      // Every section above this one fades to black as it arrives (see
+      // HomeCarousel.jsx) - this one reverses that, fading from black
+      // back to white as it comes in, so the page alternates instead of
+      // staying black once HomeCarousel turns it. Same fromTo +
+      // scrollTrigger pattern: explicit start/end colors (not .from,
+      // which would just read whatever's already painted) scrubbed
+      // against the section's own arrival into the viewport.
+      trackScrollTrigger(
+        gsap.fromTo(
+          container,
+          { backgroundColor: "#000000" },
+          {
+            backgroundColor: "#ffffff",
+            ease: "none",
+            scrollTrigger: {
+              trigger: container,
+              start: "top bottom",
+              end: "top top",
+              scrub: true,
+            },
+          },
+        ).scrollTrigger,
+      );
+
       const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
       // The sideways "exit" throw below was a fixed 800px, tuned for

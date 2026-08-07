@@ -1,19 +1,41 @@
 .homehero {
     height: 100vh;
     display: flex;
-    position: relative;
+    /* Fixed (not the normal relative/in-flow position) so it stays
+       pinned to the viewport instead of scrolling away with the page —
+       .text-and-cards right after it (see text-and-cards.css) then
+       scrolls up and over it with a higher z-index, covering it, rather
+       than the two sections just scrolling past each other normally.
+       Low z-index keeps it beneath that incoming section once it
+       arrives. A fixed element is removed from normal document flow,
+       so .homehero-spacer below reserves this same 100vh of scroll
+       room right after it — without that, .text-and-cards would start
+       immediately at the very top of the page instead of after a full
+       viewport-height of hero first. */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    /* Scale-down + darken as .text-and-cards scrolls over it is driven
+       by HomeHero.jsx's own ScrollTrigger (gsap.set scale/filter) — a
+       center transform-origin makes that read as the hero receding
+       evenly into the background rather than shrinking off toward one
+       corner (the default top-left origin). will-change hints the
+       browser to keep this on its own GPU layer during the scrub,
+       matching the pattern used for scroll-scrubbed transforms
+       elsewhere in the app (e.g. .box in collective.css). */
+    transform-origin: center center;
+    will-change: transform, filter;
 }
 
-/* The unicorn embed's own box just ends sharply at 100vh against the
-   page's white background below it — this overlay fades the embed's
-   bottom edge into that same background color so the two blend instead
-   of showing a hard line. Kept short (6%) and weighted toward the very
-   bottom (gradient stop at 60%, not 0%) so it stays well clear of
-   .homehero-tag at bottom:5% — white tag text would go unreadable if
-   the fade reached far enough to turn the background white behind it.
-   Sits above the embed but below the heading/tag text (z-index: 2),
-   and pointer-events:none so it never blocks interaction with the
-   embed underneath it. */
+/* Reserves the scroll distance .homehero would normally take up in
+   flow, now that .homehero itself is position: fixed and out of flow.
+   Rendered as a sibling right after .homehero in HomeHero.jsx. */
+.homehero-spacer {
+    height: 100vh;
+}
+
 .homehero-fade {
     position: absolute;
     left: 0;
@@ -21,7 +43,7 @@
     bottom: 0;
     height: 3%;
     z-index: 1;
-    background: linear-gradient(to bottom, transparent 0%, var(--bodybg, #fcfcfc) 60%);
+    background: linear-gradient(to bottom, transparent 0%, var(--bodybg, #fcfcfc) 90%);
     pointer-events: none;
 }
 

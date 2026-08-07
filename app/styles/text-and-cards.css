@@ -5,6 +5,19 @@
 }
 .text-and-cards {
   height: auto;
+  /* .homehero (see home-hero.css) is position: fixed with z-index: 1 so
+     it stays pinned in place while the page scrolls, instead of
+     scrolling away normally. position: relative + a higher z-index
+     here is what actually lets this section scroll up and visually
+     cover it — a background-less/static-position sibling would just
+     scroll past a fixed element in the same stacking context with no
+     defined paint order, not necessarily cover it. background: #fcfcfc
+     (matches --bodybg, the same color .homehero-fade fades toward)
+     ensures there's an opaque surface doing the covering, not a
+     transparent section letting the fixed hero show through underneath. */
+  position: relative;
+  z-index: 2;
+  background: var(--bodybg, #fcfcfc);
 }
 /* ── Text Section ── */
 .hs-text-section {
@@ -31,6 +44,7 @@
   font-size: clamp(1.75rem, 3.2vw, 3rem);
   font-weight: 500;
   line-height: 1.2;
+  /* text-align: justify !important; */
   letter-spacing: -0.02em;
   color: #121212 !important;
   text-align: left;
@@ -98,7 +112,6 @@
   flex: 1 1 0;
   min-height: 0;
 }
-
 
 .hs-card--dark {
   background: #0f0f0f;
@@ -210,6 +223,9 @@
   .hs-card-title {
     font-size: 49px;
   }
+  .hs-text-section {
+    padding: 150px clamp(24px, 9.3vw, 240px) 40px;
+  }
 }
 
 @media (max-width: 1400px) {
@@ -217,11 +233,11 @@
     /* flex-wrap: wrap; */
     justify-content: center;
   }
-  
+
   .hs-card {
     height: 330px;
   }
-  .hs-card-desc{
+  .hs-card-desc {
     font-size: 19px;
   }
   .hs-card {
