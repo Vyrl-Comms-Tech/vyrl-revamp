@@ -311,7 +311,8 @@
 
 .footer-subscribe-subtitle {
   max-width: 570px;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.4);
+
   font-weight: 300;
   font-size: 17px;
   /* border: 1px solid red; */
@@ -630,7 +631,7 @@
   }
 
   .footer-connect-title {
-    font-size: 26px;
+    font-size: 32px;
   }
 
   .footer-arrow-btn {
@@ -644,23 +645,38 @@
     height: 15px;
   }
 
-  .footer-connect-heading:hover .footer-arrow-btn--right {
-    width: 34px;
-    min-width: 34px;
-    margin-left: 14px;
+  /* Desktop shows the left arrow first and reveals the right one only
+     on :hover — but touch devices have no hover, so the swap animation
+     between them never happens here, and both were being decided purely
+     by the :hover rules above, which mobile can't trigger. Instead:
+     hide the left arrow outright and force the right one permanently
+     visible, giving a static "heading — gap — arrow" layout with the
+     arrow on the right, independent of the hover state. */
+  .footer-connect-heading {
+    justify-content: space-between;
+    gap: 14px;
   }
 
   .footer-arrow-btn--left {
-    margin-right: 14px;
+    display: none;
+  }
+
+  .footer-arrow-btn--right,
+  .footer-connect-heading:hover .footer-arrow-btn--right {
+    width: 34px;
+    min-width: 34px;
+    margin-left: 0;
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
   }
 
   .footer-connect-subtitle {
-    font-size: 14px;
+    font-size: 17px;
   }
 
   .footer-social-btn {
-    width: 38px;
-    height: 38px;
+    width: 60px;
+    height: 60px;
   }
 
   .footer-inner-link-col {
@@ -676,11 +692,11 @@
   }
 
   .footer-nav-title {
-    font-size: 18px;
+    font-size: 22px;
   }
 
   .footer-nav-link {
-    font-size: 15px;
+    font-size: 19px;
   }
 
   .footer-bottom-row {
@@ -694,17 +710,21 @@
   }
 
   .footer-subscribe-title {
-    font-size: 28px;
+    font-size: 31px;
   }
 
   .footer-subscribe-subtitle {
-    font-size: 14px;
+    font-size: 17px;
     max-width: 100%;
+    line-height: 111%;
   }
 
   .footer-subscribe-input {
     height: 48px;
-    font-size: 13px;
+    font-size: 19px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.05);
   }
 
   .footer-subscribe-input::placeholder {
@@ -734,17 +754,17 @@
   }
 
   .footer-time-label {
-    font-size: 18px;
+    font-size: 29px;
   }
 
   .footer-time-values {
     width: 100%;
-    justify-content: space-between;
-    gap: 12px;
+    justify-content: flex-start;
+    gap: 45px;
   }
 
   .footer-time-value {
-    font-size: 15px;
+    font-size: 19px;
   }
 
   .footer-next {

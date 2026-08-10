@@ -152,6 +152,7 @@ z-index: 3;
     display: flex;
     flex-direction: column-reverse !important;
     min-height: unset;
+    gap: 15px;
   }
   .hp-section {
     width: 100%;

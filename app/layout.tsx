@@ -10,25 +10,35 @@ import PreloaderGate, {
   preloaderSkipScript,
 } from "@/app/components/layout/PreloaderGate";
 
-const neueMontreal = localFont({
+const laygrotesk = localFont({
   src: [
     {
-      path: "../public/fonts/NeueMontreal-Light.woff2",
-      weight: "300",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/NeueMontreal-Regular.woff2",
+      path: "../public/fonts2/laygrotesk-trial-regular.woff2",
       weight: "400",
       style: "normal",
     },
     {
-      path: "../public/fonts/NeueMontreal-Medium.woff2",
+      path: "../public/fonts2/laygrotesk-trial-medium.woff2",
       weight: "500",
       style: "normal",
     },
+    {
+      path: "../public/fonts2/laygrotesk-trial-semibold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts2/laygrotesk-trial-bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts2/laygrotesk-trial-black.woff2",
+      weight: "900",
+      style: "normal",
+    },
   ],
-  variable: "--font-neue-montreal",
+  variable: "--font-laygrotesk",
   display: "swap",
 });
 
@@ -50,7 +60,7 @@ export default function RootLayout({
       
       <html
         lang="en"
-        className={`${neueMontreal.variable} h-full antialiased`}
+        className={`${laygrotesk.variable} h-full antialiased`}
       >
         <body  className="min-h-full">
           {/* beforeInteractive scripts are always injected into <head>

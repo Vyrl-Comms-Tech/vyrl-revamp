@@ -35,6 +35,7 @@
   height: 4vw;
   padding: 1.3vw;
   will-change: width, transform;
+border: 1px solid rgba(255, 255, 255, 0.15);
   justify-content: space-between;
   align-items: center;
   background-color: #000;
@@ -302,7 +303,7 @@
    .menu-dropdown {
     align-items: center;
     position: fixed;
-    bottom: 15%;
+    bottom: 10%;
     top: auto;
   }
   .nav-bar {
@@ -323,7 +324,7 @@
   }
   .site-nav {
     top: auto;
-    bottom: 6%;
+    bottom: 2%;
     height: auto;
     flex-direction: column;
   }

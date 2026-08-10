@@ -35,7 +35,7 @@ const BASE_POSITIONS = [
 ];
 
 function getResponsiveScale(viewportWidth) {
-  if (viewportWidth <= 640) return 0.55;
+  if (viewportWidth <= 640) return 0.70;
   if (viewportWidth <= 1720) return 0.78;
   return 1;
 }
@@ -45,7 +45,7 @@ function getResponsiveScale(viewportWidth) {
 // a 200px base offset still lands ~110px from center, which overflows
 // a narrow phone. Pull them in further on top of the size scale.
 function getOffsetScale(viewportWidth) {
-  if (viewportWidth <= 640) return 0.45;
+  if (viewportWidth <= 640) return 0.85;
   if (viewportWidth <= 1620) return 0.85;
   return 1;
 }

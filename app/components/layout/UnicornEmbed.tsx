@@ -171,12 +171,20 @@ async function initializeUnicornStudio(): Promise<void> {
 }
 
 type UnicornEmbedProps = {
-  projectId: string;
+  // Exactly one of these is expected — projectId resolves the scene
+  // through Unicorn Studio's own hosted CDN by id, filePath instead
+  // fetches a scene JSON straight from a URL (e.g. a same-origin file
+  // under /public), skipping their CDN entirely. The runtime picks
+  // between them via data-us-project vs data-us-project-src (see
+  // "[data-us-project], [data-us-project-src]" in its own init()).
+  projectId?: string;
+  filePath?: string;
   className?: string;
 };
 
 export default function UnicornEmbed({
   projectId,
+  filePath,
   className,
 }: UnicornEmbedProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -215,6 +223,7 @@ useEffect(() => {
       ref={containerRef}
       className={className}
       data-us-project={projectId}
+      data-us-project-src={filePath}
       style={{
         width: "100%",
         height: "100%",

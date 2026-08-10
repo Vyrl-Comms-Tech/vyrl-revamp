@@ -301,7 +301,7 @@ function Footer() {
                 Contact
               </FooterNavLink>
             </div>
-            <div className="footer-nav-col">
+            {/* <div className="footer-nav-col">
               <h4 className="footer-nav-title">Other</h4>
               <FooterNavLink
                 href="/projects"
@@ -311,13 +311,8 @@ function Footer() {
               >
                 Case Studies
               </FooterNavLink>
-              {/* <PageTransitionLink href="/blogs" className="footer-nav-link">
-                Blog
-              </PageTransitionLink> */}
-              {/* <PageTransitionLink href="/blogs" className="footer-nav-link">
-                Careers
-              </PageTransitionLink> */}
-            </div>
+            
+            </div> */}
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Info</h4>
               <FooterNavLink

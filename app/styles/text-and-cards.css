@@ -30,7 +30,7 @@
      in from the edge than content elsewhere on the page (e.g. the
      marquee below, which sizes off vw), reading as "off to one side."
      Scales continuously between a floor and ceiling instead. */
-  padding: 150px clamp(24px, 8vw, 240px) 40px;
+  padding: 150px clamp(34px, 27vw, 350px) 40px;
 }
 
 .hs-text-inner {
@@ -45,7 +45,7 @@
   font-weight: 500;
   line-height: 1.2;
   /* text-align: justify !important; */
-  letter-spacing: -0.02em;
+  letter-spacing: 0.02em;
   color: #121212 !important;
   text-align: left;
   text-indent: 0;
@@ -84,7 +84,7 @@
   height: 437px;
   padding: 30px 60px 30px 23px;
 
-  border-radius: 16px;
+  border-radius: 10px;
   overflow: hidden;
 
   /*
@@ -213,7 +213,7 @@
   }
 
   .hs-heading {
-    font-size: clamp(26px, 2.9vw, 3rem);
+    font-size: clamp(29px, 2.9vw, 3rem);
   }
   .hs-card {
     height: 350px;
@@ -252,9 +252,16 @@
   width: clamp(60px, 12vw, 220px);
 }
 @media (max-width: 840px) {
+.hs-heading-indent {
+display: block;
+}
+.hs-text-inner{
+  gap: 20px;
+}
   .hs-text-section {
-    padding-top: 2rem;
+    padding-top: 5rem;
     padding-bottom: 2.7rem;
+    padding-inline:15px;
     min-height: auto;
   }
   .hs-cards-section {

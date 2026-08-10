@@ -72,7 +72,7 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
 
     const isMobile = window.innerWidth <= 700;
 
-    // Scroll progress is written by ScrollTrigger's onUpdate below (always
+    // Scroll progress is written by ScrollTrigger's onUpdate below (always.hs-heading
     // runs) and read by the cube's render loop (only runs when WebGL is
     // available) — declared here so both sides can see it regardless of
     // which branch below actually executes.
@@ -479,6 +479,16 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       // untouched afterward (which is what made it feel like scrolling
       // "did nothing" after reaching the last service).
       const releasePastEdge = (direction) => {
+        // Lenis is stopped for as long as this section is pinned (see
+        // onEnter/onEnterBack above) so its own momentum can't drag real
+        // scroll through the pin on its own — but that also means its RAF
+        // loop isn't running to pick up this native scroll write. Starting
+        // it back up first guarantees Lenis resyncs to the new position
+        // and keeps driving smooth scroll immediately past this section,
+        // rather than staying stopped until the next scroll/wheel event
+        // happens to reach ScrollTrigger's onLeave/onLeaveBack.
+        window.lenis?.start();
+
         const st = mainScrollTrigger;
         const scrollerEl = st.scroller;
         const targetScroll =
@@ -568,6 +578,29 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
         start: "top top",
         end: `+=${SERVICES.length * 100}%`,
         pin: true,
+        // Lenis (SmoothScroll.jsx) smooths/eases every wheel and touch
+        // gesture into its own scroll animation over ~1.2s — it was still
+        // doing that *underneath* this section's own touchstart/move/end
+        // listeners, racing both against the same raw gesture. Two visible
+        // failure modes on iOS came from that race: (1) Lenis's momentum
+        // carried the real scroll position across this trigger's pinned
+        // range on its own, independent of stepIndex, so the counter/text
+        // looked frozen while the page silently scrolled underneath, then
+        // "caught up" and jumped sections once Lenis's easing settled;
+        // (2) a fast flick fed Lenis one large smoothed delta that could
+        // carry real scroll clean through `end` in a single motion, well
+        // before the STEP_COOLDOWN-gated stepIndex reached the last
+        // service. Stopping Lenis for the exact duration this section is
+        // pinned makes real scroll position fully static, so stepIndex
+        // (driven only by the gesture handlers below) is the only thing
+        // that can ever move the page — onEnter/onLeaveBack resume Lenis
+        // once the section is behind or ahead, and releasePastEdge's own
+        // scrollTop/scrollTo assignment still works with Lenis stopped
+        // since that's a direct scroll position write, not a Lenis call.
+        onEnter: () => window.lenis?.stop(),
+        onEnterBack: () => window.lenis?.stop(),
+        onLeave: () => window.lenis?.start(),
+        onLeaveBack: () => window.lenis?.start(),
       });
     } else {
       // Desktop: a long, smoothly-scrubbed distance across all services.
@@ -629,6 +662,11 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       // scrollTo tween — either of those would be a second animation
       // fighting Lenis for control of the scroll position every frame.
       if (window.lenis) {
+        // On mobile, Lenis is deliberately stopped for as long as this
+        // section is pinned (see the mobile ScrollTrigger's onEnter
+        // above), so it needs to be running again before it can animate
+        // this scrollTo — otherwise the call is silently a no-op.
+        window.lenis.start();
         window.lenis.scrollTo(targetScroll, { duration: 1.6 });
       } else {
         window.scrollTo({ top: targetScroll });
@@ -650,6 +688,12 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
 
       skipBtn?.removeEventListener("click", handleSkip);
       if (removeStepGestureListeners) removeStepGestureListeners();
+      // If this unmounts (route change, fast-refresh) while the section
+      // happened to be pinned, onLeave/onLeaveBack above will never fire
+      // to resume Lenis — leaving the whole page's scroll permanently
+      // stopped. isActive is ScrollTrigger's own "currently pinned" flag,
+      // so this only resumes it when that would otherwise be stranded.
+      if (isMobile && mainScrollTrigger.isActive) window.lenis?.start();
       mainScrollTrigger.kill();
 
       if (titleSplit) titleSplit.revert();
@@ -679,48 +723,56 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
       className={`services-main-section${dark ? " services-main-section--dark" : ""}`}
       ref={sectionRef}
     >
-      <div className="counter-divs">
-        <div className="static-number">
-          {String(SERVICES.length).padStart(2, "0")}
+      {/* The skip button used to be its own independent bottom-left
+          absolute box with no relationship to the counter's position —
+          fine on desktop, but on mobile it needed to sit directly under
+          the counter instead. Grouping both under .counter-top-left lets
+          services-3d.css switch the relationship per breakpoint: on
+          desktop this wrapper is unpositioned (static) and the counter +
+          skip button each keep their own independent absolute spot
+          against the section (top-left / bottom-left, unchanged); on
+          mobile the wrapper itself becomes the absolute top-left anchor
+          and the two children stack in normal flow underneath it. */}
+      <div className="counter-top-left">
+        <div className="counter-divs">
+          <div className="static-number">
+            {String(SERVICES.length).padStart(2, "0")}
+          </div>
+          /
+          <div className="static-number2">
+            {SERVICES.map((_, i) => (
+              <div
+                className="numbes"
+                key={i}
+                ref={(el) => (numberDigitsRefs.current[i] = el)}
+              >
+                {String(i + 1).padStart(2, "0")}
+              </div>
+            ))}
+          </div>
         </div>
-        /
-        <div className="static-number2">
-          {SERVICES.map((_, i) => (
-            <div
-              className="numbes"
-              key={i}
-              ref={(el) => (numberDigitsRefs.current[i] = el)}
+
+        <button type="button" className="services-skip-btn" ref={skipRef}>
+          <span className="services-skip-icon" aria-hidden="true">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
             >
-              {String(i + 1).padStart(2, "0")}
-            </div>
-          ))}
-        </div>
+              <path
+                d="M13 5L20 12L13 19M4 5L11 12L4 19"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+          Skip this section
+        </button>
       </div>
-
-      <div className="services-cta-desktop">
-        <CtaButton label="Explore Services" href="/services" className={ctaClassName} />
-      </div>
-
-      <button type="button" className="services-skip-btn" ref={skipRef}>
-        <span className="services-skip-icon" aria-hidden="true">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M13 5L20 12L13 19M4 5L11 12L4 19"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </span>
-        Skip this section
-      </button>
 
       <div className="right-text-services">
         <div className="service-tags" ref={tagsRef}>

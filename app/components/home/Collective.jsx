@@ -85,7 +85,7 @@ function Collective() {
       // narrower window (so each box fully finishes well before the
       // next one starts) paired with a bigger per-box delay stagger
       // (below) is what actually produces that one-by-one feel.
-      const animationWindow = isMobile ? 0.45 : 0.8;
+      const animationWindow = isMobile ? 0.95 : 0.8;
       const boxDelayStep = isMobile ? 0.45 : 0.1;
 
       // Mobile only shows the 2 "center" images (tpbox5 top-right,
