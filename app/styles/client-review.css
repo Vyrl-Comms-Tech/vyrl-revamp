@@ -380,5 +380,7 @@
   }
   .client-review-cta p:nth-child(2){
     display: none;
+  }  .client-review-section-container {
+    padding: 40px 15px 32px;
   }
 }

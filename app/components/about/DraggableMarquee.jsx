@@ -72,7 +72,7 @@ const TEAM = [
     name: "Maaz",
     designation: "Jr. Frontend Developer",
     image:
-      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785475202/ghjfg_gpeymd.png",
+      "/team/Maaz1.avif",
   },
   {
     name: "Mohsin",

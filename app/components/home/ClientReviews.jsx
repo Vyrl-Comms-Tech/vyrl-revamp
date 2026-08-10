@@ -35,7 +35,7 @@ const BASE_POSITIONS = [
 ];
 
 function getResponsiveScale(viewportWidth) {
-  if (viewportWidth <= 640) return 0.70;
+  if (viewportWidth <= 640) return 0.60;
   if (viewportWidth <= 1720) return 0.78;
   return 1;
 }
