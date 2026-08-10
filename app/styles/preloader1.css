@@ -45,9 +45,16 @@
 }
 
 @media (max-width: 800px) {
+  /* left compensates for .first-path's own transform: translateX(35%)
+     (further down this file), which shifts the drawn glyph rightward
+     *inside* the SVG's viewBox independent of how the SVG canvas itself
+     is centered — without this, the glyph renders off-center to the
+     right (confirmed: removing it entirely, or under-correcting with
+     smaller values, both still landed right of center). -10% is the
+     tuned value that actually centers it on mobile. */
   .pre-loader svg {
     scale: 0.3;
-    left: -2%;
+    left: -10%;
     top: 38%;
   }
 }
