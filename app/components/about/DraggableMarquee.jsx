@@ -13,35 +13,10 @@ gsap.registerPlugin(Draggable, InertiaPlugin);
 // these in once real photos/names/roles are available.
 const TEAM = [
   {
-    name: "Adeel",
-    designation: "Jr. Full Stack Developer",
-    image:
-      "/team/adeel.avif",
-  },
-  {
     name: "Arsalan",
     designation: "Performance Head",
     image:
       "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team2_bb0rwa.jpg",
-  },
-  {
-    name: "Fatima",
-    designation: "Jr. Designer",
-    image:
-      "/team/fatima.avif",
-  },
-  {
-    name: "Daniyal",
-    designation: "Project Manager",
-    image:
-      "/team/daniyal.avif",
-  },
-
-  {
-    name: "Haris",
-    designation: "Sr. Full Stack Developer",
-    image:
-      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team5_kebi7v.jpg",
   },
   {
     name: "Zain",
@@ -50,10 +25,43 @@ const TEAM = [
       "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318700/team6_xvot0o.jpg",
   },
   {
+    name: "Haris",
+    designation: "Sr. Full Stack Developer",
+    image:
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team5_kebi7v.jpg",
+  },
+
+  {
     name: "Saqib",
     designation: "Sr. Front End Developer",
     image:
       "https://res.cloudinary.com/drwzstxy2/image/upload/v1785318699/team10_dvdwyi.jpg",
+  },
+  {
+    name: "Maaz",
+    designation: "Jr. Frontend Developer",
+    image: "/team/Maaz1.avif",
+  },
+  {
+    name: "Adeel",
+    designation: "Jr. Full Stack Developer",
+    image: "/team/adeel.avif",
+  },
+  {
+    name: "Fuad",
+    designation: "Sr. Graphic Designer",
+    image:
+      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785397361/WhatsApp_Image_2026-07-30_at_12.20.17_PM_mzq8rn.jpg",
+  },
+  {
+    name: "Mohsin",
+    designation: "UI/UX & Design Lead",
+    image: "/team/mohsin.avif",
+  },
+  {
+    name: "Fatima",
+    designation: "Jr. Designer",
+    image: "/team/fatima.avif",
   },
   {
     name: "Amna",
@@ -63,22 +71,9 @@ const TEAM = [
   },
 
   {
-    name: "Fuad",
-    designation: "Sr. Graphic Designer",
-    image:
-      "https://res.cloudinary.com/drwzstxy2/image/upload/v1785397361/WhatsApp_Image_2026-07-30_at_12.20.17_PM_mzq8rn.jpg",
-  },
-  {
-    name: "Maaz",
-    designation: "Jr. Frontend Developer",
-    image:
-      "/team/Maaz1.avif",
-  },
-  {
-    name: "Mohsin",
-    designation: "UI/UX & Design Lead",
-    image:
-      "/team/mohsin.avif",
+    name: "Daniyal",
+    designation: "Project Manager",
+    image: "/team/daniyal.avif",
   },
 ];
 

@@ -677,6 +677,83 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
     skipBtn?.addEventListener("click", handleSkip);
 
     // ------------------------------------------------
+    // Darken into the next section (HomeCarousel)
+    // ------------------------------------------------
+    // HomeCarousel already scrubs its own background white->black as it
+    // scrolls in (see home-carousel.css/HomeCarousel.jsx), but that fade
+    // is scoped entirely to HomeCarousel's own top edge — while this
+    // section is still pinned, HomeCarousel's top sits just beneath it
+    // and starts darkening on its own schedule, independent of whatever
+    // is happening up here. The visible result was a hard seam: this
+    // section stayed flat white the entire time it was pinned, right
+    // above a strip of HomeCarousel that was already partway to black.
+    // Instead of just softening that seam, this fades the *whole*
+    // Services3d section (background + every text/UI color) to black
+    // over the final stretch of its own pin, timed to land on full black
+    // exactly as the pin releases — so by the time HomeCarousel's strip
+    // becomes visible underneath, this section is already the same
+    // black it's fading into, and the whole viewport reads as one
+    // continuous blackout rather than two sections crossing a seam.
+    // Uses the same gsap.fromTo(background/color) technique as
+    // HomeCarousel's own scrub rather than toggling
+    // .services-main-section--dark (a hard class swap has nothing to
+    // interpolate against a scrub).
+    const darkenTargets = [
+      section,
+      ...(tags ? [tags] : []),
+      title,
+      desc,
+      section.querySelector(".counter-divs"),
+      section.querySelector(".services-skip-btn"),
+      section.querySelector(".services-skip-icon"),
+    ].filter(Boolean);
+
+    // mainScrollTrigger.end is an *absolute* page-scroll pixel position
+    // (where the pin releases), not a duration — the actual pinned
+    // scroll distance is end - start. Deriving the darken window from
+    // that distance, rather than end itself, is what makes "start at
+    // 80% through the pin" and "finish exactly at the pin's release"
+    // land correctly regardless of how far down the page this section
+    // sits.
+    const pinDistance = () => mainScrollTrigger.end - mainScrollTrigger.start;
+
+    const darkenTween = gsap.fromTo(
+      darkenTargets,
+      { backgroundColor: "#ffffff", color: "#000000" },
+      {
+        backgroundColor: "#000000",
+        color: "#ffffff",
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          // The last 20% of this section's own pinned scroll distance —
+          // starting late enough that the darken doesn't eat into the
+          // time available to read/step through the services, but
+          // finishing exactly at "end" (the pin's release point) so
+          // there's no gap between "fully black" and "pin releases".
+          start: () => `top+=${pinDistance() * 0.8} top`,
+          end: () => `top+=${pinDistance()} top`,
+          scrub: true,
+        },
+      },
+    );
+
+    // .service-tag/.counter-divs children (border-color, not just
+    // color/background) and .cta-btn aren't plain color/backgroundColor
+    // props GSAP can tween on the section itself — .services-main-
+    // section--dark already defines exactly the right end-state for all
+    // of those (see services-3d.css), so it's applied as a discrete
+    // switch at the same halfway point the color scrub is passing
+    // through, rather than trying to hand-tween every nested selector.
+    const darkClassTrigger = ScrollTrigger.create({
+      trigger: section,
+      start: () => `top+=${pinDistance() * 0.5} top`,
+      onEnter: () => section.classList.add("services-main-section--dark"),
+      onLeaveBack: () =>
+        section.classList.remove("services-main-section--dark"),
+    });
+
+    // ------------------------------------------------
     // Cleanup
     // ------------------------------------------------
     return () => {
@@ -688,6 +765,9 @@ export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
 
       skipBtn?.removeEventListener("click", handleSkip);
       if (removeStepGestureListeners) removeStepGestureListeners();
+      darkenTween.scrollTrigger?.kill();
+      darkenTween.kill();
+      darkClassTrigger.kill();
       // If this unmounts (route change, fast-refresh) while the section
       // happened to be pinned, onLeave/onLeaveBack above will never fire
       // to resume Lenis — leaving the whole page's scroll permanently
