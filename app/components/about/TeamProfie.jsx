@@ -352,11 +352,28 @@ export default function TeamProfile() {
     }
     rafRef.current = requestAnimationFrame(loop);
 
+    // wrapper's box is fixed at init time (the physics world's walls
+    // above are built from this same W/H and never re-measured either),
+    // so there's nothing to gain from re-reading it on every mousemove —
+    // only cost: getBoundingClientRect() forces a synchronous layout
+    // recalc if anything else invalidated layout that frame, and with
+    // mousemove firing dozens of times a second while the cursor is
+    // over this section, on a page whose loop() above is *also*
+    // constantly writing transforms just above this in the same frame,
+    // that reflow was both frequent and easy to trigger. Caching it
+    // once (recomputed only on resize, which — like the physics
+    // walls — this component didn't previously track at all) gives the
+    // exact same numbers with none of the per-event cost.
+    let wrapperRect = wrapper.getBoundingClientRect();
+    const updateWrapperRect = () => {
+      wrapperRect = wrapper.getBoundingClientRect();
+    };
+    window.addEventListener("resize", updateWrapperRect);
+
     // ✅ Fixed: attach to wrapper, not window; removed broken delta-throttle
     function onMouseMove(e) {
-      const rect = wrapper.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
+      const mx = e.clientX - wrapperRect.left;
+      const my = e.clientY - wrapperRect.top;
 
       itemsRef.current.forEach(({ body }) => {
         const bx = body.position.x;
@@ -375,8 +392,10 @@ export default function TeamProfile() {
 
     // ✅ Attach to wrapper so it only fires inside the physics area
     wrapper.addEventListener("mousemove", onMouseMove);
-    cleanupRef.current = () =>
+    cleanupRef.current = () => {
       wrapper.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("resize", updateWrapperRect);
+    };
   }
 
   const sectionHeading = (
