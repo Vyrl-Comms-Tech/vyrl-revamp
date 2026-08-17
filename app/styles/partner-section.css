@@ -1,0 +1,232 @@
+
+.logo-section {
+  --partners-offset: 170vh;
+/* background: #000; */
+  position: relative;
+  width: 100%;
+  min-height: 110vh;
+  /* margin-top: var(--partners-offset); */
+}
+
+.partners-section {
+  width: 100%;
+  min-height: 100vh;
+  padding: 5rem 4vw;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  color: #fff;
+}
+
+/* =========================
+   TOP ROW
+   ========================= */
+
+.partners-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 1.5rem;
+}
+
+.partners-heading {
+  margin: 0;
+  font-size: clamp(2.25rem, 5vw, 5rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.partners-top > span {
+  font-size: 0.55rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+/* =========================
+   GRID
+   ========================= */
+
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  perspective: 1000px;
+}
+
+.partner-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 150px;
+  padding: 2rem;
+
+  border: 1px solid rgb(150 147 147 / 15%);
+  z-index: 20;
+
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  /* GSAP animates transform + opacity on this element (entrance) and on
+     .partner-logo inside it (shuffle) continuously — hint the compositor
+     so it promotes both to their own layer instead of repainting. */
+  will-change: transform, opacity;
+
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.partner-card:hover {
+  background: rgb(255 255 255 / 3.5%);
+}
+
+.partner-logo {
+  display: block;
+
+  width: auto;
+  height: auto;
+  max-width: 65%;
+  max-height: 55px;
+  object-fit: contain;
+
+  opacity: 0.9;
+  /* next/image renders an <img>; filter makes any-color source logos read
+     as a uniform white mark, matching the original monochrome treatment. */
+  filter: brightness(0) invert(1);
+
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.4s ease;
+}
+
+.partner-card:hover .partner-logo {
+  opacity: 1;
+  transform: scale(1.06);
+}
+
+/* =========================
+   BOTTOM ROW
+   ========================= */
+
+.partners-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  margin-top: 2.2rem;
+
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.partners-bottom span:nth-child(2) {
+  text-align: center;
+}
+
+.partners-bottom span:nth-child(3) {
+  text-align: right;
+}
+
+/* =========================
+   ACCESSIBILITY UTILITY
+   ========================= */
+
+/* Visually hidden but still announced by screen readers — used for the
+   static client-name list, since the visible grid shuffles decoratively. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =========================
+   REDUCED MOTION
+   ========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .partner-card,
+  .partner-logo {
+    transition: none;
+    will-change: auto;
+  }
+}
+
+/* =========================
+   TABLET
+   ========================= */
+
+@media (max-width: 900px) {
+  .partners-section {
+    padding: 4rem 3vw;
+  }
+
+  .partners-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 600px) {
+  .logo-section {
+    min-height: auto;
+  }
+
+  .partners-section {
+    min-height: auto;
+    padding: 5rem 5vw;
+  }
+
+  .partners-top {
+    margin-bottom: 1rem;
+  }
+
+  .partners-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .partner-card {
+    height: 100px;
+    padding: 1.5rem;
+  }
+
+  .partner-logo {
+    max-width: 70%;
+    max-height: 35px;
+  }
+
+  .partners-bottom {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 0.5rem;
+  }
+
+  .partners-bottom span:nth-child(2) {
+    text-align: right;
+  }
+
+  .partners-bottom span:nth-child(3) {
+    display: none;
+  }
+}

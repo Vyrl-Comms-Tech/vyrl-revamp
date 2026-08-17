@@ -342,7 +342,7 @@ export default function HeroModelSection() {
               end: "+=400% bottom",
               scrub: 1,
               pin: true,
-              markers: process.env.NODE_ENV === "development",
+              // markers: process.env.NODE_ENV === "development",
             },
           });
 
