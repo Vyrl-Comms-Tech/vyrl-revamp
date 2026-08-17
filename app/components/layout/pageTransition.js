@@ -1,3 +1,32 @@
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+// GSAP's `pin: true` reparents the pinned DOM node into an auto-generated
+// pin-spacer wrapper, entirely outside React's own bookkeeping. Every
+// pinned section in this app unwraps that spacer on unmount (gsap.context's
+// ctx.revert() / ScrollTrigger instance .kill()) — that's normally enough,
+// but next-view-transitions' router.push({ onTransitionReady }) calls
+// document.startViewTransition() and lets React's unmount commit happen
+// *inside* the transition's own DOM-swap step, racing against each
+// component's cleanup effect. If React's removeChild for the old page
+// commits before a pin-spacer has been unwrapped (or while one is being
+// resized by a stray ScrollTrigger.refresh() mid-transition), the node
+// React expects to remove is no longer where it left it — the browser
+// throws "Failed to execute 'removeChild' on 'Node'" and React aborts the
+// commit partway through, which is why the URL changes but the old page
+// (e.g. the home hero) is still visible underneath.
+//
+// Killing every ScrollTrigger pin synchronously, *before* router.push()
+// even runs (i.e. before startViewTransition takes its old-DOM snapshot),
+// closes that race for good: pin-spacers are gone and their content
+// restored to plain document flow before React ever gets a chance to
+// unmount anything. Called from every click handler that navigates via
+// this transition (Navbar's NavLink, PageTransitionLink, ProjectsGrid).
+export const killAllPins = () => {
+  ScrollTrigger.getAll().forEach((st) => {
+    if (st.pin) st.kill();
+  });
+};
+
 // Shared WAAPI keyframes for next-view-transitions' onTransitionReady hook.
 // The old page fades/slides up slightly while the new page reveals
 // upward over it, matching the reference video's effect.

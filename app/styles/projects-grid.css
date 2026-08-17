@@ -105,7 +105,16 @@
   align-items: center;
   gap: 2.5rem;
   background-color: #000;
-  padding: 2rem 0;
+  /* Bottom padding was the same 2rem as the top — with no section
+     after this one, the last row (JEIKOR/SANAM CARS) sat right at the
+     page's true bottom edge with almost no breathing room, so its
+     .imgFollow hover-follower (which needs a card's-worth of room to
+     travel toward the bottom edge) had nowhere to go but visibly past
+     the card and toward the very end of the page/section — read as
+     the last row being "cut off". A larger bottom padding gives that
+     row (and its hover interactions) the same clearance every other
+     row gets from the row below it. */
+  padding: 2rem 0 8rem;
 }
 
 .cardsProject {
@@ -121,6 +130,21 @@
   display: flex;
   border-radius: 5px;
   overflow: hidden;
+  /* .imgFollow (the cursor-follow thumbnail) is GPU-composited by GSAP's
+     quickTo — its x/y tween runs on transform, which Chrome promotes to
+     its own layer for performance. A plain `overflow: hidden` alone
+     doesn't reliably clip a transformed, layer-promoted descendant in
+     every case — confirmed here: JEIKOR/SANAM CARS' .cardsProject
+     computed the *same* height as every other card (verified in
+     DevTools), yet .imgFollow still visibly rendered past their bottom
+     edge on hover once the cursor got near it, while shorter-travel
+     cards (BANDA, LALA DARBAR — cursor happened to stay further from
+     their edges in testing) didn't show it. `isolation: isolate`
+     forces this element to be its own stacking context, which is what
+     actually makes the browser honor overflow clipping against a
+     transformed child reliably, regardless of where the cursor drags
+     the follower to. */
+  isolation: isolate;
   justify-content: center;
   align-items: center;
   cursor: pointer;

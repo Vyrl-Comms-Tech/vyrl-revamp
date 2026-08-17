@@ -4,7 +4,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Link, useTransitionRouter } from "next-view-transitions";
 import gsap from "gsap";
-import { slideInOut, isCaseStudyPath } from "./pageTransition";
+import { slideInOut, isCaseStudyPath, killAllPins } from "./pageTransition";
 import { isKnownRoute } from "./knownRoutes";
 import "../../styles/navbar.css";
 import PageTransitionLink from "./PageTransitionLink";
@@ -54,6 +54,9 @@ const NavLink = ({ label, href }) => {
     if (isCaseStudyPath(href)) return;
 
     e.preventDefault();
+    // Must run before router.push kicks off the view transition — see
+    // killAllPins' own comment in pageTransition.js for why.
+    killAllPins();
     router.push(href, { onTransitionReady: slideInOut });
   };
 

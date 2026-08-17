@@ -7,6 +7,7 @@ import { Flip } from "gsap/Flip";
 import "../../styles/about-hero.css";
 import CtaButton from "../layout/cta";
 import AboutImg from "./aboutImg";
+import VyrlCtaButton from "../layout/VyrlCtaButton";
 
 gsap.registerPlugin(ScrollTrigger, Flip);
 
@@ -167,7 +168,7 @@ const AboutHero = () => {
               are here to understand what your brand is trying to become  then
               build the digital system that helps it get there.
             </p>
-            <CtaButton label="Lets Get In Touch" href="/contact-us" />
+             <VyrlCtaButton label="let's get in touch" href="/contact-us" />
           </div>
 
           <div className="aboutHero-headingCol">

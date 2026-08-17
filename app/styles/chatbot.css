@@ -1,0 +1,330 @@
+.chatbot {
+  position: fixed;
+  left: 24px;
+  bottom: 44px;
+  z-index: 950;
+}
+
+.chatbot-panel {
+  position: relative;
+  width: fit-content;
+  height: 62px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: #0c0c10;
+  overflow: hidden;
+}
+
+.chatbot-toggle {
+  display: flex;
+  align-items: center;
+  gap: 19px;
+  height: 62px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 400;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.chatbot--open .chatbot-toggle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chatbot-toggle-text {
+  color: #fff;
+}
+
+.chatbot-dots {
+  display: grid;
+  grid-template-columns: repeat(3, 5px);
+  grid-template-rows: repeat(3, 5px);
+  justify-items: center;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.chatbot-dots--small {
+  animation: chatbot-dots-pulse 2.4s ease-in-out infinite;
+}
+
+.chatbot-dot {
+  width: 5px;
+  height: 5px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: #fff;
+}
+
+@keyframes chatbot-dots-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.35) rotate(180deg);
+  }
+}
+
+.chatbot-body {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chatbot--open .chatbot-body {
+  pointer-events: auto;
+}
+
+.chatbot-tabs {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  gap: 16px;
+  z-index: 2;
+}
+
+.chatbot-tab {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+
+.chatbot-tab--active {
+  color: #fff;
+}
+
+.chatbot-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.chatbot-media {
+  width: 100%;
+  height: 55%;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.chatbot-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.chatbot-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 0px;
+  padding: 16px 20px 0;
+}
+
+.chatbot-name {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.chatbot-heading {
+  font-size: 23px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.chatbot-text {
+  font-size: 18px;
+  color:white;
+}
+
+.chatbot-questions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.chatbot-question {
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 14.5px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.chatbot-question:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.chatbot-messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 5px;
+  padding-bottom: 8px;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+
+.chatbot-messages::-webkit-scrollbar {
+  width: 5px;
+}
+
+.chatbot-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chatbot-messages::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+}
+
+.chatbot-messages::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.chatbot-message {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 14.5px;
+  line-height: 1.4;
+  animation: chatbot-message-in 0.3s ease;
+  /* A long, unbroken string (no spaces to wrap on) forced the bubble
+     wider than the panel instead of wrapping, which pushed
+     .chatbot-messages into horizontal overflow and showed a bottom
+     scrollbar. overflow-wrap breaks a too-long word/string at any
+     character once it no longer fits, same as normal chat apps. */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+@keyframes chatbot-message-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chatbot-message--user {
+  align-self: flex-end;
+  background: #fff;
+  color: #0c0c10;
+  border-bottom-right-radius: 4px;
+}
+
+.chatbot-message--bot {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-bottom-left-radius: 4px;
+}
+
+.chatbot-message--typing {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 14px;
+}
+
+.chatbot-message--typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  animation: chatbot-typing-bounce 1.2s ease-in-out infinite;
+}
+
+.chatbot-message--typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.chatbot-message--typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes chatbot-typing-bounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.chatbot-inputRow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px 18px;
+}
+
+.chatbot-input {
+  flex: 1;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+}
+
+.chatbot-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 520px) {
+  .chatbot {
+    left: 16px;
+    bottom: 16px;
+  }
+}

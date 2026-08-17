@@ -16,7 +16,7 @@
      ensures there's an opaque surface doing the covering, not a
      transparent section letting the fixed hero show through underneath. */
   position: relative;
-  z-index: 2;
+  z-index: 101;
   background: var(--bodybg, #fcfcfc);
 }
 /* ── Text Section ── */
@@ -55,6 +55,9 @@
   width: 100%;
   display: flex;
   align-items: center;
+  margin-top: -25vh;
+  z-index: 999 !important ;
+  position: relative;
   justify-content: center;
   background: #fff;
   padding: 6rem 3rem;

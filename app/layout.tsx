@@ -3,12 +3,15 @@ import Footer from "./components/layout/Footer";
 import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
+import "./styles/heromodel-section.css";
 import { ViewTransitions } from "next-view-transitions";
 import Navbar from "@/app/components/layout/Navbar";
 import SmoothScroll from "@/app/components/layout/SmoothScroll";
 import PreloaderGate, {
   preloaderSkipScript,
 } from "@/app/components/layout/PreloaderGate";
+import Chatbot from "@/app/components/layout/Chatbot";
+import FluidBackground from "@/app/components/layout/FluidBackgroundLoader";
 
 const laygrotesk = localFont({
   src: [
@@ -74,12 +77,14 @@ export default function RootLayout({
             strategy="beforeInteractive"
             dangerouslySetInnerHTML={{ __html: preloaderSkipScript }}
           /> */}
-          <PreloaderGate />
+          {/* <PreloaderGate /> */}
+          {/* <FluidBackground /> */}
           <SmoothScroll />
           {/* <Header /> */}
           <Navbar />
           {children}
           <Footer />
+          <Chatbot />
         </body>
       </html>
     </ViewTransitions>

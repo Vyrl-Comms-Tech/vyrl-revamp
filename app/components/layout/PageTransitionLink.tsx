@@ -2,7 +2,7 @@
 import { forwardRef, MouseEvent } from "react";
 import { Link, useTransitionRouter } from "next-view-transitions";
 import { usePathname } from "next/navigation";
-import { slideInOut, isCaseStudyPath } from "./pageTransition";
+import { slideInOut, isCaseStudyPath, killAllPins } from "./pageTransition";
 
 type PageTransitionLinkProps = React.ComponentProps<typeof Link>;
 
@@ -49,6 +49,9 @@ const PageTransitionLink = forwardRef<HTMLAnchorElement, PageTransitionLinkProps
         return;
       }
 
+      // Must run before router.push kicks off the view transition — see
+      // killAllPins' own comment in pageTransition.js for why.
+      killAllPins();
       router.push(hrefStr, { onTransitionReady: slideInOut });
     };
 

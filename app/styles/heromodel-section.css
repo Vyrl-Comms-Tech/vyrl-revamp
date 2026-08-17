@@ -1,0 +1,121 @@
+/*
+  HeroModelSection.module.css
+  ----------------------------
+  Flattened from the original SCSS (CSS Modules don't reliably support
+  nesting across all Next.js setups, so each nested selector becomes an
+  explicit, scoped class). The `.tag-head` class on the "About" tag is
+  intentionally left as a plain global class in the JSX -- it's assumed
+  to come from a shared design-system utility stylesheet, not this
+  component's own styles.
+*/
+
+.heroSection {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+
+  z-index: 100;
+}
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.heroHeadingModel {
+  position: absolute;
+  right: 3%;
+  bottom: 3%;
+  width: 40%;
+}
+
+@media (max-width: 800px) {
+  .heroHeadingModel {
+    width: 70%;
+    bottom: 13%;
+  }
+}
+
+.heroHeadingModelHeading {
+  overflow: hidden;
+  will-change: transform;
+  text-align: end;
+  line-height: 1.1;
+  font-size: 3.8rem;
+  font-weight: 100;
+  color: #fff;
+}
+
+@media (max-width: 800px) {
+  .heroHeadingModelHeading {
+    width: 100%;
+    font-size: 8rem;
+  }
+}
+
+.centerTextHero {
+  position: absolute;
+  top: 0;
+  display: flex;
+  /* Was a row (the default) with no flex-direction set — the "About"
+     tag (.tops, first in DOM order) and the heading were laid out
+     side-by-side instead of stacked, so the tag ended up overlapping
+     the heading's own centered text instead of sitting above it.
+     column stacks the tag directly above the heading, both still
+     centered by the existing align-items/justify-content. */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.centerTextHeroHeading {
+  width: 60%;
+  text-align: center;
+  line-height: 1;
+  font-size: 4rem;
+  font-weight: 200;
+  will-change: transform;
+}
+
+@media (max-width: 800px) {
+  .centerTextHeroHeading {
+    width: 80%;
+    font-size: 8rem;
+  }
+}
+
+.tops {
+  /* top: 35% previously did nothing — .tops itself was never
+     position:absolute/relative, so a top offset has no positioned
+     ancestor of its own to resolve against. Now that .centerTextHero
+     is a column flex container (see above), this tag is already placed
+     above the heading by flex order/centering alone; top is dropped
+     rather than fixed, since flex layout is what's actually doing the
+     positioning here. */
+  display: inline-block;
+  margin-bottom: 1.25rem;
+  padding: 0.4em 1.1em;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  will-change: transform;
+}
+
+@media (max-width: 800px) {
+  .tops {
+    font-size: 1.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroHeadingModelHeading,
+  .centerTextHeroHeading,
+  .tops {
+    will-change: auto;
+  }
+}

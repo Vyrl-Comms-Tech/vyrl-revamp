@@ -1,0 +1,329 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import "../../styles/chatbot.css";
+import Link from "next/link";
+
+const QUESTIONS = [
+  "Walk me through this",
+  "Could you do this for us?",
+  "What went into this?",
+];
+
+export default function Chatbot() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+  const [isBotTyping, setIsBotTyping] = useState(false);
+  const [videoSrc, setVideoSrc] = useState("/chat1.mp4");
+  const isActiveRef = useRef(false);
+  const panelRef = useRef(null);
+  const panelBodyRef = useRef(null);
+  const toggleRef = useRef(null);
+  const timelineRef = useRef(null);
+  const messagesEndRef = useRef(null);
+  const videoRef = useRef(null);
+  const switchVideoTimeoutRef = useRef(null);
+  const revertVideoTimeoutRef = useRef(null);
+
+  // Fades the video to black, swaps its source underneath while hidden,
+  // then fades back in — so the chat1<->chat2 swap reads as a soft
+  // crossfade instead of an instant, jarring cut.
+  const switchVideo = (nextSrc) => {
+    const video = videoRef.current;
+    if (!video) {
+      setVideoSrc(nextSrc);
+      return;
+    }
+    gsap.to(video, {
+      opacity: 0,
+      duration: 0.25,
+      ease: "power2.in",
+      onComplete: () => {
+        setVideoSrc(nextSrc);
+        gsap.to(video, {
+          opacity: 1,
+          duration: 0.35,
+          ease: "power2.out",
+        });
+      },
+    });
+  };
+
+  const sendMessage = (text) => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+
+    if (switchVideoTimeoutRef.current) {
+      clearTimeout(switchVideoTimeoutRef.current);
+    }
+    if (revertVideoTimeoutRef.current) {
+      clearTimeout(revertVideoTimeoutRef.current);
+    }
+    switchVideoTimeoutRef.current = setTimeout(() => {
+      switchVideo("/chat2.mp4");
+      switchVideoTimeoutRef.current = null;
+      revertVideoTimeoutRef.current = setTimeout(() => {
+        switchVideo("/chat1.mp4");
+        revertVideoTimeoutRef.current = null;
+      }, 3000);
+    }, 1000);
+
+    setMessages((prev) => [
+      ...prev,
+      { id: `u-${Date.now()}`, from: "user", text: trimmed },
+    ]);
+    setInputValue("");
+    setIsBotTyping(true);
+
+    setTimeout(() => {
+      setIsBotTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        { id: `b-${Date.now()}`, from: "bot", text: "yeah , sure i can do that for you" },
+      ]);
+    }, 1200);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (switchVideoTimeoutRef.current) {
+        clearTimeout(switchVideoTimeoutRef.current);
+      }
+      if (revertVideoTimeoutRef.current) {
+        clearTimeout(revertVideoTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleInputSubmit = (e) => {
+    e.preventDefault();
+    sendMessage(inputValue);
+  };
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isBotTyping]);
+
+  const toggle = (forceState) => {
+    const nextActive = forceState ?? !isActiveRef.current;
+    if (nextActive === isActiveRef.current) return;
+    isActiveRef.current = nextActive;
+    setIsOpen(nextActive);
+
+    if (timelineRef.current) timelineRef.current.kill();
+
+    const panel = panelRef.current;
+    const body = panelBodyRef.current;
+    const isMobile = window.innerWidth <= 520;
+    const width = isMobile ? "calc(100vw - 24px)" : "450px";
+    const height = isMobile ? "calc(100vh - 32px)" : "672px";
+    const closedWidth = toggleRef.current?.offsetWidth ?? 220;
+    const closedHeight = 62;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        if (timelineRef.current === tl) timelineRef.current = null;
+      },
+    });
+    timelineRef.current = tl;
+
+    if (nextActive) {
+      gsap.set(body, { pointerEvents: "auto" });
+      tl.to(panel, {
+        width,
+        borderRadius: 24,
+        duration: 0.6,
+        ease: "power4.inOut",
+      }).to(
+        panel,
+        {
+          height,
+          duration: 0.6,
+          ease: "power3.inOut",
+        },
+        "-=0.15",
+      );
+      tl.to(
+        body,
+        {
+          opacity: 1,
+          duration: 0.4,
+          ease: "power2.out",
+        },
+        "-=0.2",
+      );
+    } else {
+      tl.to(body, {
+        opacity: 0,
+        duration: 0.25,
+        ease: "power2.in",
+      })
+        .to(
+          panel,
+          {
+            height: closedHeight,
+            duration: 0.5,
+            ease: "power3.inOut",
+          },
+          "-=0.05",
+        )
+        .to(
+          panel,
+          {
+            width: closedWidth,
+            borderRadius: 999,
+            duration: 0.55,
+            ease: "power4.inOut",
+            onComplete: () => {
+              // Clears every inline style GSAP set during the open/close
+              // tweens so the resting pill goes back to being driven by
+              // plain CSS (width: fit-content, height: 62px) instead of
+              // the fixed pixel values just tweened to.
+              gsap.set(panel, { clearProps: "width,height,borderRadius" });
+              // Was set on `panel` itself, which also disabled the
+              // toggle button living inside it — the pill you click to
+              // reopen the chat never received clicks again after the
+              // first close. Only the expanded body's content (tabs,
+              // questions, input) needs to stop being interactive while
+              // closed; the toggle's own opacity/pointer-events are
+              // already handled separately by .chatbot-toggle's CSS.
+              gsap.set(body, { pointerEvents: "none" });
+            },
+          },
+          "-=0.15",
+        );
+    }
+  };
+
+  return (
+    <div className={`chatbot ${isOpen ? "chatbot--open" : ""}`}>
+      <div className="chatbot-panel" ref={panelRef}>
+        <button
+          type="button"
+          className="chatbot-toggle"
+          ref={toggleRef}
+          onClick={() => toggle(true)}
+          aria-label="Open chat"
+        >
+          <span className="chatbot-dots" aria-hidden="true">
+            {Array.from({ length: 9 }).map((_, i) => (
+              <span key={i} className="chatbot-dot" />
+            ))}
+          </span>
+          <span className="chatbot-toggle-text">Let&apos;s work together</span>
+        </button>
+
+        <div className="chatbot-body" ref={panelBodyRef}>
+          <div className="chatbot-tabs">
+            <button type="button" className="chatbot-tab chatbot-tab--active">
+              Chat
+            </button>
+            <Link href="/contact-us" className="chatbot-tab">
+              Contact
+            </Link>
+          </div>
+
+          <button
+            type="button"
+            className="chatbot-close"
+            onClick={() => toggle(false)}
+            aria-label="Close chat"
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path
+                d="M6 6L18 18M18 6L6 18"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+
+          <div className="chatbot-media">
+            <video
+              className="chatbot-video"
+              ref={videoRef}
+              src={videoSrc}
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          </div>
+
+          <div className="chatbot-content">
+            <span className="chatbot-name">Remi</span>
+            <h3 className="chatbot-heading">Checking out Control Tower.</h3>
+            <p className="chatbot-text">
+              I can walk you through what happened here.
+            </p>
+
+            {messages.length === 0 ? (
+              <div className="chatbot-questions">
+                {QUESTIONS.map((question) => (
+                  <button
+                    key={question}
+                    type="button"
+                    className="chatbot-question"
+                    onClick={() => sendMessage(question)}
+                  >
+                    {question}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              // Lenis (SmoothScroll.jsx) intercepts wheel/touch gestures
+              // globally to drive its own smooth page scroll — without
+              // this, scrolling here with the mouse wheel scrolled the
+              // whole page underneath the chat instead of this list.
+              // data-lenis-prevent is Lenis's own documented escape
+              // hatch: it skips handling the gesture entirely for any
+              // element (or descendant) carrying this attribute, letting
+              // native scroll take over here as normal.
+              <div className="chatbot-messages" data-lenis-prevent>
+                {messages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={`chatbot-message chatbot-message--${message.from}`}
+                  >
+                    {message.text}
+                  </div>
+                ))}
+
+                {isBotTyping && (
+                  <div className="chatbot-message chatbot-message--bot chatbot-message--typing">
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                )}
+
+                <div ref={messagesEndRef} />
+              </div>
+            )}
+          </div>
+
+          <form className="chatbot-inputRow" onSubmit={handleInputSubmit}>
+            <span
+              className="chatbot-dots chatbot-dots--small"
+              aria-hidden="true"
+            >
+              {Array.from({ length: 9 }).map((_, i) => (
+                <span key={i} className="chatbot-dot" />
+              ))}
+            </span>
+            <input
+              type="text"
+              className="chatbot-input"
+              placeholder="Ask me anything..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}

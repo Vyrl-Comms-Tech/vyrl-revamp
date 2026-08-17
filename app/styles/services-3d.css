@@ -184,8 +184,8 @@
 ------------------------------ */
 .services-skip-btn {
   position: absolute;
-  left: 2%;
-  bottom: 5%;
+  right: 2%;
+  top: 5%;
   z-index: 30;
   display: inline-flex;
   align-items: center;
@@ -268,7 +268,7 @@
     z-index: 99;
   }
   .cube-rotate {
-    scale: 0.6;
+    /* scale: 0.6; */
   }
   /* .right-text-services h1 {
     font-size: 2.9rem;
@@ -296,7 +296,9 @@
 }
 @media (max-width: 900px) {
   .cube-rotate {
-    scale: 0.4;
+    scale: 0.6;
+    transform: translateY(-4%);
+    transform: translateX(-9%);
   }
   .services-cta-desktop {
     bottom: 50%;
@@ -314,6 +316,7 @@
   }
 
   .cube-rotate {
+    transform: translateX(0);
     transform: translateY(-23%);
     scale: 1.1 !important;
   }

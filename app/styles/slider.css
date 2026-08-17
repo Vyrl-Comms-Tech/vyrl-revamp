@@ -108,11 +108,6 @@
 }
 
 .banner .slider {
-  /* Ring radius multiplier as its own variable so it can be overridden
-     per-breakpoint (see mobile media query below) without touching the
-     translateZ calc() itself. Lowering it pulls every card on the ring
-     closer together — smaller radius relative to card width means less
-     visible gap between adjacent cards. */
   --ring-multiplier: 2.39;
 }
 
@@ -136,9 +131,27 @@
   object-fit: cover;
 }
 
-@media (max-width: 1623px) {
+@media (max-width: 1723px) {
   .banner .slider {
     scale: 0.9;
+  }
+}
+@media (max-width: 1590px) {
+  .slider-headingCol h1 {
+    font-size: clamp(2.75rem, 4vw, 5.6rem);
+  }
+  .banner .slider {
+    scale: 0.8;
+  }
+  .banner {
+    padding: clamp(4rem, 9vw, 10rem) 3% clamp(11rem, 19vw, 24rem);
+  }
+}
+@media (max-width: 1480px) {
+  .banner .slider {
+    scale: 0.7;
+  } .banner {
+    padding: clamp(4rem, 7vw, 10rem) 3% clamp(11rem, 17vw, 24rem);
   }
 }
 @media (max-width: 1023px) {
@@ -164,6 +177,6 @@
        lower this further to tighten the gap even more, or raise it back
        toward 2.39 to widen it. */
     --ring-multiplier: 1.7;
-    scale:.85;
+    scale: 0.85;
   }
 }

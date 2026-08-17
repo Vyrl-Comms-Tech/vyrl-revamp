@@ -1,0 +1,147 @@
+.vyrl-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 0.4rem 1.3rem;
+  border: 1px solid #000;
+  border-radius: 10rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-radius 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.vyrl-cta:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 3px;
+}
+
+/* Growing "blob" fill that sweeps up and squares off on hover/focus.
+   Was height: 20vh anchored from top:0 with only a translateY offset —
+   at this button's actual size (a couple rem tall, from its padding/
+   font-size) that's several times taller than the button itself, so
+   .vyrl-cta's overflow:hidden was only ever showing a sliver of the
+   top of that oversized shape, never a fill that's actually centered
+   in the button. Sizing it to the button's own box (inset: 0) and
+   animating it in/out via scaleY from the bottom instead reliably
+   fills exactly the button's height, centered, at any button size. */
+.vyrl-cta__blob {
+  position: absolute;
+  inset: 0;
+  background-color: #000;
+  /* .vyrl-cta itself clips via overflow:hidden at its own 10rem
+     border-radius (see above), so this shape's own radius is only
+     ever visible at its bottom corners while scaleY is mid-transition
+     — matching .vyrl-cta's radius here keeps that transitional edge
+     rounded too, instead of briefly showing square corners peeking
+     out from inside a rounded clip. */
+  border-radius: 10rem;
+  transform: scaleY(0);
+  transform-origin: bottom center;
+  transition: transform 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
+  pointer-events: none;
+}
+
+.vyrl-cta:hover .vyrl-cta__blob,
+.vyrl-cta:focus-visible .vyrl-cta__blob {
+  transform: scaleY(1);
+}
+
+.vyrl-cta__text-wrap {
+  position: relative;
+  z-index: 1;
+  font-size: 1.4rem;
+  line-height: 1;
+  perspective: 400px;
+}
+
+.vyrl-cta__text {
+  position: relative;
+  display: block;
+  transform-style: preserve-3d;
+  /* Without this, a rotateX'd element is still fully visible (mirrored),
+     so both text layers show through each other simultaneously — this is
+     what causes the garbled, doubled-up look. */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition:
+    transform 0.8s cubic-bezier(0.075, 0.82, 0.165, 1),
+    color 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.vyrl-cta__char {
+  display: inline-block;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/*
+ * Sits directly on top of the primary label. Position/layering only —
+ * the actual yPercent/rotateX offsets are applied per-character by GSAP
+ * (see VyrlCtaButton.jsx). Putting a transform here too would compound
+ * with the per-char transforms and reproduce the garbled overlap.
+ */
+.vyrl-cta__text--secondary {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #000;
+}
+
+.vyrl-cta:hover .vyrl-cta__text--secondary,
+.vyrl-cta:focus-visible .vyrl-cta__text--secondary {
+  color: #fff;
+}
+
+.vyrl-cta__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/*
+ * Reduced motion fallback.
+ * The JS char-split GSAP animation is skipped entirely in this mode
+ * (see VyrlCtaButton.jsx), so this provides an instant, transform-free
+ * state swap that still communicates hover/focus without motion.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .vyrl-cta__blob,
+  .vyrl-cta__text {
+    transition: none;
+  }
+
+  .vyrl-cta__text--secondary {
+    transform: none;
+    opacity: 0;
+  }
+
+  .vyrl-cta:hover .vyrl-cta__text--primary,
+  .vyrl-cta:focus-visible .vyrl-cta__text--primary {
+    transform: none;
+    opacity: 0;
+  }
+
+  .vyrl-cta:hover .vyrl-cta__text--secondary,
+  .vyrl-cta:focus-visible .vyrl-cta__text--secondary {
+    transform: none;
+    opacity: 1;
+    color: #fff;
+  }
+
+  .vyrl-cta:hover .vyrl-cta__blob,
+  .vyrl-cta:focus-visible .vyrl-cta__blob {
+    border-radius: 0;
+    transform: translateY(0%);
+  }
+}

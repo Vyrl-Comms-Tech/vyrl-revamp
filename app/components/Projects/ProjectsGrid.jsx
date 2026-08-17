@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
-import { slideInOut } from "../layout/pageTransition";
+import { slideInOut, killAllPins } from "../layout/pageTransition";
 import "../../styles/projects-grid.css";
 
 gsap.registerPlugin(ScrollTrigger, Flip);
@@ -279,6 +279,9 @@ export default function ProjectsGrid() {
 
   const handleCardClick = (project) => () => {
     if (project.href) {
+      // Must run before router.push kicks off the view transition — see
+      // killAllPins' own comment in pageTransition.js for why.
+      killAllPins();
       router.push(project.href, { onTransitionReady: slideInOut });
     }
   };

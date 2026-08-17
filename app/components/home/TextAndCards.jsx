@@ -638,7 +638,7 @@ export default function TextAndCards() {
 
   return (
     <div className="text-and-cards">
-      <section className="hs-text-section">
+      {/* <section className="hs-text-section">
         <div className="hs-text-inner">
           <TextAnimation animateOnScroll delay={0.15}>
             <h1 className="hs-heading">
@@ -656,7 +656,7 @@ export default function TextAndCards() {
             href="/about"
           />
         </div>
-      </section>
+      </section> */}
 
       <section ref={cardsRef} className="hs-cards-section">
         <div className="hs-cards-grid">

@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = "out"
+
+# No Next.js Runtime plugin: `next.config.ts` sets output: "export", so
+# `next build` produces a plain static site in out/ directly. Without this
+# file, Netlify auto-detects the Next.js framework and attaches its
+# Next.js Runtime plugin, which wraps every page in a Netlify Function
+# (Lambda) for SSR/ISR/image-optimization even though this app doesn't use
+# any of that — that's the "invocation" usage this file removes. publish
+# pointing at out/ (a plain static folder, not .next/) is what tells
+# Netlify there's nothing here to run a function for.
