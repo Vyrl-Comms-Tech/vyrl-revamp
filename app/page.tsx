@@ -53,8 +53,9 @@ export default function Home() {
       {/* <LazySection>
         <HomeCarousel />
       </LazySection> */}
-      {/* <LazySection>
-        <Logos />
+        {/* <Logos /> */}
+      {/* 
+      <LazySection>
       </LazySection> */}
       {/* <LazySection>
         <ClientReviews />
