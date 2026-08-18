@@ -49,25 +49,25 @@ function FooterNavLink({
 }
 
 gsap.registerPlugin(ScrollTrigger);
-
+// orbit(1).avif
 const DEFAULT_IMAGES = [
-  { src: "arab1.avif", alt: "Collective member 1" },
-  { src: "arab2.avif", alt: "Collective member 2" },
-  { src: "arab3.avif", alt: "Collective member 3" },
-  { src: "arab4.avif", alt: "Collective member 4" },
-  { src: "arab5.avif", alt: "Collective member 5" },
-  { src: "banda1.avif", alt: "Collective member 6" },
-  { src: "banda2.avif", alt: "Collective member 7" },
-  //   { src: "banda3.avif", alt: "Collective member 8" },
+  { src: "orbit(1).avif", alt: "Collective member 1" },
+  { src: "orbit(2).avif", alt: "Collective member 2" },
+  { src: "orbit(3).avif", alt: "Collective member 3" },
+  { src: "orbit(4).avif", alt: "Collective member 4" },
+  { src: "orbit(5).avif", alt: "Collective member 5" },
+  { src: "orbit(6).avif", alt: "Collective member 6" },
+  { src: "orbit(7).avif", alt: "Collective member 7" },
+    { src: "banda3.avif", alt: "Collective member 8" },
   //   { src: "banda4.avif", alt: "Collective member 9" },
-  { src: "jeikor.avif", alt: "Collective member 10" },
-  { src: "jeikor2.avif", alt: "Collective member 11" },
-  { src: "jeikor3.avif", alt: "Collective member 12" },
+  { src: "orbit(1).avif", alt: "Collective member 10" },
+  { src: "orbit(1).avif", alt: "Collective member 11" },
+  { src: "orbit(1).avif", alt: "Collective member 12" },
   //   { src: "jeikor4.avif", alt: "Collective member 13" },
-  { src: "lala1.avif", alt: "Collective member 14" },
-  { src: "lala2.avif", alt: "Collective member 15" },
-  { src: "lala3.avif", alt: "Collective member 16" },
-  { src: "lala4.avif", alt: "Collective member 17" },
+  { src: "orbit(1).avif", alt: "Collective member 14" },
+  { src: "orbit(1).avif", alt: "Collective member 15" },
+  { src: "orbit(1).avif", alt: "Collective member 16" },
+  { src: "orbit(1).avif", alt: "Collective member 17" },
 ];
 
 const MOBILE_BREAKPOINT = 800;

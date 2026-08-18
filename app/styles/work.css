@@ -168,7 +168,14 @@
   justify-content: center;
   align-items: center;
 }
-
+@media (max-width:1600px){
+  .work-section-cards{
+    gap: 0.5rem;
+  }
+  .heading-for-work h2{
+    font-size: 6rem;
+  }
+}
 @media (max-width: 800px) {
   .work-sections {
     height: 40vh;

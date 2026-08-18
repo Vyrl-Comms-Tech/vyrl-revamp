@@ -16,7 +16,7 @@
   justify-content: center;
   user-select: none;
   align-items: center;
-  margin-top: 10rem;
+  margin-top: clamp(6rem, 18vh, 10rem);
   width: 400px;
   height: 600px;
   overflow: hidden;
@@ -92,7 +92,7 @@
   justify-content: center;
   align-items: center;
   width: 95%;
-  font-size: 5rem;
+  font-size: clamp(2.6rem, 6vh, 5rem);
   color: #fff;
   z-index: 10;
 }
@@ -121,4 +121,24 @@
   position: absolute;
   inset: 0;
   opacity: 0;
+}
+@media (max-width:1500px){
+  .clients-testimonial{
+    /* height: 150vh; */
+  }
+}
+
+/* Laptop-range desktop screens report a shorter 100vh than the
+   heading (font-size: 5rem) + card's fixed 10rem top offset were
+   tuned against, so the "CLIENTS" heading and the card's top edge
+   could collide. Pull the heading down in short-viewport windows too,
+   on top of the clamp()s above. */
+@media (max-height: 800px) {
+  .heading-testimonial {
+    font-size: clamp(2.4rem, 5.2vh, 4rem);
+  }
+
+  .testimonial-card {
+    margin-top: 14vh;
+  }
 }

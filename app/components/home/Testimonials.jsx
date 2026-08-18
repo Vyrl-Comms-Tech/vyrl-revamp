@@ -368,12 +368,26 @@ export default function Testimonials() {
         )
         .to(
           leftHeadRef.current,
-          { yPercent: 400, xPercent: 30, scale: 0.5, ease: "none" },
+          {
+            yPercent: 0,
+            y: "48vh",
+            xPercent: 30,
+            x: "-50px",
+            scale: 0.5,
+            ease: "none",
+          },
           0.5,
         )
         .to(
           rightHeadRef.current,
-          { yPercent: 400, xPercent: -14, scale: 0.5, ease: "none" },
+          {
+            yPercent: 0,
+            y: "48vh",
+            xPercent: -14,
+            x: "50px",
+            scale: 0.5,
+            ease: "none",
+          },
           0.5,
         )
         .to(document.body, { background: "#fff" }, 0.5);

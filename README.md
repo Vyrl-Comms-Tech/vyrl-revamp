@@ -38,3 +38,7 @@ function YourSection() {
 }
 
 export default YourSection;
+
+
+
+Stop-Process -Id 22144 -Force -ErrorAction SilentlyContinue; Start-Sleep -Milliseconds 500; Get-Process -Id 22144 -ErrorAction SilentlyContinue
