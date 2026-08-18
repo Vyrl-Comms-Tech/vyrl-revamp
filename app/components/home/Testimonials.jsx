@@ -350,6 +350,12 @@ export default function Testimonials() {
         },
       });
 
+      // Counter resting x-offset from center: wider on laptop-range
+      // screens (<=1500px) than on desktop, since the card and heading
+      // both scale down relative to viewport there — a flat 50px reads
+      // as too close to the card at that size.
+      const counterOffsetX = window.innerWidth <= 1500 ? 120 : 50;
+
       introTl
         .to(
           leftHeadRef.current,
@@ -372,7 +378,7 @@ export default function Testimonials() {
             yPercent: 0,
             y: "48vh",
             xPercent: 30,
-            x: "-50px",
+            x: -counterOffsetX,
             scale: 0.5,
             ease: "none",
           },
@@ -384,7 +390,7 @@ export default function Testimonials() {
             yPercent: 0,
             y: "48vh",
             xPercent: -14,
-            x: "50px",
+            x: counterOffsetX,
             scale: 0.5,
             ease: "none",
           },

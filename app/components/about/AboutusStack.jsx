@@ -612,6 +612,31 @@ export default function AboutUsStack() {
             invalidateOnRefresh: true,
           });
         }
+
+        // This section is white while its cards stack/exit, but
+        // PartnersSection right after it (see app/about/page.jsx) has no
+        // background of its own — it just inherits whatever <body> is
+        // painted, so without this the white page shows through behind
+        // its logo grid instead of the black backdrop it's designed for.
+        // Scrubbed against this section's own pinned scroll range (last
+        // 30%, i.e. as the final card settles) so <body> reaches black
+        // right as PartnersSection scrolls into view, same fromTo +
+        // scrollTrigger pattern Testimonials.jsx uses for its own
+        // body/navbar color swap.
+        gsap.fromTo(
+          document.body,
+          { backgroundColor: "#fcfcfc" },
+          {
+            backgroundColor: "#000000",
+            ease: "none",
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "70% top",
+              end: "bottom top",
+              scrub: true,
+            },
+          },
+        );
       }, containerRef);
     })();
 
@@ -632,6 +657,13 @@ export default function AboutUsStack() {
           .filter((st) => st.trigger === containerRef.current)
           .forEach((st) => st.kill());
       }
+      // Note: unlike Testimonials.jsx's own document.body tween cleanup,
+      // there's no extra gsap.set(..., { clearProps: "background" }) here
+      // — gsap is dynamically imported inside the async block above, not
+      // in scope in this cleanup closure. ctx.revert() already restores
+      // document.body's background to its pre-tween value (GSAP contexts
+      // revert every property they touched), so nothing leaks to other
+      // routes regardless.
     };
   }, []);
 

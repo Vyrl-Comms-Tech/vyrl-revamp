@@ -6,6 +6,9 @@ import AboutUsStack from "../components/about/AboutusStack";
 import AboutHero from "../components/about/AboutHero";
 import AboutText from "../components/about/AboutText";
 import AboutLogos from "../components/about/AboutLogos";
+import PartnersSection from "@/app/components/home/PartnersSection";
+import OrbitGallery from "@/app/components/home/OrbitGallery";
+
 import LazySection from "@/app/components/layout/LazySection";
 import DraggableMarquee from "../components/about/DraggableMarquee";
 const page = () => {
@@ -17,8 +20,15 @@ const page = () => {
         <AboutUsStack />
       </LazySection>
       {/* <Logos /> */}
-      <LazySection>
+      {/* <LazySection>
         <AboutLogos />
+      </LazySection> */}
+      <LazySection placeholder={<div style={{ height: "50vh" }} />}>
+        <PartnersSection
+          year="2024"
+          clientCount="70+"
+          brand="VYRL® COMMUNICATIONS"
+        />
       </LazySection>
       <LazySection>
         {/* <TeamProfile /> */}
@@ -26,7 +36,8 @@ const page = () => {
       </LazySection>
       {/* <SimilarPost /> */}
       <LazySection>
-        <HomeSecondLast />
+        {/* <HomeSecondLast /> */}
+        <OrbitGallery />
       </LazySection>
     </div>
   );
