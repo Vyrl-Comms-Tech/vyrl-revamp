@@ -324,7 +324,11 @@
 
 @media (max-width: 520px) {
   .chatbot {
-    left: 16px;
-    bottom: 16px;
+    left: auto;
+    bottom: 11%;
+    right: 10%;
+  }
+  .chatbot-toggle-text{
+    display: none;
   }
 }

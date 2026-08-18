@@ -14,12 +14,12 @@ const DEFAULT_IMAGES = [
   { src: "arab5.avif", alt: "Collective member 5" },
   { src: "banda1.avif", alt: "Collective member 6" },
   { src: "banda2.avif", alt: "Collective member 7" },
-//   { src: "banda3.avif", alt: "Collective member 8" },
-//   { src: "banda4.avif", alt: "Collective member 9" },
+  //   { src: "banda3.avif", alt: "Collective member 8" },
+  //   { src: "banda4.avif", alt: "Collective member 9" },
   { src: "jeikor.avif", alt: "Collective member 10" },
   { src: "jeikor2.avif", alt: "Collective member 11" },
   { src: "jeikor3.avif", alt: "Collective member 12" },
-//   { src: "jeikor4.avif", alt: "Collective member 13" },
+  //   { src: "jeikor4.avif", alt: "Collective member 13" },
   { src: "lala1.avif", alt: "Collective member 14" },
   { src: "lala2.avif", alt: "Collective member 15" },
   { src: "lala3.avif", alt: "Collective member 16" },
@@ -116,62 +116,80 @@ export default function OrbitGallery({
       window.addEventListener("resize", handleResize);
 
       // Footer (mounted globally in layout.tsx, right after this
-      // section in the DOM) rises up and covers this section, which
-      // itself stays pinned in place (not scrolling normally) while it
-      // scales down and fades — the section holds still on screen and
-      // the footer comes to it, rather than the two just scrolling past
-      // each other.
+      // section in the DOM) rises up and physically overlaps the bottom
+      // portion of this section — this section itself never moves,
+      // scales, or fades; it stays completely static on screen the
+      // whole time. Once the footer (shorter than one viewport) has
+      // fully risen, it permanently covers roughly its own height's
+      // worth of the section's bottom, with the rest of the section
+      // still visible above it — a true "footer sits on top of it"
+      // overlap, not a full-screen handoff.
       //
-      // The footer is deliberately left in normal document flow the
-      // entire time (never position: fixed) — an earlier version here
-      // switched it to fixed for the pin's duration and back to relative
-      // on release, but reconciling those two positioning systems at the
-      // exact handoff instant was fragile: the two disagreed on where
-      // the footer visually was by a full viewport height, producing a
-      // hard jump right as the pin released, and since the footer being
-      // fixed removed its height from the document during that window,
-      // the page had less real scroll room left than the pin needed —
-      // the handoff could never fully finish; the footer got stuck
-      // partway up with no more page left to scroll.
+      // Every earlier version here drove the footer's rise by leaving it
+      // in normal document flow and pinning this section for some
+      // computed amount of *extra scroll* — sized to the footer's own
+      // height, a full viewport, or an adaptive mix of the two. All of
+      // those hit the same wall: this section is the very last thing on
+      // the page, and whenever the footer (trailing right after it) is
+      // shorter than one viewport, the browser's real scrollable bottom
+      // — document height minus one viewport — lands short of wherever
+      // the pin would need to fully release, by exactly
+      // (viewport height − footer height). That's not a tunable
+      // distance, it's how browsers clamp scroll at the end of any page:
+      // no pin-distance formula routes around it as long as the footer's
+      // own height is what's providing the page's remaining real scroll
+      // room.
       //
-      // Leaving it in flow sidesteps both problems at once: the footer
-      // simply scrolls up under normal document flow like every other
-      // section, contributing its own real height to the page the whole
-      // time (so the pin's reserved distance is always exactly enough,
-      // no reconciliation needed) — pinning *this* section (below) is
-      // what makes that scroll-up read as the footer actively rising
-      // over it, since the section holds still on screen while the
-      // footer's own normal scroll carries it upward into view. A
-      // z-index above this section's own stacking (see orbit-gallery.css:
-      // .heading-before-footer is 900, .orbit-card scales up to ~800) is
-      // still needed so the footer visually covers the content instead
-      // of sliding in underneath it.
+      // The fix is to stop depending on scroll position (and therefore
+      // on the footer contributing real document height) entirely.
+      // footer becomes position: fixed for the pin's whole duration —
+      // out of document flow — and its rise is driven directly off this
+      // ScrollTrigger's own 0→1 `progress`, which GSAP always completes
+      // correctly regardless of how much scroll room the rest of the
+      // page happens to have left. The pin distance below (a flat 500px)
+      // no longer needs to match anything about the footer at all — it
+      // only controls how much scroll gesture the rise takes to play
+      // out, exactly like any other scrubbed animation.
       let footerTrigger;
       const footer = document.querySelector(".footer");
       if (footer && !prefersReducedMotion) {
-        gsap.set(footer, { position: "relative", zIndex: 1000 });
-
-        // Pinned for exactly the footer's own height worth of extra
-        // scroll — that's how much scroll distance the footer actually
-        // needs to travel from "just below the viewport" to "fully in
-        // place" while this section holds still underneath it. Using
-        // the footer's real height (rather than a fixed guess like
-        // "+=100%") keeps the reserved distance exactly matched to how
-        // far it truly has to travel, so the handoff always completes
-        // by the time the user reaches the real bottom of the page.
-        const footerHeight = footer.getBoundingClientRect().height;
+        gsap.set(footer, {
+          position: "fixed",
+          left: 0,
+          bottom: 0,
+          width: "100%",
+          yPercent: 100,
+          zIndex: 1000,
+        });
 
         footerTrigger = ScrollTrigger.create({
           trigger: section,
           start: "top top",
-          end: `+=${footerHeight}`,
+          end: "+=500",
           pin: true,
           scrub: true,
           onUpdate: (self) => {
-            const p = self.progress;
-            gsap.set(section, {
-              scale: 1 - 0.08 * p,
-              opacity: 1 - 0.4 * p,
+            gsap.set(footer, { yPercent: 100 - 100 * self.progress });
+          },
+          onLeave: () => {
+            // Pin has released — hand the footer back to normal document
+            // flow so it becomes the actual last thing on the page
+            // (reachable, contributes real height, scrolls normally)
+            // instead of staying fixed on screen forever.
+            gsap.set(footer, {
+              clearProps: "position,left,bottom,width,zIndex,transform",
+            });
+          },
+          onEnterBack: () => {
+            // Scrolling back up into this section's pin range: put the
+            // footer back into the fixed overlay layer so it can resume
+            // tracking this trigger's progress (onUpdate) correctly.
+            gsap.set(footer, {
+              position: "fixed",
+              left: 0,
+              bottom: 0,
+              width: "100%",
+              zIndex: 1000,
             });
           },
         });
@@ -183,10 +201,12 @@ export default function OrbitGallery({
         footerTrigger?.kill();
         // Footer is mounted globally (layout.tsx) and outlasts this
         // section — without resetting it here, navigating away from
-        // the homepage would leave its z-index permanently bumped above
-        // every other page's content.
+        // the homepage would leave it permanently fixed/translated on
+        // every other page instead of back in normal document flow.
         if (footer) {
-          gsap.set(footer, { clearProps: "position,zIndex" });
+          gsap.set(footer, {
+            clearProps: "position,left,bottom,width,transform,zIndex",
+          });
         }
       };
     }, section);

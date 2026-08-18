@@ -49,7 +49,7 @@ const SERVICES = [
   },
 ];
 
-export default function Services3d({ modelUrl = "/cube1.glb", dark = false }) {
+export default function Services3d({ modelUrl = "/cube1-optimized.glb", dark = false }) {
   const pathname = usePathname();
   const ctaClassName = pathname === "/services" ? "cta-button-white" : "";
   const sectionRef = useRef(null);

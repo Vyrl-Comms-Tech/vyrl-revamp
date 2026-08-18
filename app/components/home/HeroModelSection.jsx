@@ -1,46 +1,5 @@
 "use client";
 
-/**
- * HeroModelSection
- * -----------------
- * Cinematic pinned hero: a Three.js model scene (loaded from a Three.js
- * Editor / ObjectLoader JSON export) with a scroll-scrubbed video-to-white
- * reveal, split-text intros, and a subtle mouse-parallax camera.
- *
- * Required packages:
- *   npm i three gsap lenis
- *
- * Required static assets (place under /public so Next.js serves them
- * as-is, rather than importing them through webpack):
- *   /public/models/model-1.json
- *   /public/videos/hero-reel.mp4
- *
- * Notes on the conversion from the original vanilla script:
- *   - document.querySelector(...) -> React refs, scoped to this component
- *     instead of global selectors (safe for multiple instances / SSR).
- *   - Binary/JSON assets are no longer bundled via `import`; they're
- *     fetched from /public at runtime so this works cleanly with Next's
- *     asset pipeline and doesn't bloat the JS bundle.
- *   - All GSAP work (SplitText + ScrollTrigger) is scoped with
- *     gsap.context() so it's fully torn down on unmount -> safe for
- *     client-side navigation / React Strict Mode double-invocation.
- *   - Three.js scene, renderer, textures and geometries are explicitly
- *     disposed on unmount to avoid GPU memory leaks in an SPA.
- *   - ScrollTrigger `markers` only render in development.
- *   - `prefers-reduced-motion` is respected: users who request reduced
- *     motion still see the final state, without the scroll-scrubbed
- *     camera/opacity animation.
- *   - No local Lenis instance: this app already runs one global Lenis
- *     (see SmoothScroll.jsx in the root layout), wired to the GSAP
- *     ticker with `lenis.on("scroll", ScrollTrigger.update)`. A second,
- *     independent Lenis instance here used to run in parallel with it —
- *     both smoothing the same native scroll input and calling
- *     ScrollTrigger.update() every tick — which corrupted ScrollTrigger's
- *     pin bookkeeping enough to crash the next pinned section
- *     (Services3d) on scroll. Every other pinned section in this app
- *     reads the single global `window.lenis`; this one does too now.
- */
-
 import { useEffect, useLayoutEffect, useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -61,28 +20,12 @@ export default function HeroModelSection() {
   const tagRef = useRef(null);
   const placeholderTriggerRef = useRef(null);
 
-  // Reserves this section's ~400vh of pinned scroll space *synchronously*,
-  // in useLayoutEffect, before paint and before the async model load in
-  // the effect below even starts. Every other pinned section on this
-  // page (e.g. Services3d) creates its own trigger synchronously too, in
-  // its own useLayoutEffect — so without this placeholder, this
-  // section's real trigger (created only after `await fetch(...)`
-  // resolves in init() below, an async gap of unpredictable length)
-  // would come into existence after those other sections had already
-  // measured the page *without* this section's pin-spacer. That left
-  // their start/end pointing at stale coordinates once this spacer then
-  // appeared — observed as Services3d entering its own pin partway
-  // through, dead-ending in a blank gap, and showing its last frame
-  // overlapped by the Footer. Same start/end/pin as the real timeline's
-  // scrollTrigger further down (no scrub content yet — that needs the
-  // loaded model's bounding box) so the reserved scroll distance never
-  // changes when init() swaps this placeholder out for the real one.
   useLayoutEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
     const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
+      "(prefers-reduced-motion: reduce)",
     ).matches;
     if (prefersReducedMotion) return;
 
@@ -115,7 +58,7 @@ export default function HeroModelSection() {
 
     const disposables = [];
     const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
+      "(prefers-reduced-motion: reduce)",
     ).matches;
 
     const mouse = { x: 0, y: 0 };
@@ -156,7 +99,7 @@ export default function HeroModelSection() {
         35,
         canvas.clientWidth / canvas.clientHeight,
         0.1,
-        1000
+        1000,
       );
       camera.position.set(0, 0, 8);
 
@@ -281,7 +224,12 @@ export default function HeroModelSection() {
       whitePlane.position.set(0, 0.19, 1.59);
       scene.add(whitePlane);
 
-      disposables.push(planeGeometry, planeMaterial, whiteMaterial, videoTexture);
+      disposables.push(
+        planeGeometry,
+        planeMaterial,
+        whiteMaterial,
+        videoTexture,
+      );
 
       video.play().catch((err) => {
         console.warn("HeroModelSection: video autoplay was blocked", err);
@@ -358,18 +306,81 @@ export default function HeroModelSection() {
                 stagger: 0.05,
                 ease: "power3.out",
               },
-              "0.5"
+              "0.5",
             )
             .from(
               tagRef.current,
               { opacity: 0, duration: 1, stagger: 0.05, ease: "power3.out" },
-              "0.5"
+              "0.5",
             )
             .to(
               heroHeadingRef.current,
-              { opacity: 0, scale: 2.5, y: 800, x: 800, duration: 1 },
-              "0"
+              {
+                opacity: 0,
+                scale: 2.5,
+                // Mobile throws the heading toward the opposite corner
+                // (up-left, negative y/x) instead of desktop's
+                // down-right (positive y/x) — same "flies off scale
+                // during the scroll-scrub" exit, just a different exit
+                // direction to match how much less room there is beside
+                // the heading on a narrow viewport.
+                y: window.innerWidth < 768 ? -800 : 800,
+                x: window.innerWidth < 768 ? -100 : 800,
+                duration: 1,
+              },
+              "0",
             );
+
+          // Navbar is a fixed, always-mounted element in the root layout
+          // (see Navbar.jsx) — not scoped inside this section, so it's
+          // reached by class selector rather than a ref passed down.
+          // .nav-bar's own resting background is a faint 5%-white tint
+          // (see navbar.css) that reads dark against this hero's
+          // model/video but would nearly disappear once whiteMaterial
+          // (above) fades the scene to white behind centerTextHero — this
+          // tween darkens the navbar to solid black on the same scrub
+          // timeline, at the same "0.5" position centerTextHero's own
+          // content reveals at, so the two change together.
+          //
+          // Added to the timeline separately (not chained into the
+          // .to(...) sequence above) and polled for briefly first: GSAP
+          // resolves a string target once, synchronously, when .to() is
+          // called — it doesn't re-check later. Navbar.jsx is a sibling
+          // component with its own client-side setup (SplitText on nav
+          // links, menu refs, etc.), which in practice can still be
+          // mounting its .nav-bar div at the exact moment this runs, even
+          // though this whole init() already waited on an async model
+          // fetch first — reproduced via a genuine "GSAP target .nav-bar
+          // not found" console warning on a fresh load, meaning the tween
+          // silently never got added. A few-frame poll here is cheap and
+          // only affects this cosmetic addition — the core pin/scrub
+          // timeline above (which every other section's scroll math
+          // depends on) is built immediately as before, unaffected by
+          // whether the navbar has mounted yet.
+          // .menu-dropdown is the navbar's expandable menu panel (see
+          // Navbar.jsx) — same faint translucent resting background as
+          // .nav-bar (navbar.css), so it needs the same treatment for the
+          // same reason: without it, opening the menu while this section
+          // is showing its white centerTextHero background would read as
+          // barely-there instead of a solid black panel matching the bar
+          // it drops from.
+          let attempts = 0;
+          const addNavbarTween = () => {
+            if (!isMounted) return;
+            const navBar = document.querySelector(".nav-bar");
+            const menuDropdown = document.querySelector(".menu-dropdown");
+            if (navBar && menuDropdown) {
+              modelTrigger.to(
+                [navBar, menuDropdown],
+                { backgroundColor: "#0a0a0a", ease: "power2.inOut" },
+                "0.2",
+              );
+              return;
+            }
+            attempts += 1;
+            if (attempts < 30) requestAnimationFrame(addNavbarTween);
+          };
+          addNavbarTween();
         }
       }, section);
 
@@ -436,7 +447,7 @@ export default function HeroModelSection() {
     <section ref={sectionRef} className="heroSection">
       <div className="heroHeadingModel">
         <h2 ref={heroHeadingRef} className="heroHeadingModelHeading">
-          Shaping The Next Generation Of Digital Experiences.
+          Shaping The <br /> Next Generation <br /> Of Digital Experiences.
         </h2>
       </div>
 

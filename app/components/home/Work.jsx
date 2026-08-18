@@ -303,16 +303,49 @@ export default function Work() {
       // BODY BACKGROUND SWAP (triggered by the dark card)
       // ==========================================================
       if (bgBlackCardRef.current) {
-        gsap
-          .timeline({
-            scrollTrigger: {
-              trigger: bgBlackCardRef.current,
-              start: "top center",
-              end: "bottom bottom",
-              scrub: 1,
-            },
-          })
-          .to(document.body, { background: "#000" });
+        const bodyTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: bgBlackCardRef.current,
+            start: "top center",
+            end: "bottom bottom",
+            scrub: 1,
+          },
+        });
+
+        bodyTl.to(document.body, { background: "#000" }, 0);
+
+        // HeroModelSection.jsx darkens .nav-bar/.menu-dropdown to solid
+        // black as its centerTextHero panel comes in (their own resting
+        // default is a faint translucent white — see navbar.css). Once
+        // this section's dark card flips the page background to black to
+        // match, that same dark navbar reads as invisible against it —
+        // so this reverses it back to its whitish default in the same
+        // scrub, at the same "0" position as the body tween above, so
+        // they change together.
+        //
+        // Same lazy-lookup-with-poll pattern as HeroModelSection.jsx's
+        // own navbar tween, and for the same reason: .nav-bar/
+        // .menu-dropdown live in a sibling component (Navbar.jsx) that
+        // isn't guaranteed to have mounted yet at the exact moment this
+        // runs, and GSAP resolves a string/element target once,
+        // synchronously, when the tween is added — it won't retry later.
+        let attempts = 0;
+        const addNavbarRestoreTween = () => {
+          if (cancelled) return;
+          const navBar = document.querySelector(".nav-bar");
+          const menuDropdown = document.querySelector(".menu-dropdown");
+          if (navBar && menuDropdown) {
+            bodyTl.to(
+              [navBar, menuDropdown],
+              { backgroundColor: "rgba(255, 255, 255, 0.05)", ease: "power2.inOut" },
+              0,
+            );
+            return;
+          }
+          attempts += 1;
+          if (attempts < 30) requestAnimationFrame(addNavbarRestoreTween);
+        };
+        addNavbarRestoreTween();
       }
 
       ScrollTrigger.refresh();

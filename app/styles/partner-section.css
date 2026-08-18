@@ -19,11 +19,6 @@
 
   color: #fff;
 }
-
-/* =========================
-   TOP ROW
-   ========================= */
-
 .partners-top {
   display: flex;
   align-items: center;
@@ -49,9 +44,6 @@
   opacity: 0.8;
 }
 
-/* =========================
-   GRID
-   ========================= */
 
 .partners-grid {
   display: grid;
@@ -111,9 +103,7 @@
   object-fit: contain;
 
   opacity: 0.9;
-  /* next/image renders an <img>; filter makes any-color source logos read
-     as a uniform white mark, matching the original monochrome treatment. */
-  filter: brightness(0) invert(1);
+  /* filter: brightness(0) invert(1); */
 
   transition:
     transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),

@@ -176,7 +176,7 @@ export default function Preloader({
   // mid-scroll once any Services3d instance (home or /services) mounts.
   // ---------------------------------------------------------------------
   useEffect(() => {
-    warmUpServices3d('/cube1.glb');
+    warmUpServices3d('/cube1-optimized.glb');
 
     const unicornScriptSrc =
       'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.2.8/dist/unicornStudio.umd.js';

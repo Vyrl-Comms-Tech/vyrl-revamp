@@ -78,6 +78,9 @@ export default function Testimonials() {
   useEffect(() => {
     const rootEl = rootRef.current;
     const totalTestimonials = cardRefs.current.length;
+    // Guards the deferred rAF poll further down (navbar darken tween) in
+    // case this component unmounts before .nav-bar/.menu-dropdown are found.
+    let cancelled = false;
 
     // Mutable slider state — kept in a plain object (not React state) on
     // purpose: this drives GSAP tweens on every drag/autoplay tick, and
@@ -375,14 +378,50 @@ export default function Testimonials() {
         )
         .to(document.body, { background: "#fff" }, 0.5);
 
+      // Once document.body fades to white above, .nav-bar/.menu-dropdown's
+      // own resting translucent-white background (see navbar.css) all but
+      // disappears against it — same problem HeroModelSection.jsx and
+      // Work.jsx already fix for their own background swaps, solved the
+      // same way here: darken the navbar to solid black in the same
+      // scrub, at the same "0.5" position the body itself turns white.
+      //
+      // Added separately (not chained into the .to() sequence above) and
+      // polled for briefly first: GSAP resolves an element/selector
+      // target once, synchronously, when it's added to the timeline —
+      // .nav-bar/.menu-dropdown live in a sibling component (Navbar.jsx)
+      // that isn't guaranteed to have mounted yet at this exact moment.
+      let attempts = 0;
+      const addNavbarDarkenTween = () => {
+        if (cancelled) return;
+        const navBar = document.querySelector(".nav-bar");
+        const menuDropdown = document.querySelector(".menu-dropdown");
+        if (navBar && menuDropdown) {
+          introTl.to(
+            [navBar, menuDropdown],
+            { backgroundColor: "#0a0a0a", ease: "power2.inOut" },
+            0.5,
+          );
+          return;
+        }
+        attempts += 1;
+        if (attempts < 30) requestAnimationFrame(addNavbarDarkenTween);
+      };
+      addNavbarDarkenTween();
+
       ScrollTrigger.refresh();
     }, rootRef);
 
     return () => {
+      cancelled = true; // guards the deferred rAF poll above if unmount beats it
       rootEl.removeEventListener("pointerdown", handlePointerDown);
       rootEl.removeEventListener("pointerup", handlePointerUp);
       stopAutoplay();
-      ctx.revert(); // kills all tweens/ScrollTriggers created above
+      ctx.revert(); // kills all tweens/ScrollTriggers created above, including
+      // the navbar tween — this reverts .nav-bar/.menu-dropdown's
+      // backgroundColor inline style back to whatever it was before, same
+      // as document.body below (gsap.context tracks a tween by creation,
+      // not by which element it targets, so it's covered even though
+      // .nav-bar lives outside rootRef's subtree).
       gsap.set(document.body, { clearProps: "background" }); // don't leak white bg to other routes
     };
   }, []);

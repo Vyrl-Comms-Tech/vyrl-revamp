@@ -46,7 +46,7 @@ let warmUpPromise = null;
 // includes the lighting configuration, so any mismatch (a missing light, a
 // different type/intensity) produces a different cache key and Services3d
 // would still recompile from scratch on its own first frame.
-export function warmUpServices3d(modelUrl = "/cube1.glb") {
+export function warmUpServices3d(modelUrl = "/cube1-optimized.glb") {
   if (warmUpPromise) return warmUpPromise;
 
   const renderer = getSharedRenderer();

@@ -1,23 +1,11 @@
 .work-sections {
-margin-top: 30vh;
-    height: 100vh;
+  height: 100vh;
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
   position: relative;
-
-  /* This section sits on black (see the dark work-item card further down,
-     which flips document.body to #000 as it scrolls into view — Work.jsx's
-     "BODY BACKGROUND SWAP" ScrollTrigger) and .tag-head is styled for a
-     black backdrop (background:#000, color:#fff) — but the heading below
-     never had its own color set, so it fell through to <body>'s default
-     text color (--foreground, near-black, see globals.css), making it
-     unreadable against black. Setting it explicitly here means this
-     section's text is legible regardless of whatever <body>'s background
-     currently is between routes/scroll positions.
-  */    
 }
 
 .heading-for-work {
@@ -30,18 +18,10 @@ margin-top: 30vh;
   overflow: hidden;
   flex-direction: column;
   display: flex;
-  height: auto;
+  height: 44vh;
   justify-content: center;
   align-items: center;
-  /* .tag-head used to be position:absolute + a hand-tuned `top: %` to
-     land it above the heading — any change to the heading's font-size/
-     line-height (or just a different viewport) could put the two back
-     into overlap, which is what happened here. Now .tag-head is a plain
-     flex child of this column (see .tag-head below — position:absolute
-     removed there too), stacked above the <h2> with real space between
-     them via this gap instead of guessed coordinates, so it can't
-     overlap regardless of heading size.
-  */
+
   gap: 1.5rem;
   perspective: 1000px;
   transform-origin: center;
@@ -53,7 +33,7 @@ margin-top: 30vh;
   text-align: center;
   font-weight: 400;
   line-height: 1;
-  font-size: 7.2rem;
+  font-size: clamp(3rem, 7rem, 8.2rem);
 }
 
 .heading-for-work p {
@@ -68,8 +48,8 @@ margin-top: 30vh;
 }
 
 .tag-head {
-  background-color: #000000;
-  color: #fff;
+  background-color: #0000001a;
+  color: black;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -105,7 +85,7 @@ margin-top: 30vh;
      leaves enough real travel distance below "top 60%" for the first
      card's own reveal to play out same as the rest.
   */
-  margin-top: -65vh;
+  margin-top: -85vh;
 }
 
 .card-work-cm {
@@ -167,12 +147,11 @@ margin-top: 30vh;
   line-height: 1;
   width: fit-content;
   border-radius: 5px;
-  /* transform: translateX(-300%); */
   will-change: transform;
   padding: 0.5rem 1rem;
   background-color: #0a0a0ace;
   color: #fff;
-  font-size: 0.9rem;
+  font-size: 0.9rem !important;
 }
 
 .tag-name-project {
@@ -184,28 +163,27 @@ margin-top: 30vh;
   display: flex;
   border-radius: 5px;
   font-weight: 200 !important;
-  font-size: 2.5rem !important;
+  font-size: 2.2rem !important;
   justify-content: center;
   align-items: center;
 }
 
 @media (max-width: 800px) {
   .work-sections {
-    height: 60vh;
+    height: 40vh;
   }
 
   .heading-for-work {
-    height: 60vh;
+    height: 40vh;
   }
 
   .heading-for-work h2 {
-    font-size: 12rem;
+    font-size: 3.1rem;
     width: 80%;
   }
-
   .tag-head {
-    font-size: 4.5rem;
-    padding: 1.9rem 4.5rem;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.7rem;
   }
 
   .work-section-cards {
@@ -213,7 +191,9 @@ margin-top: 30vh;
     /* Mobile's pin-spacer is 60% of .work-sections' own 60vh height here
        (Work.jsx's end: "+=60%"), i.e. 36vh reserved — pull up by that,
        same reasoning as the desktop margin-top above. */
-    margin-top: -36vh;
+    margin-top: -24vh;
+    padding: 15px;
+    gap: 0.7rem;
   }
 
   .card-work-cm {
@@ -230,13 +210,17 @@ margin-top: 30vh;
   }
 
   .tags-main {
-    font-size: 2.5rem;
-    padding: 2.5rem 2.5rem;
+    font-size: 0.7rem !important;
+    padding: 0.6rem;
     transform: translateY(0%) !important;
   }
-
+  .cta-content {
+    bottom: 4%;
+    left: 4%;
+    gap: 0.3rem;
+  }
   .tag-name-project {
-    font-size: 5.5rem !important;
+    font-size: 1.5rem !important;
     transform: translateY(0%) !important;
   }
 }

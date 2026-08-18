@@ -155,7 +155,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 
   user-select: none;
   pointer-events: none;
@@ -177,6 +177,7 @@
 .hs-card-media {
   position: absolute;
   inset: 0;
+  background: #000;
   width: 100%;
   height: 100%;
   z-index: 1;
@@ -185,7 +186,7 @@
 .hs-card-media-el {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 0;
   user-select: none;
   pointer-events: none;

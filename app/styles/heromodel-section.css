@@ -1,14 +1,3 @@
-/*
-  HeroModelSection.module.css
-  ----------------------------
-  Flattened from the original SCSS (CSS Modules don't reliably support
-  nesting across all Next.js setups, so each nested selector becomes an
-  explicit, scoped class). The `.tag-head` class on the "About" tag is
-  intentionally left as a plain global class in the JSX -- it's assumed
-  to come from a shared design-system utility stylesheet, not this
-  component's own styles.
-*/
-
 .heroSection {
   position: relative;
   width: 100vw;
@@ -30,13 +19,6 @@
   width: 40%;
 }
 
-@media (max-width: 800px) {
-  .heroHeadingModel {
-    width: 70%;
-    bottom: 13%;
-  }
-}
-
 .heroHeadingModelHeading {
   overflow: hidden;
   will-change: transform;
@@ -45,13 +27,6 @@
   font-size: 3.8rem;
   font-weight: 100;
   color: #fff;
-}
-
-@media (max-width: 800px) {
-  .heroHeadingModelHeading {
-    width: 100%;
-    font-size: 8rem;
-  }
 }
 
 .centerTextHero {
@@ -80,21 +55,7 @@
   will-change: transform;
 }
 
-@media (max-width: 800px) {
-  .centerTextHeroHeading {
-    width: 80%;
-    font-size: 8rem;
-  }
-}
-
 .tops {
-  /* top: 35% previously did nothing — .tops itself was never
-     position:absolute/relative, so a top offset has no positioned
-     ancestor of its own to resolve against. Now that .centerTextHero
-     is a column flex container (see above), this tag is already placed
-     above the heading by flex order/centering alone; top is dropped
-     rather than fixed, since flex layout is what's actually doing the
-     positioning here. */
   display: inline-block;
   margin-bottom: 1.25rem;
   padding: 0.4em 1.1em;
@@ -106,9 +67,34 @@
   will-change: transform;
 }
 
+@media (max-width: 1500px) {
+  .heroHeadingModelHeading {
+    font-size: 3.3rem;
+  }
+  .centerTextHeroHeading {
+    width: 79%;
+    font-size: 3.8rem;
+  }
+}
+
 @media (max-width: 800px) {
   .tops {
-    font-size: 1.6rem;
+    padding: 0.2em 0.9em;
+    font-size: 0.7rem;
+  }
+  .centerTextHeroHeading {
+    width: 90%;
+    font-size: 2rem;
+  }
+  .heroHeadingModelHeading {
+    width: 100%;
+    text-align: left;
+    font-size: 2.2rem;
+  }
+  .heroHeadingModel {
+    width: 90%;
+    bottom: auto;
+    top: 9%;
   }
 }
 

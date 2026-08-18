@@ -35,10 +35,11 @@
   height: 4vw;
   padding: 1.3vw;
   will-change: width, transform;
-border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   justify-content: space-between;
   align-items: center;
-  background-color: #000;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15.7px);
 }
 
 .logo {
@@ -74,7 +75,8 @@ border: 1px solid rgba(255, 255, 255, 0.15);
   justify-content: space-between;
   display: flex;
   height: 0vh;
-  background-color: #000;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15.7px);
   overflow: hidden;
   border-radius: 7px;
   backdrop-filter: blur(20px);
@@ -281,7 +283,7 @@ border: 1px solid rgba(255, 255, 255, 0.15);
   .nav-link-item {
     font-size: 2rem;
   }
-  .box-1 p{
+  .box-1 p {
     font-size: 1.2rem;
   }
 }
@@ -292,15 +294,15 @@ border: 1px solid rgba(255, 255, 255, 0.15);
     position: fixed;
     top: 15%;
   }
-      .nav-bar {
-        width: 31%;
-        height: 8vw;
-        padding: 1.6vw;
-    }
+  .nav-bar {
+    width: 31%;
+    height: 8vw;
+    padding: 1.6vw;
+  }
 }
 
 @media (max-width: 700px) {
-   .menu-dropdown {
+  .menu-dropdown {
     align-items: center;
     position: fixed;
     bottom: 10%;
