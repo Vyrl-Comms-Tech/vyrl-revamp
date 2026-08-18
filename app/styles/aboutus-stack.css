@@ -249,7 +249,8 @@
 .upperHeadingStack span {
   font-size: 1.2rem;
 }
-  .upperHeadingStack h1 {
+.upperHeadingStack h1 {
+    width: 85%;
     font-size: 2.6rem;
   }
   .cardsStack-desc {

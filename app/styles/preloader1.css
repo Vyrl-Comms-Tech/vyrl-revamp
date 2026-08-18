@@ -47,7 +47,7 @@
      tuned value that actually centers it on mobile. */
   .pre-loader svg {
     scale: 0.3;
-    left: -10%;
+    left: -5%;
     top: 38%;
   }
 }
@@ -73,8 +73,8 @@
 }
 
 .pre-loader .counters {
-  position: absolute;
   bottom: 3%;
+  position: absolute;
   left: 3%;
   font-size: 2rem;
   line-height: 1;
@@ -118,3 +118,10 @@
       }
     }
 */
+
+@media (max-width:767px){
+  
+.pre-loader .counters {
+  bottom: 9%;
+}
+}

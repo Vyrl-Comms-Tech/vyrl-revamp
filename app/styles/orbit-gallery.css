@@ -60,7 +60,15 @@
 }
 @media (max-width: 800px) {
   .image-orbit {
-    height: 70vh;
+    /* No pin/reveal animation runs on mobile (see the isMobile check in
+       OrbitGallery.jsx), so .footer renders as a normal in-flow block
+       after the orbit cards instead of being absolutely positioned and
+       tweened over them — height needs to grow to fit both instead of
+       clipping to a fixed 70vh, and overflow can't stay hidden or the
+       footer would be clipped away entirely. */
+    height: auto;
+    min-height: 70vh;
+    overflow: visible;
   }
   .heading-before-footer h2 {
     width: 80%;

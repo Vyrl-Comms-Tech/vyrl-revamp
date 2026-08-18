@@ -98,6 +98,14 @@ export default function OrbitGallery({
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
+    // On mobile this whole pin/orbit/footer-reveal choreography is
+    // skipped — the section just renders as a normal, static block (see
+    // the max-width: 800px override in orbit-gallery.css/footer.css that
+    // puts .footer in its plain resting position instead of the
+    // translateY(100%) scale(0.8) it starts at for the desktop reveal).
+    const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
+    const skipAnimation = prefersReducedMotion || isMobile;
+
     const ctx = gsap.context(() => {
       let orbitProgress = 0;
       let orbitRadiusX = getRadiusX();
@@ -151,7 +159,7 @@ export default function OrbitGallery({
       updateOrbit();
 
       let trigger;
-      if (!prefersReducedMotion) {
+      if (!skipAnimation) {
         trigger = ScrollTrigger.create({
           trigger: section,
           start: "top bottom",
@@ -181,8 +189,10 @@ export default function OrbitGallery({
       // scrollTrigger driving both steps together — the footer rises
       // while the orbit cards shrink/fade/rise away, still actively
       // orbiting the whole time (see cardExit/updateOrbit above).
+      // Skipped on mobile — see isMobile check above — so the section
+      // renders as one normal, unpinned block there.
       let pinTimeline;
-      if (!prefersReducedMotion) {
+      if (!skipAnimation) {
         pinTimeline = gsap.timeline({
           scrollTrigger: {
             trigger: section,
