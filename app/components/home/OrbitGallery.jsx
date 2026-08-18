@@ -26,12 +26,6 @@ function FooterNavLink({
   className,
   matchPaths,
   children,
-}: {
-  href: string;
-  pathname: string;
-  className?: string;
-  matchPaths?: string[];
-  children: React.ReactNode;
 }) {
   const isActive = (matchPaths ?? [href]).includes(pathname);
 
@@ -246,7 +240,7 @@ export default function OrbitGallery({
   const pathname = usePathname();
   const hideFooter =
     NO_FOOTER_PATHS.includes(pathname) || !isKnownRoute(pathname);
-  const mascotVideoRef = useRef<HTMLVideoElement>(null);
+  const mascotVideoRef = useRef(null);
 
   const [time, setTime] = useState({
     uae: "",
@@ -298,7 +292,7 @@ export default function OrbitGallery({
 
   useEffect(() => {
     const updateTime = () => {
-      const format = (timeZone: string) =>
+      const format = (timeZone) =>
         new Intl.DateTimeFormat("en-US", {
           timeZone,
           hour: "2-digit",
@@ -322,7 +316,7 @@ export default function OrbitGallery({
   useEffect(() => {
     if (!isReelOpen) return;
 
-    const onKeyDown = (e: KeyboardEvent) => {
+    const onKeyDown = (e) => {
       if (e.key === "Escape") closeReel();
     };
     window.addEventListener("keydown", onKeyDown);
@@ -333,13 +327,8 @@ export default function OrbitGallery({
     // scrolling the page underneath regardless of native overflow).
     // window.lenis is the same global instance CaseStudyInner.jsx
     // already reaches for; overflow:hidden is kept too as a fallback for
-    // the brief moment before Lenis has initialized. Its declared type
-    // (inferred from wherever it's first assigned, in untyped
-    // SmoothScroll.jsx) doesn't carry the real Lenis instance shape, so
-    // TS doesn't know about .stop()/.start() without this cast.
-    const lenis = (
-      window as unknown as { lenis?: { stop: () => void; start: () => void } }
-    ).lenis;
+    // the brief moment before Lenis has initialized.
+    const lenis = window.lenis;
 
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
