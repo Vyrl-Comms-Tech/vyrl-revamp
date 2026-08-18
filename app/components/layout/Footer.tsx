@@ -73,7 +73,9 @@ function Footer() {
 
   const openReel = () => {
     setIsReelOpen(true);
-    requestAnimationFrame(() => requestAnimationFrame(() => setIsReelVisible(true)));
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => setIsReelVisible(true)),
+    );
   };
 
   const closeReel = () => {
@@ -144,7 +146,9 @@ function Footer() {
     // (inferred from wherever it's first assigned, in untyped
     // SmoothScroll.jsx) doesn't carry the real Lenis instance shape, so
     // TS doesn't know about .stop()/.start() without this cast.
-    const lenis = (window as unknown as { lenis?: { stop: () => void; start: () => void } }).lenis;
+    const lenis = (
+      window as unknown as { lenis?: { stop: () => void; start: () => void } }
+    ).lenis;
 
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -276,13 +280,25 @@ function Footer() {
           <div className="footer-inner-link-col">
             <div className="footer-nav-col">
               <h4 className="footer-nav-title">Links</h4>
-              <FooterNavLink href="/" pathname={pathname} className="footer-nav-link">
+              <FooterNavLink
+                href="/"
+                pathname={pathname}
+                className="footer-nav-link"
+              >
                 Home
               </FooterNavLink>
-              <FooterNavLink href="/about" pathname={pathname} className="footer-nav-link">
+              <FooterNavLink
+                href="/about"
+                pathname={pathname}
+                className="footer-nav-link"
+              >
                 About
               </FooterNavLink>
-              <FooterNavLink href="/services" pathname={pathname} className="footer-nav-link">
+              <FooterNavLink
+                href="/services"
+                pathname={pathname}
+                className="footer-nav-link"
+              >
                 Services
               </FooterNavLink>
               <FooterNavLink
@@ -362,7 +378,6 @@ function Footer() {
                 >
                   +971 58 513 4999
                 </a>
-
               </span>
             </div>
           </div>

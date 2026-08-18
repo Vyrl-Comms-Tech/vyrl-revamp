@@ -60,12 +60,8 @@ export default function RootLayout({
 }>) {
   return (
     <ViewTransitions>
-      
-      <html
-        lang="en"
-        className={`${laygrotesk.variable} h-full antialiased`}
-      >
-        <body  className="min-h-full">
+      <html lang="en" className={`${laygrotesk.variable} h-full antialiased`}>
+        <body className="min-h-full">
           {/* beforeInteractive scripts are always injected into <head>
               by Next.js regardless of where they're placed — this runs
               before hydration/paint and stamps a class on <html> if
@@ -83,7 +79,7 @@ export default function RootLayout({
           {/* <Header /> */}
           <Navbar />
           {children}
-          <Footer />
+          {/* <Footer /> */}
           <Chatbot />
         </body>
       </html>

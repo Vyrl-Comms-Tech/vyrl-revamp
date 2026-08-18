@@ -1,11 +1,16 @@
 /* ─── Footer ─────────────────────────────────────────────── */
 .footer {
-  position: relative;
-  z-index: 3;
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
+ 
+  position: absolute;
+  bottom: 0 !important;
+  z-index: 99999;
+  border-top-left-radius: 110px;
+  border-top-right-radius: 110px;
   /* overlay:; */
   width: 100% !important;
+  
+  transform: translateY(100%) scale(0.8);
+   /* scale: (0.8); */
   background-color: #000;
   padding: 0 16px 40px;
   display: flex;
@@ -856,7 +861,6 @@
 .reel-modal-close:hover {
   background: rgba(0, 0, 0, 0.8);
 }
-
 @media (max-width: 768px) {
   .reel-modal-panel {
     width: 92vw;

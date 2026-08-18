@@ -37,8 +37,22 @@ body {
   font-family: var(--font-laygrotesk), Arial, Helvetica, sans-serif;
 }
 
-body {
+/* overflow-x lives on <html>, not <body>: setting only overflow-x here
+   (with overflow-y left unset) makes the browser compute overflow-y as
+   `auto`, turning body into its own independent scroll container. That
+   silently breaks `position: sticky` anywhere in the page (e.g. .footer
+   in footer.css) — sticky resolves against the *nearest* scrolling
+   ancestor, which became body's own scrollport instead of the real
+   viewport, and body's scroll position never moves (window/Lenis only
+   ever scroll the viewport), so anything sticky froze in place instead
+   of tracking scroll. Clipping horizontal overflow on <html> instead
+   gives the same "no horizontal scrollbar" guarantee without making
+   body a scroll container. */
+html {
   overflow-x: hidden;
+}
+
+body {
   /* cursor: none; */
   background-color: var(--bodybg);
 }

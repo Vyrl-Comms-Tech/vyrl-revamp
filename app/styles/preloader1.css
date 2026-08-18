@@ -1,10 +1,3 @@
-/* ==========================================================================
-   Preloader.css
-   Scoped styles for <Preloader />. Every selector is namespaced under
-   .pre-loader so importing this file globally in Next.js won't bleed
-   into the rest of the app.
-   ========================================================================== */
-
 .pre-loader {
   width: 100vw;
   height: 100vh;

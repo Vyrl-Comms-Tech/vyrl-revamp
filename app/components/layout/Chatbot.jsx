@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import "../../styles/chatbot.css";
 import Link from "next/link";
+import Image from "next/image";
 
 const QUESTIONS = [
   "Walk me through this",
@@ -117,8 +118,17 @@ export default function Chatbot() {
     const panel = panelRef.current;
     const body = panelBodyRef.current;
     const isMobile = window.innerWidth <= 520;
-    const width = isMobile ? "calc(100vw - 24px)" : "450px";
-    const height = isMobile ? "calc(100vh - 32px)" : "672px";
+    // .chatbot is anchored with right: 10% on mobile (see chatbot.css),
+    // so the open width has to leave that same 10% clear on the left
+    // too, or the panel overshoots past the left edge while the right
+    // side keeps its 10% gap — that's the "left side cut" bug.
+    const width = isMobile ? "calc(100vw - 100%)" : "450px";
+    // Leave room above and below the panel on phones instead of expanding
+    // it to almost the entire viewport. `innerHeight` also follows the
+    // browser's currently visible viewport more reliably than `100vh`.
+    const height = isMobile
+      ? Math.min(620, Math.max(360, window.innerHeight - 160))
+      : 672;
     const closedWidth = toggleRef.current?.offsetWidth ?? 220;
     const closedHeight = 62;
 
@@ -207,11 +217,14 @@ export default function Chatbot() {
           onClick={() => toggle(true)}
           aria-label="Open chat"
         >
-          <span className="chatbot-dots" aria-hidden="true">
-            {Array.from({ length: 9 }).map((_, i) => (
-              <span key={i} className="chatbot-dot" />
-            ))}
-          </span>
+          <Image
+            className="chatbot-star"
+            src="/star.png"
+            alt=""
+            width={24}
+            height={24}
+            aria-hidden="true"
+          />
           <span className="chatbot-toggle-text">Let&apos;s work together</span>
         </button>
 
@@ -274,14 +287,7 @@ export default function Chatbot() {
                 ))}
               </div>
             ) : (
-              // Lenis (SmoothScroll.jsx) intercepts wheel/touch gestures
-              // globally to drive its own smooth page scroll — without
-              // this, scrolling here with the mouse wheel scrolled the
-              // whole page underneath the chat instead of this list.
-              // data-lenis-prevent is Lenis's own documented escape
-              // hatch: it skips handling the gesture entirely for any
-              // element (or descendant) carrying this attribute, letting
-              // native scroll take over here as normal.
+            
               <div className="chatbot-messages" data-lenis-prevent>
                 {messages.map((message) => (
                   <div
@@ -306,14 +312,14 @@ export default function Chatbot() {
           </div>
 
           <form className="chatbot-inputRow" onSubmit={handleInputSubmit}>
-            <span
-              className="chatbot-dots chatbot-dots--small"
+            <Image
+              className="chatbot-star chatbot-star--small"
+              src="/star.png"
+              alt=""
+              width={24}
+              height={24}
               aria-hidden="true"
-            >
-              {Array.from({ length: 9 }).map((_, i) => (
-                <span key={i} className="chatbot-dot" />
-              ))}
-            </span>
+            />
             <input
               type="text"
               className="chatbot-input"
