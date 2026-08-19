@@ -1,5 +1,5 @@
 .image-orbit {
-  background-color: #fff;
+  /* background-color: #fff; */
   position: relative;
   overflow: hidden;
   overflow: hidden;
@@ -46,12 +46,30 @@
   text-align: center;
 }
 
-.heading-before-footer p {
+.heading-before-footer span {
+  padding-top: 3%;
+  color: white;
+}
+/* Excludes .cta-btn-label — CtaButton's label is also a <p> nested in
+   here (through .heading-before-footer span), so this bare descendant
+   selector was overriding cta.css's own color: #fff on it (higher
+   specificity: one class + one tag beats cta.css's single-class rule),
+   which is what made the button's label render in this paragraph's
+   gray instead of white. */
+.heading-before-footer p:not(.cta-btn-label) {
   width: 35%;
   color: #525252;
   font-size: 1.1rem;
   line-height: 1;
   text-align: center;
+}
+
+/* CtaButton's label has no white-space rule of its own in cta.css, so
+   at narrow widths (see max-width: 800px block below) "Explore
+   Services" was reflowing onto two lines instead of staying on one
+   like the button is designed to read. */
+.heading-before-footer .cta-btn-label {
+  white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -70,16 +88,19 @@
     overflow-y: visible;
   }
   .heading-before-footer h2 {
-    width: 80%;
-    font-size: 1.9rem;
+    width: 70%;
+    font-size: 1.5rem;
   }
   .orbit-card {
     width: 70px;
     height: 70px;
   }
-  .heading-before-footer p {
-    width: 80%;
+  .heading-before-footer p:not(.cta-btn-label) {
+    width: 74%;
     padding-top: 10px;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
   }
+.heading-before-footer p:not(.cta-btn-label) {
+width: 74%;
+}
 }

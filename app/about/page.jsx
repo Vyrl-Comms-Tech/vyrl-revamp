@@ -3,10 +3,11 @@ import SimilarPost from "@/app/components/home/SimilarPost";
 import HomeSecondLast from "@/app/components/home/HomeSecondLast";
 import Logos from "@/app/components/home/Logos";
 import AboutUsStack from "../components/about/AboutusStack";
+import AboutUsStackMobile from "../components/about/AboutusStackMobile";
 import AboutHero from "../components/about/AboutHero";
 import AboutText from "../components/about/AboutText";
 import AboutLogos from "../components/about/AboutLogos";
-import PartnersSection from "@/app/components/home/PartnersSection";
+import AboutPartnersSection from "../components/about/AboutPartnerSection";
 import OrbitGallery from "@/app/components/home/OrbitGallery";
 
 import LazySection from "@/app/components/layout/LazySection";
@@ -18,13 +19,14 @@ const page = () => {
       <AboutText />
       <LazySection>
         <AboutUsStack />
+        <AboutUsStackMobile />
       </LazySection>
       {/* <Logos /> */}
       {/* <LazySection>
         <AboutLogos />
       </LazySection> */}
       <LazySection placeholder={<div style={{ height: "50vh" }} />}>
-        <PartnersSection
+        <AboutPartnersSection
           year="2024"
           clientCount="70+"
           brand="VYRL® COMMUNICATIONS"

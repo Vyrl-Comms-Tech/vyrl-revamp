@@ -10,6 +10,7 @@ import PageTransitionLink from "../layout/PageTransitionLink";
 import "../../styles/footer.css";
 import Link from "next/link";
 import { isKnownRoute } from "../layout/knownRoutes";
+import CtaButton from "../layout/cta";
 // import PageTransitionLink from "./PageTransitionLink";
 
 const CASE_STUDY_PATHS = Object.values(caseStudies).map((c) => c.href);
@@ -379,6 +380,11 @@ export default function OrbitGallery({
       <div className="heading-before-footer">
         <h2>{heading}</h2>
         <p>{subheading}</p>
+
+        <span>
+        <CtaButton label="Explore Services" href="/services" className="cta-button" />
+        </span>
+
       </div>
 
       {images.map((image, index) => (

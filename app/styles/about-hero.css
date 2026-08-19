@@ -70,7 +70,7 @@
 }
 
 .aboutHero-headingCol {
-  align-self: flex-end;
+  align-self: flex-start;
   text-align: right;
   display: flex;
   flex-direction: column;
@@ -146,18 +146,14 @@
   }
 }
 @media (max-width: 900px) {
-  /* Desktop reserves a full 100vh so the embed fills the viewport
-     behind the absolutely-positioned bottom text row. On mobile the
-     text stacks in normal flow instead (see .aboutHero-bottomRow
-     below), so the 100vh height is no longer needed to contain
-     anything — without shrinking it, that reserved viewport height
-     shows as blank space above the stacked content. Kept plain
-     auto-height (no min-height / justify-end) — inflating THIS
-     element's height for scroll-scrub room pushes the text content
-     down from the top, which is the "too much padding at top" bug.
-     The scroll distance the Flip animation (AboutHero.jsx) needs
-     instead comes from .aboutHero-imageSpacer's margin-top below,
-     since that gap sits after the visible content, not before it. */
+  .aboutHero-tag {
+    margin-bottom: 13%;
+    color: #fff;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.7rem;
+    background-color: #000;
+    border-radius: 20rem;
+  }
   .aboutHero-top {
     height: auto;
     padding-top: 3.5rem;
@@ -222,7 +218,7 @@
   .aboutHero-imagePlaceholder {
     width: 200px;
     height: 124px;
-    margin-top: -0.5rem ;
+    margin-top: -0.5rem;
   }
 
   /* Final size the image scales up to — the JS reads this element's
@@ -231,7 +227,7 @@
   .aboutHero-imageSpacer {
     width: 340px;
     max-width: 80vw;
-    height: 420px;
+    height: 560px;
     margin-top: 0.5rem;
     margin-inline: auto;
   }
@@ -265,5 +261,4 @@
       transparent 100%
     );
   } */
-  
 }

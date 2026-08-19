@@ -16,7 +16,7 @@
      content actually needs. */
   height: fit-content;
   padding: 60px 0;
-  background: #000;
+  /* background: #000; */
   overflow: hidden;
   cursor: none;
 }

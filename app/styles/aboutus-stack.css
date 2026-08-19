@@ -6,7 +6,7 @@
   min-height: 100vh;
   width: 100vw;
   display: flex;
-  background: #fff;
+  /* background: #fff; */
   justify-content: center;
   align-items: center;
   position: relative;
@@ -258,6 +258,19 @@
   width: 62%;
   }
 }
+/* Below 800px, AboutusStackMobile.jsx (see aboutus-stack-mobile.css)
+   takes over as a simple static-card layout instead of this pinned
+   GSAP stack — the pin/step-scroll mechanic here is desktop-shaped and
+   fighting it into a touch-friendly mobile version wasn't worth it.
+   Both components are always mounted (about/page.jsx); CSS alone
+   decides which is visible, so AboutusStack's own GSAP/ScrollTrigger
+   setup keeps running underneath but never paints. */
+@media (max-width: 800px) {
+  .aboutUsStack {
+    display: none;
+  }
+}
+
 @media (max-width: 700px) {
   .cardsStack {
     width: 95vw !important;

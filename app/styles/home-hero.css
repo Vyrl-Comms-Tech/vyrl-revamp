@@ -17,14 +17,7 @@
     left: 0;
     right: 0;
     z-index: 1;
-    /* Scale-down + darken as .text-and-cards scrolls over it is driven
-       by HomeHero.jsx's own ScrollTrigger (gsap.set scale/filter) — a
-       center transform-origin makes that read as the hero receding
-       evenly into the background rather than shrinking off toward one
-       corner (the default top-left origin). will-change hints the
-       browser to keep this on its own GPU layer during the scrub,
-       matching the pattern used for scroll-scrubbed transforms
-       elsewhere in the app (e.g. .box in collective.css). */
+   
     transform-origin: center center;
     will-change: transform, filter;
 }

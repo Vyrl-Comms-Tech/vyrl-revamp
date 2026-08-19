@@ -337,6 +337,7 @@ const COUNTER_LABELS = ["01", "02", "03"];
 
 export default function AboutUsStack() {
   const containerRef = useRef(null);
+  const ctaRef = useRef(null);
   const cardRefs = useRef([]);
   const lineRefs = useRef([]);
   const counterRefs = useRef([]);
@@ -433,6 +434,88 @@ export default function AboutUsStack() {
             "0.6",
           )
           .to(counterRefs.current, { color: "#000", stagger: 0.4 }, "0.2");
+
+        // Foreground pieces (counter, its connecting line, and the CTA
+        // button) invert color right as the last card finishes settling
+        // in — so they flip in sync with AboutPartnerSection's black
+        // backdrop scrubbing in behind them, same idea as
+        // ClientReviews.jsx flipping its heading/nav/CTA dark when ITS
+        // page goes black to white, mirrored here (page going white to
+        // black). The last card's own box/heading/description stay as-is
+        // (black card, white text) — only these three flip.
+        //
+        // Appended onto the EXISTING pinned `timeline` (not a separate
+        // ScrollTrigger of its own): a second, independently-triggered
+        // ScrollTrigger on these same elements was the actual bug in an
+        // earlier version — it fought this timeline's own tweens on the
+        // same elements, and its own "bottom bottom"/"bottom top" range
+        // (measured against containerRef's rect while pinned) didn't
+        // land where expected, firing the white flip as early as the
+        // first card.
+        //
+        // Anchored to the LAST card's own enter-complete instant
+        // (lastIndex * 0.4 stagger + 0.5s default duration — same formula
+        // `cardSettleTimes` below uses), not `timeline.duration()`: this
+        // timeline's overall duration is actually governed by the
+        // EARLIER cards' exit tweens (they start later, at absolute "1",
+        // and run their own 0.5s from there), which finish after the
+        // last card has already visually settled. Anchoring to
+        // `duration()` was landing the flip inside that trailing exit
+        // window — while card 2/3 was still visibly finishing its own
+        // animation — instead of strictly after it.
+        const lastCardSettleTime = lastIndex * 0.4 + 0.5;
+
+        const ctaBtn = ctaRef.current?.querySelector(".cta-btn");
+        const ctaArrowBg = ctaRef.current?.querySelectorAll(".cta-arrow-box");
+        const ctaArrowSvgPaths = ctaRef.current?.querySelectorAll(
+          ".cta-arrow-box svg path",
+        );
+        const ctaLabel = ctaRef.current?.querySelector(".cta-btn-label");
+
+        timeline
+          .to(
+            counterRefs.current,
+            { color: "#fff", ease: "none" },
+            lastCardSettleTime,
+          )
+          .to(
+            lineRefs.current,
+            { backgroundColor: "#fff", ease: "none" },
+            lastCardSettleTime,
+          );
+
+        if (ctaBtn) {
+          timeline.to(
+            ctaBtn,
+            { backgroundColor: "#fff", color: "#000", ease: "none" },
+            lastCardSettleTime,
+          );
+        }
+        if (ctaArrowBg?.length) {
+          timeline.to(
+            ctaArrowBg,
+            { backgroundColor: "#000", ease: "none" },
+            lastCardSettleTime,
+          );
+        }
+        if (ctaArrowSvgPaths?.length) {
+          // Arrow circle goes black (above), so the icon inside it needs
+          // to stay white to read against it — same pairing the existing
+          // .cta-button-white CSS variant uses (see cta.css: black
+          // .cta-arrow-box + white svg path).
+          timeline.to(
+            ctaArrowSvgPaths,
+            { fill: "#fff", ease: "none" },
+            lastCardSettleTime,
+          );
+        }
+        if (ctaLabel) {
+          timeline.to(
+            ctaLabel,
+            { color: "#000", ease: "none" },
+            lastCardSettleTime,
+          );
+        }
 
         // Previously held an extra 0.3s once the last card settled (a
         // no-op tween to its own resting scale, purely to reserve dead
@@ -589,6 +672,7 @@ export default function AboutUsStack() {
           });
 
           trigger = ScrollTrigger.create({
+            id: "about-us-stack-pin",
             trigger: section,
             start: "top top",
             end: `+=${cardCount * 100}%`,
@@ -603,6 +687,7 @@ export default function AboutUsStack() {
           };
         } else {
           ScrollTrigger.create({
+            id: "about-us-stack-pin",
             animation: timeline,
             trigger: containerRef.current,
             pin: true,
@@ -613,30 +698,19 @@ export default function AboutUsStack() {
           });
         }
 
-        // This section is white while its cards stack/exit, but
-        // PartnersSection right after it (see app/about/page.jsx) has no
-        // background of its own — it just inherits whatever <body> is
-        // painted, so without this the white page shows through behind
-        // its logo grid instead of the black backdrop it's designed for.
-        // Scrubbed against this section's own pinned scroll range (last
-        // 30%, i.e. as the final card settles) so <body> reaches black
-        // right as PartnersSection scrolls into view, same fromTo +
-        // scrollTrigger pattern Testimonials.jsx uses for its own
-        // body/navbar color swap.
-        gsap.fromTo(
-          document.body,
-          { backgroundColor: "#fcfcfc" },
-          {
-            backgroundColor: "#000000",
-            ease: "none",
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "70% top",
-              end: "bottom top",
-              scrub: true,
-            },
-          },
-        );
+        // The white->black backdrop handoff into the next section (the
+        // "Our Clients" partner logos) used to live here as a
+        // document.body tween — but this section is pinned while its
+        // cards stack/exit (see the two branches above), and a pinned
+        // trigger freezes the viewport, so a color scrub riding that
+        // frozen progress had no visible scroll motion to read as smooth
+        // against; it looked like a flat, instant CSS swap instead.
+        // Moved to AboutPartnerSection.jsx's own scroll-scrubbed
+        // background tween instead (same fromTo + scrub pattern as
+        // Testimonials.jsx's introTl), which is self-contained and
+        // scrubs across that section's own real, un-pinned scroll-into-
+        // view distance — same fix, applied where the motion is actually
+        // visible.
       }, containerRef);
     })();
 
@@ -702,7 +776,7 @@ export default function AboutUsStack() {
           </div>
         ))}
 
-        <div className="aboutUsStack-cta">
+        <div className="aboutUsStack-cta" ref={ctaRef}>
           <CtaButton
             label="Explore Services"
             href="/services"

@@ -4,9 +4,16 @@ import Image from "next/image";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
 import { InertiaPlugin } from "gsap/InertiaPlugin";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "../../styles/draggable-marquee.css";
 
 gsap.registerPlugin(Draggable, InertiaPlugin);
+// Registering a browser-only plugin at module scope would break SSR
+// (Next renders client components on the server too) — guard it, same
+// pattern as AboutPartnerSection.jsx/PartnersSection.jsx.
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 // No real team roster exists yet in this project (see TeamProfie.jsx,
 // which uses the same "/team.jpg" + placeholder text pattern) — swap
@@ -443,6 +450,98 @@ export default function DraggableMarquee() {
       duration: 0.5,
       ease: "power3",
     });
+  }, []);
+
+  // Black -> white handoff at the end of this section. AboutPartnerSection
+  // (the section right before this one) already painted document.body
+  // black once AboutUsStack's pin releases — this section has no
+  // background of its own (see .draggable-marquee in
+  // draggable-marquee.css), so it's been inheriting that black the whole
+  // way through. As this section scrolls past, the page needs to go back
+  // to white for OrbitGallery below (which does have its own solid white
+  // background, but the page column around/behind it should already be
+  // white by the time it arrives, not still catching up).
+  //
+  // Same scroll-scrubbed fromTo + un-pinned trigger pattern as
+  // Testimonials.jsx's introTl and AboutPartnerSection's own body tween:
+  // trigger is this section's own element (wrapperRef, not pinned), so
+  // there's real, visible scroll motion under the scrub the whole way
+  // through instead of an instant CSS-style swap.
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    let cancelled = false;
+
+    const ctx = gsap.context(() => {
+      const colorTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: wrapper,
+          start: "bottom bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+      colorTl.fromTo(
+        document.body,
+        { backgroundColor: "#000" },
+        { backgroundColor: "#fff", ease: "none" },
+        0,
+      );
+
+      const infoEls = wrapper.querySelectorAll(
+        ".draggable-marquee-name, .draggable-marquee-designation",
+      );
+      if (infoEls.length) {
+        colorTl.fromTo(
+          infoEls,
+          { color: "#fff" },
+          { color: "#000", ease: "none" },
+          0,
+        );
+      }
+
+      // Navbar was whitened (rgba(255,255,255,0.05), its own resting
+      // default) by AboutPartnerSection while the page was black. Now
+      // that this section is handing the page back to white, the navbar
+      // needs to darken again to stay visible — same "#0a0a0a" value
+      // AboutHero uses for its own white-background section. Chained
+      // onto this same colorTl (position 0) so it scrubs in sync with
+      // the body/text color change above.
+      //
+      // .nav-bar/.menu-dropdown live in a sibling component (Navbar.jsx)
+      // that isn't guaranteed to have mounted yet at this exact moment —
+      // same lazy-lookup-with-poll guard used everywhere else this app
+      // reaches across to the navbar.
+      let navbarAttempts = 0;
+      const addNavbarDarkenTween = () => {
+        if (cancelled) return;
+        const navBar = document.querySelector(".nav-bar");
+        const menuDropdown = document.querySelector(".menu-dropdown");
+        if (navBar && menuDropdown) {
+          colorTl.to(
+            [navBar, menuDropdown],
+            { backgroundColor: "#0a0a0a", ease: "none" },
+            0,
+          );
+          return;
+        }
+        navbarAttempts += 1;
+        if (navbarAttempts < 30) {
+          requestAnimationFrame(addNavbarDarkenTween);
+        }
+      };
+      addNavbarDarkenTween();
+    }, wrapper);
+
+    return () => {
+      cancelled = true;
+      ctx.revert();
+      // Don't leak white bg to other routes/sections — same cleanup
+      // AboutPartnerSection.jsx and Testimonials.jsx use for their own
+      // document.body tweens.
+      gsap.set(document.body, { clearProps: "backgroundColor" });
+    };
   }, []);
 
   const handleMouseMove = (e) => {

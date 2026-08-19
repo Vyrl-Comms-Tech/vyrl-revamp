@@ -28,7 +28,95 @@ const AboutHero = () => {
       if (!container || !top || !imageWrap || !placeholder || !spacer) return;
 
       let tween;
+      let navbarTrigger;
       let cancelled = false;
+
+      // Navbar is white/translucent by default (see navbar.css) and this
+      // section's own background is white too, so the navbar reads as
+      // invisible against it. Darken it to black for as long as
+      // AboutHero is the section in view, reverting once it scrolls
+      // past — same pattern as HeroModelSection.jsx/Work.jsx/
+      // Testimonials.jsx darkening or restoring the navbar to match
+      // whatever background is showing at that point in the page, just
+      // with toggleActions instead of scrub since there's no gradient to
+      // ride here — this section is a flat white the whole time it's on
+      // screen, so the navbar only needs an on/off flip at its edges,
+      // not a continuous scrub.
+      //
+      // .nav-bar/.menu-dropdown live in the sibling Navbar.jsx component
+      // and aren't guaranteed to have mounted yet at this exact moment —
+      // same lazy-lookup-with-poll guard used everywhere else this app
+      // reaches across to the navbar.
+      let attempts = 0;
+      const addNavbarTrigger = () => {
+        if (cancelled) return;
+        const navBar = document.querySelector(".nav-bar");
+        const menuDropdown = document.querySelector(".menu-dropdown");
+        if (navBar && menuDropdown) {
+          const darken = () =>
+            gsap.to([navBar, menuDropdown], {
+              backgroundColor: "#0a0a0a",
+              ease: "power2.inOut",
+              duration: 0.6,
+            });
+          const lighten = () =>
+            gsap.to([navBar, menuDropdown], {
+              backgroundColor: "rgba(255, 255, 255, 0.05)",
+              ease: "power2.inOut",
+              duration: 0.6,
+            });
+
+          navbarTrigger = ScrollTrigger.create({
+            trigger: container,
+            start: "top top",
+            end: "bottom top",
+            // onEnter/onEnterBack fire crossing INTO the range going
+            // forward/backward respectively; onLeave/onLeaveBack fire
+            // crossing OUT of it going forward/backward.
+            //
+            // No onLeaveBack here on purpose: AboutHero is the very first
+            // element on this page, so "leaving backward past start"
+            // means scrollY has landed back at/near 0 — i.e. still
+            // resting inside (or right at the edge of) this same section,
+            // not actually above it into some other content. With
+            // onLeaveBack wired to lighten(), scrolling up from below
+            // fired onEnterBack (darken) immediately followed by
+            // onLeaveBack (lighten) as the scroll settled at the top edge
+            // — the navbar ended up stuck whitish at the very moment it
+            // should read as "still on AboutHero." onEnterBack handles
+            // the real "scrolled back up into this section" case; there's
+            // no meaningful state above it on this page to revert for.
+            onEnter: darken,
+            onEnterBack: darken,
+            // Scrolling forward past AboutHero into whatever comes next
+            // (currently just whatever that section's own default
+            // background is) — lighten back rather than leaving the
+            // navbar stuck black with nothing below claiming it. If a
+            // later section (e.g. the planned black "logo section")
+            // wants the navbar dark again, it can add its own trigger the
+            // same way, independent of this one.
+            onLeave: darken,
+          });
+
+          // This section is at the very top of the page, so it's already
+          // "entered" on first load — onEnter alone only fires on the
+          // NEXT scroll crossing, which would leave the navbar in its
+          // default whitish state until the user scrolled away and back.
+          // ScrollTrigger's own .isActive right after .create() isn't
+          // reliable this early (its internal position bookkeeping is
+          // still catching up to a page whose layout may still be
+          // settling — the same class of stale-measurement issue as
+          // every other deferred trigger in this app) — so this measures
+          // the container's real, current position directly instead of
+          // trusting that flag.
+          const rect = container.getBoundingClientRect();
+          if (rect.top <= 0 && rect.bottom > 0) darken();
+          return;
+        }
+        attempts += 1;
+        if (attempts < 30) requestAnimationFrame(addNavbarTrigger);
+      };
+      addNavbarTrigger();
 
       // Snap the image to the placeholder's box immediately (synchronously,
       // same frame) so there's no flash of it sitting at its unstyled
@@ -148,6 +236,17 @@ const AboutHero = () => {
       return () => {
         cancelled = true;
         tween?.kill();
+        navbarTrigger?.kill();
+        // Restore the navbar's own default rather than leaving it stuck
+        // black if this component unmounts (route change) while it was
+        // still in its "AboutHero on screen" black state.
+        const navBar = document.querySelector(".nav-bar");
+        const menuDropdown = document.querySelector(".menu-dropdown");
+        if (navBar || menuDropdown) {
+          gsap.set([navBar, menuDropdown].filter(Boolean), {
+            clearProps: "backgroundColor",
+          });
+        }
       };
     },
     { scope: containerRef, dependencies: [] },
