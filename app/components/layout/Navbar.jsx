@@ -326,7 +326,7 @@ const Navbar = () => {
       .to(
         navBarRef.current,
         {
-          width: nextActive ? "95%" : isMobile ? "80%" : "23%",
+          width: nextActive ? "95%" : isMobile ? "88%" : "23%",
           duration: 1.5,
           ease: "power4.inOut",
         },

@@ -1,4 +1,9 @@
 
+// 12 entries — on mobile (.partners-grid's 2-column breakpoint, see
+// partner-section.css's max-width: 600px block) that's exactly 6 full
+// rows with no dangling partial row. Was 16 (8 rows); trimmed the last
+// 4 (HP, Miller, Telkom, Sanlam) down to this count specifically to
+// hit 6 rows on mobile.
 export const partners = [
   { name: "Spotify", src: "/lo1.avif", width: 140, height: 42 },
   { name: "Standard Bank", src: "/lo2.avif", width: 160, height: 40 },
@@ -12,9 +17,5 @@ export const partners = [
   { name: "Omnia", src: "/lo5.avif", width: 130, height: 38 },
   { name: "11Invest", src: "/lo6.avif", width: 130, height: 38 },
   { name: "Catalyst Africa", src: "/lo7.avif", width: 160, height: 40 },
-  { name: "HP", src: "/lo8.avif", width: 90, height: 42 },
-  { name: "Miller", src: "/lo9.avif", width: 130, height: 40 },
-  { name: "Telkom", src: "/lo10.avif", width: 140, height: 38 },
-  { name: "Sanlam", src: "/lo2.avif", width: 150, height: 36 },
 ];
  
