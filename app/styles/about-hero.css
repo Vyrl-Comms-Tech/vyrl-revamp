@@ -87,7 +87,7 @@ background: #fff;
 
 .aboutHero-headingCol h1 {
   color: #011825;
-  font-size: clamp(1.75rem, 85px, 110px);
+  font-size: clamp(2.5rem, 85px, 110px);
   font-weight: 500;
   line-height: 1.01;
   /* margin: 0; */
@@ -197,8 +197,9 @@ background: #fff;
   }
 
   .aboutHero-desc {
-    order: 2;
-    padding: 0 15px;
+    /* order: 2;
+    padding: 0 15px; */
+    display: none;
   }
 
   .aboutHero-imagePlaceholder {
@@ -207,6 +208,7 @@ background: #fff;
 
   .aboutHero-headingCol h1 {
     text-align: center;
+    font-size: 2.5rem;
   }
 
   /* Starting size for the scroll-driven scale-up — the JS reads this
@@ -217,20 +219,23 @@ background: #fff;
      .aboutHero-imageSpacer's margin-top below were stacking into a
      bigger visual gap than intended before the video underneath. */
   .aboutHero-imagePlaceholder {
-    width: 200px;
-    height: 124px;
-    margin-top: -0.5rem;
+    width: 333px;
+    max-width: calc(100vw - 30px);
+    height: 350px;
+    margin-top: 0.5rem;
   }
 
   /* Final size the image scales up to — the JS reads this element's
      rect as the "after" snapshot for GSAP Flip, so this box's
-     width/height IS the animation's end size. */
+     width/height IS the animation's end size. Full-width with a flat
+     15px gutter on each side (not a percentage/vw cap like before),
+     per the "almost full, only padding-inline 15px" spec. */
   .aboutHero-imageSpacer {
-    width: 340px;
-    max-width: 80vw;
-    height: 560px;
+    width: auto;
+    max-width: none;
+    height: 622px;
     margin-top: 0.5rem;
-    margin-inline: auto;
+    margin-inline: 15px;
   }
 
   /* No fixed width/height here — the JS drives both via the Flip

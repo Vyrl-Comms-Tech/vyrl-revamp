@@ -144,13 +144,127 @@
     border-radius: 0;
     transform: translateY(0%);
   }
+
+  /* --solid's blob is the button's only source of black (see the
+     variant block below) — under reduced motion the base rule above
+     still only translates it, never actually hides it, so without
+     this override --solid would keep a solid black blob showing at
+     all times and never read as going transparent on hover/focus. */
+  .vyrl-cta--solid:hover .vyrl-cta__blob,
+  .vyrl-cta--solid:focus-visible .vyrl-cta__blob {
+    transform: scaleY(0);
+  }
+
+  .vyrl-cta--solid:hover .vyrl-cta__text--primary,
+  .vyrl-cta--solid:focus-visible .vyrl-cta__text--primary {
+    color: #000;
+  }
+
+  /* Same fix as --solid above, mirrored for --invert's white blob. */
+  .vyrl-cta--invert:hover .vyrl-cta__blob,
+  .vyrl-cta--invert:focus-visible .vyrl-cta__blob {
+    transform: scaleY(0);
+  }
+
+  .vyrl-cta--invert:hover .vyrl-cta__text--primary,
+  .vyrl-cta--invert:focus-visible .vyrl-cta__text--primary {
+    color: #fff;
+  }
 }
 @media (max-width:800px){
   .vyrl-cta{
-    padding: 0.2rem 0.9rem;
+    padding: 0.3rem 0.9rem;
   }
 
 
 .vyrl-cta__text-wrap {
-  font-size: 1rem;}
+  font-size: 1.1rem;}
+}
+
+/* ── Solid variant ──
+   Inverse of the default: starts solid black (not transparent), and
+   on hover the black recedes to transparent instead of filling in.
+   Reuses the same .vyrl-cta__blob sweep mechanic, just flipped — the
+   blob itself (inset: 0, so it already covers the whole button) IS
+   the solid black fill at rest (scaleY(1)), then shrinks away on
+   hover (scaleY(0)) to reveal the button's own background — which
+   stays the base .vyrl-cta transparent, deliberately NOT overridden
+   to black here. An earlier version set this element's own background
+   to #000 "underneath" the blob, meaning even once the blob fully
+   receded there was still an opaque black layer behind it and hover
+   never actually reached transparent — the blob has to be the only
+   thing providing black, with nothing solid left once it's gone.
+   Placed after every base .vyrl-cta rule in this file (not just ahead
+   of it on specificity) — .vyrl-cta--solid:hover .vyrl-cta__blob and
+   .vyrl-cta:hover .vyrl-cta__blob are equal specificity (one class +
+   one pseudo + one class each), so without later source order the
+   base rule's scaleY(1) was winning the tie and silently overriding
+   this variant's scaleY(0) on hover. */
+.vyrl-cta--solid {
+  /* .vyrl-cta__text--primary has no color of its own — it inherits
+     this, and it's the layer actually visible at rest (before the
+     char-flip swaps in --secondary on hover), so it needs to read
+     white against the blob's solid black fill here. */
+  color: #fff;
+}
+
+.vyrl-cta--solid .vyrl-cta__blob {
+  transform: scaleY(1);
+  transform-origin: top center;
+}
+
+.vyrl-cta--solid:hover .vyrl-cta__blob,
+.vyrl-cta--solid:focus-visible .vyrl-cta__blob {
+  transform: scaleY(0);
+}
+
+/* --secondary is the layer that swaps in as the blob recedes and the
+   button reads as transparent, so it needs the opposite of
+   --primary's color at each state: black once transparent (hover),
+   white at rest in case it's glimpsed mid-transition. */
+.vyrl-cta--solid .vyrl-cta__text--secondary {
+  color: #fff;
+}
+
+.vyrl-cta--solid:hover .vyrl-cta__text--secondary,
+.vyrl-cta--solid:focus-visible .vyrl-cta__text--secondary {
+  color: #000;
+}
+
+/* ── Invert variant ──
+   White pill / black text — the "after" state for CTAs that flip
+   alongside a page backdrop going white->black (see AboutusStack.jsx
+   and AboutusStackMobile.jsx, which toggle this class on/off in sync
+   with their own body-color scroll trigger, rather than driving
+   individual GSAP color tweens the way the old .cta-btn-based CTA
+   did — this button's DOM has no separate arrow-badge element to
+   tween, so a CSS class swap + transition is the simpler match). Same
+   blob-is-the-only-fill mechanic as --solid, just with white instead
+   of black: the button's own background/border stay put (from base
+   .vyrl-cta, transparent+black border works fine since the blob
+   fully covers it at rest), and the blob itself is white and covers
+   the button at rest, receding on hover to reveal the transparent
+   base with a black border. */
+.vyrl-cta--invert {
+  color: #000;
+}
+
+.vyrl-cta--invert .vyrl-cta__blob {
+  background-color: #fff;
+  transform: scaleY(1);
+  transform-origin: top center;
+}
+
+.vyrl-cta--invert:hover .vyrl-cta__blob,
+.vyrl-cta--invert:focus-visible .vyrl-cta__blob {
+  transform: scaleY(0);
+}
+
+.vyrl-cta--invert .vyrl-cta__text--secondary {
+  color: #000;
+}
+
+.vyrl-cta--invert:hover .vyrl-cta__text--secondary,
+.vyrl-cta--invert:focus-visible .vyrl-cta__text--secondary {
+  color: #fff;
 }

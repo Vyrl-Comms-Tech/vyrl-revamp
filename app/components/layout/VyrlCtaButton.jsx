@@ -1,15 +1,26 @@
 import { useLayoutEffect, useMemo, useRef } from "react";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
+import PageTransitionLink from "./PageTransitionLink";
 import "../../styles/vyrl-cta-button.css";
 
 gsap.registerPlugin(SplitText);
 
+// href/external mirror CtaButton's (cta.jsx) own link-vs-button
+// branching: with href set, renders PageTransitionLink for internal
+// routes or a plain <a target="_blank"> for external ones; with no
+// href (the original usage — e.g. Preloader's "Let's get started"),
+// stays a plain <button> exactly as before. AboutusStack.jsx and
+// AboutusStackMobile.jsx both need this to actually navigate to
+// /services, which the button-only version silently couldn't.
 export default function VyrlCtaButton({
   label = "Contact us",
   onClick,
   className = "",
   type = "button",
+  href,
+  external = false,
+  id,
 }) {
   const rootRef = useRef(null);
   const primaryCharsRef = useRef([]);
@@ -93,13 +104,8 @@ export default function VyrlCtaButton({
     return () => ctx.revert();
   }, [chars]);
  
-  return (
-    <button
-      ref={rootRef}
-      type={type}
-      onClick={onClick}
-      className={`vyrl-cta ${className}`.trim()}
-    >
+  const content = (
+    <>
       <span className="vyrl-cta__blob" aria-hidden="true" />
       <span className="vyrl-cta__text-wrap">
         <span className="vyrl-cta__text vyrl-cta__text--primary" aria-hidden="true">
@@ -128,6 +134,41 @@ export default function VyrlCtaButton({
             for screen readers regardless of char-split/animation state. */}
         <span className="vyrl-cta__sr-only">{label}</span>
       </span>
+    </>
+  );
+
+  if (href) {
+    return external ? (
+      <a
+        ref={rootRef}
+        href={href}
+        id={id}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`vyrl-cta ${className}`.trim()}
+      >
+        {content}
+      </a>
+    ) : (
+      <PageTransitionLink
+        ref={rootRef}
+        href={href}
+        id={id}
+        className={`vyrl-cta ${className}`.trim()}
+      >
+        {content}
+      </PageTransitionLink>
+    );
+  }
+
+  return (
+    <button
+      ref={rootRef}
+      type={type}
+      onClick={onClick}
+      className={`vyrl-cta ${className}`.trim()}
+    >
+      {content}
     </button>
   );
 }

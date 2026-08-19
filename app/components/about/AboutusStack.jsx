@@ -281,7 +281,7 @@
 
 import { Fragment, useEffect, useRef } from "react";
 import "../../styles/aboutus-stack.css";
-import CtaButton from "../layout/cta";
+import VyrlCtaButton from "../layout/VyrlCtaButton";
 
 /**
  * Card data — swap `video` paths for files placed under /public/assets/*
@@ -465,12 +465,23 @@ export default function AboutUsStack() {
         // animation — instead of strictly after it.
         const lastCardSettleTime = lastIndex * 0.4 + 0.5;
 
-        const ctaBtn = ctaRef.current?.querySelector(".cta-btn");
-        const ctaArrowBg = ctaRef.current?.querySelectorAll(".cta-arrow-box");
-        const ctaArrowSvgPaths = ctaRef.current?.querySelectorAll(
-          ".cta-arrow-box svg path",
-        );
-        const ctaLabel = ctaRef.current?.querySelector(".cta-btn-label");
+        // VyrlCtaButton (see AboutusStack.jsx's render below) has no
+        // separate arrow-badge/label elements to tween individually the
+        // way the old CtaButton-based CTA did — its white/black flip is
+        // a single CSS class (.vyrl-cta--invert, see
+        // vyrl-cta-button.css) toggled on the root .vyrl-cta element.
+        //
+        // Not GSAP's className tween ("+=vyrl-cta--invert"): that
+        // relative-value shorthand is for numeric properties, and on
+        // className it doesn't add a class — it replaces the entire
+        // class attribute with the literal string "+=vyrl-cta--invert",
+        // wiping out .vyrl-cta and .vyrl-cta--solid outright (confirmed
+        // live: className read back exactly that literal string once
+        // scrubbed past this point). A zero-duration .to() with
+        // onComplete/onReverseComplete instead calls classList.toggle
+        // directly, which stays in sync with the scrub in both
+        // directions without touching any other class already present.
+        const ctaRoot = ctaRef.current?.querySelector(".vyrl-cta");
 
         timeline
           .to(
@@ -484,35 +495,15 @@ export default function AboutUsStack() {
             lastCardSettleTime,
           );
 
-        if (ctaBtn) {
+        if (ctaRoot) {
           timeline.to(
-            ctaBtn,
-            { backgroundColor: "#fff", color: "#000", ease: "none" },
-            lastCardSettleTime,
-          );
-        }
-        if (ctaArrowBg?.length) {
-          timeline.to(
-            ctaArrowBg,
-            { backgroundColor: "#000", ease: "none" },
-            lastCardSettleTime,
-          );
-        }
-        if (ctaArrowSvgPaths?.length) {
-          // Arrow circle goes black (above), so the icon inside it needs
-          // to stay white to read against it — same pairing the existing
-          // .cta-button-white CSS variant uses (see cta.css: black
-          // .cta-arrow-box + white svg path).
-          timeline.to(
-            ctaArrowSvgPaths,
-            { fill: "#fff", ease: "none" },
-            lastCardSettleTime,
-          );
-        }
-        if (ctaLabel) {
-          timeline.to(
-            ctaLabel,
-            { color: "#000", ease: "none" },
+            ctaRoot,
+            {
+              duration: 0,
+              onComplete: () => ctaRoot.classList.add("vyrl-cta--invert"),
+              onReverseComplete: () =>
+                ctaRoot.classList.remove("vyrl-cta--invert"),
+            },
             lastCardSettleTime,
           );
         }
@@ -777,10 +768,10 @@ export default function AboutUsStack() {
         ))}
 
         <div className="aboutUsStack-cta" ref={ctaRef}>
-          <CtaButton
+          <VyrlCtaButton
             label="Explore Services"
             href="/services"
-            className="cta-button"
+            className="vyrl-cta--solid"
           />
         </div>
       </div>

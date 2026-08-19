@@ -220,9 +220,9 @@ const AboutHero = () => {
                     // takes a longer, slower distance (400px) to finish
                     // instead of snapping shut almost immediately.
                     trigger: container,
-                    start: "top+=60 top",
-                    end: "+=200",
-                    scrub: 0.8,
+                    start: "top+=100 top",
+                    end: "+=400",
+                    scrub: 1,
                   }
                 : {
                     trigger: top,
@@ -272,11 +272,11 @@ const AboutHero = () => {
               are here to understand what your brand is trying to become  then
               build the digital system that helps it get there.
             </p>
-             <VyrlCtaButton label="let's get in touch" href="/contact-us" />
+             <VyrlCtaButton label="let's get in touch" href="/contact-us" className="vyrl-cta--solid" />
           </div>
 
           <div className="aboutHero-headingCol">
-            <span className="aboutHero-tag">• About</span>
+            <span className="aboutHero-tag">About</span>
             <h1>
               A Creative Partner
               <br />

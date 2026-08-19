@@ -1,7 +1,6 @@
-
 .logo-section {
   --partners-offset: 170vh;
-/* background: #000; */
+  /* background: #000; */
   position: relative;
   width: 100%;
   min-height: 110vh;
@@ -44,7 +43,6 @@
   opacity: 0.8;
 }
 
-
 .partners-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -84,11 +82,7 @@
 
 .partner-card:hover {
   background: rgb(255 255 255 / 3.5%);
-  /* Whitish border + soft outward glow on hover, matching the reference
-     screenshot's bright-bordered-cell look — border-color brightens from
-     the resting 15%-opacity gray to a near-solid white, and the box-shadow
-     (no spread offset needed since it isn't inset) casts that same white
-     softly outside the card's edges rather than just inside it. */
+
   border-color: rgb(255 255 255 / 80%);
   box-shadow: 0 0 24px rgb(255 255 255 / 25%);
 }
@@ -226,5 +220,11 @@
 
   .partners-bottom span:nth-child(3) {
     display: none;
+  }
+  .partner-card:hover {
+    background: none;
+    border: none;
+    border-color:none;
+    box-shadow: none;
   }
 }

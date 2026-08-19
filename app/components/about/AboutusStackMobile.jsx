@@ -5,7 +5,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "../../styles/aboutus-stack-mobile.css";
-import CtaButton from "../layout/cta";
+import VyrlCtaButton from "../layout/VyrlCtaButton";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -130,68 +130,34 @@ export default function AboutusStackMobile() {
           },
         );
 
-        // CTA flips to the white variant in step with the same body
-        // handoff above — same idea as AboutusStack.jsx's desktop CTA
-        // flip (see its lastCardSettleTime tweens on ctaBtn/ctaArrowBg/
-        // ctaArrowSvgPaths/ctaLabel), just scrubbed against this
-        // section's own lastCard trigger instead of a pinned timeline
-        // position, and reusing cta.css's existing .cta-button-white
-        // color pairing (white pill, black arrow badge, white arrow
-        // icon) rather than re-declaring those colors here.
-        const ctaBtn = ctaRef.current?.querySelector(".cta-btn");
-        const ctaArrowBg = ctaRef.current?.querySelectorAll(".cta-arrow-box");
-        const ctaArrowSvgPaths = ctaRef.current?.querySelectorAll(
-          ".cta-arrow-box svg path",
-        );
+        // CTA flips to the white/invert variant in step with the same
+        // body handoff above. VyrlCtaButton (see this file's render
+        // below) has no separate arrow-badge/label elements to tween
+        // the way the old CtaButton-based version did — its white/black
+        // flip is a single CSS class (.vyrl-cta--invert, see
+        // vyrl-cta-button.css) toggled on the root .vyrl-cta element.
+        //
+        // Not GSAP's className tween ("+=vyrl-cta--invert"): that
+        // relative-value shorthand is for numeric properties, and on
+        // className it doesn't add a class — it replaces the entire
+        // class attribute with the literal string "+=vyrl-cta--invert",
+        // wiping out .vyrl-cta and .vyrl-cta--solid outright (confirmed
+        // live: className read back exactly that literal string once
+        // scrolled past this trigger). This range has scrub:true (a
+        // continuous, non-discrete crossing, unlike AboutusStack.jsx's
+        // single-instant timeline position), so onEnter/onLeaveBack —
+        // fired once each at the range's start/end edges — toggle the
+        // class directly via classList instead.
+        const ctaRoot = ctaRef.current?.querySelector(".vyrl-cta");
 
-        if (ctaBtn) {
-          gsap.fromTo(
-            ctaBtn,
-            { backgroundColor: "#000", color: "#fff" },
-            {
-              backgroundColor: "#fff",
-              color: "#000",
-              ease: "none",
-              scrollTrigger: {
-                trigger: lastCard,
-                start: "bottom center",
-                end: "bottom top",
-                scrub: true,
-              },
-            },
-          );
-        }
-        if (ctaArrowBg?.length) {
-          gsap.fromTo(
-            ctaArrowBg,
-            { backgroundColor: "#fff" },
-            {
-              backgroundColor: "#000",
-              ease: "none",
-              scrollTrigger: {
-                trigger: lastCard,
-                start: "bottom center",
-                end: "bottom top",
-                scrub: true,
-              },
-            },
-          );
-        }
-        if (ctaArrowSvgPaths?.length) {
-          gsap.fromTo(
-            ctaArrowSvgPaths,
-            { fill: "#000" },
-            {
-              fill: "#fff",
-              ease: "none",
-              scrollTrigger: {
-                trigger: lastCard,
-                start: "bottom center",
-                end: "bottom top",
-                scrub: true,
-              },
-            },
-          );
+        if (ctaRoot) {
+          ScrollTrigger.create({
+            trigger: lastCard,
+            start: "bottom center",
+            end: "bottom top",
+            onEnter: () => ctaRoot.classList.add("vyrl-cta--invert"),
+            onLeaveBack: () => ctaRoot.classList.remove("vyrl-cta--invert"),
+          });
         }
       }
     },
@@ -263,7 +229,7 @@ export default function AboutusStackMobile() {
       </div>
 
       <div className="aboutStackMobile-cta" ref={ctaRef}>
-        <CtaButton label="Explore Services" href="/services" className="cta-button" />
+        <VyrlCtaButton label="Explore Services" href="/services" className="vyrl-cta--solid" />
       </div>
     </div>
   );

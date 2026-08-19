@@ -3,6 +3,7 @@ import React from "react";
 import TextAnimation from "../home/TextAnimation";
 import CtaButton from "../layout/cta";
 import "../../styles/text-and-cards.css";
+import VyrlCtaButton from "../layout/VyrlCtaButton";
 
 const AboutText = ({
   children,
@@ -17,7 +18,7 @@ const AboutText = ({
         <div className="hs-text-inner">
           <TextAnimation animateOnScroll={true} delay={0.3}>
             <h1 className="hs-heading">
-              <span className="hs-heading-indent" aria-hidden="true" />
+              {/* <span className="hs-heading-indent" aria-hidden="true" /> */}
               {children ?? (
                 <>
                   Our team brings together creative direction, strategic
@@ -30,10 +31,11 @@ const AboutText = ({
           </TextAnimation>
 
           {showButton && (
-            <CtaButton
+            <VyrlCtaButton
               label={buttonLabel}
               videoSrc={buttonVideoSrc}
               href={buttonHref}
+              className="vyrl-cta--solid"
             />
           )}
         </div>
