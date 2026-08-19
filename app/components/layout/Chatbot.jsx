@@ -194,18 +194,9 @@ export default function Chatbot() {
             duration: 0.55,
             ease: "power4.inOut",
             onComplete: () => {
-              // Clears every inline style GSAP set during the open/close
-              // tweens so the resting pill goes back to being driven by
-              // plain CSS (width: fit-content, height: 62px) instead of
-              // the fixed pixel values just tweened to.
+             
               gsap.set(panel, { clearProps: "width,height,borderRadius" });
-              // Was set on `panel` itself, which also disabled the
-              // toggle button living inside it — the pill you click to
-              // reopen the chat never received clicks again after the
-              // first close. Only the expanded body's content (tabs,
-              // questions, input) needs to stop being interactive while
-              // closed; the toggle's own opacity/pointer-events are
-              // already handled separately by .chatbot-toggle's CSS.
+           
               gsap.set(body, { pointerEvents: "none" });
             },
           },
@@ -226,7 +217,7 @@ export default function Chatbot() {
         >
           <Image
             className="chatbot-star"
-            src="/star.png"
+            src="/chatbot-star.png"
             alt=""
             width={24}
             height={24}

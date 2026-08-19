@@ -87,6 +87,21 @@
      card's own reveal to play out same as the rest.
   */
   margin-top: -85vh;
+  /* This negative margin pulls the whole cards grid up far enough that
+     row 1 (cards 1-2) physically overlaps the tail end of
+     .text-and-cards, the section immediately before this one in the DOM
+     — which sets z-index: 101 (position: relative) on itself specifically
+     so it can visually cover the fixed .homehero behind it (see
+     text-and-cards.css). Sibling stacking contexts paint by z-index
+     first, DOM order second, so that higher 101 was winning over
+     .work-sections' own z-index: 100 in the overlap zone and silently
+     swallowing hover/click on just cards 1-2 — cards further down clear
+     .text-and-cards' bottom edge and were never affected. position:
+     relative + a z-index above 101 puts this grid back on top without
+     touching .text-and-cards' own stacking (still needs to stay above
+     the fixed hero further up the page). */
+  position: relative;
+  z-index: 102;
 }
 
 .card-work-cm {
