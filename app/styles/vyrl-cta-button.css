@@ -173,7 +173,7 @@
 }
 @media (max-width:800px){
   .vyrl-cta{
-    padding: 0.3rem 0.9rem;
+    padding: .5rem 1.3rem;
   }
 
 
@@ -231,20 +231,6 @@
   color: #000;
 }
 
-/* ── Invert variant ──
-   White pill / black text — the "after" state for CTAs that flip
-   alongside a page backdrop going white->black (see AboutusStack.jsx
-   and AboutusStackMobile.jsx, which toggle this class on/off in sync
-   with their own body-color scroll trigger, rather than driving
-   individual GSAP color tweens the way the old .cta-btn-based CTA
-   did — this button's DOM has no separate arrow-badge element to
-   tween, so a CSS class swap + transition is the simpler match). Same
-   blob-is-the-only-fill mechanic as --solid, just with white instead
-   of black: the button's own background/border stay put (from base
-   .vyrl-cta, transparent+black border works fine since the blob
-   fully covers it at rest), and the blob itself is white and covers
-   the button at rest, receding on hover to reveal the transparent
-   base with a black border. */
 .vyrl-cta--invert {
   color: #000;
 }
