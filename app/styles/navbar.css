@@ -115,6 +115,8 @@
 .right-content ul li {
   text-decoration: none;
   display: flex;
+  opacity: 0;
+  transform: translateY(20px);
 }
 
 .nav-link-item {
@@ -123,24 +125,27 @@
   color: #fff;
   font-family: inherit;
   /* cursor: none; */
-  display: none;
+  display: block;
   font-size: 3rem;
   text-transform: uppercase;
+  opacity: 0.45;
+  filter: brightness(1);
+  transition:
+    opacity 0.2s ease,
+    filter 0.2s ease;
+}
+
+.nav-link-item--active {
+  opacity: 1;
+}
+
+.nav-link-item:hover {
+  filter: brightness(1.4);
 }
 
 .char {
   display: inline-block;
   will-change: transform;
-}
-
-.draw-line-box {
-  position: absolute;
-  left: 0;
-  scale: 0.5;
-  bottom: 0;
-  width: 20%;
-  height: 18px;
-  pointer-events: none;
 }
 
 .grid-cards {
@@ -249,7 +254,6 @@
   z-index: 9998;
 }
 
-.right-content a,
 .grid-cards .box-1 {
   opacity: 0;
   transform: translateY(20px);
@@ -319,11 +323,6 @@
     line-height: 1.2;
   }
 
-  /* .draw-line-box sits flush at bottom:0 of the link, right against
-     the text baseline — nudge it down slightly for breathing room. */
-  .draw-line-box {
-    bottom: -6px;
-  }
   .site-nav {
     top: auto;
     bottom: 2%;

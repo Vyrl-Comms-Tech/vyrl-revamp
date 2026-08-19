@@ -68,7 +68,7 @@ export default function RootLayout({
             strategy="beforeInteractive"
             dangerouslySetInnerHTML={{ __html: preloaderSkipScript }}
           /> */}
-          {/* <PreloaderGate /> */}
+          <PreloaderGate />
           {/* <FluidBackground /> */}
           <SmoothScroll />
           {/* <Header /> */}
