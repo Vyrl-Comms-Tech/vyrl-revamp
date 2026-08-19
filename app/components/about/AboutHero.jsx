@@ -214,10 +214,15 @@ const AboutHero = () => {
               ease: "none",
               scrollTrigger: isMobile
                 ? {
+                    // start is offset past "top top" (not at 0) so a
+                    // small initial scroll does nothing — the grow only
+                    // kicks in once the user has scrolled a bit, then
+                    // takes a longer, slower distance (400px) to finish
+                    // instead of snapping shut almost immediately.
                     trigger: container,
-                    start: "top top",
-                    end: `+=${window.innerHeight * 0.2}`,
-                    scrub: 0.5,
+                    start: "top+=60 top",
+                    end: "+=200",
+                    scrub: 0.8,
                   }
                 : {
                     trigger: top,

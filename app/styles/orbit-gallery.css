@@ -100,7 +100,7 @@
     padding-top: 10px;
     font-size: 0.95rem;
   }
-.heading-before-footer p:not(.cta-btn-label) {
-width: 74%;
-}
+  .heading-before-footer p:not(.cta-btn-label) {
+    width: 74%;
+  }
 }
