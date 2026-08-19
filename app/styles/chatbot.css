@@ -11,7 +11,7 @@
   height: 52px;
   border-radius: 999px;
   border: 2px solid rgba(255, 255, 255, 0.2);
-  background: #0c0c10;
+  background: #000;
   overflow: hidden;
 }
 
@@ -143,6 +143,8 @@
   gap: 0px;
   margin-top: auto;
   padding: 12px 20px 15px;
+
+  max-height: 48%;
 
   background: linear-gradient(
     to bottom,
@@ -325,7 +327,13 @@
 
 @media (max-width: 520px) {
   .chatbot {
-    /* left: auto; */
+    /* Base rule above sets right: 24px for desktop's right-anchored
+       placement — never cleared here before, so this fixed-position
+       element carried BOTH left: 5% and right: 24px into the open
+       state's animated width tween, leaving the browser to reconcile
+       three width constraints (left, right, and GSAP's explicit inline
+       width) at once instead of just left + width. */
+    right: auto;
     bottom: 11%;
     left: 5%;
   }
@@ -336,11 +344,21 @@
   }
 
   .chatbot--open .chatbot-media {
-    height: 48%;
+    height: 74%;
+  }
+
+  /* Media takes up 57% here (from the top) — content has to stay under
+     the remaining ~43%, or it grows straight up over the face instead of
+     scrolling within its own budget the way .chatbot-messages' flex:1 +
+     overflow-y:auto is meant to handle it. Was 80%, more than the media
+     itself leaves room for (57% + 80% > 100%), which is exactly why the
+     message list kept climbing over the video. */
+  .chatbot--open .chatbot-content {
+    max-height: 43%;
   }
 
   .chatbot--open .chatbot-content {
-    padding: 12px 14px 0;
+    padding: 12px 14px 20px;
   }
 
   .chatbot--open .chatbot-inputRow {

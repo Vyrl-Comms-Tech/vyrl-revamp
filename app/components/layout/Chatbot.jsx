@@ -118,11 +118,21 @@ export default function Chatbot() {
     const panel = panelRef.current;
     const body = panelBodyRef.current;
     const isMobile = window.innerWidth <= 520;
-    // .chatbot is anchored with right: 10% on mobile (see chatbot.css),
-    // so the open width has to leave that same 10% clear on the left
-    // too, or the panel overshoots past the left edge while the right
-    // side keeps its 10% gap — that's the "left side cut" bug.
-    const width = isMobile ? "calc(100vw - 100%)" : "450px";
+    // .chatbot is anchored with left: 5% on mobile (see chatbot.css), so
+    // the open width has to leave that same 5% clear on the right too,
+    // or the panel overshoots past the right edge of the viewport.
+    //
+    // Must be `vw`, not `%`: .chatbot-panel (this tween's actual target)
+    // is position: relative, so its containing block for a percentage
+    // WIDTH is its nearest positioned ancestor — .chatbot — not the
+    // viewport. .chatbot itself is `width: fit-content` (sized to the
+    // small closed pill, see chatbot.css), so any `%` width here was
+    // resolving against that tiny fit-content box, not 100vw, and came
+    // out close to the full viewport width regardless of the "- 10%" —
+    // which is what pushed the panel past the right edge. `vw` resolves
+    // against the actual viewport unconditionally, sidestepping the
+    // containing-block lookup entirely.
+    const width = isMobile ? "calc(100vw - 10vw)" : "450px";
     // Leave room above and below the panel on phones instead of expanding
     // it to almost the entire viewport. `innerHeight` also follows the
     // browser's currently visible viewport more reliably than `100vh`.
