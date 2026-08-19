@@ -4,11 +4,6 @@ import { Canvas } from "@react-three/fiber";
 import { EffectComposer } from "@react-three/postprocessing";
 import { Fluid } from "@whatisjery/react-fluid-distortion";
 
-// Full-viewport, mouse-reactive fluid distortion layered over the whole
-// site. pointer-events:none is load-bearing — without it this fixed,
-// full-screen canvas would sit on top of (and swallow clicks meant
-// for) every bit of real page content underneath it, since it's
-// painted after everything else in the DOM.
 export default function FluidBackground() {
   return (
     <Canvas
@@ -20,11 +15,36 @@ export default function FluidBackground() {
         width: "100vw",
         height: "100vh",
         pointerEvents: "none",
-        // zIndex: 9999,
+        background: "transparent",
+        opacity: 0.1,
+        zIndex: 9999,
+        // mixBlendMode: "difference" previously made this layer invert
+        // every pixel underneath it site-wide — including fixed-color
+        // text like HeroModelSection's white heading, which stopped
+        // reading as plain white and effectively "disappeared" against
+        // whatever it was inverting against. There's no way to exclude
+        // specific elements from a full-viewport blend mode; it applies
+        // to everything in the same stacking context uniformly. Back to
+        // a plain translucent overlay (opacity above) instead — it
+        // won't auto-invert to stay visible on both light and dark
+        // sections the way difference did, but it no longer corrupts
+        // real page content either.
       }}
     >
       <EffectComposer>
-        <Fluid fluidColor="#ffffff" curl={30} />
+        {/* The shader mixes the rendered frame with a flat fluidColor
+            by `intensity` — at intensity={10} that mix leans almost
+            entirely toward the flat color, painting a mostly-opaque
+            smoke shape rather than a light tint. Lowered so it stays a
+            light, translucent trail instead of fighting the opacity
+            above. */}
+        <Fluid
+          fluidColor="#808080"
+          curl={30}
+          intensity={0.5}
+          distortion={0.6}
+          showBackground={false}
+        />
       </EffectComposer>
     </Canvas>
   );

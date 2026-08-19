@@ -605,16 +605,6 @@
     padding-block: 20px;
   }
 }
-
-/* On desktop .footer starts hidden (translateY(100%) scale(0.8)) and
-   GSAP's pin timeline in OrbitGallery.jsx animates it into place as
-   part of the orbit/reveal scroll choreography. That whole timeline is
-   skipped on mobile (see the isMobile check there) so the section reads
-   as one normal, unpinned block — which means nothing ever tweens this
-   transform away, so it must already sit at its resting position here.
-   Matches OrbitGallery.jsx's MOBILE_BREAKPOINT (800px), not the 640px
-   "Mobile" breakpoint below, so JS and CSS agree on where this section
-   switches to its static mobile layout. */
 @media (max-width: 800px) {
   .footer {
     position: relative;
@@ -622,7 +612,8 @@
        would still shift the box down from its normal flow position, so
        it has to be overridden here too, not just `position`. */
     bottom: auto !important;
-    transform: none;
+    transform:none;
+    z-index: 9;
   }
 }
 

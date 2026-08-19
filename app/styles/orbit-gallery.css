@@ -2,6 +2,7 @@
   background-color: #fff;
   position: relative;
   overflow: hidden;
+  overflow: hidden;
   width: 100%;
   height: 100vh;
 }
@@ -59,16 +60,14 @@
   }
 }
 @media (max-width: 800px) {
+  #footer-mble-hide {
+    display: none;
+  }
   .image-orbit {
-    /* No pin/reveal animation runs on mobile (see the isMobile check in
-       OrbitGallery.jsx), so .footer renders as a normal in-flow block
-       after the orbit cards instead of being absolutely positioned and
-       tweened over them — height needs to grow to fit both instead of
-       clipping to a fixed 70vh, and overflow can't stay hidden or the
-       footer would be clipped away entirely. */
     height: auto;
     min-height: 70vh;
-    overflow: visible;
+    overflow-x: hidden;
+    overflow-y: visible;
   }
   .heading-before-footer h2 {
     width: 80%;

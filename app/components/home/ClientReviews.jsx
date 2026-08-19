@@ -2,10 +2,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TextAnimation from "./TextAnimation";
 import ChangeTextAnimation from "../layout/ChangeTextAnimation";
 import "../../styles/client-review.css";
 import CtaButton from "../layout/cta";
+
+// Registering a browser-only plugin at module scope would break SSR
+// (Next renders client components on the server too) — guard it.
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 // Base (desktop, >1620px) card geometry. width/height/x/y scale down at
 // smaller breakpoints via getResponsiveScale(); rotate/zIndex/opacity don't
@@ -120,6 +127,7 @@ function ClientReviewSection() {
   const dragStartX = useRef(0);
   const dragging = useRef(false);
   const containerRef = useRef(null);
+  const sectionRef = useRef(null);
   const shiftRef = useRef(null);
   const positionsRef = useRef(
     getPositions(typeof window !== "undefined" ? window.innerWidth : 1920),
@@ -143,6 +151,12 @@ function ClientReviewSection() {
   // same choice carries over to the next one that rotates into center
   // (rather than each card remembering its own separate mute state).
   const [isMuted, setIsMuted] = useState(true);
+  // Flips the CTA button from its white variant to the plain black one
+  // as the section's background scrubs to white (see the colorTl
+  // ScrollTrigger below) — kept as state rather than a direct GSAP
+  // tween since .client-review-cta remounts a fresh CtaButton every
+  // time the active review changes.
+  const [isCtaDark, setIsCtaDark] = useState(false);
 
   function posSlot(cardIdx, offset) {
     return (((cardIdx - offset) % N) + N) % N;
@@ -171,6 +185,10 @@ function ClientReviewSection() {
   }, [activeIndex]);
 
   useEffect(() => {
+    // Guards the deferred rAF poll further down (navbar darken tween) in
+    // case this component unmounts before .nav-bar/.menu-dropdown are found.
+    let cancelled = false;
+
     const ctx = gsap.context(() => {
       const els = cardRefs.current;
 
@@ -358,6 +376,92 @@ function ClientReviewSection() {
       window.addEventListener("keydown", onKeyDown);
       window.addEventListener("resize", onResize);
 
+      // ── background/navbar color swap ────────────────────────────────
+      // Mirrors Testimonials.jsx's own halfway-through-the-section color
+      // change (its desktop counterpart, swapped in via ResponsiveSwap):
+      // <body> fades to white and the navbar darkens to solid black as
+      // this section scrolls to its center, so the navbar (normally a
+      // translucent white — see navbar.css) stays visible against the
+      // now-white page instead of all but disappearing into it.
+      if (sectionRef.current) {
+        const section = sectionRef.current;
+        const colorTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "center center",
+            scrub: 1,
+          },
+        });
+        colorTl.to(document.body, { background: "#fff", ease: "none" }, 0);
+
+        // Heading + bottom nav arrows were white-on-black; now the page
+        // (and this section's own background) turns white alongside
+        // them, so they need to flip to black to stay legible.
+        const heading = section.querySelector(".client-review-section-text");
+        if (heading) {
+          colorTl.to(heading, { color: "#000", ease: "none" }, 0);
+        }
+
+        const navBtns = section.querySelectorAll(".client-review-nav-btn");
+        if (navBtns.length) {
+          colorTl.to(
+            navBtns,
+            { borderColor: "rgba(0, 0, 0, 0.35)", ease: "none" },
+            0,
+          );
+        }
+
+        // Arrow icons are hardcoded fill="white" in the SVG markup, but
+        // GSAP can tween an SVG path's fill attribute directly (unlike
+        // a CSS rule, which a presentation attribute would still beat).
+        const navBtnSvgPaths = section.querySelectorAll(
+          ".client-review-nav-btn svg path",
+        );
+        if (navBtnSvgPaths.length) {
+          colorTl.to(navBtnSvgPaths, { fill: "#000", ease: "none" }, 0);
+        }
+
+        // CTA button swaps from its white variant (cta-button-white —
+        // white bg, black text/arrow) to the plain black variant (black
+        // bg, white text/arrow) it'd normally need against a black
+        // page, since the page is now white behind it. Driven by
+        // isCtaDark React state (flipped below) rather than a direct
+        // GSAP tween on the button node: .client-review-cta remounts a
+        // fresh CtaButton every time the active review changes (it's
+        // keyed on active.id), which would detach a live tween from its
+        // target — state survives that remount since it lives on this
+        // component, not the node.
+        colorTl.eventCallback("onUpdate", () => {
+          setIsCtaDark(colorTl.progress() > 0.5);
+        });
+
+        // Added separately (not chained above) and polled for briefly
+        // first: GSAP resolves an element/selector target once,
+        // synchronously, when it's added to the timeline — .nav-bar/
+        // .menu-dropdown live in a sibling component (Navbar.jsx) that
+        // isn't guaranteed to have mounted yet at this exact moment.
+        let attempts = 0;
+        const addNavbarDarkenTween = () => {
+          if (cancelled) return;
+          const navBar = document.querySelector(".nav-bar");
+          const menuDropdown = document.querySelector(".menu-dropdown");
+          if (navBar && menuDropdown) {
+            colorTl.to(
+              [navBar, menuDropdown],
+              { backgroundColor: "#0a0a0a", ease: "none" },
+              0,
+            );
+            return;
+          }
+          attempts += 1;
+          if (attempts < 30) requestAnimationFrame(addNavbarDarkenTween);
+        };
+        addNavbarDarkenTween();
+      }
+
+      ScrollTrigger.refresh();
+
       return () => {
         container.removeEventListener("pointerdown", onPointerDown);
         window.removeEventListener("pointermove", onPointerMove);
@@ -368,7 +472,13 @@ function ClientReviewSection() {
       };
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      cancelled = true; // guards the deferred rAF poll above if unmount beats it
+      ctx.revert(); // also reverts document.body/.nav-bar/.menu-dropdown's
+      // color tweens back to their pre-tween values, same as
+      // Testimonials.jsx relies on for its own copy of this tween.
+      gsap.set(document.body, { clearProps: "background" }); // don't leak white bg to other routes
+    };
   }, []);
 
   useEffect(() => {
@@ -417,7 +527,7 @@ function ClientReviewSection() {
   const displayedTagsReview = REVIEWS[tagsIndex];
 
   return (
-    <div className="client-review-section-container">
+    <div className="client-review-section-container" ref={sectionRef}>
       <TextAnimation animateOnScroll={true} delay={0.3}>
         <h1 className="client-review-section-text">
           <span className="client-review-heading-line-1">Real Stories.</span>
@@ -548,7 +658,7 @@ function ClientReviewSection() {
             label={active.ctaLabel}
             href={active.href}
             external={active.href !== "#"}
-            className="cta-button-white"
+            className={isCtaDark ? "" : "cta-button-white"}
           />
           <p>
             Hear from the brands and founders we have partnered with, sharing

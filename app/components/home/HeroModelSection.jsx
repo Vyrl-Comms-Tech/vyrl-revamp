@@ -325,7 +325,7 @@ export default function HeroModelSection() {
                 // direction to match how much less room there is beside
                 // the heading on a narrow viewport.
                 y: window.innerWidth < 768 ? -800 : 800,
-                x: window.innerWidth < 768 ? -100 : 800,
+                x: window.innerWidth < 768 ? -100 : -800,
                 duration: 1,
               },
               "0",

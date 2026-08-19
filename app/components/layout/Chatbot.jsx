@@ -130,7 +130,14 @@ export default function Chatbot() {
       ? Math.min(620, Math.max(360, window.innerHeight - 160))
       : 672;
     const closedWidth = toggleRef.current?.offsetWidth ?? 220;
-    const closedHeight = 62;
+    // Must match .chatbot-panel's resting height in chatbot.css (52px)
+    // — this was 62px, 10px taller than the plain-CSS height the
+    // trailing clearProps below snaps back to once the close tween
+    // finishes. That mismatch is what read as "shrinks, then shrinks
+    // again": the panel tweened down to 62px, then instantly jumped to
+    // 52px the moment clearProps applied, instead of the tween's final
+    // frame already matching the resting CSS value.
+    const closedHeight = 52;
 
     const tl = gsap.timeline({
       onComplete: () => {

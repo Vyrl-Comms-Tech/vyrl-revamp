@@ -20,13 +20,7 @@ const NO_FOOTER_PATHS = [...CASE_STUDY_PATHS, "/contact-us"];
 // navigation) when the current page is already that link's
 // destination. matchPaths lets "Work" and "Case Studies" both
 // disable together on /projects since they share that one href.
-function FooterNavLink({
-  href,
-  pathname,
-  className,
-  matchPaths,
-  children,
-}) {
+function FooterNavLink({ href, pathname, className, matchPaths, children }) {
   const isActive = (matchPaths ?? [href]).includes(pathname);
 
   if (isActive) {
@@ -58,7 +52,7 @@ const DEFAULT_IMAGES = [
   { src: "orbit(18).avif", alt: "Collective member 3" },
   { src: "orbit(6).avif", alt: "Collective member 6" },
   { src: "orbit(7).avif", alt: "Collective member 7" },
-    { src: "orbit(10).avif", alt: "Collective member 8" },
+  { src: "orbit(10).avif", alt: "Collective member 8" },
   //   { src: "banda4.avif", alt: "Collective member 9" },
   { src: "orbit(11).avif", alt: "Collective member 10" },
   { src: "orbit(12).avif", alt: "Collective member 11" },
@@ -98,13 +92,18 @@ export default function OrbitGallery({
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
-    // On mobile this whole pin/orbit/footer-reveal choreography is
-    // skipped — the section just renders as a normal, static block (see
-    // the max-width: 800px override in orbit-gallery.css/footer.css that
-    // puts .footer in its plain resting position instead of the
-    // translateY(100%) scale(0.8) it starts at for the desktop reveal).
     const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
-    const skipAnimation = prefersReducedMotion || isMobile;
+
+    // The two pieces of motion here are independent: the orbit cards'
+    // continuous scroll-driven rotation (kept on mobile too — it's
+    // wanted there), and the pin timeline that reveals .footer over the
+    // cards as the section is pinned (skipped on mobile — see the
+    // max-width: 800px override in orbit-gallery.css/footer.css that
+    // puts .footer in its plain static resting position there instead
+    // of the translateY(100%) it starts at for the desktop reveal, so
+    // there's nothing left for a pin to animate into place).
+    const skipOrbitRotation = prefersReducedMotion;
+    const skipPin = prefersReducedMotion || isMobile;
 
     const ctx = gsap.context(() => {
       let orbitProgress = 0;
@@ -113,7 +112,7 @@ export default function OrbitGallery({
       const cardCount = cards.length;
 
       function getRadiusX() {
-        return window.innerWidth < MOBILE_BREAKPOINT ? 260 : 540;
+        return window.innerWidth < MOBILE_BREAKPOINT ? 220 : 540;
       }
       function getRadiusY() {
         return window.innerWidth < MOBILE_BREAKPOINT ? 190 : 320;
@@ -159,7 +158,7 @@ export default function OrbitGallery({
       updateOrbit();
 
       let trigger;
-      if (!skipAnimation) {
+      if (!skipOrbitRotation) {
         trigger = ScrollTrigger.create({
           trigger: section,
           start: "top bottom",
@@ -189,10 +188,10 @@ export default function OrbitGallery({
       // scrollTrigger driving both steps together — the footer rises
       // while the orbit cards shrink/fade/rise away, still actively
       // orbiting the whole time (see cardExit/updateOrbit above).
-      // Skipped on mobile — see isMobile check above — so the section
-      // renders as one normal, unpinned block there.
+      // Skipped on mobile — see skipPin above — so the section renders
+      // as one normal, unpinned block there (orbit rotation still runs).
       let pinTimeline;
-      if (!skipAnimation) {
+      if (!skipPin) {
         pinTimeline = gsap.timeline({
           scrollTrigger: {
             trigger: section,
@@ -237,7 +236,30 @@ export default function OrbitGallery({
           );
       }
 
+      // This section sits far down the page, after several other pinned
+      // sections (Services3d, Work, Testimonials, ...) whose own
+      // pin-spacers can still be settling into their final reserved
+      // height at the moment this ScrollTrigger is created — same class
+      // of bug Work.jsx and PartnersSection.jsx both document/fix for
+      // themselves. Without this, "top top"/"+=110%" above gets measured
+      // against a page that hasn't finished growing yet, so the pin can
+      // activate at the wrong scroll offset — which is what shows up as
+      // .footer already revealed/overlapping the orbit cards on load
+      // instead of staying hidden below them until you actually scroll
+      // here. One rAF only guarantees a repaint; a second gives every
+      // earlier pin-spacer one more full frame to finish settling before
+      // this measures anything.
+      let cancelled = false;
+      requestAnimationFrame(() => {
+        if (cancelled) return;
+        requestAnimationFrame(() => {
+          if (cancelled) return;
+          ScrollTrigger.refresh();
+        });
+      });
+
       return () => {
+        cancelled = true;
         window.removeEventListener("resize", handleResize);
         trigger?.kill();
         pinTimeline?.scrollTrigger?.kill();
@@ -369,7 +391,7 @@ export default function OrbitGallery({
           />
         </div>
       ))}
-      <footer
+      <footer id="footer-mble-hide"
         className={`footer${pathname === "/projects" ? " footer--no-radius" : ""}`}
       >
         {/* Row 1 – Logo */}

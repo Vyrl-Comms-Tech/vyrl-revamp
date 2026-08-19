@@ -14,15 +14,15 @@
 
 .heroHeadingModel {
   position: absolute;
-  right: 3%;
+  left: 3%;
   bottom: 3%;
-  width: 40%;
+  /* width: 40%; */
 }
 
 .heroHeadingModelHeading {
   overflow: hidden;
   will-change: transform;
-  text-align: end;
+  text-align: left;
   line-height: 1.1;
   font-size: 3.8rem;
   font-weight: 100;

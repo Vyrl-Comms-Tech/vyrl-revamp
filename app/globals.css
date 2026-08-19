@@ -56,6 +56,22 @@ body {
   /* cursor: none; */
   background-color: var(--bodybg);
 }
+
+/* Wraps the global layout-level <Footer /> (see GlobalFooter.tsx) —
+   visible only on mobile. Above 800px, pages without OrbitGallery.jsx
+   currently have no footer at all (matching prior behavior); pages
+   with it (home, about) get its own desktop pin-reveal footer instead
+   — GlobalFooter.tsx skips rendering entirely on those two routes, so
+   this class only ever needs to handle the viewport-width part. */
+.global-footer-mobile-only {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .global-footer-mobile-only {
+    display: block;
+  }
+}
 /* 
 a,
 button,

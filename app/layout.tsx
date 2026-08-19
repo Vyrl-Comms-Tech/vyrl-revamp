@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Footer from "./components/layout/Footer";
+import GlobalFooter from "./components/layout/GlobalFooter";
 import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
@@ -62,24 +62,20 @@ export default function RootLayout({
     <ViewTransitions>
       <html lang="en" className={`${laygrotesk.variable} h-full antialiased`}>
         <body className="min-h-full">
-          {/* beforeInteractive scripts are always injected into <head>
-              by Next.js regardless of where they're placed — this runs
-              before hydration/paint and stamps a class on <html> if
-              this session already saw the preloader, so globals.css can
-              hide it instantly with zero flash instead of waiting for a
-              client effect to decide that after the page has painted. */}
+        
           {/* <Script
             id="preloader-skip-check"
             strategy="beforeInteractive"
             dangerouslySetInnerHTML={{ __html: preloaderSkipScript }}
           /> */}
-          <PreloaderGate />
+          {/* <PreloaderGate /> */}
           {/* <FluidBackground /> */}
           <SmoothScroll />
           {/* <Header /> */}
           <Navbar />
           {children}
-          {/* <Footer /> */}
+        
+          <GlobalFooter />
           <Chatbot />
         </body>
       </html>
