@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
 import "../../styles/caseStudyInner.css";
 import { getCaseStudy, getNextCaseStudy } from "./caseStudiesData";
-import CtaButton from "../layout/cta";
+import VyrlCtaButton from "../layout/VyrlCtaButton";
 
 gsap.registerPlugin(ScrollTrigger, Flip);
 
@@ -107,6 +107,56 @@ const CaseStudyInner = ({ slug }) => {
       );
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Navbar's own resting default is a faint 5%-white tint (see
+  // navbar.css) — reads fine against a dark page, but every panel here
+  // is white (.cs-panel { background: #fff }, see caseStudyInner.css)
+  // for the entire time this page is on screen, so it was reading as
+  // washed-out/whitish instead of a visible dark bar. Unlike the
+  // scroll-scrubbed sections elsewhere in this app, this page has no
+  // vertical color transition to track — it's a single horizontal-scroll
+  // gallery that's white start to finish — so this just darkens the
+  // navbar once on mount and restores it on unmount, rather than a
+  // scrubbed ScrollTrigger tween.
+  //
+  // .nav-bar/.menu-dropdown live in a sibling component (Navbar.jsx)
+  // that isn't guaranteed to have mounted yet at this exact moment —
+  // same lazy-lookup-with-poll guard used everywhere else this app
+  // reaches across to the navbar.
+  useEffect(() => {
+    let cancelled = false;
+    let attempts = 0;
+
+    const darkenNavbar = () => {
+      if (cancelled) return;
+      const navBar = document.querySelector(".nav-bar");
+      const menuDropdown = document.querySelector(".menu-dropdown");
+      if (navBar && menuDropdown) {
+        gsap.to([navBar, menuDropdown], {
+          backgroundColor: "#0a0a0a",
+          ease: "power2.inOut",
+          duration: 0.6,
+        });
+        return;
+      }
+      attempts += 1;
+      if (attempts < 30) requestAnimationFrame(darkenNavbar);
+    };
+    darkenNavbar();
+
+    return () => {
+      cancelled = true;
+      const navBar = document.querySelector(".nav-bar");
+      const menuDropdown = document.querySelector(".menu-dropdown");
+      if (navBar && menuDropdown) {
+        gsap.to([navBar, menuDropdown], {
+          backgroundColor: "rgba(255, 255, 255, 0.05)",
+          ease: "power2.inOut",
+          duration: 0.6,
+        });
+      }
+    };
+  }, []);
 
   // ── main horizontal-scroll + bar-fill setup
   useEffect(() => {
@@ -600,12 +650,12 @@ const CaseStudyInner = ({ slug }) => {
             <div className="cs-p1-header">
               <h2 className="cs-title">{c1.title}</h2>
               <div className="cs-btn-slot" ref={btnSlotRef}>
-                <CtaButton
+                <VyrlCtaButton
                   ref={btnRef}
                   label="View website"
                   href={c1.websiteUrl}
                   external
-                  // className="cs-visit-btn"
+                  className="vyrl-cta--solid" 
                 />
               </div>
             </div>

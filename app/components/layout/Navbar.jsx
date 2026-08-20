@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { Link, useTransitionRouter } from "next-view-transitions";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
-import { slideInOut, isCaseStudyPath, killAllPins } from "./pageTransition";
+import { animateTransition, isCaseStudyPath, killAllPins } from "./pageTransition";
 import { isKnownRoute } from "./knownRoutes";
 import "../../styles/navbar.css";
 import PageTransitionLink from "./PageTransitionLink";
@@ -28,7 +28,7 @@ const idleMessages = [
 const NavLink = ({ label, href }) => {
   const linkRef = useRef(null);
   const pathname = usePathname();
-  const router = useTransitionRouter();
+  const router = useRouter();
   const isActive = href !== "#" && pathname === href;
 
   const handleClick = (e) => {
@@ -37,16 +37,21 @@ const NavLink = ({ label, href }) => {
     // Entering a case-study page runs its own hand-built transition
     // (heading clone + overlay, timed against a plain router.push in
     // CaseStudyInner.jsx) — let that happen normally instead of layering
-    // this view transition on top of it. Leaving a case-study page via
-    // a navbar link is fine to use this transition (see the matching
+    // the block wipe on top of it. Leaving a case-study page via a
+    // navbar link is fine to use this transition (see the matching
     // comment in PageTransitionLink.tsx for why).
     if (isCaseStudyPath(href)) return;
 
     e.preventDefault();
-    // Must run before router.push kicks off the view transition — see
-    // killAllPins' own comment in pageTransition.js for why.
-    killAllPins();
-    router.push(href, { onTransitionReady: slideInOut });
+    // killAllPins() must run AFTER the blocks have fully covered the
+    // screen, not before — see the matching comment in
+    // PageTransitionLink.tsx for why (killing a pin, e.g. OrbitGallery's
+    // .image-orbit, un-pins it instantly and visibly reflows the page
+    // before the wipe has finished covering it).
+    animateTransition(href).then(() => {
+      killAllPins();
+      router.push(href);
+    });
   };
 
   return (

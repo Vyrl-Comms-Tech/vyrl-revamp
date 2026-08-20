@@ -71,6 +71,17 @@ export default function Testimonials() {
   // its black straight through instead.
   const pathname = usePathname();
   const isServicesPage = pathname === "/services";
+  // On /projects, ProjectsGrid.jsx fades document.body to white over its
+  // own last stretch of scroll, landing fully white before this section
+  // even starts (see ProjectsGrid.jsx's body-color effect) — unlike home,
+  // where the page starts white from the very top and these headings'
+  // white-on-black -> black-on-white timing is tuned to track that first
+  // scroll-in. Arriving here with the page already white but these
+  // headings still at their white CSS default (see testimonials.css)
+  // read as invisible white-on-white until introTl's own scroll position
+  // caught up and darkened them. Set black immediately instead of
+  // animating on this route.
+  const isProjectsPage = pathname === "/projects";
   const rootRef = useRef(null);
   const cardRefs = useRef([]);
   const leftHeadRef = useRef(null);
@@ -92,6 +103,19 @@ export default function Testimonials() {
     // Guards the deferred rAF poll further down (navbar darken tween) in
     // case this component unmounts before .nav-bar/.menu-dropdown are found.
     let cancelled = false;
+
+    // See isProjectsPage's comment above: on /projects the page is
+    // already white by the time this section mounts, so these headings
+    // need to already be black too — set immediately rather than waiting
+    // for introTl's scroll-linked color tween further down (which is
+    // skipped entirely on this route, same as isServicesPage skips it
+    // for the opposite reason).
+    if (isProjectsPage) {
+      gsap.set(
+        [leftHeadRef.current, rightHeadRef.current, centerHeadRef.current],
+        { color: "#000" },
+      );
+    }
 
     // Mutable slider state — kept in a plain object (not React state) on
     // purpose: this drives GSAP tweens on every drag/autoplay tick, and
@@ -365,7 +389,7 @@ export default function Testimonials() {
       // screens (<=1500px) than on desktop, since the card and heading
       // both scale down relative to viewport there — a flat 50px reads
       // as too close to the card at that size.
-      const counterOffsetX = window.innerWidth <= 1500 ? 120 : 50;
+      const counterOffsetX = window.innerWidth <= 1500 ? 120 : 70;
 
       // WHAT / CLIENTS / SAYS rest white by default (see testimonials.css)
       // and tween to black here so they stay legible once document.body
@@ -375,6 +399,10 @@ export default function Testimonials() {
       // forcing these headings to black there would bury them against
       // that same black — leave them at their default white instead by
       // skipping the color tween on this route.
+      //
+      // On /projects these still tween color: "#000" — harmless no-op
+      // there, since isProjectsPage's gsap.set() above already set them
+      // black before this timeline was even created.
       introTl
         .to(
           leftHeadRef.current,
@@ -493,7 +521,7 @@ export default function Testimonials() {
         gsap.set(document.body, { clearProps: "background" }); // don't leak white bg to other routes
       }
     };
-  }, [isServicesPage]);
+  }, [isServicesPage, isProjectsPage]);
 
   return (
     <div className="clients-testimonial" ref={rootRef}>

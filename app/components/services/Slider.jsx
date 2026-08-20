@@ -224,7 +224,7 @@ const Slider = () => {
     <div className="banner text" ref={rootRef}>
       <div className="slider-top">
         <div className="slider-headingCol">
-          <span className="slider-tag">• Services</span>
+          <span className="slider-tag">Services</span>
 
           <h1>
             Digital Systems

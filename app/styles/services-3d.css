@@ -259,6 +259,7 @@
 }
 @media (max-width: 1555px) {
   .right-text-services {
+    bottom: 17%;
     width: 35%;
   }
 }
@@ -287,6 +288,11 @@
   .right-text-services h1 {
     font-size: 2.5rem;
     line-height: 109%;
+  }
+}
+@media (max-width:1300px){
+  .right-text-services {
+    bottom: 19%;
   }
 }
 @media (max-width: 1200px) {
@@ -322,7 +328,7 @@
   }
   .right-text-services {
     width: 94%;
-    bottom: 10%;
+    bottom: 12%;
     right: 15px;
   }
   .right-text-services h1 {

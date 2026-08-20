@@ -132,6 +132,47 @@ background: #fff;
   display: block;
 }
 
+/* Centered over the video, faded/scaled in via GSAP as the grow tween
+   nears completion (see AboutHero.jsx) — opacity/scale/pointer-events
+   are all set inline by that tween (pointer-events flips to "auto" only
+   once actually visible, so it can't intercept clicks while still
+   faded out at opacity 0), so only static positioning/appearance lives
+   here. A real <button> (toggles the video's own play/pause on click),
+   not a decorative element — the plain <img> inside it is the visual
+   triangle glyph only. */
+.aboutHero-playBtn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 8;
+}
+
+.aboutHero-playBtn img {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+
+/* Paused: keep the button fully visible/solid regardless of the grow
+   tween's own scroll-linked opacity (e.g. scrolled back up after
+   pausing) so there's always an obvious way to resume. */
+.aboutHero-playBtn--paused {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
 @media (max-width: 1620px) {
   .aboutHero-headingCol h1 {
     font-size: clamp(1.75rem, 4.4vw, 85px);
@@ -149,9 +190,9 @@ background: #fff;
 @media (max-width: 900px) {
   .aboutHero-tag {
     margin-bottom: 7%;
+    font-size: 0.7rem;
     color: #fff;
     padding: 0.3rem 0.8rem;
-    font-size: 0.7rem;
     background-color: #000;
     border-radius: 20rem;
   }

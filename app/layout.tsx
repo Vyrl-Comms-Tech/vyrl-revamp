@@ -4,12 +4,13 @@ import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
 import "./styles/heromodel-section.css";
-import { ViewTransitions } from "next-view-transitions";
+import "./styles/page-transition.css";
 import Navbar from "@/app/components/layout/Navbar";
 import SmoothScroll from "@/app/components/layout/SmoothScroll";
 import PreloaderGate, {
   preloaderSkipScript,
 } from "@/app/components/layout/PreloaderGate";
+import PageTransitionOverlay from "@/app/components/layout/PageTransitionOverlay";
 import Chatbot from "@/app/components/layout/Chatbot";
 import FluidBackground from "@/app/components/layout/FluidBackgroundLoader";
 
@@ -59,26 +60,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ViewTransitions>
-      <html lang="en" className={`${laygrotesk.variable} h-full antialiased`}>
-        <body className="min-h-full">
-        
-          {/* <Script
-            id="preloader-skip-check"
-            strategy="beforeInteractive"
-            dangerouslySetInnerHTML={{ __html: preloaderSkipScript }}
-          /> */}
-          {/* <PreloaderGate /> */}
-          {/* <FluidBackground /> */}
-          <SmoothScroll />
-          {/* <Header /> */}
-          <Navbar />
-          {children}
-        
-          <GlobalFooter />
-          <Chatbot />
-        </body>
-      </html>
-    </ViewTransitions>
+    <html lang="en" className={`${laygrotesk.variable} h-full antialiased`}>
+      <body className="min-h-full">
+
+        <Script
+          id="preloader-skip-check"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: preloaderSkipScript }}
+        />
+        <PreloaderGate />
+        {/* <FluidBackground /> */}
+        <SmoothScroll />
+        {/* <Header /> */}
+        <Navbar />
+        {children}
+
+        <GlobalFooter />
+        <Chatbot />
+        <PageTransitionOverlay />
+      </body>
+    </html>
   );
 }

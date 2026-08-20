@@ -322,7 +322,7 @@ function VyrlAbout() {
         tl.to(
           captionRef.current,
           {
-            y: 60,
+            y: 20,
             opacity: 0,
             ease: "none",
             duration: 0.6,
@@ -452,7 +452,7 @@ function VyrlAbout() {
 
         <div className="vyrl-section-about-image" ref={imageRef}>
           <div className="vyrl-section-about-image-crop">
-            <Image src="/services1.jpg" alt="" fill className="object-cover" sizes="634px" />
+            <Image src="/vyrl-about1.jpg" alt="" fill className="object-cover" sizes="634px" />
           </div>
           <p className="vyrl-section-about-caption" ref={captionRef}>
             Our clients work with us for more than deliverables. They come to

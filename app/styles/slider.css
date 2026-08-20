@@ -1,19 +1,7 @@
 .banner {
-  /* height: auto everywhere — the box sizes itself to its actual content
-     (heading + text + carousel) instead of a per-breakpoint vh/min-height
-     guess. Those guesses assumed a content height that didn't actually
-     match at every width, which is what cut cards off on some screens
-     and left huge empty padding on others. Vertical rhythm is controlled
-     entirely by the padding below, which scales smoothly with viewport
-     via clamp() instead of jumping between fixed values per breakpoint. */
+
   height: auto;
-  /* Bottom padding is bigger than the top: the cards are absolutely
-     positioned and 3D-tilted (rotateX + large translateZ), so they
-     visually extend well past .slider's own small flat layout box —
-     height: auto only accounts for that flat box, not how far the
-     tilted cards actually render below it. Without this extra room the
-     cards get cut right at the container edge with no breathing space
-     underneath. */
+
   padding: clamp(4rem, 9vw, 10rem) 3% clamp(11rem, 24vw, 24rem);
   width: 100%;
   text-align: center;
@@ -40,9 +28,13 @@
 }
 
 .slider-tag {
-  color: #000;
+  color: #fff;
   font-size: 0.95rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.75rem; color: #fff;
+    padding: 0.3rem 0.8rem;
+    background-color: #000;
+    border-radius: 20rem;
+  
 }
 
 .slider-headingCol h1 {
@@ -177,6 +169,6 @@
        lower this further to tighten the gap even more, or raise it back
        toward 2.39 to widen it. */
     --ring-multiplier: 1.7;
-    scale: 0.85;
+    scale: 0.94;
   }
 }

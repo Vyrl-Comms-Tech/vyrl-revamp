@@ -10,7 +10,7 @@ import { SplitText } from "gsap/SplitText";
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const MODEL_JSON_PATH = "/Main Scxtion.json";
-const VIDEO_PATH = "/banda -v_compressed.mp4";
+const VIDEO_PATH = "/shoreel.mp4";
 
 export default function HeroModelSection() {
   const sectionRef = useRef(null);

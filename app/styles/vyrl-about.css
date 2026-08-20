@@ -88,8 +88,13 @@
   margin-top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;
-  max-width: 550px;
+  /* Fixed px, not a % of the parent — .vyrl-section-about-image (this
+     caption's positioning parent) is the box the scroll-driven GSAP
+     tween grows from 634px up to 95vw (see VyrlAbout.jsx), so a
+     percentage width here was shrinking/growing right along with it
+     instead of staying put at its own natural reading width. */
+  width: 550px;
+  max-width: 90vw;
   margin-bottom: 0;
   color: #fff;
   text-align: center;
@@ -102,7 +107,7 @@
   height: 100vh;
   background-color: transparent;
   position: absolute;
-  top: 34vh;
+  top: 28vh;
   left: 0;
   z-index: 10;
   pointer-events: none;

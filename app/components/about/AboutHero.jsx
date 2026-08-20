@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -17,6 +17,26 @@ const AboutHero = () => {
   const imageWrapRef = useRef(null);
   const placeholderRef = useRef(null);
   const spacerRef = useRef(null);
+  const playBtnRef = useRef(null);
+  const videoRef = useRef(null);
+  // Video autoplays/loops muted by default (see the <video> below) — the
+  // play button is purely a visual cue at rest, but once clicked it
+  // becomes a real toggle: pause on click, and clicking again (now
+  // showing the same icon, since paused state also keeps it visible)
+  // resumes play.
+  const [isPlaying, setIsPlaying] = useState(true);
+
+  const togglePlay = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      video.play();
+      setIsPlaying(true);
+    } else {
+      video.pause();
+      setIsPlaying(false);
+    }
+  };
 
   useGSAP(
     () => {
@@ -209,28 +229,59 @@ const AboutHero = () => {
             // a fixed viewport-relative distance, can't collapse like that.
             const isMobile = window.innerWidth <= 900;
 
+            // Play button starts hidden (see the gsap.set right below)
+            // and only fades/scales in once the video is nearly at full
+            // size — driven directly off this same grow tween's own
+            // scroll progress (last 25%, i.e. progress 0.75 -> 1) rather
+            // than a second independent ScrollTrigger, so it can never
+            // drift out of sync with the video actually reaching "full".
+            const playBtn = playBtnRef.current;
+            if (playBtn) {
+              gsap.set(playBtn, { opacity: 0, scale: 0.6 });
+            }
+
             tween = gsap.to(imageWrap, {
               ...flip,
               ease: "none",
-              scrollTrigger: isMobile
-                ? {
-                    // start is offset past "top top" (not at 0) so a
-                    // small initial scroll does nothing — the grow only
-                    // kicks in once the user has scrolled a bit, then
-                    // takes a longer, slower distance (400px) to finish
-                    // instead of snapping shut almost immediately.
-                    trigger: container,
-                    start: "top+=100 top",
-                    end: "+=400",
-                    scrub: 1,
-                  }
-                : {
-                    trigger: top,
-                    start: "bottom bottom",
-                    endTrigger: spacer,
-                    end: "bottom-=30 bottom",
-                    scrub: 0.5,
-                  },
+              scrollTrigger: {
+                ...(isMobile
+                  ? {
+                      // start is offset past "top top" (not at 0) so a
+                      // small initial scroll does nothing — the grow only
+                      // kicks in once the user has scrolled a bit, then
+                      // takes a longer, slower distance (400px) to finish
+                      // instead of snapping shut almost immediately.
+                      trigger: container,
+                      start: "top+=100 top",
+                      end: "+=400",
+                      scrub: 1,
+                    }
+                  : {
+                      trigger: top,
+                      start: "bottom bottom",
+                      endTrigger: spacer,
+                      end: "bottom-=30 bottom",
+                      scrub: 0.5,
+                    }),
+                onUpdate: (self) => {
+                  if (!playBtn) return;
+                  const revealProgress = gsap.utils.clamp(
+                    0,
+                    1,
+                    (self.progress - 0.75) / 0.25,
+                  );
+                  gsap.set(playBtn, {
+                    opacity: revealProgress,
+                    scale: 0.6 + revealProgress * 0.4,
+                    // Only clickable once actually visible — at
+                    // revealProgress 0 it's sitting invisible (opacity
+                    // 0) directly over the video, and without this it'd
+                    // still intercept clicks meant for scrolling/other
+                    // content behind it the whole time before that.
+                    pointerEvents: revealProgress > 0 ? "auto" : "none",
+                  });
+                },
+              },
             });
 
             ScrollTrigger.refresh();
@@ -272,7 +323,7 @@ const AboutHero = () => {
               are here to understand what your brand is trying to become  then
               build the digital system that helps it get there.
             </p>
-             <VyrlCtaButton label="let's get in touch" href="/contact-us" className="vyrl-cta--solid" />
+             <VyrlCtaButton label="lets get in touch" href="/contact-us" className="vyrl-cta--solid" />
           </div>
 
           <div className="aboutHero-headingCol">
@@ -290,9 +341,18 @@ const AboutHero = () => {
 
       <div className="aboutHero-imageWrap" ref={imageWrapRef}>
         {/* <img src="/img2.avif" alt="" /> */}
-        <video muted loop autoPlay playsInline>
+        <video ref={videoRef} muted loop autoPlay playsInline>
           <source src="https://res.cloudinary.com/drwzstxy2/video/upload/v1785318296/From_Klickpin.com-_Bookmark_this_guide_to_budget-friendly_playroom_organization_ideas_that_bring_style_function_and_personality_together_with_real_wawftb.mp4" />
         </video>
+        <button
+          type="button"
+          className={`aboutHero-playBtn${isPlaying ? "" : " aboutHero-playBtn--paused"}`}
+          ref={playBtnRef}
+          onClick={togglePlay}
+          aria-label={isPlaying ? "Pause video" : "Play video"}
+        >
+          <img src="/play-icon.png" alt="" aria-hidden="true" />
+        </button>
       </div>
     </div>
   );

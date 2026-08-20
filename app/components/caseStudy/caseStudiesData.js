@@ -52,7 +52,7 @@ export const caseStudies = {
       "/sanam4.avif",
     ],
     panel8Image: "/sanam5.avif",
-    infoHeading: "information",
+    infoHeading: "Information",
     description:
       "Sanam Cars is a premium car dealership offering a curated selection of new and pre-owned vehicles, backed by transparent pricing and a customer-first buying experience. The brand is known for pairing modern showroom experiences with knowledgeable, no-pressure sales guidance.",
     creditsTitle: "Credits",

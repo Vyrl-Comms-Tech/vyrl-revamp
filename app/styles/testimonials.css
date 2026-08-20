@@ -7,6 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* margin-bottom: 50px; */
 }
 
 .testimonial-card {
@@ -16,7 +17,7 @@
   justify-content: center;
   user-select: none;
   align-items: center;
-  margin-top: clamp(6rem, 18vh, 10rem);
+  margin-top: clamp(6rem, 18vh, 10rem) !important;
   width: 400px;
   height: 600px;
   overflow: hidden;
@@ -122,9 +123,21 @@
   inset: 0;
   opacity: 0;
 }
-@media (max-width:1500px){
-  .clients-testimonial{
-    /* height: 150vh; */
+@media (max-width: 1500px) {
+  .clients-testimonial {
+    margin-bottom: 10%;
+  }
+  .testimonial-card {
+    height: 550px;
+  }
+}
+@media (max-width:1400px){
+  .testimonial-card{
+    margin-top: 30vh !important;
+    height: 525px;
+  }
+  .card-inner-testi{
+    bottom: 21%;
   }
 }
 

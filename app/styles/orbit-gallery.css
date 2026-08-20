@@ -78,6 +78,13 @@
     transition: none;
   }
 }
+
+@media (max-width:1500px){
+  .heading-before-footer h2{
+    font-size: 2.5rem;
+  }
+}
+
 @media (max-width: 800px) {
   #footer-mble-hide {
     display: none;

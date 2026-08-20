@@ -36,7 +36,7 @@
 .hs-text-inner {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 40px;
 }
 

@@ -66,6 +66,13 @@ const DEFAULT_IMAGES = [
 ];
 
 const MOBILE_BREAKPOINT = 800;
+// Desktop's 540/320 orbit radius reads oversized on laptop-range
+// screens (the ring pushes cards close to/past the viewport edge at
+// narrower widths still above the mobile breakpoint) — this tier scales
+// it down, roughly the midpoint between mobile's 220/190 and desktop's
+// 540/320, same "laptop gets its own smaller-than-desktop step" pattern
+// Testimonials.jsx's counterOffsetX uses at the same 1500px cutoff.
+const LAPTOP_BREAKPOINT = 1500;
 const VELOCITY_TO_RADIANS = 0.00003;
 
 export default function OrbitGallery({
@@ -113,10 +120,14 @@ export default function OrbitGallery({
       const cardCount = cards.length;
 
       function getRadiusX() {
-        return window.innerWidth < MOBILE_BREAKPOINT ? 220 : 540;
+        if (window.innerWidth < MOBILE_BREAKPOINT) return 220;
+        if (window.innerWidth <= LAPTOP_BREAKPOINT) return 550;
+        return 540;
       }
       function getRadiusY() {
-        return window.innerWidth < MOBILE_BREAKPOINT ? 190 : 320;
+        if (window.innerWidth < MOBILE_BREAKPOINT) return 190;
+        if (window.innerWidth <= LAPTOP_BREAKPOINT) return 255;
+        return 320;
       }
 
       // Driven by the pin timeline below, 1 → 0 as it scrubs through.

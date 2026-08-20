@@ -18,8 +18,8 @@ const page = () => {
       <AboutHero />
       <AboutText />
       <LazySection>
-        <AboutUsStack />
-        <AboutUsStackMobile />
+      <AboutUsStack />
+      <AboutUsStackMobile />
       </LazySection>
       {/* <Logos /> */}
       {/* <LazySection>

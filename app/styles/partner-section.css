@@ -163,10 +163,11 @@
   }
 }
 
-/* =========================
-   TABLET
-   ========================= */
-
+@media (max-width:1500px){
+  .partner-logo{
+    max-height: 43px;
+  }
+}
 @media (max-width: 900px) {
   .partners-section {
     padding: 4rem 3vw;

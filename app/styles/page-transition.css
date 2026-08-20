@@ -1,0 +1,59 @@
+/* Block-grid page transition overlay — see PageTransitionOverlay.jsx
+   for the DOM this styles and pageTransition.js for the GSAP driving
+   it. Ported 1:1 from the plain HTML/CSS reference: fixed full-
+   viewport, two stacked rows of five blocks each, z-index above
+   everything else on the page.
+   9998 (this app's previous highest, .pre-loader/.cursor-follow) was
+   NOT actually above everything — .footer (footer.css) sits at
+   99999, well above it, so navigating away from a page whose footer
+   is on screen let the footer's own content paint through the wipe
+   instead of being covered by it (the black rectangle looked
+   partial/skewed with the destination page's footer bleeding through
+   around it). 999999 clears every z-index in the app, including
+   .footer's 99999 and .pre-loader's 9999 — the one deliberate
+   exception is .menu-box's 99999999999 !important, but that's just
+   the mobile hamburger icon's small tap-target, not a full-screen
+   layer that could visually leak through a wipe the way .footer did. */
+.page-transition {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  z-index: 999999;
+  pointer-events: none;
+}
+
+.page-transition-row {
+  flex: 1;
+  display: flex;
+}
+
+/* Row 1 blocks scale from their top edge, row 2 from their bottom —
+   together the two rows meet/part at the vertical center of the
+   screen instead of both sweeping from the same edge. */
+.page-transition-row--1 .page-transition-block {
+  transform-origin: top;
+}
+
+.page-transition-row--2 .page-transition-block {
+  transform-origin: bottom;
+}
+
+/* Resting state is HIDDEN (scaleY: 0), not covering the screen — this
+   app already has its own separate first-load preloader (PreLoader1,
+   an SVG draw/morph animation, see PreloaderGate.tsx) that owns
+   revealing the very first page. The reference implementation's own
+   resting state was scaleY(1)/covering, reveal-on-DOMContentLoaded,
+   because IT had no separate preloader of its own — this app does, so
+   this grid only needs to activate for client-side route changes
+   after that first load, never on it. */
+.page-transition-block {
+  flex: 1;
+  background-color: #000;
+  transform: scaleY(0);
+  will-change: transform;
+  visibility: hidden;
+}

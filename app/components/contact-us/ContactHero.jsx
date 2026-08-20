@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import "../../styles/contact-hero.css";
 import "../../styles/cta.css";
 import Link from "next/link";
+import VyrlCtaButton from "../layout/VyrlCtaButton";
 
 const SERVICE_TAGS = [
   "   Web Development",
@@ -192,43 +193,9 @@ const ContactHero = () => {
               <input type="text" placeholder="Message" />
             </div>
 
-            <div className="cta-btn-container">
-              <button type="submit" className="cta-btn cta-button-white">
-                <div className="cta-btn-vid">
-                  <video muted loop autoPlay playsInline>
-                    <source src="/bg-v-compressed.mp4" />
-                  </video>
-                </div>
-                <div className="cta-arrow-box cta-arrow-box--before">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="15"
-                    height="18"
-                    viewBox="0 0 15 18"
-                    fill="none"
-                  >
-                    <path
-                      d="M10.3213 0.000213146L1.27547e-05 4.4884L0.64805 5.937L8.47908 2.53785L2.7051 17.4253L4.19683 18.0038L9.97081 3.11641L13.462 10.9068L14.9174 10.274L10.3213 0.000213146Z"
-                      fill="#000"
-                    />
-                  </svg>
-                </div>
-                <p className="cta-btn-label">Send Now</p>
-                <div className="cta-arrow-box cta-arrow-box--after">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="15"
-                    height="18"
-                    viewBox="0 0 15 18"
-                    fill="none"
-                  >
-                    <path
-                      d="M10.3213 0.000213146L1.27547e-05 4.4884L0.64805 5.937L8.47908 2.53785L2.7051 17.4253L4.19683 18.0038L9.97081 3.11641L13.462 10.9068L14.9174 10.274L10.3213 0.000213146Z"
-                      fill="#000"
-                    />
-                  </svg>
-                </div>
-              </button>
+            <div className="">
+            <VyrlCtaButton label="Send Now" href="/contact-us" className="vyrl-cta--invert" />
+            
             </div>
           </form>
         </div>

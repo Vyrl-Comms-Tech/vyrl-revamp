@@ -38,7 +38,47 @@ export default function LazySection({
     );
 
     observer.observe(node);
-    return () => observer.disconnect();
+
+    // Belt-and-suspenders against a real race: if the page's layout is
+    // still settling at the exact moment observer.observe() runs (web
+    // fonts still loading and reflowing earlier sections, other
+    // LazySections above this one still expanding from their own
+    // placeholder height, etc.), this placeholder's rect can shift
+    // into/out of the observer's rootMargin between when the browser
+    // computed its initial intersection state and when observe() was
+    // actually called — IntersectionObserver only reports on genuine
+    // rect *changes* after that point, so a placeholder that was
+    // already within rootMargin the whole time, but only settled there
+    // milliseconds after observe() ran, can end up with no observer
+    // callback firing at all until the user's next real scroll nudges
+    // it. Reproduced on a production static-export build: every
+    // LazySection below the fold stayed stuck on its placeholder
+    // (0-height div) through the entire initial load — confirmed by
+    // manually scrolling once, which is exactly the kind of event that
+    // would newly trigger a callback the observer otherwise missed.
+    // requestAnimationFrame lets one paint happen first so this reads
+    // the settled rect, not whatever existed the instant observe() ran.
+    const rafId = requestAnimationFrame(() => {
+      if (isNear) return;
+      const rect = node.getBoundingClientRect();
+      // rootMargin is only ever "<px> 0px" in practice here (see the
+      // default above and every call site) — parse just the vertical
+      // component rather than building a full CSS margin parser for a
+      // fallback check.
+      const marginPx = parseInt(rootMargin, 10) || 0;
+      const nearViewport =
+        rect.bottom >= -marginPx &&
+        rect.top <= window.innerHeight + marginPx;
+      if (nearViewport) {
+        setIsNear(true);
+        observer.disconnect();
+      }
+    });
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      observer.disconnect();
+    };
   }, [isNear, rootMargin]);
 
   // Mounting the real section changes the document's total scrollable

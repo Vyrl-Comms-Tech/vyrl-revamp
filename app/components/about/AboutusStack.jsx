@@ -689,6 +689,30 @@ export default function AboutUsStack() {
           });
         }
 
+        // GSAP/ScrollTrigger are loaded via dynamic import() at the top
+        // of this effect (unlike every other section, which imports them
+        // statically) — so this pin isn't actually created until that
+        // async chunk resolves, which happens later, and less
+        // predictably, in production (a real network fetch for a
+        // separate chunk) than in dev (already bundled). LazySection's
+        // own ScrollTrigger.refresh() (see LazySection.tsx) fires on a
+        // fixed one-rAF delay after this component starts mounting —
+        // there's no guarantee that lands after this async pin actually
+        // exists, so it can easily refresh too early to include it,
+        // leaving this pin's measurements (and every trigger below it on
+        // the page) stuck against whatever layout existed before this
+        // section's real height was known. That reads as exactly what
+        // showed up post-deploy: cards collapsed/overlapping instead of
+        // stacked, as if the pin's scroll distance were computed against
+        // a near-zero-height section. Refreshing again here, once this
+        // pin (and everything else in this ctx) actually exists, closes
+        // that gap — deferred one frame so the pin's own DOM
+        // (cards/lines/counters already gsap.set above) has settled
+        // before ScrollTrigger measures it.
+        requestAnimationFrame(() => {
+          if (isMounted) ScrollTrigger.refresh();
+        });
+
         // The white->black backdrop handoff into the next section (the
         // "Our Clients" partner logos) used to live here as a
         // document.body tween — but this section is pinned while its

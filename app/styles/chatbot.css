@@ -149,7 +149,7 @@
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(12, 12, 16, 0.85) 45%,
+    rgba(0, 0, 0, 0.85) 45%,
     #0c0c10 100%
   );
 }

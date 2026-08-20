@@ -137,7 +137,7 @@
   overflow: hidden;
 }
 
-.cardsStack {
+/* .cardsStack {
   width: 60.17vw;
   height: 80vh !important;
   overflow: hidden;
@@ -148,7 +148,7 @@
   align-items: center;
   background-color: #000;
   will-change: transform, opacity;
-}
+} */
 
 /* Resting position for the not-yet-active cards, before GSAP takes over
    on scroll — kept as a class (rather than an inline style) so it can be

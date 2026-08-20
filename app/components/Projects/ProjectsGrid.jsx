@@ -2,12 +2,11 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useTransitionRouter } from "next-view-transitions";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
-import { slideInOut, killAllPins } from "../layout/pageTransition";
+import { animateTransition, killAllPins } from "../layout/pageTransition";
 import "../../styles/projects-grid.css";
 
 gsap.registerPlugin(ScrollTrigger, Flip);
@@ -26,15 +25,16 @@ const FILTERS = [
 // needing separate row wrappers.
 const PROJECTS = [
   {
-    id: "banda",
-    title: "BANDA",
-    category: "real-estate",
+    id: "sanam-cars",
+    title: "SANAM CARS",
+    category: "automotive",
     type: "video",
-    src: "/banda -v_compressed.mp4",
-    poster: "/banda -v_compressed.avif",
-    href: "/banda",
-    tags: ["Property Developer", "Luxury Homes"],
+    src: "/sanam-v_compressed.mp4",
+    poster: "/sanam-v_compressed.avif",
+    href: "/sanamcars",
+    tags: ["Car Dealership", "Premium Vehicles"],
   },
+
   {
     id: "lala-darbar",
     title: "LALA DARBAR",
@@ -64,20 +64,20 @@ const PROJECTS = [
     tags: ["Property Developer", "Urban Living"],
   },
   {
-    id: "sanam-cars",
-    title: "SANAM CARS",
-    category: "automotive",
+    id: "banda",
+    title: "BANDA",
+    category: "real-estate",
     type: "video",
-    src: "/sanam-v_compressed.mp4",
-    poster: "/sanam-v_compressed.avif",
-    href: "/sanamcars",
-    tags: ["Car Dealership", "Premium Vehicles"],
+    src: "/banda -v_compressed.mp4",
+    poster: "/banda -v_compressed.avif",
+    href: "/banda",
+    tags: ["Property Developer", "Luxury Homes"],
   },
 ];
 const FILTER_VALUES = FILTERS.map((f) => f.value);
 
 export default function ProjectsGrid() {
-  const router = useTransitionRouter();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const sectionRef = useRef(null);
   const cardRefs = useRef(new Map()); // id -> card DOM node
@@ -201,6 +201,94 @@ export default function ProjectsGrid() {
     };
   }, []);
 
+  // --- Background: black by default, handing off to white right before
+  // this section ends -----------------------------------------------------
+  // ProjectsGrid is the first section on /projects (see projects/page.jsx)
+  // and its own content (.heroProject, card text — see projects-grid.css)
+  // is already styled black-bg/white-text, so unlike Slider.jsx (which
+  // starts white and scrubs to black over its own scroll distance) this
+  // section just needs document.body black immediately, no scroll needed.
+  // Testimonials follows right after and is white-bg by default, so the
+  // handoff only needs to run the other direction, timed to land right as
+  // this section is about to end — same scrubbed-fade idiom Slider.jsx
+  // uses for its own body-color handoff, just white instead of black and
+  // anchored to the section's tail instead of its front half.
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    gsap.set(document.body, { background: "#000000" });
+
+    let navbarAttempts = 0;
+    let cancelled = false;
+    const addNavbarDarkenTween = () => {
+      if (cancelled) return;
+      const navBar = document.querySelector(".nav-bar");
+      const menuDropdown = document.querySelector(".menu-dropdown");
+      if (navBar && menuDropdown) {
+        gsap.set([navBar, menuDropdown], { backgroundColor: "#0a0a0a" });
+        return;
+      }
+      navbarAttempts += 1;
+      if (navbarAttempts < 30) requestAnimationFrame(addNavbarDarkenTween);
+    };
+    addNavbarDarkenTween();
+
+    const ctx = gsap.context(() => {
+      // Trigger spans the section's full scroll distance; the fade
+      // itself only runs across the timeline's last 25% (0.75 -> 1, via
+      // the dummy filler tween before it — same "stretch the timeline so
+      // the real tween only occupies part of the scrub range" trick
+      // Slider.jsx documents for its own black fade), so white is only
+      // fully reached right as the section is about to end, not
+      // partway through it.
+      const bodyTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      bodyTl.to({}, { duration: 0.75 });
+      bodyTl.to(
+        document.body,
+        { background: "#ffffff", duration: 0.25, ease: "none" },
+        0.75,
+      );
+
+      let lightenAttempts = 0;
+      const addNavbarLightenTween = () => {
+        if (cancelled) return;
+        const navBar = document.querySelector(".nav-bar");
+        const menuDropdown = document.querySelector(".menu-dropdown");
+        if (navBar && menuDropdown) {
+          bodyTl.to(
+            [navBar, menuDropdown],
+            {
+              backgroundColor: "rgba(255, 255, 255, 0.05)",
+              ease: "power2.inOut",
+            },
+            0.75,
+          );
+          return;
+        }
+        lightenAttempts += 1;
+        if (lightenAttempts < 30) requestAnimationFrame(addNavbarLightenTween);
+      };
+      addNavbarLightenTween();
+    }, sectionRef);
+
+    return () => {
+      cancelled = true;
+      ctx.revert();
+      // Don't leak black bg to other routes — same cleanup Slider.jsx/
+      // Testimonials.jsx use for their own document.body tweens.
+      gsap.set(document.body, { clearProps: "background" });
+    };
+  }, []);
+
   // --- Filter: re-run whenever the active category changes --------------
   // Matching cards flip to the front of the grid and reflow into place
   // (via Flip.getState -> mutate order/opacity -> Flip.from) instead of
@@ -245,7 +333,11 @@ export default function ProjectsGrid() {
     cardEls.forEach((card) => {
       const isVisible = cardIsActive(card);
       card.style.order =
-        activeFilter === "all" ? "0" : isVisible ? String(orderMap.get(card)) : "999";
+        activeFilter === "all"
+          ? "0"
+          : isVisible
+            ? String(orderMap.get(card))
+            : "999";
       card.style.opacity = isVisible ? "1" : "0.3";
       card.style.pointerEvents = isVisible ? "auto" : "none";
       card.style.cursor = isVisible ? "pointer" : "default";
@@ -279,10 +371,15 @@ export default function ProjectsGrid() {
 
   const handleCardClick = (project) => () => {
     if (project.href) {
-      // Must run before router.push kicks off the view transition — see
-      // killAllPins' own comment in pageTransition.js for why.
-      killAllPins();
-      router.push(project.href, { onTransitionReady: slideInOut });
+      // killAllPins() must run AFTER the blocks have fully covered the
+      // screen, not before — see the matching comment in
+      // PageTransitionLink.tsx for why (killing a pin un-pins it
+      // instantly and visibly reflows the page before the wipe has
+      // finished covering it).
+      animateTransition(project.href).then(() => {
+        killAllPins();
+        router.push(project.href);
+      });
     }
   };
 
