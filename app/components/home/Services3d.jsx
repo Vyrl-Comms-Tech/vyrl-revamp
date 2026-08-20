@@ -7,7 +7,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitType from "split-type";
 import "../../styles/services-3d.css";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import CtaButton from "../layout/cta";
 import { loadGLTF } from "@/app/lib/glbCache";
 import {
   getSharedRenderer,

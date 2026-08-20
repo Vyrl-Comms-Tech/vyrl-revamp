@@ -187,7 +187,7 @@ const Slider = () => {
     // );
     bodyTl.to(
       document.body,
-      { background: "#000000", duration: 0.5, ease: "none" },
+      { "--bodybg": "#000000", duration: 0.5, ease: "none" },
       0,
     );
     if (headingCol) {
@@ -210,10 +210,11 @@ const Slider = () => {
       bodyTl.scrollTrigger?.kill();
       bodyTl.kill();
       // Same cleanup Work.jsx/Testimonials.jsx/AboutPartnerSection.jsx use
-      // for their own document.body tweens: strip the inline background
-      // this timeline set so it doesn't leak black into whatever route
-      // gets navigated to next (their bodies don't expect it).
-      gsap.set(document.body, { clearProps: "background" });
+      // for their own document.body tweens: strip the --bodybg custom
+      // property (see globals.css) this timeline set so it doesn't leak
+      // black into whatever route gets navigated to next (their bodies
+      // don't expect it).
+      gsap.set(document.body, { clearProps: "--bodybg" });
     };
   }, []);
 

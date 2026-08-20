@@ -190,7 +190,7 @@ function VyrlAbout() {
       // "about to end", not the middle of it.
       bodyTl.to(
         document.body,
-        { background: "#fcfcfc", duration: 0.2, ease: "none" },
+        { "--bodybg": "#fcfcfc", duration: 0.2, ease: "none" },
         0.8,
       );
 
@@ -235,6 +235,19 @@ function VyrlAbout() {
     return () => {
       isMountedRef.current = false;
       ctx.revert();
+      // ctx.revert() alone restores document.body's background to
+      // whatever it was immediately BEFORE this timeline's black -> white
+      // tween ran — which on /services is black (Slider.jsx set it going
+      // in) — not to a genuinely cleared/default state. Without this,
+      // leaving /services (this section's own bodyTl unmounting) was
+      // actively re-blackening the page being navigated TO, regardless
+      // of what that next page actually needed (reported: navigating
+      // /services -> home showed home stuck black-bg/black-text). Same
+      // explicit clearProps every other document.body tween in this
+      // app already does on unmount (Slider.jsx, Work.jsx,
+      // Testimonials.jsx, ProjectsGrid.jsx, AboutPartnerSection.jsx) —
+      // this effect was the one place that pattern got missed.
+      gsap.set(document.body, { clearProps: "--bodybg" });
     };
   }, []);
 
@@ -388,7 +401,7 @@ function VyrlAbout() {
       });
       bodyTl.to(
         document.body,
-        { background: "#fcfcfc", duration: 0.5, ease: "none" },
+        { "--bodybg": "#fcfcfc", duration: 0.5, ease: "none" },
         0,
       );
  
@@ -434,6 +447,12 @@ function VyrlAbout() {
     return () => {
       isMountedRef.current = false;
       ctx.revert();
+      // Same reasoning as the mobile effect's identical cleanup above —
+      // ctx.revert() alone restores document.body to its pre-tween
+      // value (black, on /services), not a cleared default. Without
+      // this, leaving /services via this (desktop) effect unmounting
+      // was just as capable of re-blackening whatever page came next.
+      gsap.set(document.body, { clearProps: "--bodybg" });
     };
   }, []);
 

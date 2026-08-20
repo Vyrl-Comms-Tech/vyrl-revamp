@@ -46,11 +46,6 @@ export default function PreloaderGate() {
       document.documentElement.classList.contains(PRELOADER_SKIP_CLASS),
   );
 
-  // Same scroll-lock behavior PreLoader.tsx used to own internally: lock
-  // scroll (and reset to top) for as long as the preloader is actually
-  // going to play, but skip the lock entirely on repeat page loads this
-  // session since those replays are invisible and shouldn't block
-  // scrolling.
   useEffect(() => {
     if (isDone || skipped) {
       document.documentElement.classList.remove("preloader-active");
@@ -75,35 +70,14 @@ export default function PreloaderGate() {
         sessionStorage.setItem(PRELOADER_SESSION_KEY, "1");
         setIsDone(true);
 
-        // Every section mounted underneath while the preloader covered the
-        // screen, so their ScrollTrigger/Lenis measurements were taken
-        // against a DOM that was still settling (images/fonts loading,
-        // layout shifting under the fixed overlay). SmoothScroll only ever
-        // re-measures on pathname change, so on first load nothing corrects
-        // those stale values until the user's first scroll forces a reflow
-        // — which is what showed up as a tiny/broken navbar and a frozen
-        // page until scrolling into the second section.
         window.dispatchEvent(new Event("preloader:finish"));
       }}
     />
   );
 
-  // return (
-  //   <Preloader
-  //     onFinish={() => {
-  //       sessionStorage.setItem(PRELOADER_SESSION_KEY, "1");
-  //       setIsDone(true);
-  //       window.dispatchEvent(new Event("preloader:finish"));
-  //     }}
-  //   />
-  // );
+
 }
 
-// Rendered as a <script> in the document <head> via dangerouslySetInnerHTML
-// (see layout.tsx) — runs synchronously before anything paints. If this
-// session already saw the preloader, it stamps a class on <html> that
-// globals.css uses to hide the preloader instantly with no transition
-// and no flash, in either direction.
 export const preloaderSkipScript = `
 (function() {
   try {

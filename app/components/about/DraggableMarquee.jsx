@@ -484,8 +484,8 @@ export default function DraggableMarquee() {
       });
       colorTl.fromTo(
         document.body,
-        { backgroundColor: "#000" },
-        { backgroundColor: "#fff", ease: "none" },
+        { "--bodybg": "#000" },
+        { "--bodybg": "#fff", ease: "none" },
         0,
       );
 
@@ -539,8 +539,15 @@ export default function DraggableMarquee() {
       ctx.revert();
       // Don't leak white bg to other routes/sections — same cleanup
       // AboutPartnerSection.jsx and Testimonials.jsx use for their own
-      // document.body tweens.
-      gsap.set(document.body, { clearProps: "backgroundColor" });
+      // document.body tweens. Every document.body tween in this app now
+      // writes to the shared --bodybg custom property (see globals.css)
+      // instead of each section picking its own inline property name —
+      // needed here since this can unmount independently of a full page
+      // navigation (e.g. browser back/forward via bfcache). Ordinary
+      // navigation is now a hard reload (see pageTransition.js's
+      // triggerNavigation()), which tears down document.body's state for
+      // free either way.
+      gsap.set(document.body, { clearProps: "--bodybg" });
     };
   }, []);
 

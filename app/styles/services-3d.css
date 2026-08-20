@@ -3,12 +3,13 @@
   width: 100vw;
   overflow-x: hidden;
   position: relative;
-  background-color: transparent;
+
+  background-color: #fff;
   z-index: 100;
 }
 
 .services-main-section--dark {
-  /* background-color: #000000; */
+  background-color: transparent;
 }
 
 /* ------------------------------

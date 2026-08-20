@@ -1,51 +1,33 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
-import { revealTransition } from "./pageTransition";
+import { useEffect } from "react";
+import { revealTransitionIfPending } from "./pageTransition";
 
-// Fixed, full-viewport grid of blocks that wipes the screen on route
-// changes — ported from a plain HTML/CSS/JS reference (5x2 grid,
-// row-1 blocks scale from their top edge, row-2 blocks scale from
-// their bottom edge, GSAP stagger animates each block's scaleY).
-// Mounted once in app/layout.tsx so it persists across every route
-// (a per-page overlay would unmount/remount on navigation, which is
-// exactly the DOM it needs to survive across to cover the swap).
+// Fixed, full-viewport grid of blocks that wipes the screen during
+// navigation — ported from a plain HTML/CSS/JS reference (5x2 grid,
+// row-1 blocks scale from their top edge, row-2 blocks scale from their
+// bottom edge, GSAP stagger animates each block's scaleY). Mounted once in
+// app/layout.tsx.
 //
-// Replaces the previous next-view-transitions-based mechanism
-// (ViewTransitions + native document.startViewTransition(), see the
-// old slideInOut in pageTransition.js) — this version animates real
-// DOM nodes directly with GSAP instead of relying on the View
-// Transitions API, so it works identically in every browser without
-// depending on that API's availability.
-//
-// The wipe-in half (animateTransition, blocks growing to cover the
-// screen) is triggered by the outgoing page's own click handler
-// (PageTransitionLink.tsx, Navbar.jsx, ProjectsGrid.jsx) right before
-// router.push. This component owns the other half: revealing the
-// grid again (scaling back down) once the NEW route has actually
-// mounted, since this overlay lives outside the routed page tree in
-// layout.tsx and never itself unmounts/remounts on navigation the way
-// the reference's single-page version did.
-//
-// Nothing runs on the very first mount (real page load, not a client
-// navigation) — the grid's own resting CSS state is already hidden
-// (see page-transition.css), and this app's separate first-load
-// preloader (PreloaderGate.tsx) owns revealing the very first page.
-// Only pathname changes AFTER that first mount are client-side route
-// changes, where this is what reveals the new page from behind
-// whatever wipe animateTransition() played.
+// Navigation itself is now a real, hard browser navigation
+// (window.location.href — see pageTransition.js's triggerNavigation()),
+// matching the old (pre-App-Router) site's PageTransition.jsx: every click
+// covers the screen, then does a genuine full-page reload, rather than a
+// Next.js client-side router.push(). That means this component's own DOM
+// is destroyed and recreated fresh on every single navigation along with
+// the rest of the page — there is no persistent SPA shell for it to react
+// to a pathname change within. Its only job now is: on mount (i.e. on
+// every page load), check whether the PREVIOUS page left a "still covering,
+// please reveal me" flag in sessionStorage (survives the hard reload,
+// unlike any JS variable) and if so, play the reveal half of the wipe.
+// revealTransitionIfPending() itself is the no-op when that flag isn't set
+// (direct load, external link, browser back/forward, or the very first
+// visit — which this app's separate PreloaderGate/Preloader1 already owns
+// revealing instead).
 export default function PageTransitionOverlay() {
-  const pathname = usePathname();
-  const isFirstRun = useRef(true);
-
   useEffect(() => {
-    if (isFirstRun.current) {
-      isFirstRun.current = false;
-      return;
-    }
-    revealTransition();
-  }, [pathname]);
+    revealTransitionIfPending();
+  }, []);
 
   const row1 = [0, 1, 2, 3, 4];
   const row2 = [0, 1, 2, 3, 4];

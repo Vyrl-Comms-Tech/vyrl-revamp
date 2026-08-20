@@ -6,7 +6,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
-import { animateTransition, killAllPins } from "../layout/pageTransition";
 import "../../styles/projects-grid.css";
 
 gsap.registerPlugin(ScrollTrigger, Flip);
@@ -217,7 +216,7 @@ export default function ProjectsGrid() {
     const section = sectionRef.current;
     if (!section) return;
 
-    gsap.set(document.body, { background: "#000000" });
+    gsap.set(document.body, { "--bodybg": "#000000" });
 
     let navbarAttempts = 0;
     let cancelled = false;
@@ -254,7 +253,7 @@ export default function ProjectsGrid() {
       bodyTl.to({}, { duration: 0.75 });
       bodyTl.to(
         document.body,
-        { background: "#ffffff", duration: 0.25, ease: "none" },
+        { "--bodybg": "#ffffff", duration: 0.25, ease: "none" },
         0.75,
       );
 
@@ -284,8 +283,10 @@ export default function ProjectsGrid() {
       cancelled = true;
       ctx.revert();
       // Don't leak black bg to other routes — same cleanup Slider.jsx/
-      // Testimonials.jsx use for their own document.body tweens.
-      gsap.set(document.body, { clearProps: "background" });
+      // Testimonials.jsx use for their own document.body tweens
+      // (all writing to the shared --bodybg custom property, see
+      // globals.css).
+      gsap.set(document.body, { clearProps: "--bodybg" });
     };
   }, []);
 
@@ -371,15 +372,16 @@ export default function ProjectsGrid() {
 
   const handleCardClick = (project) => () => {
     if (project.href) {
-      // killAllPins() must run AFTER the blocks have fully covered the
-      // screen, not before — see the matching comment in
-      // PageTransitionLink.tsx for why (killing a pin un-pins it
-      // instantly and visibly reflows the page before the wipe has
-      // finished covering it).
-      animateTransition(project.href).then(() => {
-        killAllPins();
-        router.push(project.href);
-      });
+      // Every card here links into a case-study route (see PROJECTS
+      // above), which runs its own hand-built transition (heading clone
+      // + overlay, still client-side/router.push-based — see
+      // CaseStudyInner.jsx). That owns the whole visual on the way in,
+      // so this is a plain router.push with no wipe of its own layered
+      // on top — same exclusion PageTransitionLink.tsx/Navbar.jsx apply
+      // for any other link into a case study. Every other navigation in
+      // this app (leaving this page via the navbar, footer, etc.) goes
+      // through the hard-nav wipe in pageTransition.js instead.
+      router.push(project.href);
     }
   };
 

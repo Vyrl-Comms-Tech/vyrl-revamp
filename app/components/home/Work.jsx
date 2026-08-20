@@ -42,7 +42,7 @@ const WORK_ITEMS = [
     tags: ["UIUX", "3D WEB", "AI CHATBOT"],
     image: "/sanam5.avif",
 
-    video: '/sanam-v_compressed.mp4',
+    video: "/sanam-v_compressed.mp4",
   },
   {
     id: "arabian",
@@ -76,6 +76,31 @@ export default function Work() {
     // gsap.context scopes every tween/ScrollTrigger created inside to this
     // component and guarantees clean teardown on unmount (App Router safe).
     const ctx = gsap.context(() => {
+      // Hard-set document.body's --bodybg custom property (see
+      // globals.css) to white the instant this component mounts,
+      // before anything scroll-scrubbed below ever gets a chance to
+      // evaluate. bodyTl's own trigger (further down, inside the
+      // deferred double-rAF block) is now measured correctly against
+      // settled layout — see that block's own comment — but this is a
+      // second, unconditional guarantee on top of that: no matter what
+      // scroll position the page loads/navigates in at, or whether some
+      // future change reintroduces a timing gap in the trigger
+      // measurement, this section always starts from a known white
+      // state the moment it exists, and only the scrub below ever moves
+      // it toward black from there.
+      //
+      // Targets --bodybg, not the `background` shorthand directly:
+      // every document.body tween in this app now writes to this one
+      // shared custom property instead of each section picking its own
+      // inline property name (`background` here, `backgroundColor` on
+      // /about's sections) — that mismatch was clearProps' actual
+      // conflict (clearing one property never touched a value the
+      // other had written), reported as home showing solid black
+      // immediately after navigating from /about. One property name
+      // everywhere means one clearProps call clears it, everywhere,
+      // guaranteed.
+      gsap.set(document.body, { "--bodybg": "#fff" });
+
       // ==========================================================
       // CARD REVEAL + PARALLAX + HOVER
       // ==========================================================
@@ -134,7 +159,7 @@ export default function Work() {
                   start: "top 60%",
                   end: "top 45%",
                   scrub: false,
-                  //   markers:true,
+                  // markers:true,
                 },
               });
 
@@ -293,59 +318,82 @@ export default function Work() {
                 duration: 1.2,
               });
 
+              // ==========================================================
+              // BODY BACKGROUND SWAP (triggered by the dark card)
+              // ==========================================================
+              // Moved inside this same deferred double-rAF block (was
+              // created synchronously, right after this whole if-block,
+              // outside the defer) — headingTl's own pin above reserves
+              // real extra scroll height once its pin-spacer lands
+              // (end: "+=70%" of the viewport), which only actually
+              // happens once THIS deferred callback runs. Creating
+              // bodyTl's ScrollTrigger before that pin-spacer existed
+              // measured bgBlackCardRef's "top center" position against
+              // a page that was about to grow taller, landing its
+              // trigger in the wrong place — reachable "for real" only
+              // well past where the user's actual scroll position ended
+              // up relative to it, which is what read as this section
+              // showing solid black immediately instead of scrubbing
+              // in from white. Same double-rAF reasoning
+              // AboutPartnerSection.jsx documents for its own deferred
+              // measurements: one rAF only guarantees a repaint, not
+              // that this page's own earlier pin has finished settling.
+              if (bgBlackCardRef.current) {
+                const bodyTl = gsap.timeline({
+                  scrollTrigger: {
+                    trigger: bgBlackCardRef.current,
+                    start: "top center",
+                    end: "bottom bottom",
+                    scrub: 1,
+                  },
+                });
+
+                bodyTl.to(document.body, { "--bodybg": "#000" }, 0);
+
+                // HeroModelSection.jsx darkens .nav-bar/.menu-dropdown to
+                // solid black as its centerTextHero panel comes in (their
+                // own resting default is a faint translucent white — see
+                // navbar.css). Once this section's dark card flips the
+                // page background to black to match, that same dark
+                // navbar reads as invisible against it — so this reverses
+                // it back to its whitish default in the same scrub, at
+                // the same "0" position as the body tween above, so they
+                // change together.
+                //
+                // Same lazy-lookup-with-poll pattern as
+                // HeroModelSection.jsx's own navbar tween, and for the
+                // same reason: .nav-bar/.menu-dropdown live in a sibling
+                // component (Navbar.jsx) that isn't guaranteed to have
+                // mounted yet at the exact moment this runs, and GSAP
+                // resolves a string/element target once, synchronously,
+                // when the tween is added — it won't retry later.
+                let navbarAttempts = 0;
+                const addNavbarRestoreTween = () => {
+                  if (cancelled) return;
+                  const navBar = document.querySelector(".nav-bar");
+                  const menuDropdown = document.querySelector(".menu-dropdown");
+                  if (navBar && menuDropdown) {
+                    bodyTl.to(
+                      [navBar, menuDropdown],
+                      {
+                        backgroundColor: "rgba(255, 255, 255, 0.05)",
+                        ease: "power2.inOut",
+                      },
+                      0,
+                    );
+                    return;
+                  }
+                  navbarAttempts += 1;
+                  if (navbarAttempts < 30)
+                    requestAnimationFrame(addNavbarRestoreTween);
+                };
+                addNavbarRestoreTween();
+              }
+
               ScrollTrigger.refresh();
             });
           });
         });
-      }
-
-      // ==========================================================
-      // BODY BACKGROUND SWAP (triggered by the dark card)
-      // ==========================================================
-      if (bgBlackCardRef.current) {
-        const bodyTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: bgBlackCardRef.current,
-            start: "top center",
-            end: "bottom bottom",
-            scrub: 1,
-          },
-        });
-
-        bodyTl.to(document.body, { background: "#000" }, 0);
-
-        // HeroModelSection.jsx darkens .nav-bar/.menu-dropdown to solid
-        // black as its centerTextHero panel comes in (their own resting
-        // default is a faint translucent white — see navbar.css). Once
-        // this section's dark card flips the page background to black to
-        // match, that same dark navbar reads as invisible against it —
-        // so this reverses it back to its whitish default in the same
-        // scrub, at the same "0" position as the body tween above, so
-        // they change together.
-        //
-        // Same lazy-lookup-with-poll pattern as HeroModelSection.jsx's
-        // own navbar tween, and for the same reason: .nav-bar/
-        // .menu-dropdown live in a sibling component (Navbar.jsx) that
-        // isn't guaranteed to have mounted yet at the exact moment this
-        // runs, and GSAP resolves a string/element target once,
-        // synchronously, when the tween is added — it won't retry later.
-        let attempts = 0;
-        const addNavbarRestoreTween = () => {
-          if (cancelled) return;
-          const navBar = document.querySelector(".nav-bar");
-          const menuDropdown = document.querySelector(".menu-dropdown");
-          if (navBar && menuDropdown) {
-            bodyTl.to(
-              [navBar, menuDropdown],
-              { backgroundColor: "rgba(255, 255, 255, 0.05)", ease: "power2.inOut" },
-              0,
-            );
-            return;
-          }
-          attempts += 1;
-          if (attempts < 30) requestAnimationFrame(addNavbarRestoreTween);
-        };
-        addNavbarRestoreTween();
       }
 
       ScrollTrigger.refresh();
@@ -356,7 +404,7 @@ export default function Work() {
       cardRefs.current.forEach((card) => card.__cleanupHover?.());
       ctx.revert(); // kills all tweens/ScrollTriggers created above
       splitHeading?.revert(); // un-wraps the SplitText <div> spans
-      gsap.set(document.body, { clearProps: "background" }); // don't leak black bg to other routes
+      gsap.set(document.body, { clearProps: "--bodybg" }); // don't leak black bg to other routes
     };
   }, []);
 
@@ -401,7 +449,6 @@ export default function Work() {
                 <source src={item.video} type="video/mp4" />
               </video>
             )}
-
             <img
               className="card-work-cm__image"
               src={item.image}

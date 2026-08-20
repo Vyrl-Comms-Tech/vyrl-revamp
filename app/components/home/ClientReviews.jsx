@@ -401,7 +401,7 @@ function ClientReviewSection() {
             scrub: 1,
           },
         });
-        colorTl.to(document.body, { background: "#fff", ease: "none" }, 0);
+        colorTl.to(document.body, { "--bodybg": "#fff", ease: "none" }, 0);
 
         // Heading + bottom nav arrows were white-on-black; now the page
         // (and this section's own background) turns white alongside
@@ -493,7 +493,7 @@ function ClientReviewSection() {
       // would strip that black out from under it. Same guard
       // Testimonials.jsx applies to its own identical cleanup.
       if (!isServicesPage) {
-        gsap.set(document.body, { clearProps: "background" }); // don't leak white bg to other routes
+        gsap.set(document.body, { clearProps: "--bodybg" }); // don't leak white bg to other routes
       }
     };
   }, [isServicesPage]);

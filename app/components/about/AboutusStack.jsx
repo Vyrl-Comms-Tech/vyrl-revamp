@@ -465,22 +465,6 @@ export default function AboutUsStack() {
         // animation — instead of strictly after it.
         const lastCardSettleTime = lastIndex * 0.4 + 0.5;
 
-        // VyrlCtaButton (see AboutusStack.jsx's render below) has no
-        // separate arrow-badge/label elements to tween individually the
-        // way the old CtaButton-based CTA did — its white/black flip is
-        // a single CSS class (.vyrl-cta--invert, see
-        // vyrl-cta-button.css) toggled on the root .vyrl-cta element.
-        //
-        // Not GSAP's className tween ("+=vyrl-cta--invert"): that
-        // relative-value shorthand is for numeric properties, and on
-        // className it doesn't add a class — it replaces the entire
-        // class attribute with the literal string "+=vyrl-cta--invert",
-        // wiping out .vyrl-cta and .vyrl-cta--solid outright (confirmed
-        // live: className read back exactly that literal string once
-        // scrubbed past this point). A zero-duration .to() with
-        // onComplete/onReverseComplete instead calls classList.toggle
-        // directly, which stays in sync with the scrub in both
-        // directions without touching any other class already present.
         const ctaRoot = ctaRef.current?.querySelector(".vyrl-cta");
 
         timeline
@@ -746,13 +730,7 @@ export default function AboutUsStack() {
           .filter((st) => st.trigger === containerRef.current)
           .forEach((st) => st.kill());
       }
-      // Note: unlike Testimonials.jsx's own document.body tween cleanup,
-      // there's no extra gsap.set(..., { clearProps: "background" }) here
-      // — gsap is dynamically imported inside the async block above, not
-      // in scope in this cleanup closure. ctx.revert() already restores
-      // document.body's background to its pre-tween value (GSAP contexts
-      // revert every property they touched), so nothing leaks to other
-      // routes regardless.
+      
     };
   }, []);
 

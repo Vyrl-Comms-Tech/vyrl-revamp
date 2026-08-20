@@ -464,7 +464,7 @@ export default function Testimonials() {
       // that needs this fade (its body starts white and has nothing
       // upstream turning it black).
       if (!isServicesPage) {
-        introTl.to(document.body, { background: "#fff" }, 0.5);
+        introTl.to(document.body, { "--bodybg": "#fff" }, 0.5);
       }
 
       // Once document.body fades to white above, .nav-bar/.menu-dropdown's
@@ -518,7 +518,7 @@ export default function Testimonials() {
       // to Slider.jsx (see services/page.jsx), not this component;
       // clearing it here would strip that black out from under it.
       if (!isServicesPage) {
-        gsap.set(document.body, { clearProps: "background" }); // don't leak white bg to other routes
+        gsap.set(document.body, { clearProps: "--bodybg" }); // don't leak white bg to other routes
       }
     };
   }, [isServicesPage, isProjectsPage]);

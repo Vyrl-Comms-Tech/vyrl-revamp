@@ -1,55 +1,61 @@
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// GSAP's `pin: true` reparents the pinned DOM node into an auto-generated
-// pin-spacer wrapper, entirely outside React's own bookkeeping. Every
-// pinned section in this app unwraps that spacer on unmount (gsap.context's
-// ctx.revert() / ScrollTrigger instance .kill()) — that's normally enough,
-// but a route change committing React's unmount while a pin-spacer is
-// still mid-resize (or hasn't been unwrapped yet) can throw a
-// "Failed to execute 'removeChild' on 'Node'" and abort the commit
-// partway through, which is what used to show the URL changing while the
-// old page (e.g. the home hero) stayed visible underneath.
+// ============================================================================
+// HARD-NAVIGATION page transition
+// ----------------------------------------------------------------------------
+// Ported from the old (pre-Next.js-App-Router) site's PageTransition.jsx,
+// which the user asked to match: every internal navigation is a REAL browser
+// navigation (window.location.href), not a Next.js client-side router.push().
 //
-// Killing every ScrollTrigger pin closes that race for good: pin-spacers
-// are gone and their content restored to plain document flow before
-// React ever gets a chance to unmount anything. Called from every click
-// handler that navigates via the transition below (Navbar's NavLink,
-// PageTransitionLink, ProjectsGrid) — but only AFTER animateTransition()
-// below has finished covering the screen, not before. Un-pinning a
-// section is itself an instant, visible layout change (e.g. it
-// snapped OrbitGallery's pinned .image-orbit — and the footer whose
-// translateY reveal rides that same pin — back into normal flow the
-// moment it ran), so calling this before the wipe is opaque let that
-// reflow flash through visibly for as long as the wipe still had left
-// to run.
-export const killAllPins = () => {
-  ScrollTrigger.getAll().forEach((st) => {
-    if (st.pin) st.kill();
-  });
-};
+// Why: router.push() keeps every mounted component, every GSAP context/
+// ScrollTrigger, and document.body's inline styles alive across the
+// "navigation" — the new route's components mount ON TOP of whatever the
+// previous route left behind, and cleanup is only ever as good as each
+// component's own unmount effect. That's the entire root cause behind the
+// long tail of cross-page bugs this app kept hitting (document.body color
+// leaking between routes, stale ScrollTrigger pins, Lenis cache going stale,
+// etc — see the extensive comments previously on killAllPins() in this
+// file's git history) — every one of them was a symptom of trying to
+// simulate a clean slate on top of a persistent JS environment.
+//
+// A hard navigation sidesteps the entire category for free: the browser
+// tears down the whole page (every tween, every ScrollTrigger, every inline
+// style, Lenis, all of it) and the new route starts from a genuinely blank
+// document, exactly like a fresh page load — because it is one. The
+// tradeoff is losing the SPA's instant/no-reload navigation feel, which is
+// exactly why the block-grid wipe below exists: it covers the screen before
+// the real navigation fires and reveals it again after the new page has
+// settled, so the reload itself is never seen — same purpose the old site's
+// overlay served, just with this app's existing block-grid visual instead
+// of a single plain div.
+// ============================================================================
+
+const TRANSITION_FLAG = "pt_navigating";
+const TRANSITION_COLOR = "pt_wipe_color";
 
 const ease = "power4.inOut";
 
 // Selects the block grid mounted once in app/layout.tsx (see
-// PageTransitionOverlay.jsx) — a single shared overlay that persists
-// across every route, rather than a per-page instance that would
-// unmount/remount on the very navigation it's meant to cover.
+// PageTransitionOverlay.jsx). On a hard navigation this DOM is destroyed
+// and recreated fresh on every single page load (there's no persistent
+// SPA shell to keep it alive across), so unlike the old SPA-nav version
+// this never needs to survive a route change — only survive from "click"
+// to "the new document's first paint", which sessionStorage (below)
+// carries it across.
 const getBlocks = () =>
   typeof document !== "undefined"
     ? document.querySelectorAll(".page-transition-block")
     : [];
 
-// A solid-black wipe reads fine going into a white-hero page, but
-// blends almost invisibly into a page whose own hero is ALSO black
-// (e.g. clicking into /projects or /contact-us from anywhere) — the
-// cover/reveal barely registers as having happened. Keying the wipe's
-// own color off the DESTINATION route (looked up here by
-// animateTransition, not passed manually at every call site) means it
-// always contrasts against whatever's about to be revealed: white
-// blocks going into a black-hero page, black blocks everywhere else.
-// Case-study routes aren't listed — they never reach animateTransition
-// at all (see isCaseStudyPath below, checked before this is called).
+// A solid-black wipe reads fine going into a white-hero page, but blends
+// almost invisibly into a page whose own hero is ALSO black (e.g. /projects
+// or /contact-us) — the cover/reveal barely registers as having happened.
+// Keying the wipe's own color off the DESTINATION route means it always
+// contrasts against whatever's about to be revealed: white blocks going
+// into a black-hero page, black blocks everywhere else. Stashed in
+// sessionStorage (not just computed twice) so the reveal on the NEW page
+// load uses the exact same color the cover used, rather than recomputing
+// against what might be a different set of rules by then.
 const BLACK_HERO_PATHS = ["/projects", "/contact-us"];
 
 const getWipeColor = (destinationPath) => {
@@ -58,86 +64,112 @@ const getWipeColor = (destinationPath) => {
   return BLACK_HERO_PATHS.includes(path) ? "#fff" : "#000";
 };
 
-// Reveals the new page after a client-side route change: the grid is
-// currently covering the whole screen (however animateTransition left
-// it) and each block scales back down to hidden, uncovering the new
-// route's content underneath. Called from PageTransitionOverlay.jsx on
-// every pathname change after the first (see that file for why the
-// very first page load is excluded — this app's separate preloader
-// owns that reveal instead).
-export function revealTransition() {
-  return new Promise((resolve) => {
-    const blocks = getBlocks();
-    if (!blocks.length) {
-      resolve();
-      return;
-    }
-    gsap.set(blocks, { scaleY: 1, visibility: "visible" });
+// ----------------------------------------------------------------------------
+// Phase 1 — cover the screen, then hard-navigate.
+// Called from every internal nav link's click handler (Navbar's NavLink,
+// PageTransitionLink, ProjectsGrid's card clicks).
+// ----------------------------------------------------------------------------
+export function triggerNavigation(destinationPath) {
+  const blocks = getBlocks();
+  const wipeColor = getWipeColor(destinationPath);
+
+  if (!blocks.length) {
+    // No overlay DOM found (shouldn't happen — PageTransitionOverlay is
+    // mounted once in layout.tsx — but fail open rather than stranding
+    // the user on a dead link if it's ever missing).
+    window.location.href = destinationPath;
+    return;
+  }
+
+  gsap.set(blocks, {
+    visibility: "visible",
+    scaleY: 0,
+    backgroundColor: wipeColor,
+  });
+  gsap.to(blocks, {
+    scaleY: 1,
+    duration: 1,
+    stagger: { each: 0.1, from: "start", grid: [2, 5], axis: "x" },
+    ease,
+    onComplete: () => {
+      // Screen is now fully covered — safe to do anything visible here,
+      // same timing guarantee the old SPA version relied on for
+      // killAllPins()/router.push(). Reset scroll before navigating so
+      // the browser doesn't briefly show the new document scrolled to
+      // wherever this one happened to be (some browsers restore scroll
+      // position per-URL automatically, but this covers the general
+      // case since we're about to leave anyway).
+      window.scrollTo(0, 0);
+
+      // Flags read by revealTransition() below, on the NEW page's own
+      // load — sessionStorage (not a JS variable) is the only thing
+      // that survives a real navigation.
+      sessionStorage.setItem(TRANSITION_FLAG, "true");
+      sessionStorage.setItem(TRANSITION_COLOR, wipeColor);
+
+      // Real browser navigation — full reload, not router.push().
+      window.location.href = destinationPath;
+    },
+  });
+}
+
+// ----------------------------------------------------------------------------
+// Phase 2 — reveal the new page.
+// Called once, on mount, by PageTransitionOverlay.jsx on every page load.
+// If the flag from phase 1 is present, the overlay starts already covering
+// (in the same color phase 1 left it) and scales back down to reveal the
+// fresh page underneath; otherwise (direct load / external link / first
+// visit) the overlay just stays hidden — this app's separate PreloaderGate
+// owns revealing a genuine first load.
+// ----------------------------------------------------------------------------
+export function revealTransitionIfPending() {
+  const pending = sessionStorage.getItem(TRANSITION_FLAG);
+  if (!pending) return;
+
+  sessionStorage.removeItem(TRANSITION_FLAG);
+  const wipeColor = sessionStorage.getItem(TRANSITION_COLOR) || "#000";
+  sessionStorage.removeItem(TRANSITION_COLOR);
+
+  const blocks = getBlocks();
+  if (!blocks.length) return;
+
+  gsap.set(blocks, {
+    visibility: "visible",
+    scaleY: 1,
+    backgroundColor: wipeColor,
+  });
+
+  // A short delay before revealing (rather than revealing the instant this
+  // runs) gives the new page's own mount effects — GSAP contexts,
+  // ScrollTrigger creation, any deferred double-rAF measurement blocks
+  // (Work.jsx, AboutPartnerSection.jsx, etc.) — a moment to run first, so
+  // the wipe never uncovers a page mid-way through its own setup. Same
+  // reasoning as PageTransitionOverlay.jsx's own two-rAF defer for the
+  // SPA-era reveal; a flat timeout is used here instead of rAF chaining
+  // since this now runs once, on a fresh document, not on every pathname
+  // change.
+  gsap.delayedCall(0.12, () => {
     gsap.to(blocks, {
       scaleY: 0,
       duration: 1,
-      stagger: {
-        each: 0.1,
-        from: "start",
-        grid: "auto",
-        axis: "x",
-      },
+      stagger: { each: 0.1, from: "start", grid: "auto", axis: "x" },
       ease,
       onComplete: () => {
         gsap.set(blocks, { visibility: "hidden" });
-        resolve();
       },
     });
   });
 }
 
-// Plays on every client-side navigation: blocks scale UP from 0 to
-// fully cover the screen, then the caller navigates (router.push)
-// once this resolves — the new route's content is safely hidden
-// behind the grid by the time it mounts. The reveal half (scaling
-// back down to 0) is handled per-route by whichever component calls
-// revealTransition() again after the new page has settled — see
-// PageTransitionLink.tsx/Navbar.jsx/ProjectsGrid.jsx, which call this
-// before router.push and rely on the new page's own mount effect (or
-// a shared one in layout.tsx) to reveal again.
-//
-// destinationPath (the href being navigated to) picks the wipe's own
-// color via getWipeColor above — every call site already has this
-// value on hand (it's the same href/project.href being passed to
-// router.push right after), so this is the only piece of per-
-// navigation state animateTransition needs from its caller.
-export function animateTransition(destinationPath) {
-  return new Promise((resolve) => {
-    const blocks = getBlocks();
-    if (!blocks.length) {
-      resolve();
-      return;
-    }
-    gsap.set(blocks, {
-      visibility: "visible",
-      scaleY: 0,
-      backgroundColor: getWipeColor(destinationPath),
-    });
-    gsap.to(blocks, {
-      scaleY: 1,
-      duration: 1,
-      stagger: {
-        each: 0.1,
-        from: "start",
-        grid: [2, 5],
-        axis: "x",
-      },
-      ease,
-      onComplete: resolve,
-    });
-  });
-}
-
-// Case-study pages already run their own hand-built transition (a
-// heading clone flies between pages, timed against its own overlay and
-// a plain router.push — see CaseStudyInner.jsx). Layering the block
-// wipe on top of that would fight it, so navigations into/out of these
-// routes are excluded and just navigate normally.
+// Case-study pages already run their own hand-built transition (a heading
+// clone flies between pages, timed against its own overlay — see
+// CaseStudyInner.jsx), which still uses Next.js's client-side router.push()
+// internally rather than a hard navigation. Layering this hard-nav wipe on
+// top of that would fight it, so navigations INTO these routes via a plain
+// nav link are excluded and just let CaseStudyInner's own SPA-based
+// transition handle it (navigating between two case studies stays a
+// client-side transition, unchanged from before). Leaving a case-study page
+// via a normal nav link still uses this hard-nav wipe like everywhere else.
 export const CASE_STUDY_PATHS = [
   "/lala-darbar",
   "/sanamcars",

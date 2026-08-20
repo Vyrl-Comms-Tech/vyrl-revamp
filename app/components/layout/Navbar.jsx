@@ -2,9 +2,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
-import { animateTransition, isCaseStudyPath, killAllPins } from "./pageTransition";
+import { triggerNavigation, isCaseStudyPath } from "./pageTransition";
 import { isKnownRoute } from "./knownRoutes";
 import "../../styles/navbar.css";
 import PageTransitionLink from "./PageTransitionLink";
@@ -28,30 +28,24 @@ const idleMessages = [
 const NavLink = ({ label, href }) => {
   const linkRef = useRef(null);
   const pathname = usePathname();
-  const router = useRouter();
   const isActive = href !== "#" && pathname === href;
 
   const handleClick = (e) => {
     if (href === "#" || href === pathname) return;
 
     // Entering a case-study page runs its own hand-built transition
-    // (heading clone + overlay, timed against a plain router.push in
+    // (heading clone + overlay, still client-side/router.push-based — see
     // CaseStudyInner.jsx) — let that happen normally instead of layering
-    // the block wipe on top of it. Leaving a case-study page via a
-    // navbar link is fine to use this transition (see the matching
-    // comment in PageTransitionLink.tsx for why).
+    // the hard-nav wipe on top of it. See the matching comment in
+    // PageTransitionLink.tsx for the full reasoning.
     if (isCaseStudyPath(href)) return;
 
     e.preventDefault();
-    // killAllPins() must run AFTER the blocks have fully covered the
-    // screen, not before — see the matching comment in
-    // PageTransitionLink.tsx for why (killing a pin, e.g. OrbitGallery's
-    // .image-orbit, un-pins it instantly and visibly reflows the page
-    // before the wipe has finished covering it).
-    animateTransition(href).then(() => {
-      killAllPins();
-      router.push(href);
-    });
+    // Real hard navigation (window.location.href), not router.push() —
+    // see pageTransition.js's top-of-file comment for why. The wipe
+    // covers the screen, then triggerNavigation() itself does the actual
+    // reload once fully covered.
+    triggerNavigation(href);
   };
 
   return (

@@ -26,7 +26,6 @@ export default function Home() {
       <LazySection placeholder={<div style={{ height: "100vh" }} />}>
         <Work />
       </LazySection>
-
       <LazySection placeholder={<div style={{ height: "50vh" }} />}>
         <PartnersSection
           year="2024"
@@ -34,11 +33,9 @@ export default function Home() {
           brand="VYRL® COMMUNICATIONS"
         />
       </LazySection>
-
       <LazySection>
         <ResponsiveSwap desktop={<Testimonials />} mobile={<ClientReviews />} />
       </LazySection>
-
       <LazySection>
         <OrbitGallery />
       </LazySection>

@@ -117,9 +117,9 @@ export default function AboutusStackMobile() {
       if (lastCard) {
         gsap.fromTo(
           document.body,
-          { backgroundColor: "#fcfcfc" },
+          { "--bodybg": "#fcfcfc" },
           {
-            backgroundColor: "#000000",
+            "--bodybg": "#000000",
             ease: "none",
             scrollTrigger: {
               trigger: lastCard,
@@ -163,6 +163,30 @@ export default function AboutusStackMobile() {
     },
     { scope: sectionRef },
   );
+
+  // useGSAP's own automatic cleanup (ctx.revert() on unmount) restores
+  // document.body's background to whatever it was immediately BEFORE
+  // the white -> black tween above ran, not to a genuinely cleared
+  // default — same gap Slider.jsx/Work.jsx/Testimonials.jsx/
+  // ProjectsGrid.jsx/AboutPartnerSection.jsx all guard against with an
+  // explicit clearProps on their own unmount. Decoupled into its own
+  // effect (rather than inside the useGSAP callback above) since
+  // useGSAP's callback doesn't get a chance to run extra cleanup logic
+  // of its own beyond what ctx.revert() already does automatically —
+  // this runs as a genuinely separate unmount step, after that revert.
+  useEffect(() => {
+    return () => {
+      // Every document.body tween in this app now writes to the shared
+      // --bodybg custom property (see globals.css) instead of each
+      // section picking its own inline property name — needed here since
+      // this can unmount independently of a full page navigation (e.g.
+      // this section's own effect re-running, browser back/forward via
+      // bfcache). Ordinary navigation is now a hard reload (see
+      // pageTransition.js's triggerNavigation()), which tears down
+      // document.body's state for free either way.
+      gsap.set(document.body, { clearProps: "--bodybg" });
+    };
+  }, []);
 
   // Same lazy-video pattern as TextAndCards.jsx: only load/play a
   // card's video once it's actually near the viewport, and pause it

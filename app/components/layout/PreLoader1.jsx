@@ -43,18 +43,22 @@ export default function Preloader1({ onComplete }) {
       if (count >= 100) clearInterval(interval);
     }, 45);
 
+    // onComplete used to be the ONLY thing that started the exit fade —
+    // so the full timeline (draw -> morph -> scale to 40x) played all
+    // the way out, landing on a static, fully-scaled white circle
+    // covering the screen, and only THEN did a separate 0.5s opacity
+    // fade begin, followed by unmount. That dead beat (scale finishes ->
+    // hold -> fade -> reveal) is what read as "closes, then [pause],
+    // then opens" instead of one continuous motion. The fade is now
+    // started as part of the timeline itself, overlapping the final
+    // scale tween's own tail (see the ".to(containerRef..." call below,
+    // positioned to start before the scale tween finishes) — by the
+    // time the circle finishes ballooning past the viewport, the
+    // container is already most of the way faded, so the reveal
+    // underneath arrives smoothly instead of after a hard stop.
     const tl = gsap.timeline({
       onComplete: () => {
-        // Short fade before unmount so the reveal doesn't hard-cut
-        setIsExiting(true);
-        gsap.to(containerRef.current, {
-          opacity: 0,
-          duration: 0.5,
-          ease: 'power2.out',
-          onComplete: () => {
-            if (typeof onComplete === 'function') onComplete();
-          },
-        });
+        if (typeof onComplete === 'function') onComplete();
       },
     });
 
@@ -86,7 +90,20 @@ export default function Preloader1({ onComplete }) {
         transformOrigin: 'center center',
         duration: 1,
         ease: 'power4.inOut',
-      });
+        onStart: () => setIsExiting(true),
+      })
+      // Overlaps the scale tween above by 0.6s of its 1s duration (starts
+      // "-=0.6" into it) rather than waiting for it to finish — the
+      // circle is already most of the way expanded (and visually reads
+      // as "covering everything") well before its scale tween's numeric
+      // end, so starting the fade here instead of after removes the
+      // dead hold without cutting the expansion short early enough to
+      // notice.
+      .to(
+        containerRef.current,
+        { opacity: 0, duration: 0.6, ease: 'power2.out' },
+        '-=0.6',
+      );
 
     return () => {
       tl.kill();
