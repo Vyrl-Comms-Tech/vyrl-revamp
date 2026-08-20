@@ -16,6 +16,29 @@
   transition: opacity 0.5s ease;
 }
 
+/* On a repeat page load within the same session (including every
+   in-app navigation now that pageTransition.js does a real hard
+   reload — see triggerNavigation()), PreloaderGate.tsx still server-
+   renders <Preloader1>'s markup into the initial HTML: the "skip
+   mounting it at all" decision only happens client-side, in a
+   useState initializer that reads document.documentElement's class —
+   which doesn't exist yet on the server, so SSR always emits the
+   un-stroked, un-styled SVG. The beforeInteractive skip-script (see
+   layout.tsx/preloaderSkipScript) stamps `preloader-skip` on <html>
+   before hydration runs, but the BROWSER can still paint that already-
+   parsed HTML the instant it exists, independent of when React
+   actually hydrates and removes it — which is what showed up as a
+   ~1-frame flash of the flat black "V" outline (no stroke animation,
+   no fill) on every single reload. This CSS rule is itself in a
+   render-blocking stylesheet (globals.css/this file are both `<link>`-
+   loaded before body content paints), so the browser has this rule
+   available at the exact same moment it has the skip class — hiding
+   .pre-loader here happens at the CSS layer, synchronously with first
+   paint, instead of waiting on React to decide not to render it. */
+html.preloader-skip .pre-loader {
+  display: none !important;
+}
+
 .pre-loader * {
   padding: 0;
   margin: 0;

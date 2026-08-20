@@ -1,7 +1,7 @@
 .banner {
 
   height: auto;
-
+background: transparent;
   padding: clamp(4rem, 9vw, 10rem) 3% clamp(11rem, 24vw, 24rem);
   width: 100%;
   text-align: center;
