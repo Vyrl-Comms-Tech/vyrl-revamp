@@ -1,12 +1,14 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TextAnimation from "./TextAnimation";
 import ChangeTextAnimation from "../layout/ChangeTextAnimation";
 import "../../styles/client-review.css";
 import CtaButton from "../layout/cta";
+import VyrlCtaButton from "../layout/VyrlCtaButton";
 
 // Registering a browser-only plugin at module scope would break SSR
 // (Next renders client components on the server too) — guard it.
@@ -120,6 +122,19 @@ const REVIEWS = [
 const N = 5;
 
 function ClientReviewSection() {
+  // Rendered on both / (home, white body) and /services (via
+  // ResponsiveSwap right after Services3d — see services/page.jsx),
+  // where the page is already black by the time this section arrives
+  // (Slider.jsx flips document.body black going in, and every section
+  // since holds it — see Testimonials.jsx's identical isServicesPage
+  // guard, which this mirrors for the mobile variant of the same slot).
+  // The colorTl below normally fades this section's own white-on-black
+  // resting state to black-on-white as it scrolls to center — correct
+  // on home, but on /services that would fight the black-bg/white-text
+  // scheme this page is already committed to. Gate it off there so
+  // /services stays black-bg/white-text straight through.
+  const pathname = usePathname();
+  const isServicesPage = pathname === "/services";
   const cardRefs = useRef([]);
   const videoRefs = useRef([]);
   const offsetRef = useRef(0);
@@ -376,14 +391,7 @@ function ClientReviewSection() {
       window.addEventListener("keydown", onKeyDown);
       window.addEventListener("resize", onResize);
 
-      // ── background/navbar color swap ────────────────────────────────
-      // Mirrors Testimonials.jsx's own halfway-through-the-section color
-      // change (its desktop counterpart, swapped in via ResponsiveSwap):
-      // <body> fades to white and the navbar darkens to solid black as
-      // this section scrolls to its center, so the navbar (normally a
-      // translucent white — see navbar.css) stays visible against the
-      // now-white page instead of all but disappearing into it.
-      if (sectionRef.current) {
+      if (sectionRef.current && !isServicesPage) {
         const section = sectionRef.current;
         const colorTl = gsap.timeline({
           scrollTrigger: {
@@ -477,9 +485,18 @@ function ClientReviewSection() {
       ctx.revert(); // also reverts document.body/.nav-bar/.menu-dropdown's
       // color tweens back to their pre-tween values, same as
       // Testimonials.jsx relies on for its own copy of this tween.
-      gsap.set(document.body, { clearProps: "background" }); // don't leak white bg to other routes
+      //
+      // Only clear document.body here if this effect actually set it —
+      // on /services the colorTl block above was skipped entirely, so
+      // the black inline background at this point belongs to Slider.jsx
+      // (see services/page.jsx), not this component; clearing it here
+      // would strip that black out from under it. Same guard
+      // Testimonials.jsx applies to its own identical cleanup.
+      if (!isServicesPage) {
+        gsap.set(document.body, { clearProps: "background" }); // don't leak white bg to other routes
+      }
     };
-  }, []);
+  }, [isServicesPage]);
 
   useEffect(() => {
     if (tagsIndex === activeIndex) return;
@@ -654,11 +671,11 @@ function ClientReviewSection() {
         </div>
 
         <div className="client-review-cta" key={`cta-${active.id}`}>
-          <CtaButton
+          <VyrlCtaButton
             label={active.ctaLabel}
             href={active.href}
             external={active.href !== "#"}
-            className={isCtaDark ? "" : "cta-button-white"}
+            className={isCtaDark ? "vyrl-cta--solid" :"vyrl-cta--invert"}
           />
           <p>
             Hear from the brands and founders we have partnered with, sharing

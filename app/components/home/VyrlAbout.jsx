@@ -138,6 +138,106 @@ function VyrlAbout() {
   const card3Ref = useRef(null);
   const captionRef = useRef(null);
 
+  // Mobile (<=760px, see vyrl-about.css) renders this section as a
+  // plain static stack — no pin, no image-grow, no sliding headings —
+  // so it doesn't need any of the desktop scroll choreography below.
+  // But it still needs the same document.body black -> white handoff:
+  // this section is /services-only and arrives with the page already
+  // black (Slider.jsx flips it going in; Services3d/Testimonials hold
+  // it — see Testimonials.jsx's isServicesPage guard), and it's the
+  // last section before OrbitGallery, which expects the page's normal
+  // white background and has no body tween of its own. Split into its
+  // own effect (rather than just dropping the desktop early-return)
+  // since the mobile version needs a completely different trigger:
+  // there's no pin to time against, so this scrubs across the
+  // section's own scroll distance directly and completes right as the
+  // section is about to end, instead of at its halfway point like the
+  // desktop version — mobile's stack is taller and single-column, so
+  // "about to end" reads as the natural handoff point to the white
+  // OrbitGallery that follows, same way the desktop version times its
+  // handoff to land before Services3d's own pin engages.
+  useEffect(() => {
+    if (window.innerWidth > 760) return;
+
+    const section = sectionMainRef.current;
+    if (!section) return;
+
+    const isMountedRef = { current: true };
+
+    const ctx = gsap.context(() => {
+      // end: "bottom top" (section's bottom edge reaches the viewport's
+      // top edge — i.e. the section has fully scrolled past), not
+      // "bottom bottom": on a normal-flow (non-pinned) section taller
+      // than the viewport, "bottom bottom" is crossed almost
+      // immediately after "top top" (as soon as the section's bottom
+      // edge reaches the viewport's own bottom edge, which for an
+      // 830px-tall section against an ~844px viewport happens right at
+      // the start) — collapsing the whole scrub into a few px of actual
+      // scroll distance instead of spanning the section's full height,
+      // so the fade jumped straight to its end state the moment the
+      // section came into view instead of only near the end of it.
+      const bodyTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      // Runs across the timeline's last 20% only (0.8 -> 1), so the
+      // fade doesn't start until the section is genuinely almost done —
+      // "about to end", not the middle of it.
+      bodyTl.to(
+        document.body,
+        { background: "#fcfcfc", duration: 0.2, ease: "none" },
+        0.8,
+      );
+
+      const headings = section.querySelectorAll(
+        ".vyrl-service-about-text1, .vyrl-service-about-text2",
+      );
+      const cardText = section.querySelectorAll(
+        ".vyrl-section-card1 h1, .vyrl-section-card1 p, .vyrl-section-card2 h1, .vyrl-section-card2 p, .vyrl-section-card3 h1, .vyrl-section-card3 p",
+      );
+      if (headings.length || cardText.length) {
+        bodyTl.to(
+          [...headings, ...cardText],
+          { color: "#111111", duration: 0.2, ease: "none" },
+          0.8,
+        );
+      }
+
+      // Same navbar handoff the desktop effect below does, on the same
+      // schedule as the body/text fade above — .nav-bar/.menu-dropdown
+      // live in a sibling component (Navbar.jsx) that isn't guaranteed
+      // to have mounted yet, hence the lazy-lookup-with-poll guard used
+      // everywhere else this app reaches across to the navbar.
+      let navbarAttempts = 0;
+      const addNavbarDarkenTween = () => {
+        if (!isMountedRef.current) return;
+        const navBar = document.querySelector(".nav-bar");
+        const menuDropdown = document.querySelector(".menu-dropdown");
+        if (navBar && menuDropdown) {
+          bodyTl.to(
+            [navBar, menuDropdown],
+            { backgroundColor: "#0a0a0a", ease: "power2.inOut" },
+            0.8,
+          );
+          return;
+        }
+        navbarAttempts += 1;
+        if (navbarAttempts < 30) requestAnimationFrame(addNavbarDarkenTween);
+      };
+      addNavbarDarkenTween();
+    }, section);
+
+    return () => {
+      isMountedRef.current = false;
+      ctx.revert();
+    };
+  }, []);
+
   useEffect(() => {
     // The pinned scroll choreography (image growing, cards fading in,
     // headings sliding to the edges) assumes desktop-width layout math
@@ -145,6 +245,12 @@ function VyrlAbout() {
     // instead show a simple static stack (see CSS breakpoint), so skip
     // creating any of this scroll-driven animation there.
     if (window.innerWidth <= 760) return;
+
+    // Guards the deferred rAF poll below (navbar darken tween) in case
+    // this component unmounts before .nav-bar/.menu-dropdown are found —
+    // same isMounted pattern HeroModelSection.jsx uses for its own
+    // identical poll.
+    const isMountedRef = { current: true };
 
     const ctx = gsap.context(() => {
       // ─PHASE 1: Image slides straight down ─
@@ -256,9 +362,79 @@ function VyrlAbout() {
           tl.progress(self.progress);
         },
       });
+
+      // This section is /services-only (see services/page.jsx) and
+      // arrives with document.body already black — Slider.jsx flipped it
+      // black on the way in, and every section since (Services3d,
+      // Testimonials) has held it there (see Testimonials.jsx's
+      // isServicesPage guard). VyrlAbout is the last section before
+      // OrbitGallery, which expects the page's normal white background
+      // (--bodybg, see globals.css) and has no body tween of its own —
+      // so something has to hand it back. Same scrub idiom Slider.jsx
+      // uses for its own black fade, just reversed and spanning this
+      // section's own height instead: start/end cover the section's
+      // full scroll distance, and a dummy tween appended after the real
+      // one (see Slider.jsx's identical comment) stretches the
+      // timeline's total length so the fade completes at the section's
+      // scroll-halfway point and holds white for the remainder, rather
+      // than fading the whole way to the section's bottom edge.
+      const bodyTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionMainRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+      bodyTl.to(
+        document.body,
+        { background: "#fcfcfc", duration: 0.5, ease: "none" },
+        0,
+      );
+ 
+      bodyTl.to(
+        [textLeftRef.current, textRightRef.current],
+        { color: "#111111", duration: 0.3, ease: "none" },
+        0.2,
+      );
+      bodyTl.to({}, { duration: 0.5 }, 0.5);
+
+      // Navbar's own resting default is a faint 5%-white tint (see
+      // navbar.css) — reads fine against a dark page, but would nearly
+      // disappear once document.body above lands on white. Darken it to
+      // solid black here, in the same scrub, at the same "0.2" position
+      // the heading text above starts darkening — same idiom
+      // HeroModelSection.jsx uses for its own navbar tween on its own
+      // white-background reveal (search "modelTrigger.to(\n  [navBar,
+      // menuDropdown" there).
+      //
+      // .nav-bar/.menu-dropdown live in a sibling component (Navbar.jsx)
+      // that isn't guaranteed to have mounted yet at this exact moment —
+      // same lazy-lookup-with-poll guard used everywhere else this app
+      // reaches across to the navbar.
+      let navbarAttempts = 0;
+      const addNavbarDarkenTween = () => {
+        if (!isMountedRef.current) return;
+        const navBar = document.querySelector(".nav-bar");
+        const menuDropdown = document.querySelector(".menu-dropdown");
+        if (navBar && menuDropdown) {
+          bodyTl.to(
+            [navBar, menuDropdown],
+            { backgroundColor: "#0a0a0a", ease: "power2.inOut" },
+            0.2,
+          );
+          return;
+        }
+        navbarAttempts += 1;
+        if (navbarAttempts < 30) requestAnimationFrame(addNavbarDarkenTween);
+      };
+      addNavbarDarkenTween();
     });
 
-    return () => ctx.revert();
+    return () => {
+      isMountedRef.current = false;
+      ctx.revert();
+    };
   }, []);
 
   return (

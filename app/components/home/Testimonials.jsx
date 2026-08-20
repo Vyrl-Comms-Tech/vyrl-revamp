@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "../../styles/testimonials.css";
@@ -60,6 +61,16 @@ const TESTIMONIALS = [
 const CARD_POSITIONS = [-140, -120, 0, 120, 140, 210];
 
 export default function Testimonials() {
+  // Testimonials is rendered on both / (home, white body) and /services
+  // (via ResponsiveSwap right after Services3d — see services/page.jsx),
+  // where Slider.jsx has already flipped document.body to black to hand
+  // off into Services3d's own black background. The intro tween below
+  // normally fades document.body back to white partway through — correct
+  // on home, but on /services that would stomp the black Slider/
+  // Services3d just established. Gate it on pathname so /services keeps
+  // its black straight through instead.
+  const pathname = usePathname();
+  const isServicesPage = pathname === "/services";
   const rootRef = useRef(null);
   const cardRefs = useRef([]);
   const leftHeadRef = useRef(null);
@@ -356,20 +367,40 @@ export default function Testimonials() {
       // as too close to the card at that size.
       const counterOffsetX = window.innerWidth <= 1500 ? 120 : 50;
 
+      // WHAT / CLIENTS / SAYS rest white by default (see testimonials.css)
+      // and tween to black here so they stay legible once document.body
+      // fades to white further down this same timeline. On /services
+      // that body-white tween is skipped and the page stays black (see
+      // the isServicesPage guards on document.body above/below), so
+      // forcing these headings to black there would bury them against
+      // that same black — leave them at their default white instead by
+      // skipping the color tween on this route.
       introTl
         .to(
           leftHeadRef.current,
-          { xPercent: -200, ease: "none", color: "#000" },
+          {
+            xPercent: -200,
+            ease: "none",
+            ...(isServicesPage ? {} : { color: "#000" }),
+          },
           0,
         )
         .to(
           rightHeadRef.current,
-          { xPercent: 200, ease: "none", color: "#000" },
+          {
+            xPercent: 200,
+            ease: "none",
+            ...(isServicesPage ? {} : { color: "#000" }),
+          },
           0,
         )
         .to(
           centerHeadRef.current,
-          { scale: 0.5, yPercent: 130, color: "#000" },
+          {
+            scale: 0.5,
+            yPercent: 130,
+            ...(isServicesPage ? {} : { color: "#000" }),
+          },
           0.4,
         )
         .to(
@@ -395,8 +426,18 @@ export default function Testimonials() {
             ease: "none",
           },
           0.5,
-        )
-        .to(document.body, { background: "#fff" }, 0.5);
+        );
+
+      // On /services, Slider.jsx has already flipped document.body to
+      // black and darkened the navbar to hand off into Services3d's own
+      // black background (see services/page.jsx) — skip both tweens
+      // there so this intro doesn't fade things back to white/light
+      // partway through and undo that handoff. Home is the only route
+      // that needs this fade (its body starts white and has nothing
+      // upstream turning it black).
+      if (!isServicesPage) {
+        introTl.to(document.body, { background: "#fff" }, 0.5);
+      }
 
       // Once document.body fades to white above, .nav-bar/.menu-dropdown's
       // own resting translucent-white background (see navbar.css) all but
@@ -412,7 +453,7 @@ export default function Testimonials() {
       // that isn't guaranteed to have mounted yet at this exact moment.
       let attempts = 0;
       const addNavbarDarkenTween = () => {
-        if (cancelled) return;
+        if (cancelled || isServicesPage) return;
         const navBar = document.querySelector(".nav-bar");
         const menuDropdown = document.querySelector(".menu-dropdown");
         if (navBar && menuDropdown) {
@@ -442,9 +483,17 @@ export default function Testimonials() {
       // as document.body below (gsap.context tracks a tween by creation,
       // not by which element it targets, so it's covered even though
       // .nav-bar lives outside rootRef's subtree).
-      gsap.set(document.body, { clearProps: "background" }); // don't leak white bg to other routes
+      //
+      // Only clear document.body here if this effect actually set it —
+      // on /services the white-fade tween above was skipped, so the
+      // black inline background on document.body at this point belongs
+      // to Slider.jsx (see services/page.jsx), not this component;
+      // clearing it here would strip that black out from under it.
+      if (!isServicesPage) {
+        gsap.set(document.body, { clearProps: "background" }); // don't leak white bg to other routes
+      }
     };
-  }, []);
+  }, [isServicesPage]);
 
   return (
     <div className="clients-testimonial" ref={rootRef}>

@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import VyrlCtaButton from "../layout/VyrlCtaButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CtaButton from "../layout/cta";
@@ -132,6 +133,90 @@ const Slider = () => {
     };
   }, []);
 
+  // Flip the page's own background (document.body, not just this
+  // section) from white to black as this section scrolls through its
+  // second half, so the black that Services3d opens with (see
+  // services/page.jsx — it's rendered with `dark`) is already in place
+  // by the time it arrives instead of cutting in abruptly. Same
+  // gsap.to(document.body, { background }) + scrubbed ScrollTrigger
+  // idiom Work.jsx uses for its own body-background swap. Scrubbed
+  // against the section's own height (start "top top", end "bottom
+  // top") so "halfway" means halfway through this section's scroll
+  // distance, not the viewport.
+  //
+  // The heading/description/tag text (.slider-tag, h1, .slider-desc)
+  // are set for a white background (#000/#011825 — see slider.css) and
+  // would disappear into the incoming black, so they crossfade to white
+  // in the same scrub, on the same timeline, so both changes track
+  // together.
+  useEffect(() => {
+    const container = rootRef.current;
+    if (!container) return;
+
+    const headingCol = container.querySelector(".slider-headingCol");
+    const textCol = container.querySelector(".slider-textCol");
+
+    // Trigger spans the section's full scroll distance, and the intent
+    // is for the color tweens to only run across the first half of that
+    // — black fully reached once the section has scrolled halfway
+    // through, then holding black for the remaining half. Giving each
+    // tween duration: 0.5 alone doesn't do that: with no other content
+    // after them, GSAP auto-sizes the timeline's own total length to fit
+    // its longest child, so the timeline itself becomes exactly 0.5
+    // long and the scrub maps that whole 0.5 across the *entire*
+    // trigger range — i.e. still a plain fade end-to-end, just measured
+    // in different units. The dummy tween appended at position 0.5
+    // (doing nothing, but 0.5 long) stretches the timeline's total
+    // length to 1, so the real color tweens above now occupy only the
+    // first half of the scrub range and hold at their end value — black
+    // — for the second half.
+    const bodyTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: container,
+        start: "center top-=20",
+        end: "bottom top",
+        // duration
+        scrub: true,
+      },
+    });
+
+    // bodyTl.to(
+    //   container,
+    //   { backgroundColor: "#000000", duration: 0.5, ease: "none" },
+    //   0,
+    // );
+    bodyTl.to(
+      document.body,
+      { background: "#000000", duration: 0.5, ease: "none" },
+      0,
+    );
+    if (headingCol) {
+      bodyTl.to(
+        headingCol.querySelectorAll(".slider-tag, h1"),
+        { color: "#ffffff", duration: 0.5, ease: "none" },
+        0,
+      );
+    }
+    if (textCol) {
+      bodyTl.to(
+        textCol.querySelectorAll(".slider-desc"),
+        { color: "#ffffff", duration: 0.5, ease: "none" },
+        0,
+      );
+    }
+    bodyTl.to({}, { duration: 0.5 }, 0.5);
+
+    return () => {
+      bodyTl.scrollTrigger?.kill();
+      bodyTl.kill();
+      // Same cleanup Work.jsx/Testimonials.jsx/AboutPartnerSection.jsx use
+      // for their own document.body tweens: strip the inline background
+      // this timeline set so it doesn't leak black into whatever route
+      // gets navigated to next (their bodies don't expect it).
+      gsap.set(document.body, { clearProps: "background" });
+    };
+  }, []);
+
   // Show 10 images at 760px and below, otherwise show all 14.
   const visibleImages = isMobile ? images.slice(0, 10) : images;
 
@@ -150,12 +235,12 @@ const Slider = () => {
 
         <div className="slider-textCol">
           <p className="slider-desc">
-            Tech, strategy, content, campaigns, and performance — connected
+            Tech, strategy, content, campaigns, and performance connected
             under one roof to help ambitious brands show up stronger and scale
             smarter.
           </p>
 
-          <CtaButton label="Lets Get In Touch" href="/contact-us" />
+          <VyrlCtaButton label="Lets Get In Touch" href="/contact-us" className="vyrl-cta--solid" />
         </div>
       </div>
 

@@ -9,11 +9,11 @@ import ClientReviews from "@/app/components/home/ClientReviews";
 import Collective from "@/app/components/home/Collective";
 import OrbitGallery from "@/app/components/home/OrbitGallery";
 import Testimonials from "@/app/components/home/Testimonials";
+import ResponsiveSwap from "@/app/components/layout/ResponsiveSwap";
 import Services3d from "@/app/components/home/Services3d";
 import Work from "@/app/components/home/Work";
 import PartnersSection from "@/app/components/home/PartnersSection";
 import LazySection from "@/app/components/layout/LazySection";
-import ResponsiveSwap from "@/app/components/layout/ResponsiveSwap";
 
 export default function Home() {
   return (

@@ -13,6 +13,7 @@ import {
   getSharedRenderer,
   warmUpServices3d,
 } from "@/app/lib/services3dRenderer";
+import VyrlCtaButton from "../layout/VyrlCtaButton";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -723,16 +724,7 @@ export default function Services3d({ modelUrl = "/cube1-optimized.glb", dark = f
       className={`services-main-section${dark ? " services-main-section--dark" : ""}`}
       ref={sectionRef}
     >
-      {/* The skip button used to be its own independent bottom-left
-          absolute box with no relationship to the counter's position —
-          fine on desktop, but on mobile it needed to sit directly under
-          the counter instead. Grouping both under .counter-top-left lets
-          services-3d.css switch the relationship per breakpoint: on
-          desktop this wrapper is unpositioned (static) and the counter +
-          skip button each keep their own independent absolute spot
-          against the section (top-left / bottom-left, unchanged); on
-          mobile the wrapper itself becomes the absolute top-left anchor
-          and the two children stack in normal flow underneath it. */}
+     
       <div className="counter-top-left">
         <div className="counter-divs">
           <div className="static-number">
@@ -789,7 +781,13 @@ export default function Services3d({ modelUrl = "/cube1-optimized.glb", dark = f
           {SERVICES[0].desc}
         </p>
         <div className="services-cta-mobile">
-          <CtaButton label="Explore Services" href="/services" className={ctaClassName} />
+     
+            
+          <VyrlCtaButton
+            label="Explore Services"
+            href="/services"
+            className={dark ? "vyrl-cta--invert" : "vyrl-cta--solid"}
+          />
         </div>
       </div>
 
