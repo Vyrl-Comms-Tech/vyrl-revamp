@@ -2,7 +2,10 @@
 
 import { useLayoutEffect } from "react";
 import { usePathname } from "next/navigation";
-import { revealTransitionIfPending } from "./pageTransition";
+import {
+  prepareForHistoryNavigation,
+  revealTransitionIfPending,
+} from "./pageTransition";
 
 // Fixed, full-viewport grid of blocks that wipes the screen during
 // navigation — ported from a plain HTML/CSS/JS reference (5x2 grid,
@@ -27,6 +30,23 @@ import { revealTransitionIfPending } from "./pageTransition";
 // revealing instead).
 export default function PageTransitionOverlay() {
   const pathname = usePathname();
+
+  useLayoutEffect(() => {
+    const handlePopState = () => {
+      // Query/hash-only history changes do not remount the route and do not
+      // need pin teardown; usePathname would not change to trigger a reveal.
+      if (window.location.pathname === pathname) return;
+
+      prepareForHistoryNavigation(
+        `${window.location.pathname}${window.location.search}`,
+      );
+    };
+
+    // Capture phase runs before Next's ordinary popstate listener, giving
+    // ScrollTrigger time to unwrap pinned React nodes before route removal.
+    window.addEventListener("popstate", handlePopState, true);
+    return () => window.removeEventListener("popstate", handlePopState, true);
+  }, [pathname]);
 
   useLayoutEffect(() => {
     let secondFrame;

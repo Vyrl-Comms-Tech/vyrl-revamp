@@ -131,6 +131,28 @@ export function triggerNavigation(destinationPath, navigate) {
   });
 }
 
+// Browser Back/Forward does not pass through PageTransitionLink. popstate is
+// already changing the history entry, so cover synchronously and restore all
+// GSAP-owned pin DOM before Next removes the outgoing React tree.
+export function prepareForHistoryNavigation(destinationPath) {
+  if (navigationInProgress) return;
+
+  navigationInProgress = true;
+  transitionPending = true;
+  transitionColor = getWipeColor(destinationPath);
+
+  const blocks = getBlocks();
+  gsap.killTweensOf(blocks);
+  gsap.set(blocks, {
+    visibility: "visible",
+    scaleY: 1,
+    backgroundColor: transitionColor,
+  });
+
+  window.lenis?.stop();
+  ScrollTrigger.getAll().forEach((trigger) => trigger.kill(true));
+}
+
 // ----------------------------------------------------------------------------
 // Phase 2 — reveal the new page.
 // Called once, on mount, by PageTransitionOverlay.jsx on every page load.
