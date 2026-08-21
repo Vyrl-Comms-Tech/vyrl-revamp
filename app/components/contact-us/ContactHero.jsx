@@ -5,6 +5,7 @@ import "../../styles/contact-hero.css";
 import "../../styles/cta.css";
 import Link from "next/link";
 import VyrlCtaButton from "../layout/VyrlCtaButton";
+import { triggerNavigation } from "../layout/pageTransition";
 
 const SERVICE_TAGS = [
   "   Web Development",
@@ -107,9 +108,9 @@ const ContactHero = () => {
   // actually has a previous entry in *this tab's* history to return to.
   const handleBack = () => {
     if (typeof window !== "undefined" && window.history.length > 1) {
-      router.back();
+      triggerNavigation("/", () => router.back());
     } else {
-      router.push("/");
+      triggerNavigation("/", (destination) => router.push(destination));
     }
   };
 

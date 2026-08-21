@@ -38,6 +38,14 @@
   pointer-events: none;
 }
 
+/* The heading layer stays click-through so it never blocks the orbit cards,
+   but its CTA must opt back into hit-testing for hover, focus and clicks. */
+.heading-before-footer .vyrl-cta {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
 .heading-before-footer h2 {
   width: 35%;
   font-size: 3.5rem;

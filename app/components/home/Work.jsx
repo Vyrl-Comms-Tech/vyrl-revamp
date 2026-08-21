@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import PageTransitionLink from "../layout/PageTransitionLink";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -18,38 +19,42 @@ const WORK_ITEMS = [
   {
     id: "banda",
     title: "BANDA",
-    tags: ["UIUX", "3D WEB", "AI CHATBOT"],
+    tags: ["GSAP", "RESPONSIVE", "THREE.JS"],
     image: "/banda1.avif",
     video: "/banda -v_compressed.mp4",
+    href: "/banda",
   },
   {
     id: "lala-darbar",
     title: "LALA DARBAR",
-    tags: ["UIUX", "3D WEB", "AI CHATBOT"],
+    tags: ["UIUX", "REACT", "SEO", "GSAP"],
     image: "/lala1.avif",
     video: null,
+    href: "/lala-darbar",
   },
   {
     id: "jeikor",
     title: "JEIKOR",
-    tags: ["UIUX", "3D WEB", "AI CHATBOT"],
+    tags: ["UIUX", "GSAP", "NEXT.JS"],
     image: "/jeikor3.avif",
     video: "/jeikor-v.mp4",
+    href: "/jeikor",
   },
   {
     id: "sanam-cars",
     title: "SANAM CARS",
-    tags: ["UIUX", "3D WEB", "AI CHATBOT"],
+    tags: ["NEXT.JS", "FILTERING", "API", "RESPONSIVE"],
     image: "/sanam5.avif",
-
     video: "/sanam-v_compressed.mp4",
+    href: "/sanamcars",
   },
   {
     id: "arabian",
     title: "ARABIAN ESTATES",
-    tags: ["UIUX", "3D WEB", "AI CHATBOT"],
+    tags: ["CUSTOM DASHBOARD", "GOOGLE MAPS"],
     image: "/arab3.avif",
     video: null,
+    href: "/arabian-estate",
     isDark: true,
   },
 ];
@@ -60,8 +65,6 @@ export default function Work() {
   const headingRef = useRef(null);
   const cardRefs = useRef([]);
   const bgBlackCardRef = useRef(null);
-
-  cardRefs.current = [];
 
   const registerCardRef = (el, item) => {
     if (!el) return;
@@ -423,10 +426,12 @@ export default function Work() {
 
       <div className="work-section-cards">
         {WORK_ITEMS.map((item) => (
-          <div
+          <PageTransitionLink
+            href={item.href}
             className={`card-work-cm${item.isDark ? " bg-black" : ""}`}
             key={item.id}
             ref={(el) => registerCardRef(el, item)}
+            aria-label={`View ${item.title} case study`}
           >
             <div className="cta-content">
               {item.tags.map((tag) => (
@@ -455,7 +460,7 @@ export default function Work() {
               alt={`${item.title} project preview`}
               loading="lazy"
             />
-          </div>
+          </PageTransitionLink>
         ))}
       </div>
     </div>

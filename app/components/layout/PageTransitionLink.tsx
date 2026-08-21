@@ -2,7 +2,7 @@
 import { forwardRef, MouseEvent } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { triggerNavigation, isCaseStudyPath } from "./pageTransition";
+import { triggerNavigation } from "./pageTransition";
 
 type PageTransitionLinkProps = React.ComponentProps<typeof Link>;
 
@@ -27,17 +27,6 @@ const PageTransitionLink = forwardRef<HTMLAnchorElement, PageTransitionLinkProps
       if (e.defaultPrevented) return;
       const hrefStr = href.toString();
       if (hrefStr === "#" || hrefStr === pathname) return;
-
-      // Entering a case-study page runs its own hand-built transition
-      // (heading clone + overlay, timed against its own client-side
-      // router.push — see CaseStudyInner.jsx/ProjectsGrid.jsx), which is
-      // unchanged and still SPA-based. Layering this hard-nav wipe on top
-      // of that would fight it (and defeat the whole point of that
-      // transition's own DOM-persisting heading-fly effect), so entering
-      // a case study is excluded here and left as a plain Link navigation
-      // — CaseStudyInner's own click handling on ProjectsGrid's cards
-      // takes it from there.
-      if (isCaseStudyPath(hrefStr)) return;
 
       // pathname (from usePathname()) never includes the query string,
       // so e.g. "/projects?category=restaurant" === "/projects" is

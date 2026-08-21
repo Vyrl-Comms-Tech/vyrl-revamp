@@ -342,10 +342,6 @@ export default function AboutUsStack() {
   const lineRefs = useRef([]);
   const counterRefs = useRef([]);
 
-  cardRefs.current = [];
-  lineRefs.current = [];
-  counterRefs.current = [];
-
   const setCardRef = (el) => {
     if (el && !cardRefs.current.includes(el)) cardRefs.current.push(el);
   };
@@ -465,8 +461,6 @@ export default function AboutUsStack() {
         // animation — instead of strictly after it.
         const lastCardSettleTime = lastIndex * 0.4 + 0.5;
 
-        const ctaRoot = ctaRef.current?.querySelector(".vyrl-cta");
-
         timeline
           .to(
             counterRefs.current,
@@ -478,19 +472,6 @@ export default function AboutUsStack() {
             { backgroundColor: "#fff", ease: "none" },
             lastCardSettleTime,
           );
-
-        if (ctaRoot) {
-          timeline.to(
-            ctaRoot,
-            {
-              duration: 0,
-              onComplete: () => ctaRoot.classList.add("vyrl-cta--invert"),
-              onReverseComplete: () =>
-                ctaRoot.classList.remove("vyrl-cta--invert"),
-            },
-            lastCardSettleTime,
-          );
-        }
 
         // Previously held an extra 0.3s once the last card settled (a
         // no-op tween to its own resting scale, purely to reserve dead

@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
+import { triggerNavigation } from "../layout/pageTransition";
 import "../../styles/projects-grid.css";
 
 gsap.registerPlugin(ScrollTrigger, Flip);
@@ -372,16 +373,9 @@ export default function ProjectsGrid() {
 
   const handleCardClick = (project) => () => {
     if (project.href) {
-      // Every card here links into a case-study route (see PROJECTS
-      // above), which runs its own hand-built transition (heading clone
-      // + overlay, still client-side/router.push-based — see
-      // CaseStudyInner.jsx). That owns the whole visual on the way in,
-      // so this is a plain router.push with no wipe of its own layered
-      // on top — same exclusion PageTransitionLink.tsx/Navbar.jsx apply
-      // for any other link into a case study. Every other navigation in
-      // this app (leaving this page via the navbar, footer, etc.) goes
-      // through the hard-nav wipe in pageTransition.js instead.
-      router.push(project.href);
+      triggerNavigation(project.href, (destination) =>
+        router.push(destination),
+      );
     }
   };
 

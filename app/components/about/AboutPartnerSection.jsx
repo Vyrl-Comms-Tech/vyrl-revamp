@@ -49,10 +49,9 @@ export default function AboutPartnersSection({
   const sectionRef = useRef(null);
   const gridRef = useRef(null);
   const imgRefs = useRef([]);
-  imgRefs.current = [];
 
-  const registerImgRef = (el) => {
-    if (el) imgRefs.current.push(el);
+  const registerImgRef = (index) => (el) => {
+    imgRefs.current[index] = el;
   };
 
   useEffect(() => {
@@ -90,6 +89,7 @@ export default function AboutPartnersSection({
     // polls, which never had this problem for the same reason: they were
     // never nested inside a gsap.context() to begin with.
     const bodyColorTl = gsap.timeline();
+    const ctaColorTweens = [];
     const navbarTl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
@@ -248,6 +248,13 @@ export default function AboutPartnersSection({
           if (cancelled || isMobileLayout) return;
           const pinTrigger = ScrollTrigger.getById("about-us-stack-pin");
           if (pinTrigger) {
+            const colorScrollTrigger = () => ({
+              trigger: sectionRef.current,
+              start: () => pinTrigger.end,
+              end: () => pinTrigger.end + window.innerHeight,
+              scrub: 1,
+            });
+
             bodyColorTl.fromTo(
               document.body,
               { "--bodybg": "#fff" },
@@ -262,6 +269,51 @@ export default function AboutPartnersSection({
                 },
               },
             );
+
+            const ctaRoot = document.querySelector(
+              ".aboutUsStack-cta .vyrl-cta",
+            );
+            const ctaBlob = ctaRoot?.querySelector(".vyrl-cta__blob");
+            const ctaSecondaryText = ctaRoot?.querySelector(
+              ".vyrl-cta__text--secondary",
+            );
+
+            if (ctaRoot && ctaBlob && ctaSecondaryText) {
+              ctaColorTweens.push(
+                gsap.fromTo(
+                  ctaRoot,
+                  { color: "#fff", borderColor: "#000" },
+                  {
+                    color: "#000",
+                    borderColor: "#fff",
+                    ease: "none",
+                    scrollTrigger: colorScrollTrigger(),
+                    onComplete: () =>
+                      ctaRoot.classList.add("vyrl-cta--invert"),
+                    onReverseComplete: () =>
+                      ctaRoot.classList.remove("vyrl-cta--invert"),
+                  },
+                ),
+                gsap.fromTo(
+                  ctaBlob,
+                  { backgroundColor: "#000" },
+                  {
+                    backgroundColor: "#fff",
+                    ease: "none",
+                    scrollTrigger: colorScrollTrigger(),
+                  },
+                ),
+                gsap.fromTo(
+                  ctaSecondaryText,
+                  { color: "#fff" },
+                  {
+                    color: "#000",
+                    ease: "none",
+                    scrollTrigger: colorScrollTrigger(),
+                  },
+                ),
+              );
+            }
             return;
           }
           pinLookupAttempts += 1;
@@ -319,6 +371,10 @@ export default function AboutPartnersSection({
         // so they need killing directly. .kill() also kills each
         // tween's own linked ScrollTrigger.
         bodyColorTl.kill();
+        ctaColorTweens.forEach((tween) => {
+          tween.scrollTrigger?.kill();
+          tween.kill();
+        });
         navbarTl.kill();
         // Every document.body tween in this app now writes to the
         // shared --bodybg custom property (see globals.css) instead of
@@ -375,6 +431,10 @@ export default function AboutPartnersSection({
       // ctx.revert() doesn't touch them; kill them directly instead.
       // .kill() also kills each tween's own linked ScrollTrigger.
       bodyColorTl.kill();
+      ctaColorTweens.forEach((tween) => {
+        tween.scrollTrigger?.kill();
+        tween.kill();
+      });
       navbarTl.kill();
       firstShuffle.kill();
       startLoop.kill();
@@ -415,7 +475,7 @@ export default function AboutPartnersSection({
           {partners.map(({ name, src, width, height }, index) => (
             <li key={name} className="partner-card">
               <Image
-                ref={registerImgRef}
+                ref={registerImgRef(index)}
                 src={src}
                 alt=""
                 width={width}
