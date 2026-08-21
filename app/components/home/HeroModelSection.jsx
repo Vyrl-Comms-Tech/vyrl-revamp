@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { gsap } from "gsap";
@@ -42,7 +42,10 @@ export default function HeroModelSection() {
     };
   }, []);
 
-  useEffect(() => {
+  // This effect creates a ScrollTrigger pin, which temporarily wraps and
+  // reparents the section. Its cleanup must run in React's layout phase so
+  // GSAP restores the original DOM before React removes this route.
+  useLayoutEffect(() => {
     const section = sectionRef.current;
     const canvas = canvasRef.current;
     if (!section || !canvas) return;

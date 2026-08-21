@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
+import { usePathname } from "next/navigation";
 import { revealTransitionIfPending } from "./pageTransition";
 
 // Fixed, full-viewport grid of blocks that wipes the screen during
@@ -25,9 +26,21 @@ import { revealTransitionIfPending } from "./pageTransition";
 // visit — which this app's separate PreloaderGate/Preloader1 already owns
 // revealing instead).
 export default function PageTransitionOverlay() {
-  useEffect(() => {
-    revealTransitionIfPending();
-  }, []);
+  const pathname = usePathname();
+
+  useLayoutEffect(() => {
+    let secondFrame;
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => {
+        revealTransitionIfPending();
+      });
+    });
+
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      if (secondFrame) cancelAnimationFrame(secondFrame);
+    };
+  }, [pathname]);
 
   const row1 = [0, 1, 2, 3, 4];
   const row2 = [0, 1, 2, 3, 4];

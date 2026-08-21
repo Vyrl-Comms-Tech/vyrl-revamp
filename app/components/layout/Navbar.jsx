@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
 import { triggerNavigation, isCaseStudyPath } from "./pageTransition";
 import { isKnownRoute } from "./knownRoutes";
@@ -28,6 +28,7 @@ const idleMessages = [
 const NavLink = ({ label, href }) => {
   const linkRef = useRef(null);
   const pathname = usePathname();
+  const router = useRouter();
   const isActive = href !== "#" && pathname === href;
 
   const handleClick = (e) => {
@@ -45,7 +46,7 @@ const NavLink = ({ label, href }) => {
     // see pageTransition.js's top-of-file comment for why. The wipe
     // covers the screen, then triggerNavigation() itself does the actual
     // reload once fully covered.
-    triggerNavigation(href);
+    triggerNavigation(href, (destination) => router.push(destination));
   };
 
   return (

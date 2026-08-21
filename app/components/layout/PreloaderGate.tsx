@@ -1,15 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 // import Preloader, { PRELOADER_SKIP_CLASS } from "./PreLoader";
 import Preloader1 from "./PreLoader1";
 
-// Old Preloader's skip-class kept as a plain constant here (rather than
-// imported from PreLoader.tsx, which is commented out above) so the
-// beforeInteractive skip-script below still has something to reference —
-// uncomment the PreLoader import above and swap Preloader1 back out to
-// restore the old one; this constant's value is unchanged either way.
-export const PRELOADER_SKIP_CLASS = "preloader-skip";
 export const PRELOADER_SESSION_KEY = "vyrl-preloader-shown";
 
 // Always renders the Preloader — whether it should actually play or be
@@ -32,18 +26,19 @@ export const PRELOADER_SESSION_KEY = "vyrl-preloader-shown";
 export default function PreloaderGate() {
   const [isDone, setIsDone] = useState(false);
 
-  // PreLoader1 (unlike PreLoader.tsx) has no PRELOADER_SKIP_CLASS
-  // awareness of its own — it always plays its full ~4s intro if
-  // mounted. Reading the class here (safe: this component only ever
-  // renders client-side, after the beforeInteractive skip-script in
-  // layout.tsx's <head> has already run and stamped it, so there's no
-  // SSR/hydration mismatch to worry about) lets the gate skip mounting
-  // Preloader1 at all on a repeat visit, instead of relying on the
-  // child to self-skip.
-  const [skipped] = useState(
-    () =>
-      typeof document !== "undefined" &&
-      document.documentElement.classList.contains(PRELOADER_SKIP_CLASS),
+  // Keep the server and first client render identical, then check browser
+  // storage after hydration. This avoids placing an inline <Script> in the
+  // root layout, which React 19 rejects during client-side route rendering.
+  const skipped = useSyncExternalStore(
+    () => () => {},
+    () => {
+      try {
+        return Boolean(sessionStorage.getItem(PRELOADER_SESSION_KEY));
+      } catch {
+        return false;
+      }
+    },
+    () => false,
   );
 
   useEffect(() => {
@@ -75,15 +70,4 @@ export default function PreloaderGate() {
     />
   );
 
-
 }
-
-export const preloaderSkipScript = `
-(function() {
-  try {
-    if (sessionStorage.getItem('${PRELOADER_SESSION_KEY}')) {
-      document.documentElement.classList.add('${PRELOADER_SKIP_CLASS}');
-    }
-  } catch (e) {}
-})();
-`;

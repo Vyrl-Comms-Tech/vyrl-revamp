@@ -1,4 +1,7 @@
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // ============================================================================
 // HARD-NAVIGATION page transition
@@ -30,8 +33,9 @@ import gsap from "gsap";
 // of a single plain div.
 // ============================================================================
 
-const TRANSITION_FLAG = "pt_navigating";
-const TRANSITION_COLOR = "pt_wipe_color";
+let transitionPending = false;
+let transitionColor = "#000";
+let navigationInProgress = false;
 
 const ease = "power4.inOut";
 
@@ -69,7 +73,10 @@ const getWipeColor = (destinationPath) => {
 // Called from every internal nav link's click handler (Navbar's NavLink,
 // PageTransitionLink, ProjectsGrid's card clicks).
 // ----------------------------------------------------------------------------
-export function triggerNavigation(destinationPath) {
+export function triggerNavigation(destinationPath, navigate) {
+  if (navigationInProgress) return;
+  navigationInProgress = true;
+
   const blocks = getBlocks();
   const wipeColor = getWipeColor(destinationPath);
 
@@ -77,10 +84,12 @@ export function triggerNavigation(destinationPath) {
     // No overlay DOM found (shouldn't happen — PageTransitionOverlay is
     // mounted once in layout.tsx — but fail open rather than stranding
     // the user on a dead link if it's ever missing).
-    window.location.href = destinationPath;
+    navigationInProgress = false;
+    navigate?.(destinationPath);
     return;
   }
 
+  gsap.killTweensOf(blocks);
   gsap.set(blocks, {
     visibility: "visible",
     scaleY: 0,
@@ -88,9 +97,10 @@ export function triggerNavigation(destinationPath) {
   });
   gsap.to(blocks, {
     scaleY: 1,
-    duration: 1,
-    stagger: { each: 0.1, from: "start", grid: [2, 5], axis: "x" },
+    duration: 0.55,
+    stagger: { each: 0.05, from: "start", grid: [2, 5], axis: "x" },
     ease,
+    overwrite: "auto",
     onComplete: () => {
       // Screen is now fully covered — safe to do anything visible here,
       // same timing guarantee the old SPA version relied on for
@@ -99,16 +109,24 @@ export function triggerNavigation(destinationPath) {
       // wherever this one happened to be (some browsers restore scroll
       // position per-URL automatically, but this covers the general
       // case since we're about to leave anyway).
+      window.lenis?.stop();
+
+      // Revert GSAP pin spacers before React removes the outgoing route.
+      // This prevents removeChild NotFoundError during client navigation.
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill(true));
+
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = "manual";
+      }
+      window.lenis?.scrollTo(0, { immediate: true });
       window.scrollTo(0, 0);
 
       // Flags read by revealTransition() below, on the NEW page's own
       // load — sessionStorage (not a JS variable) is the only thing
       // that survives a real navigation.
-      sessionStorage.setItem(TRANSITION_FLAG, "true");
-      sessionStorage.setItem(TRANSITION_COLOR, wipeColor);
-
-      // Real browser navigation — full reload, not router.push().
-      window.location.href = destinationPath;
+      transitionPending = true;
+      transitionColor = wipeColor;
+      navigate?.(destinationPath);
     },
   });
 }
@@ -123,12 +141,9 @@ export function triggerNavigation(destinationPath) {
 // owns revealing a genuine first load.
 // ----------------------------------------------------------------------------
 export function revealTransitionIfPending() {
-  const pending = sessionStorage.getItem(TRANSITION_FLAG);
-  if (!pending) return;
-
-  sessionStorage.removeItem(TRANSITION_FLAG);
-  const wipeColor = sessionStorage.getItem(TRANSITION_COLOR) || "#000";
-  sessionStorage.removeItem(TRANSITION_COLOR);
+  if (!transitionPending) return;
+  transitionPending = false;
+  const wipeColor = transitionColor;
 
   const blocks = getBlocks();
   if (!blocks.length) return;
@@ -139,6 +154,10 @@ export function revealTransitionIfPending() {
     backgroundColor: wipeColor,
   });
 
+  ScrollTrigger.refresh(true);
+  window.lenis?.resize();
+  window.lenis?.start();
+
   // A short delay before revealing (rather than revealing the instant this
   // runs) gives the new page's own mount effects — GSAP contexts,
   // ScrollTrigger creation, any deferred double-rAF measurement blocks
@@ -148,14 +167,16 @@ export function revealTransitionIfPending() {
   // SPA-era reveal; a flat timeout is used here instead of rAF chaining
   // since this now runs once, on a fresh document, not on every pathname
   // change.
-  gsap.delayedCall(0.12, () => {
+  gsap.delayedCall(0.05, () => {
     gsap.to(blocks, {
       scaleY: 0,
-      duration: 1,
-      stagger: { each: 0.1, from: "start", grid: "auto", axis: "x" },
+      duration: 0.55,
+      stagger: { each: 0.05, from: "start", grid: "auto", axis: "x" },
       ease,
+      overwrite: "auto",
       onComplete: () => {
         gsap.set(blocks, { visibility: "hidden" });
+        navigationInProgress = false;
       },
     });
   });

@@ -57,7 +57,9 @@ const PageTransitionLink = forwardRef<HTMLAnchorElement, PageTransitionLinkProps
         return;
       }
 
-      triggerNavigation(hrefStr);
+      triggerNavigation(hrefStr, (destination: string) =>
+        router.push(destination),
+      );
     };
 
     return (
