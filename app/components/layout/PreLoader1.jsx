@@ -33,6 +33,7 @@ export default function Preloader1({ onComplete }) {
     gsap.set(path, {
       strokeDasharray: length,
       strokeDashoffset: length,
+      opacity: 1,
     });
 
     // Counter: 1 -> 100, ~45ms per tick (matches original timing/feel)
@@ -61,6 +62,9 @@ export default function Preloader1({ onComplete }) {
         if (typeof onComplete === 'function') onComplete();
       },
     });
+
+    // Keep the choreography intact but make the full intro about 20% faster.
+    tl.timeScale(1.2);
 
     tl.to(path, { strokeDashoffset: 0, duration: 2.4, ease: 'power4.inOut' })
       .to(path, { fill: '#000000', duration: 1 }, '-=0.1')

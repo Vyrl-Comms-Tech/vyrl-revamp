@@ -77,6 +77,9 @@ html.preloader-skip .pre-loader {
 
 .pre-loader .first-path {
   transform: translateX(35%);
+  /* Prevent the complete V path painting before GSAP measures and hides
+     the stroke. PreLoader1 reveals it only after dash setup is complete. */
+  opacity: 0;
   fill: transparent;
   stroke: #000000;
   stroke-width: 2;

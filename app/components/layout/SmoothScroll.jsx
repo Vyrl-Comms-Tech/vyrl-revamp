@@ -33,6 +33,60 @@ function isIOS() {
 function SmoothScroll() {
   const pathname = usePathname();
 
+  // Zoom emits many resize events while the browser is still changing its
+  // viewport. Refresh once after it settles so Lenis and GSAP rebuild their
+  // measurements together instead of repeatedly touching live pin spacers.
+  useEffect(() => {
+    let resizeTimer;
+    let refreshFrame;
+    let settleFrame;
+
+    const refreshAfterResize = () => {
+      window.clearTimeout(resizeTimer);
+      cancelAnimationFrame(refreshFrame);
+      cancelAnimationFrame(settleFrame);
+
+      resizeTimer = window.setTimeout(() => {
+        if (
+          document.documentElement.classList.contains(
+            "page-transition-active",
+          )
+        ) {
+          return;
+        }
+
+        refreshFrame = requestAnimationFrame(() => {
+          window.lenis?.resize();
+          ScrollTrigger.refresh(true);
+          settleFrame = requestAnimationFrame(() => {
+            window.lenis?.resize();
+            ScrollTrigger.update();
+          });
+        });
+      }, 220);
+    };
+
+    window.addEventListener("resize", refreshAfterResize, { passive: true });
+    window.addEventListener("orientationchange", refreshAfterResize, {
+      passive: true,
+    });
+    window.visualViewport?.addEventListener("resize", refreshAfterResize, {
+      passive: true,
+    });
+
+    return () => {
+      window.clearTimeout(resizeTimer);
+      cancelAnimationFrame(refreshFrame);
+      cancelAnimationFrame(settleFrame);
+      window.removeEventListener("resize", refreshAfterResize);
+      window.removeEventListener("orientationchange", refreshAfterResize);
+      window.visualViewport?.removeEventListener(
+        "resize",
+        refreshAfterResize,
+      );
+    };
+  }, []);
+
   useEffect(() => {
     if (isIOS()) {
       // No Lenis instance at all: ScrollTrigger still needs to hear

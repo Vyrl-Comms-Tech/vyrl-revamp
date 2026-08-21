@@ -82,7 +82,6 @@ export default function OrbitGallery({
 }) {
   const sectionRef = useRef(null);
   const cardRefs = useRef([]);
-  cardRefs.current = [];
 
   const addCardRef = (el) => {
     if (el && !cardRefs.current.includes(el)) {
@@ -187,7 +186,9 @@ export default function OrbitGallery({
         orbitRadiusX = getRadiusX();
         orbitRadiusY = getRadiusY();
         updateOrbit();
-        ScrollTrigger.refresh();
+        // SmoothScroll owns the debounced global refresh after zoom/resize.
+        // Refreshing here for every intermediate zoom event could rebuild
+        // this section's active pin spacer repeatedly and corrupt its DOM.
       };
 
       window.addEventListener("resize", handleResize);

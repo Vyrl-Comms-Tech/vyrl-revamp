@@ -3,6 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 // import Preloader, { PRELOADER_SKIP_CLASS } from "./PreLoader";
 import Preloader1 from "./PreLoader1";
+import { warmUpServices3d } from "@/app/lib/services3dRenderer";
 
 export const PRELOADER_SESSION_KEY = "vyrl-preloader-shown";
 
@@ -56,6 +57,21 @@ export default function PreloaderGate() {
       document.body.classList.remove("preloader-active");
     };
   }, [isDone, skipped]);
+
+  // Warm up the services cube (GLB fetch/parse/Draco-decode + a hidden
+  // shader compile on the shared offscreen renderer, see
+  // services3dRenderer.js) while the preloader's own intro is playing
+  // anyway, so it's ready by the time Services3d actually mounts. This
+  // used to run inside the old PreLoader.tsx, which PreloaderGate no
+  // longer renders (PreLoader1 replaced it) — nothing called it since,
+  // so the full fetch/decode/compile cost was paid, visibly, on first
+  // scroll into the section instead. warmUpServices3d() is idempotent
+  // (module-scope cached promise) and fires unconditionally here (even
+  // when skipped/isDone) since the shared renderer/program cache is
+  // still worth warming on every load, preloader-skipped or not.
+  useEffect(() => {
+    warmUpServices3d("/cube1-optimized.glb");
+  }, []);
 
   if (isDone || skipped) return null;
 

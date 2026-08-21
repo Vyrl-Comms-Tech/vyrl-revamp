@@ -4,6 +4,7 @@ import { useLayoutEffect } from "react";
 import { usePathname } from "next/navigation";
 import {
   prepareForHistoryNavigation,
+  prepareRefreshTransitionIfNeeded,
   revealTransitionIfPending,
 } from "./pageTransition";
 
@@ -49,6 +50,8 @@ export default function PageTransitionOverlay() {
   }, [pathname]);
 
   useLayoutEffect(() => {
+    prepareRefreshTransitionIfNeeded(pathname);
+
     let secondFrame;
     const firstFrame = requestAnimationFrame(() => {
       secondFrame = requestAnimationFrame(() => {

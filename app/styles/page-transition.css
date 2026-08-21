@@ -57,3 +57,11 @@
   will-change: transform;
   visibility: hidden;
 }
+
+/* instrumentation-client marks repeat-session reloads before hydration.
+   Start fully covered on the first paint; PageTransitionOverlay then uses
+   the normal GSAP reveal once the refreshed route has mounted. */
+html.page-refresh-transition .page-transition-block {
+  visibility: visible;
+  transform: scaleY(1);
+}

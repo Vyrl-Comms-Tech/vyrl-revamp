@@ -76,6 +76,7 @@ const getWipeColor = (destinationPath) => {
 export function triggerNavigation(destinationPath, navigate) {
   if (navigationInProgress) return;
   navigationInProgress = true;
+  document.documentElement.classList.add("page-transition-active");
 
   const blocks = getBlocks();
   const wipeColor = getWipeColor(destinationPath);
@@ -85,6 +86,7 @@ export function triggerNavigation(destinationPath, navigate) {
     // mounted once in layout.tsx — but fail open rather than stranding
     // the user on a dead link if it's ever missing).
     navigationInProgress = false;
+    document.documentElement.classList.remove("page-transition-active");
     navigate?.(destinationPath);
     return;
   }
@@ -138,6 +140,7 @@ export function prepareForHistoryNavigation(destinationPath) {
   if (navigationInProgress) return;
 
   navigationInProgress = true;
+  document.documentElement.classList.add("page-transition-active");
   transitionPending = true;
   transitionColor = getWipeColor(destinationPath);
 
@@ -151,6 +154,31 @@ export function prepareForHistoryNavigation(destinationPath) {
 
   window.lenis?.stop();
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill(true));
+}
+
+export function prepareRefreshTransitionIfNeeded(destinationPath) {
+  if (!document.documentElement.classList.contains("page-refresh-transition")) {
+    return;
+  }
+
+  navigationInProgress = true;
+  document.documentElement.classList.add("page-transition-active");
+  transitionPending = true;
+  transitionColor = getWipeColor(destinationPath);
+
+  const blocks = getBlocks();
+  gsap.set(blocks, {
+    visibility: "visible",
+    scaleY: 1,
+    backgroundColor: transitionColor,
+  });
+
+  if ("scrollRestoration" in window.history) {
+    window.history.scrollRestoration = "manual";
+  }
+  window.lenis?.scrollTo(0, { immediate: true });
+  window.scrollTo(0, 0);
+  document.documentElement.classList.remove("page-refresh-transition");
 }
 
 // ----------------------------------------------------------------------------
@@ -199,6 +227,7 @@ export function revealTransitionIfPending() {
       onComplete: () => {
         gsap.set(blocks, { visibility: "hidden" });
         navigationInProgress = false;
+        document.documentElement.classList.remove("page-transition-active");
       },
     });
   });
