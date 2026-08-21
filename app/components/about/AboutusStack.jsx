@@ -358,6 +358,11 @@ export default function AboutUsStack() {
     let removeStepGestureListeners = null;
     let isMounted = true;
 
+    // AboutStack always begins on white. Reassert it after this component's
+    // passive mount so cleanup from the outgoing route cannot leave a stale
+    // black --bodybg value behind during client-side navigation.
+    document.body.style.setProperty("--bodybg", "#fff");
+
     (async () => {
       const [gsapModule, scrollTriggerModule] = await Promise.all([
         import("gsap"),

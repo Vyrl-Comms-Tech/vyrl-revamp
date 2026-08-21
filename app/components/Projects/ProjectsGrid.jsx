@@ -280,8 +280,25 @@ export default function ProjectsGrid() {
       addNavbarLightenTween();
     }, sectionRef);
 
+    // During a client-side page transition, passive cleanup from the
+    // outgoing route can run after this layout effect and clear --bodybg
+    // back to white. Wait until that cleanup and the new grid's first
+    // layout have both committed, then restore the Projects start state
+    // and recalculate every scroll measurement against the final DOM.
+    let secondFrame;
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => {
+        if (cancelled) return;
+        gsap.set(document.body, { "--bodybg": "#000000" });
+        ScrollTrigger.refresh(true);
+        window.lenis?.resize();
+      });
+    });
+
     return () => {
       cancelled = true;
+      cancelAnimationFrame(firstFrame);
+      if (secondFrame) cancelAnimationFrame(secondFrame);
       ctx.revert();
       // Don't leak black bg to other routes — same cleanup Slider.jsx/
       // Testimonials.jsx use for their own document.body tweens

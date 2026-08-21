@@ -440,10 +440,10 @@ export default function AboutPartnersSection({
       startLoop.kill();
       loopCall?.kill();
       gsap.killTweensOf(imgRefs.current);
-      // Clear both property names — see the identical guard/comment on
-      // this same cleanup's other branch (the prefersReducedMotion
-      // early return) above for why.
-      gsap.set(document.body, { clearProps: "background,backgroundColor" }); // don't leak black bg to other routes
+      // This section animates the shared custom property, so clear that
+      // exact property. Clearing background/backgroundColor left the inline
+      // --bodybg:#000 value behind and made AboutStack black on re-entry.
+      gsap.set(document.body, { clearProps: "--bodybg" });
     };
   }, []);
 
