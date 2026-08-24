@@ -64,7 +64,9 @@
   .logos-left h2 {
     font-size: 62px;
   }
-
+.logo{
+  scale: 0.8;
+}
   .logos-left-desc {
     font-size: 18px;
     line-height: 111%;

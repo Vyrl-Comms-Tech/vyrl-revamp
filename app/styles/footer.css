@@ -541,6 +541,10 @@
   .footer-mascot video {
     width: 210px;
   }
+  .footer-subscribe-subtitle{
+    line-height: 111%;
+    font-size: 16px;
+  }
 }
 @media (max-width: 1300px) {
   .footer-nav-link {

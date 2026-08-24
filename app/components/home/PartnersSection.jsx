@@ -516,6 +516,64 @@ export default function PartnersSection({
     if (el) imgRefs.current.push(el);
   };
 
+  // Windows-10-Calendar-style "Reveal" hover: a spotlight/border-glow that
+  // tracks the cursor, driven by --mx/--my custom properties read in
+  // partner-section.css's .partner-card::before/::after. One delegated
+  // listener on the grid (not one per card) computes the hovered card's
+  // relative pointer position and writes the vars straight to its style —
+  // never through React state, since mousemove fires far faster than a
+  // render loop should run.
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    // Reveal is a cursor-follow effect — meaningless (and wasted listener
+    // overhead) on touch, and disabled outright under reduced motion.
+    if (prefersReducedMotion) return;
+
+    let rafId = null;
+    let pending = null; // most recent {card, clientX, clientY} awaiting a frame
+
+    function updateFromEvent(e) {
+      if (e.pointerType && e.pointerType !== "mouse") return;
+      const card = e.target.closest(".partner-card");
+      if (!card || !grid.contains(card)) return;
+
+      pending = { card, clientX: e.clientX, clientY: e.clientY };
+      if (rafId !== null) return; // coalesce to one update per frame
+
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        if (!pending) return;
+        const { card: c, clientX, clientY } = pending;
+        pending = null;
+        const rect = c.getBoundingClientRect();
+        c.style.setProperty("--mx", `${clientX - rect.left}px`);
+        c.style.setProperty("--my", `${clientY - rect.top}px`);
+      });
+    }
+
+    function resetCard(e) {
+      const card = e.target.closest?.(".partner-card");
+      if (card) {
+        card.style.removeProperty("--mx");
+        card.style.removeProperty("--my");
+      }
+    }
+
+    grid.addEventListener("pointermove", updateFromEvent);
+    grid.addEventListener("pointerleave", resetCard, true);
+
+    return () => {
+      grid.removeEventListener("pointermove", updateFromEvent);
+      grid.removeEventListener("pointerleave", resetCard, true);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",

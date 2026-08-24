@@ -348,7 +348,25 @@
     padding: 0.55rem 1rem;
   }
 }
-
+@media (max-width: 1500px) {
+  .contactHero-newsletter p {
+    width: 100%;
+    font-size: 1rem;
+  }
+  .contactHero-newsletter {
+    left: 1rem;
+    right: 1rem;
+  }
+  .contactHero-newsletter {
+    padding: 1rem;
+  }
+  .contactHero-newsletter-form button {
+    padding: 0.55rem 1.25rem;
+  }
+  .contactHero-right {
+    padding: 6rem 10px 3rem;
+  }
+}
 @media (max-width: 900px) {
   .contactHero {
     flex-direction: column-reverse;

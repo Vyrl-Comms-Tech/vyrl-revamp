@@ -64,6 +64,8 @@
   height: 150px;
   padding: 2rem;
 
+  position: relative;
+  overflow: hidden;
   border: 1px solid rgb(150 147 147 / 15%);
   z-index: 20;
 
@@ -78,13 +80,77 @@
     background-color 0.4s ease,
     border-color 0.4s ease,
     box-shadow 0.4s ease;
+
+  /* Cursor position within this card, in px, relative to its own
+     top-left corner. Set from JS (PartnersSection.jsx's delegated
+     pointermove handler) on every move; the fallback (card center)
+     only matters for the instant before the first pointermove fires. */
+  --mx: 50%;
+  --my: 50%;
+}
+
+/* Fluent-style "Reveal" border: a soft ring of light that follows the
+   cursor, confined to a thin band around the card's edge via the mask
+   subtraction below (inset "hole" cut out of a full-bleed gradient). */
+.partner-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+
+  background: radial-gradient(
+    160px circle at var(--mx) var(--my),
+    rgb(255 255 255 / 65%),
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  padding: 1px; /* ring thickness */
+
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+/* Inner spotlight: a much softer glow across the card surface itself,
+   same cursor-tracked center as ::before. */
+.partner-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+
+  background: radial-gradient(
+    220px circle at var(--mx) var(--my),
+    rgb(255 255 255 / 8%),
+    transparent 100%
+  );
+
+  opacity: 0;
+  transition: opacity 0.25s ease;
 }
 
 .partner-card:hover {
-  background: rgb(255 255 255 / 3.5%);
+  border-color: rgb(255 255 255 / 25%);
+}
 
-  border-color: rgb(255 255 255 / 80%);
-  box-shadow: 0 0 24px rgb(255 255 255 / 25%);
+.partner-card:hover::before,
+.partner-card:hover::after {
+  opacity: 1;
+}
+
+.partner-card > * {
+  position: relative;
+  z-index: 2;
 }
 
 .partner-logo {
@@ -157,15 +223,30 @@
 
 @media (prefers-reduced-motion: reduce) {
   .partner-card,
-  .partner-logo {
+  .partner-logo,
+  .partner-card::before,
+  .partner-card::after {
     transition: none;
     will-change: auto;
+  }
+
+  /* The cursor-tracked spotlight is motion, not just a fade — drop it
+     entirely rather than have it snap to the pointer with no transition. */
+  .partner-card::before,
+  .partner-card::after {
+    display: none;
   }
 }
 
 @media (max-width: 1500px) {
   .partner-logo {
     max-height: 43px;
+  }
+  .partners-heading {
+    font-size: clamp(2.25rem, 4vw, 5rem);
+  }
+  .partners-top > span {
+    font-size: 0.85rem;
   }
 }
 @media (max-width: 1300px) {
@@ -235,5 +316,14 @@
     border: none;
     border-color: none;
     box-shadow: none;
+  }
+
+  /* Touch has no cursor to track — the effect never fires from JS on
+     touch anyway (see the pointerType guard in PartnersSection.jsx),
+     but drop the pseudo-elements too so nothing lingers if a hybrid
+     device (touch + mouse) still matches this breakpoint. */
+  .partner-card::before,
+  .partner-card::after {
+    display: none;
   }
 }

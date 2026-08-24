@@ -401,9 +401,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import VanillaTilt from "vanilla-tilt";
 
-import TextAnimation from "./TextAnimation";
 import "../../styles/text-and-cards.css";
-import CtaButton from "../layout/cta";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -481,10 +479,10 @@ export default function TextAndCards() {
           const animation = gsap.fromTo(
             cards,
             {
-              y: 64,
-              rotateX: -8,
-              scale: 0.985,
-              opacity: 0,
+              y: 0,
+              rotateX: 0,
+              scale: 1,
+              opacity: 1,
               transformPerspective: 1200,
               transformOrigin: "50% 100%",
             },
@@ -493,15 +491,15 @@ export default function TextAndCards() {
               rotateX: 0,
               scale: 1,
               opacity: 1,
-              duration: 0.8,
-              stagger: 0.08,
+              duration: 0,
+              stagger: 0,
               ease: "power3.out",
               force3D: true,
               overwrite: "auto",
 
               scrollTrigger: {
                 trigger: section,
-                start: "top 95%",
+                start: "top bottom",
                 once: true,
               },
 
@@ -571,18 +569,30 @@ export default function TextAndCards() {
 
     const cards = Array.from(section.querySelectorAll(".hs-card"));
 
-    VanillaTilt.init(cards, {
-      max: 10,
-      speed: 400,
-      perspective: 1000,
-      easing: "cubic-bezier(.03,.98,.52,.99)",
-      reverse: true,
-      glare: true,
-      "max-glare": 0.1,
-      gyroscope: false,
+    const initializeTilt = () => {
+      VanillaTilt.init(cards, {
+        max: 10,
+        speed: 400,
+        perspective: 1000,
+        easing: "cubic-bezier(.03,.98,.52,.99)",
+        reverse: true,
+        glare: true,
+        "max-glare": 0.1,
+        gyroscope: false,
+      });
+    };
+
+    // Tilt is decorative. Deferring it keeps its layout work away from the
+    // first frame where the hero hands off to this section.
+    const idleId = window.requestIdleCallback?.(initializeTilt, {
+      timeout: 1500,
     });
+    const timeoutId =
+      idleId === undefined ? setTimeout(initializeTilt, 500) : null;
 
     return () => {
+      if (idleId !== undefined) window.cancelIdleCallback?.(idleId);
+      if (timeoutId !== null) clearTimeout(timeoutId);
       cards.forEach((card) => card.vanillaTilt?.destroy());
     };
   }, []);
@@ -636,7 +646,8 @@ export default function TextAndCards() {
       },
       {
         threshold: 0.1,
-        rootMargin: "0px",
+        // Decode just before entry so the first visible frame is already ready.
+        rootMargin: "500px 0px",
       },
     );
 

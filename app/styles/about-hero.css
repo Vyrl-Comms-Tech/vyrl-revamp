@@ -71,12 +71,12 @@ background: #fff;
 }
 
 .aboutHero-headingCol {
+  gap: 13px;
   align-self: flex-start;
   text-align: right;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  gap: 13px;
 }
 
 .aboutHero-tag {
@@ -186,6 +186,12 @@ background: #fff;
     max-width: 520px;
     font-size: 18px;
   }
+}
+@media (max-width:1500px){
+  .aboutHero-headingCol {
+  gap: 0;
+  align-self: center;
+}
 }
 @media (max-width: 900px) {
   .aboutHero-tag {

@@ -331,7 +331,7 @@
 .cs-p8-next-text {
   font-size: clamp(3rem, 5.5vw, 52px);
   font-weight: 500;
-  margin: 0 0 10px;
+  margin: 0 0 40px;
 }
 
 /* Thin progress/loading bar + circle arrow */
@@ -339,7 +339,7 @@
   display: flex;
   align-items: center;
   width: 90%;
-  padding-bottom: 88px;
+  padding-bottom: 5px;
 }
 
 .cs-p8-line {
@@ -415,9 +415,16 @@
   .cs-services-col {
     top: 58%;
   }
+  .cs-similar-sub{
+    font-size: 21px;
+    text-align: right;
+  }
   .cs-p8-next-text {
     font-size: 2.5rem;
   }
+      .cs-p3-content p {
+      font-size: 22px;
+      }
 }
 @media (max-width: 1390px) {
   .cs-services-col {

@@ -19,7 +19,7 @@
   align-items: center;
   margin-top: clamp(6rem, 18vh, 10rem) !important;
   width: 400px;
-  height:70vh;
+  height: 70vh;
   scale: 0.9 !important;
   overflow: hidden;
   border-radius: 6px;
@@ -128,19 +128,22 @@
   .clients-testimonial {
     margin-bottom: 10%;
   }
+  .testimonial-cta {
+    /* margin-top: 0.4rem; */
+  }
   .testimonial-card {
- height: 85vh;
+    height: 85vh;
     scale: 0.8 !important;
   }
 }
-@media (max-width:1400px){
-  .testimonial-card{
+@media (max-width: 1400px) {
+  .testimonial-card {
     margin-top: 30vh !important;
     height: 100vh;
     scale: 0.7 !important;
   }
 
-  .card-inner-testi{
+  .card-inner-testi {
     bottom: 11%;
   }
 }

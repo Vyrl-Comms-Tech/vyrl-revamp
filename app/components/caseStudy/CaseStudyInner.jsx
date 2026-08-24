@@ -764,7 +764,6 @@ const CaseStudyInner = ({ slug }) => {
             </ul>
             <div className="cs-p8-bottom">
               <p className="cs-p8-project-name">{c2.title}</p>
-              <h3 className="cs-p8-next-text">{c2.nextLabel}</h3>
               <div className="cs-p8-progress">
                 <div className="cs-p8-line">
                   <div className="cs-p8-fill" ref={progressFillRef} />
@@ -784,6 +783,7 @@ const CaseStudyInner = ({ slug }) => {
                   </svg>
                 </span>
               </div>
+              <h3 className="cs-p8-next-text">{c2.nextLabel}</h3>
             </div>
           </div>
 
