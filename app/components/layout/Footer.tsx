@@ -8,6 +8,7 @@ import PageTransitionLink from "./PageTransitionLink";
 import { isKnownRoute } from "./knownRoutes";
 import "../../styles/footer.css";
 import Link from "next/link";
+import { subscribe, getSubscriberErrorMessage } from "../../lib/subscriberApi";
 // import PageTransitionLink from "./PageTransitionLink";
 
 const CASE_STUDY_PATHS = Object.values(caseStudies).map((c) => c.href);
@@ -63,6 +64,37 @@ function Footer() {
     usa: "",
   });
 
+  const [subscribeEmail, setSubscribeEmail] = useState("");
+  const [subscribeStatus, setSubscribeStatus] = useState<
+    "idle" | "submitting" | "success" | "error"
+  >("idle");
+  const [subscribeMessage, setSubscribeMessage] = useState("");
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const email = subscribeEmail.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setSubscribeStatus("error");
+      setSubscribeMessage("Enter a valid email address");
+      return;
+    }
+
+    setSubscribeStatus("submitting");
+    setSubscribeMessage("");
+
+    try {
+      await subscribe(email);
+
+      setSubscribeStatus("success");
+      setSubscribeMessage("Thanks for subscribing!");
+      setSubscribeEmail("");
+    } catch (err) {
+      setSubscribeStatus("error");
+      setSubscribeMessage(getSubscriberErrorMessage(err, "Failed to subscribe"));
+    }
+  };
+
   const [isReelOpen, setIsReelOpen] = useState(false);
   // Drives the actual CSS transition. Kept separate from isReelOpen
   // (which controls mount/unmount) because the modal has to render once
@@ -94,7 +126,7 @@ function Footer() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          video.play().catch(() => {});
+          video.play().catch(() => { });
         } else {
           video.pause();
         }
@@ -137,16 +169,6 @@ function Footer() {
     };
     window.addEventListener("keydown", onKeyDown);
 
-    // The site uses Lenis for smooth scrolling (see SmoothScroll.jsx) —
-    // it drives scroll itself via its own rAF loop, so plain
-    // body { overflow: hidden } alone doesn't stop it (Lenis keeps
-    // scrolling the page underneath regardless of native overflow).
-    // window.lenis is the same global instance CaseStudyInner.jsx
-    // already reaches for; overflow:hidden is kept too as a fallback for
-    // the brief moment before Lenis has initialized. Its declared type
-    // (inferred from wherever it's first assigned, in untyped
-    // SmoothScroll.jsx) doesn't carry the real Lenis instance shape, so
-    // TS doesn't know about .stop()/.start() without this cast.
     const lenis = (
       window as unknown as { lenis?: { stop: () => void; start: () => void } }
     ).lenis;
@@ -398,16 +420,37 @@ function Footer() {
           </h3>
           <p className="footer-subscribe-subtitle">
             Stay updated with the latest news, insights, and updates from
-            Vyrl—delivered straight to your inbox.
+            Vyrl delivered straight to your inbox.
           </p>
-          <div className="footer-subscribe-form">
+          <form className="footer-subscribe-form" onSubmit={handleSubscribe}>
             <input
               type="email"
               placeholder="Subscribe"
               className="footer-subscribe-input"
+              value={subscribeEmail}
+              onChange={(e) => {
+                setSubscribeEmail(e.target.value);
+                if (subscribeStatus !== "idle") setSubscribeStatus("idle");
+              }}
             />
-            <button className="footer-subscribe-btn">Send Now</button>
-          </div>
+            <button
+              type="submit"
+              className={`footer-subscribe-btn${
+                subscribeStatus === "success" ? " is-success" : ""
+              }${subscribeStatus === "error" ? " is-error" : ""}`}
+              disabled={subscribeStatus === "submitting"}
+            >
+              <span key={subscribeStatus}>
+                {subscribeStatus === "submitting"
+                  ? "Sending..."
+                  : subscribeStatus === "success"
+                  ? "Done"
+                  : subscribeStatus === "error"
+                  ? "Try Again"
+                  : "Send Now"}
+              </span>
+            </button>
+          </form>
         </div>
 
         <div className="footer-mascot">

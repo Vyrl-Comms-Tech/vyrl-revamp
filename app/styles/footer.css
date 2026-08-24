@@ -335,9 +335,9 @@
   border: none;
   background: rgba(255, 255, 255, 0.07);
   border-radius: 5px;
-  padding: 10px 18px;
-  color: #fff;
-  font-size: 14px;
+  padding: 0px 18px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 20px;
   outline: none;
   transition: border-color 0.2s;
 }
@@ -346,6 +346,9 @@
   color: rgba(255, 255, 255, 0.5);
   font-size: 20px;
   font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .footer-subscribe-input:focus {
@@ -362,10 +365,83 @@
   font-weight: 300;
   white-space: nowrap;
   cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+}
+
+.footer-subscribe-btn span {
+  display: inline-block;
+  animation: footer-subscribe-btn-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes footer-subscribe-btn-in {
+  from {
+    opacity: 0;
+    transform: translateY(60%);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
 }
 
 .footer-subscribe-btn:hover {
   opacity: 0.85;
+}
+
+.footer-subscribe-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.footer-subscribe-btn.is-success {
+  transform: scale(1.05);
+}
+
+.footer-subscribe-btn.is-success span {
+  animation: footer-subscribe-btn-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes footer-subscribe-btn-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(60%) scale(0.7);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-6%) scale(1.15);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.footer-subscribe-btn.is-error {
+  border-color: #FF8080;
+  color: #FF8080;
+  animation: footer-subscribe-btn-shake 0.45s ease;
+}
+
+@keyframes footer-subscribe-btn-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(5px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
 }
 
 /* Mascot */

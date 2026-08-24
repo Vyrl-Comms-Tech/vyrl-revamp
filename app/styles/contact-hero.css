@@ -104,7 +104,7 @@
   font-size: 1.1rem;
   color: rgba(246, 246, 246, 0.4);
   width: 80%;
-  margin: 0 0 1.25rem;
+  /* margin: 0 0 1.25rem; */
 }
 
 .contactHero-newsletter-form {
@@ -141,6 +141,20 @@
   font-size: 1.1rem;
   /* font-weight: 400; */
   white-space: nowrap;
+}
+
+.email-formError,
+.email-formSuccess {
+  font-size: 0.95rem;
+  margin: 0.75rem 0 0;
+}
+
+.email-formError {
+  color: #ff6b6b;
+}
+
+.email-formSuccess {
+  color: #4ade80;
 }
 
 /* ---------- Right column ---------- */
@@ -207,6 +221,14 @@
   gap: 2rem;
 }
 
+.contactHero-form-field {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .contactHero-form-row input {
   flex: 1;
   min-width: 0;
@@ -223,10 +245,87 @@
   color: #8a8a8a;
 }
 
+.contactHero-form-row input[aria-invalid="true"] {
+  border-bottom-color: #FF3333;
+}
+
+.contactHero-fieldError {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+  color: #FF3333;
+  font-size: 0.8rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.contactHero-formError {
+  color: #FF3333;
+  font-size: 0.9rem;
+}
+
+.contactHero-formSuccess {
+  color: #008000;
+  font-size: 0.9rem;
+}
+
+.contactHero-submitWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 3.5rem;
+}
+
+.contactHero-submitWrap-btn {
+  transition: opacity 0.45s ease, transform 0.45s ease, filter 0.45s ease;
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0);
+}
+
+.contactHero-thankYou {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  white-space: nowrap;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #3ddc73;
+  /* text-shadow: 0 0 24px rgba(61, 220, 115, 0); */
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-50%) translateY(0.75rem) scale(0.85);
+  filter: blur(6px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.15s,
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.15s,
+    filter 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+}
+
+.contactHero-submitWrap.is-submitted .contactHero-submitWrap-btn {
+  opacity: 0;
+  transform: scale(0.9);
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+.contactHero-submitWrap.is-submitted .contactHero-thankYou {
+  opacity: 1;
+  transform: translateY(-50%) translateY(0) scale(1);
+  filter: blur(0);
+}
+
+@media (max-width: 640px) {
+  .contactHero-thankYou {
+    font-size: 1.75rem;
+  }
+}
+
 /* Wraps the "Send Now" submit button, which now reuses the shared
    cta-btn/cta-button-white hover animation (see cta.css) — this just
    restores the same top spacing the old markup had. */
-.contactHero-form > .cta-btn-container {
+.contactHero-form>.cta-btn-container {
   align-self: flex-start;
   margin-top: 0.5rem;
   /* .contactHero-form is a flex column, and a flex item's default
@@ -322,23 +421,29 @@
   .contactHero-newsletter h3 {
     font-size: 2.5rem;
   }
+
   .contactHero-right h1 {
     margin: 0 0 1rem;
   }
+
   .contactHero-tag {
     padding: 0.4rem 1rem;
     font-size: 1rem;
   }
+
   .contactHero-form {
     gap: 1.5rem;
   }
+
   .contactHero-blurb {
     font-size: 1.11rem;
   }
+
   .contactHero-social-btn {
     width: 45px;
     height: 45px;
   }
+
   .contactHero-social-btn svg {
     width: 21px;
   }
@@ -382,6 +487,7 @@
     position: relative;
     padding-bottom: 140px;
   }
+
   .contactHero-right {
     padding: 3rem 5%;
   }
@@ -424,26 +530,32 @@
   .contactHero-right h1 {
     font-size: clamp(1.8rem, 51px, 6rem);
   }
+
   .contactHero-tags {
     width: 100%;
   }
+
   .contactHero-tag {
     padding: 0.3rem 0.9rem;
     font-size: 0.8rem;
   }
+
   .contactHero-blurb {
     font-size: 1rem;
   }
+
   .contactHero-newsletter {
     padding: 15px;
     left: 11px;
     right: 11px;
   }
+
   .contactHero-newsletter h3 {
     font-size: 1.7rem;
   }
-  .contactHero-newsletter {
-  }
+
+  .contactHero-newsletter {}
+
   .contactHero-newsletter p {
     width: 100%;
     line-height: 111%;
@@ -461,4 +573,13 @@
     padding: 0.55rem 0.9rem;
     font-size: 0.85rem;
   }
+}
+
+
+
+@media (max-width: 550px) {
+  .contactHero-thankYou {
+    font-size: 1.1rem;
+  }
+
 }

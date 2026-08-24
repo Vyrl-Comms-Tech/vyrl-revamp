@@ -1,14 +1,16 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 import "../../styles/contact-hero.css";
 import "../../styles/cta.css";
 import Link from "next/link";
 import VyrlCtaButton from "../layout/VyrlCtaButton";
 import { triggerNavigation } from "../layout/pageTransition";
+import { subscribe, getSubscriberErrorMessage } from "../../lib/subscriberApi";
 
 const SERVICE_TAGS = [
-  "   Web Development",
+  "Web Development",
   " CGI / 3D",
   " Backend",
   " Branding",
@@ -91,9 +93,52 @@ const BackArrow = () => (
   </svg>
 );
 
+const INITIAL_FORM = {
+  fullName: "",
+  email: "",
+  phoneNumber: "",
+  country: "",
+  message: "",
+};
+
 const ContactHero = () => {
   const router = useRouter();
   const [selectedTags, setSelectedTags] = useState([]);
+  const [form, setForm] = useState(INITIAL_FORM);
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterStatus, setNewsletterStatus] = useState(
+    /** @type {"idle"|"submitting"|"success"|"error"} */ ("idle")
+  );
+  const [newsletterMessage, setNewsletterMessage] = useState("");
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+
+    const email = newsletterEmail.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setNewsletterStatus("error");
+      setNewsletterMessage("Enter a valid email address");
+      return;
+    }
+
+    setNewsletterStatus("submitting");
+    setNewsletterMessage("");
+
+    try {
+      await subscribe(email);
+      setNewsletterStatus("success");
+      setNewsletterMessage("Thanks for subscribing!");
+      setNewsletterEmail("");
+    } catch (err) {
+      setNewsletterStatus("error");
+      setNewsletterMessage(getSubscriberErrorMessage(err, "Failed to subscribe"));
+    }
+  };
 
   const toggleTag = (tag) => {
     setSelectedTags((prev) =>
@@ -101,11 +146,68 @@ const ContactHero = () => {
     );
   };
 
-  // router.back() silently does nothing if there's no history to go
-  // back to — e.g. this page was opened directly (typed URL, refresh,
-  // new tab, external link) rather than navigated to by clicking
-  // through the site. window.history.length > 1 means the browser
-  // actually has a previous entry in *this tab's* history to return to.
+  const handleFieldChange = (field) => (e) => {
+    const { value } = e.target;
+    setForm((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => (prev[field] ? { ...prev, [field]: "" } : prev));
+  };
+
+  const validate = () => {
+    const nextErrors = {};
+
+    if (!form.fullName.trim()) nextErrors.fullName = "Full name is required";
+
+    if (!form.email.trim()) {
+      nextErrors.email = "Email address is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      nextErrors.email = "Enter a valid email address";
+    }
+
+    if (!form.phoneNumber.trim())
+      nextErrors.phoneNumber = "Phone number is required";
+
+    if (!form.country.trim()) nextErrors.country = "Country is required";
+
+    return nextErrors;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitError("");
+    setSubmitted(false);
+
+    const nextErrors = validate();
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
+
+    setSubmitting(true);
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API}/admin/contact-us`, {
+        serviceCategory: selectedTags.join(", "),
+        fullName: form.fullName.trim(),
+        email: form.email.trim(),
+        phoneNumber: form.phoneNumber.trim(),
+        country: form.country.trim(),
+        message: form.message.trim(),
+      });
+
+      if (!res.data?.success) {
+        throw new Error(res.data?.message || "Failed to submit. Please try again.");
+      }
+
+      setForm(INITIAL_FORM);
+      setSelectedTags([]);
+      setSubmitted(true);
+      window.setTimeout(() => setSubmitted(false), 3000000);
+    } catch (err) {
+      setSubmitError(
+        err?.response?.data?.message || err?.message || "Failed to submit. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const handleBack = () => {
     if (typeof window !== "undefined" && window.history.length > 1) {
       triggerNavigation("/", () => router.back());
@@ -117,8 +219,6 @@ const ContactHero = () => {
   return (
     <div className="contactHero">
       <div className="contactHero-left">
-        {/* Desktop: back button floats over the hero image (hidden on
-            mobile, see .contactHero-back--image in the CSS) */}
         <button
           className="contactHero-back contactHero-back--image"
           aria-label="Go back"
@@ -135,21 +235,40 @@ const ContactHero = () => {
             <h3>Stay In The Loop</h3>
             <p>
               Stay updated with the latest news, insights, and updates from
-              Vyrl—delivered straight to your inbox.
+              Vyrl delivered straight to your inbox.
             </p>
-            <div className="contactHero-newsletter-form">
-              <input type="email" placeholder="Subscribe" />
-              <button>Send Now</button>
-            </div>
+            <form
+              className="contactHero-newsletter-form"
+              onSubmit={handleNewsletterSubmit}
+              noValidate
+            >
+              <input
+                type="email"
+                placeholder="Subscribe"
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+              />
+              <button type="submit" disabled={newsletterStatus === "submitting"}>
+                {newsletterStatus === "submitting" ? "Sending..." : "Send Now"}
+              </button>
+            </form>
+            {newsletterMessage && (
+              <p
+                className={
+                  newsletterStatus === "error"
+                    ? "email-formError"
+                    : "email-formSuccess"
+                }
+              >
+                {newsletterMessage}
+              </p>
+            )}
           </div>
         </div>
       </div>
 
       <div className="contactHero-right">
         <div className="contactHero-heading-row">
-          {/* Mobile: back button sits beside the heading instead of
-              floating over the image (hidden on desktop, see
-              .contactHero-back--heading in the CSS) */}
           <button
             className="contactHero-back contactHero-back--heading"
             aria-label="Go back"
@@ -166,9 +285,8 @@ const ContactHero = () => {
             {SERVICE_TAGS.map((tag) => (
               <button
                 type="button"
-                className={`contactHero-tag ${
-                  selectedTags.includes(tag) ? "is-active" : ""
-                }`}
+                className={`contactHero-tag ${selectedTags.includes(tag) ? "is-active" : ""
+                  }`}
                 aria-pressed={selectedTags.includes(tag)}
                 onClick={() => toggleTag(tag)}
                 key={tag}
@@ -181,22 +299,89 @@ const ContactHero = () => {
 
         <div className="contactHero-field-group">
           <span className="contactHero-label">Your Information</span>
-          <form className="contactHero-form">
+          <form className="contactHero-form" onSubmit={handleSubmit} noValidate>
             <div className="contactHero-form-row">
-              <input type="text" placeholder="Full Name" />
-              <input type="email" placeholder="Email Adress" />
+              <div className="contactHero-form-field">
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  value={form.fullName}
+                  onChange={handleFieldChange("fullName")}
+                  aria-invalid={!!errors.fullName}
+                />
+                {errors.fullName && (
+                  <span className="contactHero-fieldError">{errors.fullName}</span>
+                )}
+              </div>
+              <div className="contactHero-form-field">
+                <input
+                  type="email"
+                  placeholder="Email Adress"
+                  value={form.email}
+                  onChange={handleFieldChange("email")}
+                  aria-invalid={!!errors.email}
+                />
+                {errors.email && (
+                  <span className="contactHero-fieldError">{errors.email}</span>
+                )}
+              </div>
             </div>
             <div className="contactHero-form-row">
-              <input type="tel" placeholder="Phone Number" />
-              <input type="text" placeholder="Country" />
+              <div className="contactHero-form-field">
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  value={form.phoneNumber}
+                  onChange={handleFieldChange("phoneNumber")}
+                  aria-invalid={!!errors.phoneNumber}
+                />
+                {errors.phoneNumber && (
+                  <span className="contactHero-fieldError">{errors.phoneNumber}</span>
+                )}
+              </div>
+              <div className="contactHero-form-field">
+                <input
+                  type="text"
+                  placeholder="Country"
+                  value={form.country}
+                  onChange={handleFieldChange("country")}
+                  aria-invalid={!!errors.country}
+                />
+                {errors.country && (
+                  <span className="contactHero-fieldError">{errors.country}</span>
+                )}
+              </div>
             </div>
             <div className="contactHero-form-row contactHero-form-row--full">
-              <input type="text" placeholder="Message" />
+              <div className="contactHero-form-field">
+                <input
+                  type="text"
+                  placeholder="Message"
+                  value={form.message}
+                  onChange={handleFieldChange("message")}
+                  aria-invalid={!!errors.message}
+                />
+                {errors.message && (
+                  <span className="contactHero-fieldError">{errors.message}</span>
+                )}
+              </div>
             </div>
 
-            <div className="">
-            <VyrlCtaButton label="Send Now" href="/contact-us" className="vyrl-cta--invert" />
-            
+            {submitError && (
+              <p className="contactHero-formError">{submitError}</p>
+            )}
+
+            <div className={`contactHero-submitWrap ${submitted ? "is-submitted" : ""}`}>
+              <div className="contactHero-submitWrap-btn">
+                <VyrlCtaButton
+                  label={submitting ? "Sending..." : "Send Now"}
+                  type="submit"
+                  className="vyrl-cta--invert"
+                />
+              </div>
+              <div className="contactHero-thankYou" aria-live="polite">
+                Thank you! We’ll be in touch shortly.
+              </div>
             </div>
           </form>
         </div>

@@ -125,7 +125,7 @@
   height: 80%;
   flex-shrink: 0;
   overflow: hidden;
-  transition: height 0.3s ease;
+  transition: height 0.4s ease, opacity 0.4s ease;
 }
 
 .chatbot-body--contact .chatbot-media {
@@ -151,7 +151,7 @@
   padding: 12px 20px 15px;
 
   max-height: 48%;
-  transition: max-height 0.3s ease, background 0.3s ease;
+  transition: max-height 0.4s ease, background 0.4s ease;
 
   background: linear-gradient(
     to bottom,
@@ -195,7 +195,7 @@
   border: none;
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
-  font-size: 14.5px;
+  font-size: 14px;
   cursor: pointer;
   transition: background 0.2s ease;
 }

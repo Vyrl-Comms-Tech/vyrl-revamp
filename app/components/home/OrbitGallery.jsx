@@ -12,6 +12,7 @@ import "../../styles/footer.css";
 import Link from "next/link";
 import { isKnownRoute } from "../layout/knownRoutes";
 import VyrlCtaButton from "../layout/VyrlCtaButton";
+import { subscribe, getSubscriberErrorMessage } from "../../lib/subscriberApi";
 // import PageTransitionLink from "./PageTransitionLink";
 
 const CASE_STUDY_PATHS = Object.values(caseStudies).map((c) => c.href);
@@ -305,6 +306,34 @@ export default function OrbitGallery({
   // away from, so it would just appear instantly instead of animating in.
   const [isReelVisible, setIsReelVisible] = useState(false);
 
+  const [subscribeEmail, setSubscribeEmail] = useState("");
+  const [subscribeStatus, setSubscribeStatus] = useState("idle");
+  const [subscribeMessage, setSubscribeMessage] = useState("");
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+
+    const email = subscribeEmail.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setSubscribeStatus("error");
+      setSubscribeMessage("Enter a valid email address");
+      return;
+    }
+
+    setSubscribeStatus("submitting");
+    setSubscribeMessage("");
+
+    try {
+      await subscribe(email);
+      setSubscribeStatus("success");
+      setSubscribeMessage("Thanks for subscribing!");
+      setSubscribeEmail("");
+    } catch (err) {
+      setSubscribeStatus("error");
+      setSubscribeMessage(getSubscriberErrorMessage(err, "Failed to subscribe"));
+    }
+  };
+
   const openReel = () => {
     setIsReelOpen(true);
     requestAnimationFrame(() =>
@@ -327,7 +356,7 @@ export default function OrbitGallery({
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          video.play().catch(() => {});
+          video.play().catch(() => { });
         } else {
           video.pause();
         }
@@ -398,7 +427,7 @@ export default function OrbitGallery({
         <p>{subheading}</p>
 
         <span>
-        <VyrlCtaButton label="Explore Services" href="/services" className="vyrl-cta--solid"/>
+          <VyrlCtaButton label="Explore Services" href="/services" className="vyrl-cta--solid" />
         </span>
 
       </div>
@@ -425,7 +454,9 @@ export default function OrbitGallery({
         <div className="footer-connect-row">
           {/* Left */}
           <div className="footer-connect-left">
-            <div className="footer-connect-heading">
+            <div className="footer-connect-heading" onClick={() => {
+              window.location.href = "mailto:vyrlcommstech@gmail.com";
+            }}>
               <button
                 className="footer-arrow-btn footer-arrow-btn--left"
                 aria-label="Connect"
@@ -642,16 +673,37 @@ export default function OrbitGallery({
             </h3>
             <p className="footer-subscribe-subtitle">
               Stay updated with the latest news, insights, and updates from
-              Vyrl—delivered straight to your inbox.
+              Vyrl delivered straight to your inbox.
             </p>
-            <div className="footer-subscribe-form">
+            <form className="footer-subscribe-form" onSubmit={handleSubscribe}>
               <input
                 type="email"
                 placeholder="Subscribe"
                 className="footer-subscribe-input"
+                value={subscribeEmail}
+                onChange={(e) => {
+                  setSubscribeEmail(e.target.value);
+                  if (subscribeStatus !== "idle") setSubscribeStatus("idle");
+                }}
               />
-              <button className="footer-subscribe-btn">Send Now</button>
-            </div>
+              <button
+                type="submit"
+                className={`footer-subscribe-btn${
+                  subscribeStatus === "success" ? " is-success" : ""
+                }${subscribeStatus === "error" ? " is-error" : ""}`}
+                disabled={subscribeStatus === "submitting"}
+              >
+                <span key={subscribeStatus}>
+                  {subscribeStatus === "submitting"
+                    ? "Sending..."
+                    : subscribeStatus === "success"
+                    ? "Done"
+                    : subscribeStatus === "error"
+                    ? "Try Again"
+                    : "Send Now"}
+                </span>
+              </button>
+            </form>
           </div>
 
           <div className="footer-mascot">

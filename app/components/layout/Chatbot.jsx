@@ -6,8 +6,10 @@ import "../../styles/chatbot.css";
 import Image from "next/image";
 
 const QUESTIONS = [
+  { text: "What does Vyrl do?", action: "chat" },
+  { text: "How does Vyrl's process work?", action: "chat" }, 
   { text: "What services do you offer?", action: "chat" },
-  { text: "Explore our featured projects", action: "projects" },
+  { text: "Can I see all your projects?", action: "chat" }, 
   { text: "I'd like to work with you", action: "contact" },
 ];
 
@@ -19,14 +21,16 @@ const CHAT_HISTORY_KEY = "chat_history";
 const WORD_REVEAL_MS = 220;
 
 const getOpenHeight = (isMobile, tab) => {
+  const isContact = tab === "contact";
+
   if (isMobile) {
-    const max = tab === "contact" ? 480 : 620;
+    const max = isContact ? 480 : 620;
     return Math.min(max, Math.max(360, window.innerHeight - 160));
   }
 
-  if (window.innerWidth <= 1300) return "90vh";
-  if (window.innerWidth <= 1400) return "65vh";
-  return 672;
+  if (window.innerWidth <= 1300) return isContact ? "60vh" : "90vh";
+  if (window.innerWidth <= 1400) return isContact ? "48vh" : "65vh";
+  return isContact ? 480 : 672;
 };
 
 export default function Chatbot() {
@@ -50,38 +54,38 @@ export default function Chatbot() {
 
 
 
-  useEffect(() => {
-    try {
-      const savedMessages = localStorage.getItem(CHAT_MESSAGES_KEY);
-      const savedHistory = localStorage.getItem(CHAT_HISTORY_KEY);
+  // useEffect(() => {
+  //   try {
+  //     const savedMessages = localStorage.getItem(CHAT_MESSAGES_KEY);
+  //     const savedHistory = localStorage.getItem(CHAT_HISTORY_KEY);
 
-      if (savedMessages) {
-        setMessages(JSON.parse(savedMessages));
-      }
+  //     if (savedMessages) {
+  //       setMessages(JSON.parse(savedMessages));
+  //     }
 
-      if (savedHistory) {
-        setHistory(JSON.parse(savedHistory));
-      }
-    } catch (error) {
-      console.error("Failed to restore chatbot data:", error);
-    }
-  }, []);
+  //     if (savedHistory) {
+  //       setHistory(JSON.parse(savedHistory));
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to restore chatbot data:", error);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(CHAT_MESSAGES_KEY, JSON.stringify(messages));
-    } catch (error) {
-      console.error("Failed to persist chatbot messages:", error);
-    }
-  }, [messages]);
+  // useEffect(() => {
+  //   try {
+  //     localStorage.setItem(CHAT_MESSAGES_KEY, JSON.stringify(messages));
+  //   } catch (error) {
+  //     console.error("Failed to persist chatbot messages:", error);
+  //   }
+  // }, [messages]);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(history));
-    } catch (error) {
-      console.error("Failed to persist chatbot history:", error);
-    }
-  }, [history]);
+  // useEffect(() => {
+  //   try {
+  //     localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(history));
+  //   } catch (error) {
+  //     console.error("Failed to persist chatbot history:", error);
+  //   }
+  // }, [history]);
 
   const switchVideo = (nextSrc) => {
     const video = videoRef.current;
@@ -131,77 +135,11 @@ export default function Chatbot() {
     revealNext();
   };
 
-  // const sendMessage = async (text) => {
-  //   const trimmed = text.trim();
-  //   if (!trimmed) return;
-
-  //   if (switchVideoTimeoutRef.current) clearTimeout(switchVideoTimeoutRef.current);
-  //   if (revertVideoTimeoutRef.current) clearTimeout(revertVideoTimeoutRef.current);
-  //   if (revealTimeoutRef.current) clearTimeout(revealTimeoutRef.current);
-
-  //   const userMessageId = `u-${Date.now()}`;
-  //   setMessages((prev) => [
-  //     ...prev,
-  //     { id: userMessageId, from: "user", text: trimmed },
-  //   ]);
-  //   setInputValue("");
-  //   setIsBotTyping(true);
-
-  //   const currentHistory = history;
-  //   try {
-  //     const res = await fetch(CHATBOT_API_URL, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ message: trimmed, history: currentHistory }),
-  //     });
-
-  //     console.log("Response", res)
-
-  //     const data = await res.json();
-  //     if (!res.ok || !data.success) {
-  //       throw new Error(data?.message || "Chatbot request failed");
-  //     }
-
-  //     const answer = data.response;
-
-  //     setHistory([
-  //       ...currentHistory,
-  //       { role: "user", content: trimmed },
-  //       { role: "assistant", content: answer },
-  //     ]);
-
-  //     setIsBotTyping(false);
-  //     const botMessageId = `b-${Date.now()}`;
-  //     setMessages((prev) => [
-  //       ...prev,
-  //       { id: botMessageId, from: "bot", text: "" },
-  //     ]);
-  //     revealWordByWord(botMessageId, answer, {
-  //       onDone: data.showContactForm
-  //         ? () => setActiveTab("contact")
-  //         : undefined,
-  //     });
-  //   } catch (error) {
-  //     console.error("Chatbot API error:", error);
-  //     setIsBotTyping(false);
-  //     const fallbackText = "Sorry, something went wrong. Please try again.";
-  //     const fallbackId = `b-${Date.now()}`;
-  //     setMessages((prev) => [
-  //       ...prev,
-  //       { id: fallbackId, from: "bot", text: fallbackText },
-  //     ]);
-  //   }
-  // };
-
-
-
-
   const sendMessage = async (text) => {
     const trimmed = text.trim();
 
     if (!trimmed) return;
 
-    // Clear pending animation/timeouts
     if (switchVideoTimeoutRef.current) {
       clearTimeout(switchVideoTimeoutRef.current);
     }
@@ -232,14 +170,9 @@ export default function Chatbot() {
     setInputValue("");
     setIsBotTyping(true);
 
-    // Keep current history before adding this message
     const currentHistory = history;
 
     try {
-      // -----------------------------
-      // Send request to chatbot API
-      // -----------------------------
-
       const res = await fetch(CHATBOT_API_URL, {
         method: "POST",
         headers: {
@@ -253,27 +186,15 @@ export default function Chatbot() {
 
       const data = await res.json();
 
-      // -----------------------------
-      // Validate API response
-      // -----------------------------
-
       if (!res.ok || !data.success) {
         throw new Error(
           data?.message || "Chatbot request failed"
         );
       }
 
-      // -----------------------------
-      // Extract API response
-      // -----------------------------
-
       const answer = data.response;
 
       const showContactForm = data.showContactForm === true;
-
-      // -----------------------------
-      // Update conversation history
-      // -----------------------------
 
       const updatedHistory = [
         ...currentHistory,
@@ -288,16 +209,7 @@ export default function Chatbot() {
       ];
 
       setHistory(updatedHistory);
-
-      // -----------------------------
-      // Bot finished typing
-      // -----------------------------
-
       setIsBotTyping(false);
-
-      // -----------------------------
-      // Create empty bot message
-      // -----------------------------
 
       const botMessageId = `b-${Date.now()}`;
 
@@ -310,10 +222,6 @@ export default function Chatbot() {
         },
       ]);
 
-      // -----------------------------
-      // Reveal bot response
-      // -----------------------------
-
       revealWordByWord(botMessageId, answer, {
         onDone: showContactForm
           ? () => setActiveTab("contact")
@@ -323,10 +231,6 @@ export default function Chatbot() {
       console.error("Chatbot API error:", error);
 
       setIsBotTyping(false);
-
-      // -----------------------------
-      // Fallback response
-      // -----------------------------
 
       const fallbackText =
         "Sorry, something went wrong. Please try again.";
