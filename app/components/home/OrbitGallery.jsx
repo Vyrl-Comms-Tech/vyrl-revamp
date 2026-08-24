@@ -74,6 +74,7 @@ const MOBILE_BREAKPOINT = 800;
 // 540/320, same "laptop gets its own smaller-than-desktop step" pattern
 // Testimonials.jsx's counterOffsetX uses at the same 1500px cutoff.
 const LAPTOP_BREAKPOINT = 1500;
+const COMPACT_LAPTOP_BREAKPOINT = 1300;
 const VELOCITY_TO_RADIANS = 0.00003;
 
 export default function OrbitGallery({
@@ -121,12 +122,14 @@ export default function OrbitGallery({
 
       function getRadiusX() {
         if (window.innerWidth < MOBILE_BREAKPOINT) return 220;
+        if (window.innerWidth <= COMPACT_LAPTOP_BREAKPOINT) return 460;
         if (window.innerWidth <= LAPTOP_BREAKPOINT) return 550;
         return 540;
       }
       function getRadiusY() {
         if (window.innerWidth < MOBILE_BREAKPOINT) return 190;
-        if (window.innerWidth <= LAPTOP_BREAKPOINT) return 255;
+        if (window.innerWidth <= COMPACT_LAPTOP_BREAKPOINT) return 230;
+        if (window.innerWidth <= LAPTOP_BREAKPOINT) return 245;
         return 320;
       }
 
