@@ -6,10 +6,11 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
+import { scheduleScrollTriggerRefresh } from "../../lib/scheduleScrollTriggerRefresh";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-const MODEL_JSON_PATH = "/Main Scxtion.json";
+const MODEL_JSON_PATH = "/Main_Section_compressed.json";
 const VIDEO_PATH = "/shoreel.mp4";
 
 export default function HeroModelSection() {
@@ -58,6 +59,9 @@ export default function HeroModelSection() {
     let video;
     let ctx;
     let animationFrameId;
+    let visibilityObserver;
+    let isHeroVisible = true;
+    let animate;
 
     const disposables = [];
     const prefersReducedMotion = window.matchMedia(
@@ -79,6 +83,34 @@ export default function HeroModelSection() {
     const handleMouseMove = (e) => {
       targetMouse.x = (e.clientX / window.innerWidth - 0.5) * 2;
       targetMouse.y = (e.clientY / window.innerHeight - 0.5) * 2;
+    };
+
+    const stopRendering = () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = undefined;
+      }
+      video?.pause();
+    };
+
+    const startRendering = () => {
+      if (
+        !isMounted ||
+        !isHeroVisible ||
+        document.hidden ||
+        animationFrameId ||
+        !animate
+      ) {
+        return;
+      }
+
+      video?.play().catch(() => {});
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) stopRendering();
+      else startRendering();
     };
 
     async function init() {
@@ -397,7 +429,7 @@ export default function HeroModelSection() {
       // appear or resize out from under it. This refresh is just cheap
       // insurance for anything that measured itself in the single tick
       // between this component mounting and its layout effect running.
-      ScrollTrigger.refresh();
+      scheduleScrollTriggerRefresh();
 
       // ------------------------------------------------------------
       // RESIZE + POINTER PARALLAX
@@ -405,8 +437,10 @@ export default function HeroModelSection() {
       window.addEventListener("resize", handleResize);
       window.addEventListener("mousemove", handleMouseMove);
 
-      const animate = () => {
-        animationFrameId = requestAnimationFrame(animate);
+      animate = () => {
+        animationFrameId = undefined;
+
+        if (!isMounted || !isHeroVisible || document.hidden) return;
 
         mouse.x += (targetMouse.x - mouse.x) * 0.04;
         mouse.y += (targetMouse.y - mouse.y) * 0.04;
@@ -417,8 +451,21 @@ export default function HeroModelSection() {
 
         controls.update();
         renderer.render(scene, camera);
+
+        animationFrameId = requestAnimationFrame(animate);
       };
-      animate();
+
+      visibilityObserver = new IntersectionObserver(
+        ([entry]) => {
+          isHeroVisible = entry.isIntersecting;
+          if (isHeroVisible) startRendering();
+          else stopRendering();
+        },
+        { rootMargin: "200px 0px" },
+      );
+      visibilityObserver.observe(section);
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      startRendering();
     }
 
     init();
@@ -430,6 +477,11 @@ export default function HeroModelSection() {
       isMounted = false;
 
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      visibilityObserver?.disconnect();
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+      );
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
 

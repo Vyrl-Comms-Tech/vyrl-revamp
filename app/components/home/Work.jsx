@@ -5,6 +5,7 @@ import PageTransitionLink from "../layout/PageTransitionLink";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
+import { scheduleScrollTriggerRefresh } from "../../lib/scheduleScrollTriggerRefresh";
 import "../../styles/work.css";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -143,8 +144,6 @@ export default function Work() {
             if (cancelled) return;
 
             ctx.add(() => {
-              ScrollTrigger.refresh();
-
               const revealTl = gsap.timeline({
                 scrollTrigger: {
                   trigger: card,
@@ -189,7 +188,7 @@ export default function Work() {
                 },
               );
 
-              ScrollTrigger.refresh();
+              scheduleScrollTriggerRefresh();
             });
           });
         });
@@ -230,6 +229,7 @@ export default function Work() {
           });
 
           if (video) {
+            video.pause();
             gsap.to(video, {
               opacity: 0,
               duration: 0.5,
@@ -268,7 +268,7 @@ export default function Work() {
             if (cancelled) return;
 
             ctx.add(() => {
-              ScrollTrigger.refresh();
+              scheduleScrollTriggerRefresh();
 
               const headingTl = gsap.timeline({
                 scrollTrigger: {
@@ -393,13 +393,13 @@ export default function Work() {
                 addNavbarRestoreTween();
               }
 
-              ScrollTrigger.refresh();
+              scheduleScrollTriggerRefresh();
             });
           });
         });
       }
 
-      ScrollTrigger.refresh();
+      scheduleScrollTriggerRefresh();
     }, rootRef);
 
     return () => {
@@ -447,9 +447,8 @@ export default function Work() {
                 className="card-work-cm__video"
                 muted
                 loop
-                autoPlay
                 playsInline
-                preload="metadata"
+                preload="none"
               >
                 <source src={item.video} type="video/mp4" />
               </video>

@@ -19,6 +19,7 @@ export default function Home() {
   return (
     <>
       <HeroModelSection />
+      
       <TextAndCards />
       <LazySection placeholder={<div style={{ height: "100vh" }} />}>
         <Services3d />

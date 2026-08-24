@@ -428,7 +428,6 @@ const CARDS = [
     title: "Performance",
     dark: true,
     video: "/strategy.mp4",
-    poster: "/video01_compressed.avif",
     desc: "Content, campaigns, and media systems designed to drive measurable growth.",
   },
 ];
@@ -482,9 +481,9 @@ export default function TextAndCards() {
           const animation = gsap.fromTo(
             cards,
             {
-              y: 120,
-              rotateX: -28,
-              scale: 0.96,
+              y: 64,
+              rotateX: -8,
+              scale: 0.985,
               opacity: 0,
               transformPerspective: 1200,
               transformOrigin: "50% 100%",
@@ -494,15 +493,15 @@ export default function TextAndCards() {
               rotateX: 0,
               scale: 1,
               opacity: 1,
-              duration: 1.15,
-              stagger: 0.12,
+              duration: 0.8,
+              stagger: 0.08,
               ease: "power3.out",
               force3D: true,
               overwrite: "auto",
 
               scrollTrigger: {
                 trigger: section,
-                start: "top 82%",
+                start: "top 95%",
                 once: true,
               },
 
@@ -597,18 +596,38 @@ export default function TextAndCards() {
 
     if (!videos.length) return;
 
-    const observer = new IntersectionObserver(
+    const prepareVideo = (video) => {
+      if (video.src) return;
+
+      video.preload = "auto";
+      video.src = video.dataset.src;
+      video.load();
+    };
+
+    const loadObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          prepareVideo(entry.target);
+          loadObserver.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0,
+        // Begin fetching while the user is still finishing the pinned hero.
+        rootMargin: "3000px 0px",
+      },
+    );
+
+    const playObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const video = entry.target;
 
           if (entry.isIntersecting) {
-            // Load the video only when it approaches the viewport.
-            if (!video.src) {
-              video.src = video.dataset.src;
-              video.load();
-            }
-
+            // Fallback for very fast scrolling before the preload observer runs.
+            prepareVideo(video);
             video.play().catch(() => {});
           } else {
             video.pause();
@@ -617,20 +636,23 @@ export default function TextAndCards() {
       },
       {
         threshold: 0.1,
-        rootMargin: "150px 0px",
+        rootMargin: "0px",
       },
     );
 
     videos.forEach((video) => {
-      observer.observe(video);
+      loadObserver.observe(video);
+      playObserver.observe(video);
     });
 
     return () => {
-      observer.disconnect();
+      loadObserver.disconnect();
+      playObserver.disconnect();
 
       videos.forEach((video) => {
         video.pause();
         video.removeAttribute("src");
+        video.preload = "none";
         video.load();
       });
     };

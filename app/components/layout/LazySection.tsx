@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { scheduleScrollTriggerRefresh } from "../../lib/scheduleScrollTriggerRefresh";
 
 type LazySectionProps = {
   children: ReactNode;
@@ -96,8 +96,7 @@ export default function LazySection({
   // user's in-flight scroll can act on the stale height.
   useLayoutEffect(() => {
     if (!isNear) return;
-    const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
-    return () => cancelAnimationFrame(raf);
+    scheduleScrollTriggerRefresh();
   }, [isNear]);
 
   if (isNear) return <>{children}</>;

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { scheduleScrollTriggerRefresh } from "../../lib/scheduleScrollTriggerRefresh";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -57,7 +58,7 @@ function SmoothScroll() {
 
         refreshFrame = requestAnimationFrame(() => {
           window.lenis?.resize();
-          ScrollTrigger.refresh(true);
+          scheduleScrollTriggerRefresh(true);
           settleFrame = requestAnimationFrame(() => {
             window.lenis?.resize();
             ScrollTrigger.update();
@@ -100,7 +101,7 @@ function SmoothScroll() {
       const onScroll = () => ScrollTrigger.update();
       window.addEventListener("scroll", onScroll, { passive: true });
 
-      const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
+      scheduleScrollTriggerRefresh();
 
       // Same reasoning as the pathname effect below — a route change
       // can land on a page with different content height, and iOS has
@@ -108,14 +109,13 @@ function SmoothScroll() {
       // positions still need re-measuring against the new layout.
       const handlePreloaderFinish = () => {
         window.scrollTo({ top: 0, behavior: "instant" });
-        requestAnimationFrame(() => ScrollTrigger.refresh());
+        scheduleScrollTriggerRefresh();
       };
       window.addEventListener("preloader:finish", handlePreloaderFinish);
 
       return () => {
         window.removeEventListener("scroll", onScroll);
         window.removeEventListener("preloader:finish", handlePreloaderFinish);
-        cancelAnimationFrame(raf);
       };
     }
 
@@ -158,7 +158,7 @@ function SmoothScroll() {
     // mid-scroll through a pinned section.
     const handleRefresh = () => lenis.resize();
     ScrollTrigger.addEventListener("refresh", handleRefresh);
-    ScrollTrigger.refresh();
+    scheduleScrollTriggerRefresh();
 
     // Every section mounts and measures itself (ScrollTrigger pins,
     // viewport-unit-sized elements like the navbar) while the Preloader's
@@ -171,7 +171,7 @@ function SmoothScroll() {
     const handlePreloaderFinish = () => {
       lenis.start();
       lenis.scrollTo(0, { immediate: true });
-      requestAnimationFrame(() => ScrollTrigger.refresh());
+      scheduleScrollTriggerRefresh();
     };
     window.addEventListener("preloader:finish", handlePreloaderFinish);
 
@@ -195,8 +195,7 @@ function SmoothScroll() {
   // refresh on every route change re-measures against the new page's
   // actual height. rAF delay lets the new route's DOM paint first.
   useEffect(() => {
-    const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
-    return () => cancelAnimationFrame(raf);
+    scheduleScrollTriggerRefresh();
   }, [pathname]);
 
   return null;
