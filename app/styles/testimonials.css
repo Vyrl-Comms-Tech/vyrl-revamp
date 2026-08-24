@@ -19,7 +19,8 @@
   align-items: center;
   margin-top: clamp(6rem, 18vh, 10rem) !important;
   width: 400px;
-  height: 600px;
+  height:70vh;
+  scale: 0.9 !important;
   overflow: hidden;
   border-radius: 6px;
   cursor: grab;
@@ -128,16 +129,19 @@
     margin-bottom: 10%;
   }
   .testimonial-card {
-    height: 550px;
+ height: 85vh;
+    scale: 0.8 !important;
   }
 }
 @media (max-width:1400px){
   .testimonial-card{
     margin-top: 30vh !important;
-    height: 525px;
+    height: 100vh;
+    scale: 0.7 !important;
   }
+
   .card-inner-testi{
-    bottom: 21%;
+    bottom: 11%;
   }
 }
 

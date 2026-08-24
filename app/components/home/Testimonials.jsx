@@ -389,7 +389,7 @@ export default function Testimonials() {
       // screens (<=1500px) than on desktop, since the card and heading
       // both scale down relative to viewport there — a flat 50px reads
       // as too close to the card at that size.
-      const counterOffsetX = window.innerWidth <= 1500 ? 120 : 70;
+      const counterOffsetX = window.innerWidth <= 1500 ? 60 : 40;
 
       // WHAT / CLIENTS / SAYS rest white by default (see testimonials.css)
       // and tween to black here so they stay legible once document.body

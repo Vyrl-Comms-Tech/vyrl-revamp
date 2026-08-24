@@ -194,6 +194,11 @@
     font-size: 6rem;
   }
 }
+@media (max-width:1350px){
+  .heading-for-work h2{
+    font-size: 5rem;
+  }
+}
 @media (max-width: 800px) {
   .work-sections {
     height: 40vh;

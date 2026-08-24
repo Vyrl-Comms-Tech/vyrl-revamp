@@ -469,6 +469,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "../../styles/partner-section.css";
 import { partners } from "../../data/partners";
 import { logoPool } from "../../data/logoPool";
+import TextAnimation from "./TextAnimation";
 
 // Registering a browser-only plugin at module scope would break SSR
 // (Next renders client components on the server too) — guard it.
@@ -517,7 +518,7 @@ export default function PartnersSection({
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
+      "(prefers-reduced-motion: reduce)",
     ).matches;
 
     let cancelled = false;
@@ -625,7 +626,13 @@ export default function PartnersSection({
             gsap.fromTo(
               img,
               { opacity: 0, scale: 1.05, y: 8 },
-              { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: "power3.out" }
+              {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                duration: 0.45,
+                ease: "power3.out",
+              },
             );
           },
         });
@@ -656,7 +663,9 @@ export default function PartnersSection({
       <div className="partners-section">
         <header className="partners-top">
           <h2 id="partners-heading" className="partners-heading">
-            Our Clients
+            <TextAnimation animateOnScroll={true} delay={0.3}>
+              Our Clients
+            </TextAnimation>
           </h2>
           <span aria-hidden="true">{year}</span>
         </header>
@@ -671,7 +680,12 @@ export default function PartnersSection({
           Clients include {partners.map((p) => p.name).join(", ")}, and others.
         </p>
 
-        <ul className="partners-grid" ref={gridRef} role="list" aria-hidden="true">
+        <ul
+          className="partners-grid"
+          ref={gridRef}
+          role="list"
+          aria-hidden="true"
+        >
           {partners.map(({ name, src, width, height }, index) => (
             <li key={name} className="partner-card">
               <Image

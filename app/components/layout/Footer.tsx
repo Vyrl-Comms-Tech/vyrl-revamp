@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { caseStudies } from "../caseStudy/caseStudiesData";
 import UnicornEmbed from "./UnicornEmbed";
@@ -176,10 +177,14 @@ function Footer() {
       <div className="footer-connect-row">
         {/* Left */}
         <div className="footer-connect-left">
-          <div className="footer-connect-heading">
-            <button
+          <a
+            href="mailto:vyrlcommstech@gmail.com"
+            className="footer-connect-heading"
+            aria-label="Email Vyrl Communications"
+          >
+            <span
               className="footer-arrow-btn footer-arrow-btn--left"
-              aria-label="Connect"
+              aria-hidden="true"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -194,13 +199,13 @@ function Footer() {
                   strokeLinejoin="round"
                 />
               </svg>
-            </button>
+            </span>
 
             <h2 className="footer-connect-title"> Let’s Connect</h2>
 
-            <button
+            <span
               className="footer-arrow-btn footer-arrow-btn--right"
-              aria-label="Connect"
+              aria-hidden="true"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -215,8 +220,8 @@ function Footer() {
                   strokeLinejoin="round"
                 />
               </svg>
-            </button>
-          </div>
+            </span>
+          </a>
 
           <p className="footer-connect-subtitle">
             Stay updated with our latest work, insights, case <br /> studies,
@@ -482,7 +487,8 @@ function Footer() {
           smooth fade + scale-in instead of an instant appear. Closing
           reverses that — isReelVisible drops first so the CSS
           transition plays, then isReelOpen unmounts once it's done. */}
-      {isReelOpen && (
+      {isReelOpen &&
+        createPortal(
         <div
           className={`reel-modal-overlay${isReelVisible ? " reel-modal-overlay--open" : ""}`}
           onClick={closeReel}
@@ -520,7 +526,8 @@ function Footer() {
               playsInline
             />
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </footer>
   );

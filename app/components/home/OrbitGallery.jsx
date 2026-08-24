@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "../../styles/orbit-gallery.css";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { caseStudies } from "../caseStudy/caseStudiesData";
 import PageTransitionLink from "../layout/PageTransitionLink";
@@ -727,7 +728,8 @@ export default function OrbitGallery({
             smooth fade + scale-in instead of an instant appear. Closing
             reverses that — isReelVisible drops first so the CSS
             transition plays, then isReelOpen unmounts once it's done. */}
-        {isReelOpen && (
+        {isReelOpen &&
+          createPortal(
           <div
             className={`reel-modal-overlay${isReelVisible ? " reel-modal-overlay--open" : ""}`}
             onClick={closeReel}
@@ -765,7 +767,8 @@ export default function OrbitGallery({
                 playsInline
               />
             </div>
-          </div>
+          </div>,
+          document.body,
         )}
       </footer>
     </section>

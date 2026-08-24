@@ -15,26 +15,6 @@
   opacity: 1;
   transition: opacity 0.5s ease;
 }
-
-/* On a repeat page load within the same session (including every
-   in-app navigation now that pageTransition.js does a real hard
-   reload — see triggerNavigation()), PreloaderGate.tsx still server-
-   renders <Preloader1>'s markup into the initial HTML: the "skip
-   mounting it at all" decision only happens client-side, in a
-   useState initializer that reads document.documentElement's class —
-   which doesn't exist yet on the server, so SSR always emits the
-   un-stroked, un-styled SVG. The beforeInteractive skip-script (see
-   layout.tsx/preloaderSkipScript) stamps `preloader-skip` on <html>
-   before hydration runs, but the BROWSER can still paint that already-
-   parsed HTML the instant it exists, independent of when React
-   actually hydrates and removes it — which is what showed up as a
-   ~1-frame flash of the flat black "V" outline (no stroke animation,
-   no fill) on every single reload. This CSS rule is itself in a
-   render-blocking stylesheet (globals.css/this file are both `<link>`-
-   loaded before body content paints), so the browser has this rule
-   available at the exact same moment it has the skip class — hiding
-   .pre-loader here happens at the CSS layer, synchronously with first
-   paint, instead of waiting on React to decide not to render it. */
 html.preloader-skip .pre-loader {
   display: none !important;
 }
@@ -58,21 +38,6 @@ html.preloader-skip .pre-loader {
   align-items: center;
   transform: translate(-50%, -50%);
   transform-origin: center center;
-}
-
-@media (max-width: 800px) {
-  /* left compensates for .first-path's own transform: translateX(35%)
-     (further down this file), which shifts the drawn glyph rightward
-     *inside* the SVG's viewBox independent of how the SVG canvas itself
-     is centered — without this, the glyph renders off-center to the
-     right (confirmed: removing it entirely, or under-correcting with
-     smaller values, both still landed right of center). -10% is the
-     tuned value that actually centers it on mobile. */
-  .pre-loader svg {
-    scale: 0.3;
-    left: -5%;
-    top: 38%;
-  }
 }
 
 .pre-loader .first-path {
@@ -122,32 +87,15 @@ html.preloader-skip .pre-loader {
   }
 }
 
-/*
-  NOTE on the original `html { font-size: 0.83333333vw }` rule:
-  That rewrote the base rem unit for the *entire document*, not just the
-  preloader. I intentionally did NOT bring it into this file, because
-  importing it here would silently resize every `rem`-based element in
-  your whole Next.js app for as long as this stylesheet is loaded.
-
-  If your site's overall type scale is actually built on that vw-based
-  rem (common in Locomotive/GSAP agency sites), it belongs in your
-  global stylesheet (e.g. app/globals.css) as an intentional, app-wide
-  decision — not smuggled in via the preloader component:
-
-    html {
-      font-size: 0.83333333vw;
-    }
-
-    @media (max-width: 800px) {
-      html {
-        font-size: 2.6vw; // pick a sane mobile equivalent
-      }
-    }
-*/
-
-@media (max-width:767px){
-  
-.pre-loader .counters {
-  bottom: 9%;
-}
+@media (max-width: 800px) {
+  /* Scale only; keep the SVG canvas anchored to the viewport center. */
+  .pre-loader svg {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  .pre-loader .counters {
+    bottom: 13%;
+    left: 7%;
+  }
 }

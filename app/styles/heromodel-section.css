@@ -72,11 +72,17 @@
     font-size: 3.3rem;
   }
   .centerTextHeroHeading {
-    width: 79%;
-    font-size: 3.8rem;
+    width: 75%;
+    font-size: 3.5rem;
   }
 }
+@media (max-width: 1300px) {
 
+  .centerTextHeroHeading {
+    width: 72%;
+    font-size: 3.2rem;
+  }
+}
 @media (max-width: 800px) {
   .tops {
     padding: 0.2em 0.9em;

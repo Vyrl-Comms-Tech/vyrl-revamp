@@ -23,7 +23,10 @@ const getOpenHeight = (isMobile, tab) => {
     const max = tab === "contact" ? 480 : 620;
     return Math.min(max, Math.max(360, window.innerHeight - 160));
   }
-  return tab === "contact" ? 520 : 672;
+
+  if (window.innerWidth <= 1300) return "90vh";
+  if (window.innerWidth <= 1400) return "65vh";
+  return 672;
 };
 
 export default function Chatbot() {

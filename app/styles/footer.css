@@ -485,12 +485,13 @@
   }
   .footer-mascot video {
     width: 250px;
+    height: auto;
   }
   .footer-time-value {
     font-size: 18px;
   }
   .footer-subscribe {
-    padding: 21px 33px;
+    padding: 15px 33px;
   }
   .footer-subscribe-title {
     font-size: 42px;
@@ -512,13 +513,30 @@
   .footer-logo-3d canvas {
     scale: 0.9;
   }
+
+  .footer-connect-row {
+    padding: 16px 24px;
+  }
 }
 @media (max-width: 1400px) {
   .footer-nav-link {
     font-size: 15.5px;
   }
+  .footer-subscribe-title{
+    font-size: 37px;
+  }
+  .footer-next-title {
+    font-size: 34px;
+  }
+  .footer-next{
+    
+    padding: 20px 15px 49px 15px;
+  }
   .footer-subscribe-input {
     width: 330px;
+  }
+  .footer-subscribe {
+    gap: 11px;
   }
   .footer-mascot video {
     width: 210px;
@@ -530,6 +548,20 @@
   }
   .footer-subscribe-input {
     width: 290px;
+  }
+  .footer-time {
+    padding-block: 9px;
+    padding-inline: 17px;
+  }
+  .footer-connect-left {
+    gap: 9px;
+  }
+  .footer-social-btn {
+    height: 45px;
+    width: 45px;
+  }
+  .footer-connect-title {
+    font-size: 43px;
   }
 }
 
@@ -543,8 +575,8 @@
   }
 
   .footer-connect-row {
-    flex-direction: column;
     padding: 28px 24px;
+    flex-direction: column;
     gap: 28px;
   }
 
@@ -612,7 +644,7 @@
        would still shift the box down from its normal flow position, so
        it has to be overridden here too, not just `position`. */
     bottom: auto !important;
-    transform:none;
+    transform: none;
     z-index: 9;
   }
 }

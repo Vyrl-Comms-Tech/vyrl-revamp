@@ -163,9 +163,17 @@
   }
 }
 
-@media (max-width:1500px){
-  .partner-logo{
+@media (max-width: 1500px) {
+  .partner-logo {
     max-height: 43px;
+  }
+}
+@media (max-width: 1300px) {
+  .partner-card {
+    height: 129px;
+  }
+  .partner-logo {
+    max-height: 38px;
   }
 }
 @media (max-width: 900px) {
@@ -225,7 +233,7 @@
   .partner-card:hover {
     background: none;
     border: none;
-    border-color:none;
+    border-color: none;
     box-shadow: none;
   }
 }

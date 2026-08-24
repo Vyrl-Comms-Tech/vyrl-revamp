@@ -56,6 +56,17 @@
   transform: scaleY(0);
   will-change: transform;
   visibility: hidden;
+  /* flex: 1 widths round to whole pixels independently per block, so at
+     some zoom levels/DPIs adjacent blocks land a sub-pixel apart and the
+     page underneath shows through as a hairline (typically vertical,
+     between columns). A small negative margin makes neighboring blocks
+     overlap instead of merely touch, so rounding error can no longer
+     open a gap. Only every block but the first needs it. */
+  margin-left: -1px;
+}
+
+.page-transition-block:first-child {
+  margin-left: 0;
 }
 
 /* instrumentation-client marks repeat-session reloads before hydration.

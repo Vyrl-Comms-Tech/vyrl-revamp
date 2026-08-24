@@ -416,6 +416,11 @@
   opacity: 0.85;
 }
 
+@media (max-width: 1300px) {
+  .chatbot {
+    bottom: 4%;
+  }
+}
 @media (max-width: 520px) {
   .chatbot {
     right: auto;

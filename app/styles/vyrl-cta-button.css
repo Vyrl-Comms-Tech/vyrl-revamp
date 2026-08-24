@@ -52,7 +52,7 @@
 }
 
 .vyrl-cta__text-wrap {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   position: relative;
   z-index: 1;
   line-height: 1;
@@ -188,33 +188,11 @@
 
 
 .vyrl-cta__text-wrap {
-  font-size: 0.9rem;}
+  font-size: 0.8rem;}
 }
 
-/* ── Solid variant ──
-   Inverse of the default: starts solid black (not transparent), and
-   on hover the black recedes to transparent instead of filling in.
-   Reuses the same .vyrl-cta__blob sweep mechanic, just flipped — the
-   blob itself (inset: 0, so it already covers the whole button) IS
-   the solid black fill at rest (scaleY(1)), then shrinks away on
-   hover (scaleY(0)) to reveal the button's own background — which
-   stays the base .vyrl-cta transparent, deliberately NOT overridden
-   to black here. An earlier version set this element's own background
-   to #000 "underneath" the blob, meaning even once the blob fully
-   receded there was still an opaque black layer behind it and hover
-   never actually reached transparent — the blob has to be the only
-   thing providing black, with nothing solid left once it's gone.
-   Placed after every base .vyrl-cta rule in this file (not just ahead
-   of it on specificity) — .vyrl-cta--solid:hover .vyrl-cta__blob and
-   .vyrl-cta:hover .vyrl-cta__blob are equal specificity (one class +
-   one pseudo + one class each), so without later source order the
-   base rule's scaleY(1) was winning the tie and silently overriding
-   this variant's scaleY(0) on hover. */
 .vyrl-cta--solid {
-  /* .vyrl-cta__text--primary has no color of its own — it inherits
-     this, and it's the layer actually visible at rest (before the
-     char-flip swaps in --secondary on hover), so it needs to read
-     white against the blob's solid black fill here. */
+ 
   color: #fff;
 }
 
@@ -228,10 +206,6 @@
   transform: scaleY(0);
 }
 
-/* --secondary is the layer that swaps in as the blob recedes and the
-   button reads as transparent, so it needs the opposite of
-   --primary's color at each state: black once transparent (hover),
-   white at rest in case it's glimpsed mid-transition. */
 .vyrl-cta--solid .vyrl-cta__text--secondary {
   color: #fff;
 }
