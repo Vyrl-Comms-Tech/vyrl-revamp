@@ -3,14 +3,28 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import "../../styles/chatbot.css";
-import Link from "next/link";
 import Image from "next/image";
 
 const QUESTIONS = [
-  "Walk me through this",
-  "Could you do this for us?",
-  "What went into this?",
+  { text: "What services do you offer?", action: "chat" },
+  { text: "Explore our featured projects", action: "projects" },
+  { text: "I'd like to work with you", action: "contact" },
 ];
+
+const CHATBOT_API_URL = `${process.env.NEXT_PUBLIC_API}/chat/assistant`;
+
+const CHAT_MESSAGES_KEY = "chat_messages";
+const CHAT_HISTORY_KEY = "chat_history";
+
+const WORD_REVEAL_MS = 220;
+
+const getOpenHeight = (isMobile, tab) => {
+  if (isMobile) {
+    const max = tab === "contact" ? 480 : 620;
+    return Math.min(max, Math.max(360, window.innerHeight - 160));
+  }
+  return tab === "contact" ? 520 : 672;
+};
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,19 +32,54 @@ export default function Chatbot() {
   const [inputValue, setInputValue] = useState("");
   const [isBotTyping, setIsBotTyping] = useState(false);
   const [videoSrc, setVideoSrc] = useState("/chat1.mp4");
+  const [history, setHistory] = useState([]);
+  const [activeTab, setActiveTab] = useState("chat");
   const isActiveRef = useRef(false);
   const panelRef = useRef(null);
   const panelBodyRef = useRef(null);
   const toggleRef = useRef(null);
   const timelineRef = useRef(null);
-  const messagesEndRef = useRef(null);
+  const messagesRef = useRef(null);
   const videoRef = useRef(null);
   const switchVideoTimeoutRef = useRef(null);
   const revertVideoTimeoutRef = useRef(null);
+  const revealTimeoutRef = useRef(null);
 
-  // Fades the video to black, swaps its source underneath while hidden,
-  // then fades back in — so the chat1<->chat2 swap reads as a soft
-  // crossfade instead of an instant, jarring cut.
+
+
+  useEffect(() => {
+    try {
+      const savedMessages = localStorage.getItem(CHAT_MESSAGES_KEY);
+      const savedHistory = localStorage.getItem(CHAT_HISTORY_KEY);
+
+      if (savedMessages) {
+        setMessages(JSON.parse(savedMessages));
+      }
+
+      if (savedHistory) {
+        setHistory(JSON.parse(savedHistory));
+      }
+    } catch (error) {
+      console.error("Failed to restore chatbot data:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(CHAT_MESSAGES_KEY, JSON.stringify(messages));
+    } catch (error) {
+      console.error("Failed to persist chatbot messages:", error);
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(history));
+    } catch (error) {
+      console.error("Failed to persist chatbot history:", error);
+    }
+  }, [history]);
+
   const switchVideo = (nextSrc) => {
     const video = videoRef.current;
     if (!video) {
@@ -52,49 +101,252 @@ export default function Chatbot() {
     });
   };
 
-  const sendMessage = (text) => {
+  const revealWordByWord = (messageId, fullText, { onDone } = {}) => {
+    const words = fullText.split(/\s+/).filter(Boolean);
+    switchVideo("/chat2.mp4");
+    let index = 0;
+    const revealNext = () => {
+      index += 1;
+      const partial = words.slice(0, index).join(" ");
+      setMessages((prev) =>
+        prev.map((message) =>
+          message.id === messageId ? { ...message, text: partial } : message
+        )
+      );
+      if (index < words.length) {
+        revealTimeoutRef.current = setTimeout(revealNext, WORD_REVEAL_MS);
+      } else {
+        revealTimeoutRef.current = null;
+        revertVideoTimeoutRef.current = setTimeout(() => {
+          switchVideo("/chat1.mp4");
+          revertVideoTimeoutRef.current = null;
+          onDone?.();
+        }, 300);
+      }
+    };
+
+    revealNext();
+  };
+
+  // const sendMessage = async (text) => {
+  //   const trimmed = text.trim();
+  //   if (!trimmed) return;
+
+  //   if (switchVideoTimeoutRef.current) clearTimeout(switchVideoTimeoutRef.current);
+  //   if (revertVideoTimeoutRef.current) clearTimeout(revertVideoTimeoutRef.current);
+  //   if (revealTimeoutRef.current) clearTimeout(revealTimeoutRef.current);
+
+  //   const userMessageId = `u-${Date.now()}`;
+  //   setMessages((prev) => [
+  //     ...prev,
+  //     { id: userMessageId, from: "user", text: trimmed },
+  //   ]);
+  //   setInputValue("");
+  //   setIsBotTyping(true);
+
+  //   const currentHistory = history;
+  //   try {
+  //     const res = await fetch(CHATBOT_API_URL, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ message: trimmed, history: currentHistory }),
+  //     });
+
+  //     console.log("Response", res)
+
+  //     const data = await res.json();
+  //     if (!res.ok || !data.success) {
+  //       throw new Error(data?.message || "Chatbot request failed");
+  //     }
+
+  //     const answer = data.response;
+
+  //     setHistory([
+  //       ...currentHistory,
+  //       { role: "user", content: trimmed },
+  //       { role: "assistant", content: answer },
+  //     ]);
+
+  //     setIsBotTyping(false);
+  //     const botMessageId = `b-${Date.now()}`;
+  //     setMessages((prev) => [
+  //       ...prev,
+  //       { id: botMessageId, from: "bot", text: "" },
+  //     ]);
+  //     revealWordByWord(botMessageId, answer, {
+  //       onDone: data.showContactForm
+  //         ? () => setActiveTab("contact")
+  //         : undefined,
+  //     });
+  //   } catch (error) {
+  //     console.error("Chatbot API error:", error);
+  //     setIsBotTyping(false);
+  //     const fallbackText = "Sorry, something went wrong. Please try again.";
+  //     const fallbackId = `b-${Date.now()}`;
+  //     setMessages((prev) => [
+  //       ...prev,
+  //       { id: fallbackId, from: "bot", text: fallbackText },
+  //     ]);
+  //   }
+  // };
+
+
+
+
+  const sendMessage = async (text) => {
     const trimmed = text.trim();
+
     if (!trimmed) return;
 
+    // Clear pending animation/timeouts
     if (switchVideoTimeoutRef.current) {
       clearTimeout(switchVideoTimeoutRef.current);
     }
+
     if (revertVideoTimeoutRef.current) {
       clearTimeout(revertVideoTimeoutRef.current);
     }
-    switchVideoTimeoutRef.current = setTimeout(() => {
-      switchVideo("/chat2.mp4");
-      switchVideoTimeoutRef.current = null;
-      revertVideoTimeoutRef.current = setTimeout(() => {
-        switchVideo("/chat1.mp4");
-        revertVideoTimeoutRef.current = null;
-      }, 3000);
-    }, 1000);
+
+    if (revealTimeoutRef.current) {
+      clearTimeout(revealTimeoutRef.current);
+    }
+
+    // -----------------------------
+    // Add user message
+    // -----------------------------
+
+    const userMessageId = `u-${Date.now()}`;
 
     setMessages((prev) => [
       ...prev,
-      { id: `u-${Date.now()}`, from: "user", text: trimmed },
+      {
+        id: userMessageId,
+        from: "user",
+        text: trimmed,
+      },
     ]);
+
     setInputValue("");
     setIsBotTyping(true);
 
-    setTimeout(() => {
+    // Keep current history before adding this message
+    const currentHistory = history;
+
+    try {
+      // -----------------------------
+      // Send request to chatbot API
+      // -----------------------------
+
+      const res = await fetch(CHATBOT_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: trimmed,
+          history: currentHistory,
+        }),
+      });
+
+      const data = await res.json();
+
+      // -----------------------------
+      // Validate API response
+      // -----------------------------
+
+      if (!res.ok || !data.success) {
+        throw new Error(
+          data?.message || "Chatbot request failed"
+        );
+      }
+
+      // -----------------------------
+      // Extract API response
+      // -----------------------------
+
+      const answer = data.response;
+
+      const showContactForm = data.showContactForm === true;
+
+      // -----------------------------
+      // Update conversation history
+      // -----------------------------
+
+      const updatedHistory = [
+        ...currentHistory,
+        {
+          role: "user",
+          content: trimmed,
+        },
+        {
+          role: "assistant",
+          content: answer,
+        },
+      ];
+
+      setHistory(updatedHistory);
+
+      // -----------------------------
+      // Bot finished typing
+      // -----------------------------
+
       setIsBotTyping(false);
+
+      // -----------------------------
+      // Create empty bot message
+      // -----------------------------
+
+      const botMessageId = `b-${Date.now()}`;
+
       setMessages((prev) => [
         ...prev,
-        { id: `b-${Date.now()}`, from: "bot", text: "yeah , sure i can do that for you" },
+        {
+          id: botMessageId,
+          from: "bot",
+          text: "",
+        },
       ]);
-    }, 1200);
+
+      // -----------------------------
+      // Reveal bot response
+      // -----------------------------
+
+      revealWordByWord(botMessageId, answer, {
+        onDone: showContactForm
+          ? () => setActiveTab("contact")
+          : undefined,
+      });
+    } catch (error) {
+      console.error("Chatbot API error:", error);
+
+      setIsBotTyping(false);
+
+      // -----------------------------
+      // Fallback response
+      // -----------------------------
+
+      const fallbackText =
+        "Sorry, something went wrong. Please try again.";
+
+      const fallbackId = `b-${Date.now()}`;
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: fallbackId,
+          from: "bot",
+          text: fallbackText,
+        },
+      ]);
+    }
   };
+
 
   useEffect(() => {
     return () => {
-      if (switchVideoTimeoutRef.current) {
-        clearTimeout(switchVideoTimeoutRef.current);
-      }
-      if (revertVideoTimeoutRef.current) {
-        clearTimeout(revertVideoTimeoutRef.current);
-      }
+      if (switchVideoTimeoutRef.current) clearTimeout(switchVideoTimeoutRef.current);
+      if (revertVideoTimeoutRef.current) clearTimeout(revertVideoTimeoutRef.current);
+      if (revealTimeoutRef.current) clearTimeout(revealTimeoutRef.current);
     };
   }, []);
 
@@ -103,9 +355,38 @@ export default function Chatbot() {
     sendMessage(inputValue);
   };
 
+  const handleQuestionClick = (question) => {
+    if (question.action === "contact") {
+      setActiveTab("contact");
+      return;
+    }
+    if (question.action === "projects") {
+      window.location.href = "/projects";
+      return;
+    }
+    sendMessage(question.text);
+  };
+
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isBotTyping]);
+    const messagesElement = messagesRef.current;
+    if (!isOpen || !messagesElement) return;
+
+    messagesElement.scrollTo({
+      top: messagesElement.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages, isBotTyping, isOpen]);
+
+
+  useEffect(() => {
+    if (!isActiveRef.current || !panelRef.current) return;
+    const isMobile = window.innerWidth <= 520;
+    gsap.to(panelRef.current, {
+      height: getOpenHeight(isMobile, activeTab),
+      duration: 0.4,
+      ease: "power3.inOut",
+    });
+  }, [activeTab]);
 
   const toggle = (forceState) => {
     const nextActive = forceState ?? !isActiveRef.current;
@@ -118,35 +399,9 @@ export default function Chatbot() {
     const panel = panelRef.current;
     const body = panelBodyRef.current;
     const isMobile = window.innerWidth <= 520;
-    // .chatbot is anchored with left: 5% on mobile (see chatbot.css), so
-    // the open width has to leave that same 5% clear on the right too,
-    // or the panel overshoots past the right edge of the viewport.
-    //
-    // Must be `vw`, not `%`: .chatbot-panel (this tween's actual target)
-    // is position: relative, so its containing block for a percentage
-    // WIDTH is its nearest positioned ancestor — .chatbot — not the
-    // viewport. .chatbot itself is `width: fit-content` (sized to the
-    // small closed pill, see chatbot.css), so any `%` width here was
-    // resolving against that tiny fit-content box, not 100vw, and came
-    // out close to the full viewport width regardless of the "- 10%" —
-    // which is what pushed the panel past the right edge. `vw` resolves
-    // against the actual viewport unconditionally, sidestepping the
-    // containing-block lookup entirely.
     const width = isMobile ? "calc(100vw - 10vw)" : "450px";
-    // Leave room above and below the panel on phones instead of expanding
-    // it to almost the entire viewport. `innerHeight` also follows the
-    // browser's currently visible viewport more reliably than `100vh`.
-    const height = isMobile
-      ? Math.min(620, Math.max(360, window.innerHeight - 160))
-      : 672;
+    const height = getOpenHeight(isMobile, activeTab);
     const closedWidth = toggleRef.current?.offsetWidth ?? 220;
-    // Must match .chatbot-panel's resting height in chatbot.css (52px)
-    // — this was 62px, 10px taller than the plain-CSS height the
-    // trailing clearProps below snaps back to once the close tween
-    // finishes. That mismatch is what read as "shrinks, then shrinks
-    // again": the panel tweened down to 62px, then instantly jumped to
-    // 52px the moment clearProps applied, instead of the tween's final
-    // frame already matching the resting CSS value.
     const closedHeight = 52;
 
     const tl = gsap.timeline({
@@ -204,9 +459,9 @@ export default function Chatbot() {
             duration: 0.55,
             ease: "power4.inOut",
             onComplete: () => {
-             
+
               gsap.set(panel, { clearProps: "width,height,borderRadius" });
-           
+
               gsap.set(body, { pointerEvents: "none" });
             },
           },
@@ -236,14 +491,25 @@ export default function Chatbot() {
           <span className="chatbot-toggle-text">Let&apos;s work together</span>
         </button>
 
-        <div className="chatbot-body" ref={panelBodyRef}>
+        <div
+          className={`chatbot-body ${activeTab === "contact" ? "chatbot-body--contact" : ""}`}
+          ref={panelBodyRef}
+        >
           <div className="chatbot-tabs">
-            <button type="button" className="chatbot-tab chatbot-tab--active">
+            <button
+              type="button"
+              className={`chatbot-tab ${activeTab === "chat" ? "chatbot-tab--active" : ""}`}
+              onClick={() => setActiveTab("chat")}
+            >
               Chat
             </button>
-            <Link href="/contact-us" className="chatbot-tab">
+            <button
+              type="button"
+              className={`chatbot-tab ${activeTab === "contact" ? "chatbot-tab--active" : ""}`}
+              onClick={() => setActiveTab("contact")}
+            >
               Contact
-            </Link>
+            </button>
           </div>
 
           <button
@@ -275,28 +541,56 @@ export default function Chatbot() {
           </div>
 
           <div className="chatbot-content">
-            <span className="chatbot-name">Remi</span>
-            <h3 className="chatbot-heading">Checking out Control Tower.</h3>
-            <p className="chatbot-text">
-              I can walk you through what happened here.
-            </p>
+            {activeTab !== "contact" && (
+              <span className="chatbot-name">Remi</span>
+            )}
+            {activeTab === "contact" ? (
+              <>
+                <h3 className="chatbot-heading">Let&apos;s get in touch.</h3>
+                <p className="chatbot-text">
+                  Share a few details and our team will follow up.
+                </p>
+              </>
+            ) : (
+              <>
+                <h3 className="chatbot-heading">Hey, I&apos;m Remi.</h3>
+                <p className="chatbot-text">
+                  Ask me anything about Vyrl or what we can build for you.
+                </p>
+              </>
+            )}
 
-            {messages.length === 0 ? (
+            {activeTab === "contact" ? (
+              <form className="chatbot-contact-form" data-lenis-prevent>
+                <input type="text" placeholder="Full Name" />
+                <input type="email" placeholder="Email Address" />
+                <input type="tel" placeholder="Phone Number" />
+                <input type="text" placeholder="Country" />
+                <textarea placeholder="Tell us about your project" rows={3} />
+                <button type="submit" className="chatbot-contact-submit">
+                  Send
+                </button>
+              </form>
+            ) : messages.length === 0 ? (
               <div className="chatbot-questions">
                 {QUESTIONS.map((question) => (
                   <button
-                    key={question}
+                    key={question.text}
                     type="button"
                     className="chatbot-question"
-                    onClick={() => sendMessage(question)}
+                    onClick={() => handleQuestionClick(question)}
                   >
-                    {question}
+                    {question.text}
                   </button>
                 ))}
               </div>
             ) : (
-            
-              <div className="chatbot-messages" data-lenis-prevent>
+
+              <div
+                className="chatbot-messages"
+                ref={messagesRef}
+                data-lenis-prevent
+              >
                 {messages.map((message) => (
                   <div
                     key={message.id}
@@ -314,28 +608,29 @@ export default function Chatbot() {
                   </div>
                 )}
 
-                <div ref={messagesEndRef} />
               </div>
             )}
           </div>
 
-          <form className="chatbot-inputRow" onSubmit={handleInputSubmit}>
-            <Image
-              className="chatbot-star chatbot-star--small"
-              src="/star.png"
-              alt=""
-              width={24}
-              height={24}
-              aria-hidden="true"
-            />
-            <input
-              type="text"
-              className="chatbot-input"
-              placeholder="Ask me anything..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-            />
-          </form>
+          {activeTab === "chat" && (
+            <form className="chatbot-inputRow" onSubmit={handleInputSubmit}>
+              <Image
+                className="chatbot-star chatbot-star--small"
+                src="/star.png"
+                alt=""
+                width={24}
+                height={24}
+                aria-hidden="true"
+              />
+              <input
+                type="text"
+                className="chatbot-input"
+                placeholder="Ask me anything..."
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+              />
+            </form>
+          )}
         </div>
       </div>
     </div>
