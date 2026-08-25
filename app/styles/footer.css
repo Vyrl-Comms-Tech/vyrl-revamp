@@ -23,6 +23,13 @@
   border-top-right-radius: 0;
 }
 
+/* Legal pages use the footer in normal document flow, outside OrbitGallery. */
+.footer.footer--static {
+  position: static;
+  bottom: auto !important;
+  transform: none;
+}
+
 /* ─── Row 1 – Logo ───────────────────────────────────────── */
 .footer-logo-row {
   width: 100% !important;

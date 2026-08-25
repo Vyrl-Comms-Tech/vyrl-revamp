@@ -12,6 +12,11 @@ import Footer from "./Footer";
 // visitors on "/" or "/about" would see two footers stacked).
 const ORBIT_GALLERY_PATHS = ["", ""];
 
+// Terms & Privacy want the footer visible at every viewport width
+// (see .global-footer-always in globals.css), unlike the mobile-only
+// default below.
+const FULL_FOOTER_PATHS = ["/terms-and-condition", "/privacy-policy"];
+
 // Visible on mobile only (see .global-footer-mobile-only in
 // globals.css) — above 800px, pages without OrbitGallery currently have
 // no footer at all, matching existing behavior; pages with OrbitGallery
@@ -20,8 +25,10 @@ export default function GlobalFooter() {
   const pathname = usePathname();
   if (ORBIT_GALLERY_PATHS.includes(pathname)) return null;
 
+  const alwaysShow = FULL_FOOTER_PATHS.includes(pathname);
+
   return (
-    <div className="global-footer-mobile-only">
+    <div className={alwaysShow ? "global-footer-always" : "global-footer-mobile-only"}>
       <Footer />
     </div>
   );

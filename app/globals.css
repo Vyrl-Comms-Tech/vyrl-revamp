@@ -72,6 +72,24 @@ body {
     display: block;
   }
 }
+
+/* Terms & Privacy show the global footer on all viewport widths —
+   see GlobalFooter.tsx's FULL_FOOTER_PATHS. */
+.global-footer-always {
+  display: block;
+}
+
+/* footer.css's .footer is built for OrbitGallery's pin/scroll
+   choreography (absolute + translateY(100%), revealed by scroll-driven
+   transforms on its OrbitGallery parent). Terms & Privacy render it
+   as a plain static page footer with no such parent, so it needs to
+   sit in normal flow at the bottom of the page instead of floating at
+   its OrbitGallery transform. */
+.global-footer-always .footer {
+  position: relative;
+  bottom: auto !important;
+  transform: none;
+}
 /* 
 a,
 button,

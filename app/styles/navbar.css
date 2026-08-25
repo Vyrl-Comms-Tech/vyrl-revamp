@@ -108,6 +108,17 @@
   backdrop-filter: blur(22px);
 }
 
+/* The legal pages use a solid navbar against their white content. */
+.nav-bar--legal,
+.menu-dropdown--legal {
+  background: #000 !important;
+  backdrop-filter: none;
+}
+
+.nav-bar--legal .bgs {
+  display: none;
+}
+
 .right-content ul {
   padding: 2rem;
 }

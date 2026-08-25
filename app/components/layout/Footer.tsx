@@ -13,6 +13,7 @@ import { subscribe, getSubscriberErrorMessage } from "../../lib/subscriberApi";
 
 const CASE_STUDY_PATHS = Object.values(caseStudies).map((c) => c.href);
 const NO_FOOTER_PATHS = [...CASE_STUDY_PATHS, "/contact-us"];
+const STATIC_FOOTER_PATHS = ["/privacy-policy", "/terms-and-condition"];
 
 // Renders the real PageTransitionLink normally, or a disabled, non-
 // clickable version (dimmed via .footer-nav-link--disabled, no
@@ -188,7 +189,9 @@ function Footer() {
 
   return (
     <footer
-      className={`footer${pathname === "/projects" ? " footer--no-radius" : ""}`}
+      className={`footer${pathname === "/projects" ? " footer--no-radius" : ""}${
+        STATIC_FOOTER_PATHS.includes(pathname) ? " footer--static" : ""
+      }`}
     >
       {/* Row 1 – Logo */}
       {/* <div className="footer-logo-row">

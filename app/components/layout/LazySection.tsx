@@ -1,5 +1,11 @@
 "use client";
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { scheduleScrollTriggerRefresh } from "../../lib/scheduleScrollTriggerRefresh";
 
 type LazySectionProps = {
@@ -34,7 +40,7 @@ export default function LazySection({
           observer.disconnect();
         }
       },
-      { rootMargin }
+      { rootMargin },
     );
 
     observer.observe(node);
@@ -67,8 +73,7 @@ export default function LazySection({
       // fallback check.
       const marginPx = parseInt(rootMargin, 10) || 0;
       const nearViewport =
-        rect.bottom >= -marginPx &&
-        rect.top <= window.innerHeight + marginPx;
+        rect.bottom >= -marginPx && rect.top <= window.innerHeight + marginPx;
       if (nearViewport) {
         setIsNear(true);
         observer.disconnect();

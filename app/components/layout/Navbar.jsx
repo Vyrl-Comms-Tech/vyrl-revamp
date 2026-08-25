@@ -67,6 +67,8 @@ const Navbar = () => {
   const pathname = usePathname();
   const isContactPage = pathname === "/contact-us";
   const isGlassNav = pathname === "/projects" || isContactPage;
+  const isLegalPage =
+    pathname === "/privacy-policy" || pathname === "/terms-and-condition";
 
   const navBarRef = useRef(null);
   const menuDropdownRef = useRef(null);
@@ -330,7 +332,7 @@ const Navbar = () => {
         <div
           className={`menu-dropdown${isGlassNav ? " menu-dropdown--glass" : ""}${
             isContactPage ? " menu-dropdown--contact" : ""
-          }`}
+          }${isLegalPage ? " menu-dropdown--legal" : ""}`}
           ref={menuDropdownRef}
         >
           <div className="right-content">
@@ -382,7 +384,7 @@ const Navbar = () => {
         <div
           className={`nav-bar${isGlassNav ? " nav-bar--glass" : ""}${
             isContactPage ? " nav-bar--contact" : ""
-          }`}
+          }${isLegalPage ? " nav-bar--legal" : ""}`}
           ref={navBarRef}
         >
           <div className="bgs" ref={bgsRef}>
