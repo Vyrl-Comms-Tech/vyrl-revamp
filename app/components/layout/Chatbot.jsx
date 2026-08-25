@@ -7,9 +7,9 @@ import Image from "next/image";
 
 const QUESTIONS = [
   { text: "What does Vyrl do?", action: "chat" },
-  { text: "How does Vyrl's process work?", action: "chat" }, 
+  { text: "How does Vyrl's process work?", action: "chat" },
   { text: "What services do you offer?", action: "chat" },
-  { text: "Can I see all your projects?", action: "chat" }, 
+  { text: "Can I see all your projects?", action: "chat" },
   { text: "I'd like to work with you", action: "contact" },
 ];
 
@@ -536,6 +536,26 @@ export default function Chatbot() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
               />
+              <button
+                type="submit"
+                className="chatbot-sendBtn"
+                aria-label="Send message"
+                disabled={!inputValue.trim()}
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M3.4 20.6L21 12 3.4 3.4 3.4 10 15 12 3.4 14z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </button>
             </form>
           )}
         </div>
