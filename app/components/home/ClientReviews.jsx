@@ -177,27 +177,31 @@ function ClientReviewSection() {
     return (((cardIdx - offset) % N) + N) % N;
   }
 
-  // Only the centered card (activeIndex) actually plays — every other
-  // slot just shows a still frame. Runs on mount and every time the
-  // center changes (shift() updates activeIndex).
+  // Only the centered card (activeIndex) can play or emit audio. Mute and
+  // pause every side card synchronously before starting the new center;
+  // waiting for a side card's play() promise created an audio race during
+  // fast switches, where the previous review could still be heard.
   useEffect(() => {
     videoRefs.current.forEach((video, i) => {
       if (!video) return;
-      if (i === activeIndex) {
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      } else {
-        // A <video> that's never played and has no (real) poster paints
-        // nothing at all — briefly playing then immediately pausing
-        // forces the browser to decode and display its first frame, so
-        // the side cards show that instead of a blank box until a real
-        // poster is set per review.
-        video.play()
-          .then(() => video.pause())
-          .catch(() => {});
-      }
+      if (i === activeIndex) return;
+
+      video.muted = true;
+      video.pause();
     });
-  }, [activeIndex]);
+
+    const activeVideo = videoRefs.current[activeIndex];
+    if (!activeVideo) return;
+
+    activeVideo.muted = isMuted;
+    activeVideo.currentTime = 0;
+    activeVideo.play().catch(() => {});
+
+    return () => {
+      activeVideo.muted = true;
+      activeVideo.pause();
+    };
+  }, [activeIndex, isMuted]);
 
   useEffect(() => {
     // Guards the deferred rAF poll further down (navbar darken tween) in
@@ -598,7 +602,10 @@ function ClientReviewSection() {
                     // first run would otherwise be the only thing to
                     // start it.
                     autoPlay={i === activeIndex}
-                    muted={isMuted}
+                    // Never let an off-center card inherit the shared
+                    // sound setting. This also mutes the outgoing card
+                    // during React's render, before the effect runs.
+                    muted={i === activeIndex ? isMuted : true}
                     loop
                     playsInline
                     draggable={false}

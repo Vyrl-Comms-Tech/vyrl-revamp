@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -59,6 +59,7 @@ const TESTIMONIALS = [
 // Slot offsets (xPercent) relative to the active card. Only the first
 // N entries (N = testimonial count) are ever consumed, via modulo.
 const CARD_POSITIONS = [-140, -120, 0, 120, 140, 210];
+const CENTER_POSITION_INDEX = CARD_POSITIONS.indexOf(0);
 
 export default function Testimonials() {
   // Testimonials is rendered on both / (home, white body) and /services
@@ -91,11 +92,27 @@ export default function Testimonials() {
   const leftCounterRef = useRef(null);
   const rightIntroRef = useRef(null);
   const rightCounterRef = useRef(null);
-
-  cardRefs.current = [];
-  const registerCardRef = (el) => {
-    if (el && !cardRefs.current.includes(el)) cardRefs.current.push(el);
-  };
+  const videoRefs = useRef([]);
+  // One shared muted flag, not per-card — mirrors ClientReviews.jsx's
+  // mute button: a "sound on or off" toggle that applies to whichever
+  // card is currently centered, carrying over as the deck rotates. Only
+  // the centered card's <video> is ever actually unmuted (see syncAudio
+  // below) — every other card stays muted regardless of this flag, so
+  // unmuting doesn't play every video's audio at once.
+  const [isMuted, setIsMuted] = useState(true);
+  // Mirrors isMuted for the GSAP effect below, which only runs once on
+  // mount and reads this on every slide change rather than closing over
+  // a stale isMuted from its first render.
+  const isMutedRef = useRef(isMuted);
+  // Set inside the GSAP effect below to the real syncAudio() (which knows
+  // the true current center via state.currentIndex) — called here too so
+  // toggling the button takes effect immediately instead of waiting for
+  // the next slide change.
+  const syncAudioRef = useRef(null);
+  useEffect(() => {
+    isMutedRef.current = isMuted;
+    syncAudioRef.current?.();
+  }, [isMuted]);
 
   useEffect(() => {
     const rootEl = rootRef.current;
@@ -129,11 +146,31 @@ export default function Testimonials() {
       startY: 0,
     };
 
+    // state.currentIndex is the actual centered testimonial. Offset the
+    // circular position lookup by the slot containing xPercent: 0 so the
+    // visible center, counter, and audio all refer to the same card.
     const getPosition = (index) =>
       CARD_POSITIONS[
-        (index - state.currentIndex + cardRefs.current.length) %
+        (index - state.currentIndex + CENTER_POSITION_INDEX +
+          cardRefs.current.length) %
           cardRefs.current.length
       ];
+
+    // Silences every card except the one currently at slot 0 (center) —
+    // called on every shift so a card that just left center can never
+    // keep playing its audio into the next one. Driven off
+    // state.currentIndex directly rather than each card's tweened
+    // xPercent (which setCard also checks), since that's the one value
+    // that's always exactly correct and available synchronously,
+    // independent of animation state.
+    const syncAudio = () => {
+      cardRefs.current.forEach((card, index) => {
+        const video = card.querySelector("video");
+        if (!video) return;
+        video.muted = index === state.currentIndex ? isMutedRef.current : true;
+      });
+    };
+    syncAudioRef.current = syncAudio;
 
     const setCard = (card, x, animate = true) => {
       let opacity = 0.5;
@@ -258,6 +295,7 @@ export default function Testimonials() {
       cardRefs.current.forEach((card, index) =>
         setCard(card, getPosition(index), true),
       );
+      syncAudio();
 
       gsap.delayedCall(0.7, () => {
         state.isAnimating = false;
@@ -289,6 +327,7 @@ export default function Testimonials() {
       cardRefs.current.forEach((card, index) =>
         setCard(card, getPosition(index), true),
       );
+      syncAudio();
 
       gsap.delayedCall(0.7, () => {
         state.isAnimating = false;
@@ -329,6 +368,7 @@ export default function Testimonials() {
       cardRefs.current.forEach((card, index) =>
         setCard(card, getPosition(index), false),
       );
+      syncAudio();
 
       // ==========================================================
       // SCROLLTRIGGER INTRO
@@ -505,6 +545,7 @@ export default function Testimonials() {
       rootEl.removeEventListener("pointerdown", handlePointerDown);
       rootEl.removeEventListener("pointerup", handlePointerUp);
       stopAutoplay();
+      syncAudioRef.current = null;
       ctx.revert(); // kills all tweens/ScrollTriggers created above, including
       // the navbar tween — this reverts .nav-bar/.menu-dropdown's
       // backgroundColor inline style back to whatever it was before, same
@@ -549,8 +590,14 @@ export default function Testimonials() {
         </div>
       </div>
 
-      {TESTIMONIALS.map((t) => (
-        <div className="testimonial-card" key={t.id} ref={registerCardRef}>
+      {TESTIMONIALS.map((t, index) => (
+        <div
+          className="testimonial-card"
+          key={t.id}
+          ref={(el) => {
+            cardRefs.current[index] = el;
+          }}
+        >
           <div className="card-inner-testi">
             <h2>
 
@@ -573,6 +620,13 @@ export default function Testimonials() {
             </a>
           </div>
           <video
+            ref={(el) => {
+              videoRefs.current[t.id] = el;
+            }}
+            // Starts muted like every card; syncAudio (in the effect
+            // above) takes over from here, keeping only the centered
+            // card's video in sync with isMuted and every other card
+            // hard-muted.
             muted
             loop
             autoPlay
@@ -582,6 +636,38 @@ export default function Testimonials() {
           >
             <source src={t.video} type="video/mp4" />
           </video>
+          <button
+            type="button"
+            className="testimonial-mute-btn"
+            aria-label={isMuted ? "Unmute video" : "Mute video"}
+            // The root .clients-testimonial element listens for
+            // pointerdown/pointerup natively (drag-to-swipe) — stop them
+            // here too, not just click, so pressing this button doesn't
+            // also register as a drag gesture / restart autoplay.
+            onPointerDown={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              // Only ever affects the centered card's video — syncAudio
+              // hard-mutes every non-centered card regardless of
+              // isMuted, so flipping this flag alone can't leak audio
+              // into the rest of the deck.
+              setIsMuted((m) => !m);
+            }}
+          >
+            {isMuted ? (
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 9v6h4l5 5V4L8 9H4z" fill="white" />
+                <path d="M16 8.5L21 15.5M21 8.5L16 15.5" stroke="white" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 9v6h4l5 5V4L8 9H4z" fill="white" />
+                <path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="white" strokeWidth="1.6" strokeLinecap="round" />
+                <path d="M19 6a8.5 8.5 0 0 1 0 12" stroke="white" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+            )}
+          </button>
         </div>
       ))}
     </div>

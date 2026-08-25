@@ -1,5 +1,5 @@
 .aboutHero {
-background: #fff;
+  background: #fff;
   position: relative;
   width: 100%;
   box-sizing: border-box;
@@ -72,7 +72,7 @@ background: #fff;
 
 .aboutHero-headingCol {
   gap: 13px;
-  align-self: flex-start;
+  align-self: flex-start !important;
   text-align: right;
   display: flex;
   flex-direction: column;
@@ -187,11 +187,22 @@ background: #fff;
     font-size: 18px;
   }
 }
-@media (max-width:1500px){
-  .aboutHero-headingCol {
-  gap: 0;
-  align-self: center;
+@media (max-width: 1400px) {
+  .aboutHero-headingCol{
+    gap: 4px;
+    padding-top: 40px;
+    align-self: flex-start !important;
+  }
+      .aboutHero-headingCol h1 {
+        font-size: clamp(1.75rem, 3.6vw, 75px);
+    }
 }
+@media (max-width: 1300px) {
+  .aboutHero-headingCol {
+    gap: 0;
+    padding-top: 0px;
+  align-self: center !important;
+  }
 }
 @media (max-width: 900px) {
   .aboutHero-tag {
@@ -218,7 +229,7 @@ background: #fff;
   .aboutHero-imageCol,
   .aboutHero-headingCol {
     width: 100%;
-    align-items: center;
+  align-items: center ;
     text-align: center;
   }
 
