@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import axios from "axios";
 import "../../styles/chatbot.css";
 import Image from "next/image";
 
@@ -18,7 +19,91 @@ const CHATBOT_API_URL = `${process.env.NEXT_PUBLIC_API}/chat/assistant`;
 const CHAT_MESSAGES_KEY = "chat_messages";
 const CHAT_HISTORY_KEY = "chat_history";
 
+const CONTACT_INITIAL_FORM = {
+  fullName: "",
+  email: "",
+  phoneNumber: "",
+  country: "",
+  message: "",
+};
+
 const WORD_REVEAL_MS = 220;
+
+const URL_REGEX = /(https?:\/\/[^\s]+)/g;
+
+const PROJECT_LIST_REGEX =
+  /([A-Z][A-Za-z]+(?:\s+[A-Za-z]+)*?):?\s*https?:\/\/\s*vyrl\s*revamp\.netlify\.app\s*\/\s*([a-z0-9-]+)((?:\s+[a-z][a-z0-9-]*)*)/g;
+
+const parseProjectLinks = (text) => {
+  const projects = [];
+  let match;
+  PROJECT_LIST_REGEX.lastIndex = 0;
+  while ((match = PROJECT_LIST_REGEX.exec(text))) {
+    const label = match[1].replace(/^.*?project:?\s*/i, "").trim();
+    const trailingWords = match[3].trim();
+    const slug = trailingWords
+      ? `${match[2]}-${trailingWords.split(/\s+/).join("-")}`
+      : match[2];
+    projects.push({ label, url: `https://vyrlrevamp.netlify.app/${slug}` });
+  }
+  return projects;
+};
+
+const normalizeBrokenUrls = (text) =>
+  text.replace(
+    /https?:\/\/\s*vyrl\s*revamp\.netlify\.app\s*\/\s*([a-z0-9-]+)/gi,
+    (match, slug) => `https://vyrlrevamp.netlify.app/${slug}`
+  );
+
+
+const MIN_PROJECTS_FOR_LIST = 2;
+const GENERIC_LINK_LABEL_REGEX =
+  /^(see|visit|check|view|full|our|contact|the)\b/i;
+
+const renderMessageText = (rawText) => {
+  const projects = parseProjectLinks(rawText).filter(
+    (project) => !GENERIC_LINK_LABEL_REGEX.test(project.label)
+  );
+
+  if (projects.length >= MIN_PROJECTS_FOR_LIST) {
+    return (
+      <div className="chatbot-project-list">
+        <span className="chatbot-project-list-title">Projects:</span>
+        {projects.map((project, index) => (
+          <div className="chatbot-project-item" key={index}>
+            <span className="chatbot-project-name">{project.label}</span>
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="chatbot-message-link"
+            >
+              {project.url}
+            </a>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  const text = normalizeBrokenUrls(rawText);
+  const parts = text.split(URL_REGEX);
+  return parts.map((part, index) =>
+    part.match(URL_REGEX) ? (
+      <a
+        key={index}
+        href={part}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="chatbot-message-link"
+      >
+        {part}
+      </a>
+    ) : (
+      <span key={index}>{part}</span>
+    )
+  );
+};
 
 const getOpenHeight = (isMobile, tab) => {
   const isContact = tab === "contact";
@@ -41,6 +126,11 @@ export default function Chatbot() {
   const [videoSrc, setVideoSrc] = useState("/chat1.mp4");
   const [history, setHistory] = useState([]);
   const [activeTab, setActiveTab] = useState("chat");
+  const [contactForm, setContactForm] = useState(CONTACT_INITIAL_FORM);
+  const [contactErrors, setContactErrors] = useState({});
+  const [contactSubmitting, setContactSubmitting] = useState(false);
+  const [contactSubmitError, setContactSubmitError] = useState("");
+  const [contactSent, setContactSent] = useState(false);
   const isActiveRef = useRef(false);
   const panelRef = useRef(null);
   const panelBodyRef = useRef(null);
@@ -185,6 +275,7 @@ export default function Chatbot() {
       });
 
       const data = await res.json();
+      // console.log("Response Chatbot data", data)
 
       if (!res.ok || !data.success) {
         throw new Error(
@@ -256,6 +347,65 @@ export default function Chatbot() {
       if (revealTimeoutRef.current) clearTimeout(revealTimeoutRef.current);
     };
   }, []);
+
+  const handleContactFieldChange = (field) => (e) => {
+    const { value } = e.target;
+    setContactForm((prev) => ({ ...prev, [field]: value }));
+    setContactErrors((prev) => (prev[field] ? { ...prev, [field]: "" } : prev));
+  };
+
+  const validateContactForm = () => {
+    const nextErrors = {};
+
+    if (!contactForm.fullName.trim()) nextErrors.fullName = "Full name is required";
+
+    if (!contactForm.email.trim()) {
+      nextErrors.email = "Email address is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactForm.email.trim())) {
+      nextErrors.email = "Enter a valid email address";
+    }
+
+    if (!contactForm.phoneNumber.trim())
+      nextErrors.phoneNumber = "Phone number is required";
+
+    if (!contactForm.country.trim()) nextErrors.country = "Country is required";
+
+    return nextErrors;
+  };
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    setContactSubmitError("");
+
+    const nextErrors = validateContactForm();
+    setContactErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
+
+    setContactSubmitting(true);
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API}/admin/contact-us`, {
+        fullName: contactForm.fullName.trim(),
+        email: contactForm.email.trim(),
+        phoneNumber: contactForm.phoneNumber.trim(),
+        country: contactForm.country.trim(),
+        message: contactForm.message.trim(),
+      });
+
+      if (!res.data?.success) {
+        throw new Error(res.data?.message || "Failed to submit. Please try again.");
+      }
+
+      setContactForm(CONTACT_INITIAL_FORM);
+      setContactSent(true);
+      window.setTimeout(() => setContactSent(false), 3000);
+    } catch (err) {
+      setContactSubmitError(
+        err?.response?.data?.message || err?.message || "Failed to submit. Please try again."
+      );
+    } finally {
+      setContactSubmitting(false);
+    }
+  };
 
   const handleInputSubmit = (e) => {
     e.preventDefault();
@@ -468,14 +618,64 @@ export default function Chatbot() {
             )}
 
             {activeTab === "contact" ? (
-              <form className="chatbot-contact-form" data-lenis-prevent>
-                <input type="text" placeholder="Full Name" />
-                <input type="email" placeholder="Email Address" />
-                <input type="tel" placeholder="Phone Number" />
-                <input type="text" placeholder="Country" />
-                <textarea placeholder="Tell us about your project" rows={3} />
-                <button type="submit" className="chatbot-contact-submit">
-                  Send
+              <form
+                className="chatbot-contact-form"
+                data-lenis-prevent
+                onSubmit={handleContactSubmit}
+                noValidate
+              >
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  value={contactForm.fullName}
+                  onChange={handleContactFieldChange("fullName")}
+                  className={contactErrors.fullName ? "chatbot-field--error" : ""}
+                  aria-invalid={!!contactErrors.fullName}
+                />
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  value={contactForm.email}
+                  onChange={handleContactFieldChange("email")}
+                  className={contactErrors.email ? "chatbot-field--error" : ""}
+                  aria-invalid={!!contactErrors.email}
+                />
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  value={contactForm.phoneNumber}
+                  onChange={handleContactFieldChange("phoneNumber")}
+                  className={contactErrors.phoneNumber ? "chatbot-field--error" : ""}
+                  aria-invalid={!!contactErrors.phoneNumber}
+                />
+                <input
+                  type="text"
+                  placeholder="Country"
+                  value={contactForm.country}
+                  onChange={handleContactFieldChange("country")}
+                  className={contactErrors.country ? "chatbot-field--error" : ""}
+                  aria-invalid={!!contactErrors.country}
+                />
+                <textarea
+                  placeholder="Tell us about your project"
+                  rows={3}
+                  value={contactForm.message}
+                  onChange={handleContactFieldChange("message")}
+                />
+
+                {contactSubmitError && (
+                  <p className="chatbot-contact-formError">{contactSubmitError}</p>
+                )}
+
+                <button
+                  type="submit"
+                  className={`chatbot-contact-submit ${contactSent ? "is-sent" : ""}`}
+                  disabled={contactSubmitting}
+                >
+                  <span className="chatbot-contact-submit-label">
+                    {contactSubmitting ? "Sending..." : "Send"}
+                  </span>
+                  <span className="chatbot-contact-submit-sent">Sent!</span>
                 </button>
               </form>
             ) : messages.length === 0 ? (
@@ -503,7 +703,7 @@ export default function Chatbot() {
                     key={message.id}
                     className={`chatbot-message chatbot-message--${message.from}`}
                   >
-                    {message.text}
+                    {renderMessageText(message.text)}
                   </div>
                 ))}
 

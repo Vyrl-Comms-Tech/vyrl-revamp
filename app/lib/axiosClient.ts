@@ -23,7 +23,7 @@ axiosClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = getAccessToken();
 
   if (process.env.NODE_ENV !== "production") {
-    console.log(`[axiosClient] ${config.method?.toUpperCase()} ${config.url} — token:`, token);
+    // console.log(`[axiosClient] ${config.method?.toUpperCase()} ${config.url} — token:`, token);
   }
   if (token) {
     config.headers = config.headers ?? {};

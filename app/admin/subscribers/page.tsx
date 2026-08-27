@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import {
   getSubscribers,
   deleteSubscriber,
@@ -82,13 +83,16 @@ export default function AdminSubscribersPage() {
 
       <div className="adminTable-wrap">
         <div className="adminTable-toolbar">
-          <input
-            type="text"
-            className="adminTable-search"
-            placeholder="Search by email..."
-            value={search}
-            onChange={(e) => handleSearchChange(e.target.value)}
-          />
+          <div className="adminTable-searchWrap">
+            <Search className="adminTable-searchIcon" size={15} strokeWidth={2} />
+            <input
+              type="text"
+              className="adminTable-search"
+              placeholder="Search by email..."
+              value={search}
+              onChange={(e) => handleSearchChange(e.target.value)}
+            />
+          </div>
           {pagination && (
             <span className="adminTable-count">{pagination.totalItems} records</span>
           )}
@@ -151,11 +155,12 @@ export default function AdminSubscribersPage() {
             </span>
             <div className="adminPagination-controls">
               <button
-                className="adminPagination-btn"
+                className="adminPagination-btn adminPagination-btn--nav"
                 disabled={!pagination.hasPreviousPage}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
+                aria-label="Previous page"
               >
-                &lsaquo;
+                <ChevronLeft size={15} strokeWidth={2.25} />
               </button>
               {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
                 (p) => (
@@ -169,11 +174,12 @@ export default function AdminSubscribersPage() {
                 )
               )}
               <button
-                className="adminPagination-btn"
+                className="adminPagination-btn adminPagination-btn--nav"
                 disabled={!pagination.hasNextPage}
                 onClick={() => setPage((p) => p + 1)}
+                aria-label="Next page"
               >
-                &rsaquo;
+                <ChevronRight size={15} strokeWidth={2.25} />
               </button>
             </div>
           </div>

@@ -3,6 +3,15 @@
 import { useEffect, useState, ReactNode } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import {
+  LayoutGrid,
+  Mail,
+  Users,
+  Bell,
+  LogOut,
+  PanelLeftClose,
+  PanelLeftOpen,
+} from "lucide-react";
 import axiosClient, {
   getAccessToken,
   setAccessToken,
@@ -11,9 +20,9 @@ import axiosClient, {
 import "../styles/admin-dashboard.css";
 
 const NAV_ITEMS = [
-  { href: "/admin", label: "Dashboard", icon: "▦" },
-  { href: "/admin/contact-us", label: "Contact Us", icon: "✉" },
-  { href: "/admin/subscribers", label: "Subscribers", icon: "📩" },
+  { href: "/admin", label: "Dashboard", icon: LayoutGrid },
+  { href: "/admin/contact-us", label: "Contact Us", icon: Mail },
+  { href: "/admin/subscribers", label: "Subscribers", icon: Users },
 ];
 
 const PAGE_TITLES: Record<string, string> = {
@@ -93,32 +102,44 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
         {!collapsed && <div className="adminSidebar-sectionLabel">Menu</div>}
         <nav className="adminSidebar-nav">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`adminSidebar-link${pathname === item.href ? " active" : ""}`}
-              title={collapsed ? item.label : undefined}
-            >
-              <span className="adminSidebar-linkIcon">{item.icon}</span>
-              {!collapsed && (
-                <span className="adminSidebar-linkText">{item.label}</span>
-              )}
-            </Link>
-          ))}
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`adminSidebar-link${pathname === item.href ? " active" : ""}`}
+                title={collapsed ? item.label : undefined}
+              >
+                <span className="adminSidebar-linkIcon">
+                  <Icon size={17} strokeWidth={2} />
+                </span>
+                {!collapsed && (
+                  <span className="adminSidebar-linkText">{item.label}</span>
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="adminSidebar-footer">
           <button className="adminSidebar-logout" onClick={handleLogout}>
-            {!collapsed && "Logout"}
-            {collapsed && "⎋"}
+            <LogOut size={15} strokeWidth={2} />
+            {!collapsed && <span>Logout</span>}
           </button>
           <button
             className="adminSidebar-collapseBtn"
             onClick={() => setCollapsed((v) => !v)}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {collapsed ? "»" : "« Collapse"}
+            {collapsed ? (
+              <PanelLeftOpen size={15} strokeWidth={2} />
+            ) : (
+              <>
+                <PanelLeftClose size={15} strokeWidth={2} />
+                <span>Collapse</span>
+              </>
+            )}
           </button>
         </div>
       </aside>
@@ -131,7 +152,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           </div>
           <div className="adminTopbar-right">
             <button className="adminTopbar-iconBtn" aria-label="Notifications">
-              🔔
+              <Bell size={16} strokeWidth={2} />
             </button>
             <div className="adminTopbar-user">
               <span className="adminTopbar-avatar">A</span>

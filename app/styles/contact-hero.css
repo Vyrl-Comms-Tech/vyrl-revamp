@@ -137,7 +137,7 @@
   color: #fff;
   border: 1px solid #f6f6f6 !important;
   border: #fff;
-  padding: 0.75rem 1.25rem;
+  padding: 0.5rem 1.25rem;
   font-size: 1.1rem;
   /* font-weight: 400; */
   white-space: nowrap;
@@ -150,11 +150,13 @@
 }
 
 .email-formError {
-  color: #ff6b6b;
+  color: #f33 !important;
+  font-size: 16px !important;
 }
 
 .email-formSuccess {
-  color: #4ade80;
+  color: #4ade80 !important;
+  font-size: 16px !important;
 }
 
 /* ---------- Right column ---------- */
