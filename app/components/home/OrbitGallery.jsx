@@ -713,6 +713,7 @@ export default function OrbitGallery({
               muted
               loop
               playsInline
+              poster="/smiley_compressed.avif"
               src="/smiley_compressed.mp4"
             ></video>
           </div>

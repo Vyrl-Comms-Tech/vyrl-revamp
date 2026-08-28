@@ -13,19 +13,19 @@ if (typeof window !== "undefined") {
 
 const images = [
   "1 (1) (2).avif",
-  "2.png",
-  "3.png",
-  "4.png",
-  "5.png",
-  "6.png",
+  "2.avif",
+  "3.avif",
+  "4.avif",
+  "5.avif",
+  "6.avif",
   "1 (1) (2).avif",
-  "2.png",
-  "3.png",
-  "4.png",
-  "5.png",
-  "6.png",
+  "2.avif",
+  "3.avif",
+  "4.avif",
+  "5.avif",
+  "6.avif",
   "1 (1) (2).avif",
-  "4.png",
+  "4.avif",
 ];
 
 const Slider = () => {

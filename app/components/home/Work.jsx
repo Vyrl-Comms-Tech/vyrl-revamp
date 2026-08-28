@@ -39,6 +39,7 @@ const WORK_ITEMS = [
     tags: ["UIUX", "GSAP", "NEXT.JS"],
     image: "/jeikor3.avif",
     video: "/jeikor-v.mp4",
+    poster: "/jeikor-v.avif",
     href: "/jeikor",
   },
   {
@@ -449,6 +450,7 @@ export default function Work() {
                 loop
                 playsInline
                 preload="none"
+                poster={item.poster}
               >
                 <source src={item.video} type="video/mp4" />
               </video>
