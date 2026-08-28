@@ -594,6 +594,7 @@ export default function Chatbot() {
               muted
               loop
               playsInline
+              preload="none"
             />
           </div>
 

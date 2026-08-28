@@ -463,6 +463,7 @@ function Footer() {
             muted
             loop
             playsInline
+            preload="none"
             poster="/smiley_compressed.avif"
             src="/smiley_compressed.mp4"
           ></video>
