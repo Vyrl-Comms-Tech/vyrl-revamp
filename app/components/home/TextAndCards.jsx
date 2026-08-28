@@ -576,8 +576,13 @@ export default function TextAndCards() {
         perspective: 1000,
         easing: "cubic-bezier(.03,.98,.52,.99)",
         reverse: true,
-        glare: true,
-        "max-glare": 0.1,
+        // Glare adds a second per-frame DOM write (a gradient overlay
+        // element) on top of vanilla-tilt's own per-frame
+        // getBoundingClientRect() reads, roughly doubling its main-thread
+        // cost across these 3 cards. Turning it off keeps the tilt feel
+        // and drops the forced-reflow/long-task cost PageSpeed flagged
+        // on this section.
+        glare: false,
         gyroscope: false,
       });
     };
