@@ -231,7 +231,7 @@ const ContactHero = () => {
           {/* <img src="/img1.avif" alt="" /> */}
           <video src="/contactvideo_compressed.mp4" poster="/contactvideo_compressed.jpg" autoPlay loop muted playsInline />
 
-          <div className="contactHero-newsletter">
+          {/* <div className="contactHero-newsletter">
             <h3>Stay In The Loop</h3>
             <p>
               Stay updated with the latest news, insights, and updates from
@@ -263,7 +263,7 @@ const ContactHero = () => {
                 {newsletterMessage}
               </p>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
 
