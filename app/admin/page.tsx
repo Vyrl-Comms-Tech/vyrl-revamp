@@ -1,11 +1,13 @@
 "use client";
 
+import { Inbox, Sparkles, Clock, CheckCircle2, Archive } from "lucide-react";
+
 // Dummy stats — replace with real API data later.
 const STATS = [
-  { label: "Total Contacts", value: "14", icon: "📥", tone: "blue" },
-  { label: "New This Week", value: "5", icon: "✨", tone: "purple" },
-  { label: "Pending Replies", value: "3", icon: "⏳", tone: "amber" },
-  { label: "Resolved", value: "9", icon: "✅", tone: "green" },
+  { label: "Total Contacts", value: "14", icon: Inbox, tone: "blue" },
+  { label: "New This Week", value: "5", icon: Sparkles, tone: "purple" },
+  { label: "Pending Replies", value: "3", icon: Clock, tone: "amber" },
+  { label: "Resolved", value: "9", icon: CheckCircle2, tone: "green" },
 ];
 
 export default function AdminDashboardPage() {
@@ -17,17 +19,20 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className="adminStats-grid">
-        {STATS.map((stat) => (
-          <div className="adminStats-card" key={stat.label}>
-            <div className={`adminStats-icon adminStats-icon--${stat.tone}`}>
-              {stat.icon}
+        {STATS.map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <div className="adminStats-card" key={stat.label}>
+              <div className={`adminStats-icon adminStats-icon--${stat.tone}`}>
+                <Icon size={20} strokeWidth={2} />
+              </div>
+              <div>
+                <div className="adminStats-value">{stat.value}</div>
+                <div className="adminStats-label">{stat.label}</div>
+              </div>
             </div>
-            <div>
-              <div className="adminStats-value">{stat.value}</div>
-              <div className="adminStats-label">{stat.label}</div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="adminPanel">
@@ -38,7 +43,9 @@ export default function AdminDashboardPage() {
           </p>
         </div>
         <div className="adminPanel-empty">
-          <span className="adminPanel-emptyIcon">📭</span>
+          <span className="adminPanel-emptyIcon">
+            <Archive size={26} strokeWidth={1.75} />
+          </span>
           <p>No activity feed yet — this is a placeholder for future insights.</p>
         </div>
       </div>

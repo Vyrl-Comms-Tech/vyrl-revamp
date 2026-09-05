@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import PageTransitionLink from "./PageTransitionLink";
 import AnimatedFooterWordmark from "./AnimatedFooterWordmark";
+import VyrlCtaButton from "./VyrlCtaButton";
 
 gsap.registerPlugin(SplitText);
 
@@ -159,12 +160,11 @@ export default function FooterContent() {
           <br />
           something remarkable.
         </h2>
-        <PageTransitionLink
+        <VyrlCtaButton
+          label="Contact us"
           href="/contact-us"
-          className="footer-reference-contact"
-        >
-          Contact us
-        </PageTransitionLink>
+          className="vyrl-cta--invert"
+        />
       </div>
       <div className="footer-reference-middle">
         <div className="footer-reference-intro">

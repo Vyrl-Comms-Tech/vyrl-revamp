@@ -5,11 +5,11 @@ import localFont from "next/font/local";
 import "./globals.css";
 import "./styles/heromodel-section.css";
 import "./styles/page-transition.css";
-import Navbar from "@/app/components/layout/Navbar";
 import SmoothScroll from "@/app/components/layout/SmoothScroll";
 import PreloaderGate from "@/app/components/layout/PreloaderGate";
 import PageTransitionOverlay from "@/app/components/layout/PageTransitionOverlay";
 // import Chatbot from "@/app/components/layout/Chatbot"; // mid-merge-conflict, whole file commented out — see git status (UU)
+import SiteChrome from "@/app/components/layout/SiteChrome";
 import FluidBackground from "@/app/components/layout/FluidBackgroundLoader";
 
 const laygrotesk = localFont({
@@ -57,14 +57,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Kicks off the browser's fetch for the services-cube GLB from the very
-  // first HTML chunk, before any client JS (PreloaderGate's warm-up effect,
-  // Services3d's own loadGLTF) ever runs — by the time warmUpServices3d()
-  // calls fetch() on this same URL, the network request is already
-  // in-flight or complete, so only the parse/Draco-decode/shader-compile
-  // work is left to do server-side... err, hidden during the preloader.
-  // `as: "fetch"` + crossOrigin matches how three.js's GLTFLoader actually
-  // requests it, so the preloaded response is reused instead of double-fetched.
   ReactDOM.preload("/cube1-optimized.glb", {
     as: "fetch",
     crossOrigin: "anonymous",
@@ -73,11 +65,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${laygrotesk.variable} h-full antialiased`}>
       <body className="min-h-full">
-        <PreloaderGate />
         {/* <FluidBackground /> */}
         <SmoothScroll />
         {/* <Header /> */}
-        <Navbar />
+        <SiteChrome />
         {children}
         <GlobalFooter />
         {/* <Chatbot /> */}

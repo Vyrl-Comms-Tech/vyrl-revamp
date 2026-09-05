@@ -13,14 +13,17 @@ import OrbitGallery from "@/app/components/home/OrbitGallery";
 import LazySection from "@/app/components/layout/LazySection";
 import DraggableMarquee from "../components/about/DraggableMarquee";
 import FullBgImage from "../components/layout/FullBgImage";
+import ResponsiveSwap from "../components/layout/ResponsiveSwap";
 const page = () => {
   return (
     <div>
       <AboutHero />
       <AboutText />
       <LazySection>
-        <AboutUsStack />
-        <AboutUsStackMobile />
+        <ResponsiveSwap
+          desktop={<AboutUsStack />}
+          mobile={<AboutUsStackMobile />}
+        />
       </LazySection>
       {/* <Logos /> */}
       {/* <LazySection>

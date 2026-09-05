@@ -79,7 +79,7 @@ const REVIEWS = [
     tags: ["JEWELRY", "E-COMMERCE", "BRANDING"],
     ctaLabel: "Watch Testimonials",
     href: "#",
-    poster: "#",
+    poster: "/Metro_compressed-frame.avif",
   },
   {
     id: 2,
@@ -106,7 +106,7 @@ const REVIEWS = [
     tags: ["REAL ESTATE", "BRANDING", "WEB"],
     ctaLabel: "Watch Testimonials",
     href: "https://afygroup.ae/",
-    poster: "#",
+    poster: "/AFY_compressed-frame.avif",
   },
   {
     id: 5,

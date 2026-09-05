@@ -21,8 +21,10 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API}/admin/login`, { email, password });
-      console.log("response", res)
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API}/admin/login`, { email, password }, {
+        withCredentials: true,
+      });
+      // console.log("response", res)
       if (!res.data?.success || !res.data?.accessToken) {
         throw new Error(res.data?.message || "Invalid email or password");
       }
@@ -56,6 +58,7 @@ export default function AdminLoginPage() {
             <input
               id="email"
               type="email"
+              placeholder="Enter email"
               className="adminLogin-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -71,6 +74,7 @@ export default function AdminLoginPage() {
             <div className="adminLogin-passwordWrap">
               <input
                 id="password"
+                placeholder="Enter password"
                 type={showPassword ? "text" : "password"}
                 className="adminLogin-input"
                 value={password}

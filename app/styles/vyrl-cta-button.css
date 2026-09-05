@@ -216,7 +216,7 @@
 }
 
 .vyrl-cta--invert {
-  color: #000;
+  color: #000 !important;
 }
 
 .vyrl-cta--invert .vyrl-cta__blob {

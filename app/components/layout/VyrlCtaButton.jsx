@@ -13,6 +13,17 @@ gsap.registerPlugin(SplitText);
 // stays a plain <button> exactly as before. AboutusStack.jsx and
 // AboutusStackMobile.jsx both need this to actually navigate to
 // /services, which the button-only version silently couldn't.
+/**
+ * @param {{
+ *   label?: string,
+ *   onClick?: (e: React.MouseEvent) => void,
+ *   className?: string,
+ *   type?: string,
+ *   href?: string,
+ *   external?: boolean,
+ *   id?: string,
+ * }} props
+ */
 export default function VyrlCtaButton({
   label = "Contact us",
   onClick,

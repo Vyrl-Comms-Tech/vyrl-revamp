@@ -246,7 +246,7 @@
   animation: chatbot-message-in 0.3s ease;
 
   overflow-wrap: anywhere;
-  word-break: break-word;
+  word-break: normal;
 }
 
 @keyframes chatbot-message-in {
@@ -280,6 +280,56 @@
   align-items: center;
   gap: 4px;
   padding: 14px;
+}
+
+.chatbot-message-line {
+  display: block;
+}
+
+.chatbot-message-line + .chatbot-message-line {
+  margin-top: 6px;
+}
+
+.chatbot-project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chatbot-project-list-title {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.chatbot-project-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chatbot-project-name {
+  font-weight: 600;
+}
+
+.chatbot-message-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+.chatbot-message--bot .chatbot-message-link {
+  color: #8ab4ff;
+}
+
+.chatbot-message--user .chatbot-message-link {
+  color: #0c0c10;
+}
+
+.chatbot-message-link:hover {
+  opacity: 0.85;
 }
 
 .chatbot-message--typing span {
@@ -424,7 +474,19 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
+.chatbot-field--error {
+  border-color: #ff4d50ce !important;
+  background: rgba(255, 77, 79, 0.08) !important;
+}
+
+.chatbot-contact-formError {
+  color: #ff4d4f;
+  font-size: 13px;
+  margin: 0;
+}
+
 .chatbot-contact-submit {
+  position: relative;
   align-self: flex-start;
   flex-shrink: 0;
   text-align: center;
@@ -437,7 +499,49 @@
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  overflow: hidden;
+  transition: opacity 0.2s ease, background 0.3s ease;
+}
+
+.chatbot-contact-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.chatbot-contact-submit-label,
+.chatbot-contact-submit-sent {
+  display: block;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+.chatbot-contact-submit-label {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.chatbot-contact-submit-sent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.chatbot-contact-submit.is-sent {
+  background: #2ecc71;
+  color: #fff;
+}
+
+.chatbot-contact-submit.is-sent .chatbot-contact-submit-label {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.chatbot-contact-submit.is-sent .chatbot-contact-submit-sent {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .chatbot-body--contact .chatbot-heading {
@@ -487,7 +591,7 @@
   }
 
   .chatbot--open .chatbot-content {
-    min-height: 55%;
+    min-height: 42%;
   }
 
   .chatbot--open .chatbot-content {

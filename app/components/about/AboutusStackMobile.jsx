@@ -17,11 +17,9 @@ gsap.registerPlugin(ScrollTrigger);
  * viewports, this renders the same three cards as simple static cards,
  * one per row, matching TextAndCards.jsx's .hs-card mobile treatment
  * (see text-and-cards.css's max-width: 840px block) instead of trying
- * to make a pin/stack animation behave on mobile. Both this and
- * AboutusStack mount in about/page.jsx; CSS (not JS) decides which one
- * is visible per breakpoint, so only one's animation logic ever runs
- * with layout that matches it, and the other still exists (display:
- * none) rather than being conditionally unmounted.
+ * to make a pin/stack animation behave on mobile. about/page.jsx mounts
+ * exactly one of this and AboutusStack via ResponsiveSwap — never both —
+ * so only one's GSAP setup, videos, and DOM work ever run per load.
  */
 const CARDS = [
   {

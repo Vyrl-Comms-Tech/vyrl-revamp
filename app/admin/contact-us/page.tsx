@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight, X, Search } from "lucide-react";
 import axiosClient from "../../lib/axiosClient";
 
 type Contact = {
@@ -50,7 +51,7 @@ export default function AdminContactUsPage() {
         params: { page: targetPage, limit: 10, search: searchTerm || undefined },
       });
 
-      console.log("Response Contact", res)
+      // console.log("Response Contact", res)
 
       if (!res.data?.success) {
         throw new Error(res.data?.message || "Failed to fetch contacts");
@@ -115,13 +116,16 @@ export default function AdminContactUsPage() {
 
       <div className="adminTable-wrap">
         <div className="adminTable-toolbar">
-          <input
-            type="text"
-            className="adminTable-search"
-            placeholder="Search by name, email or phone..."
-            value={search}
-            onChange={(e) => handleSearchChange(e.target.value)}
-          />
+          <div className="adminTable-searchWrap">
+            <Search className="adminTable-searchIcon" size={15} strokeWidth={2} />
+            <input
+              type="text"
+              className="adminTable-search"
+              placeholder="Search by name, email or phone..."
+              value={search}
+              onChange={(e) => handleSearchChange(e.target.value)}
+            />
+          </div>
           {pagination && (
             <span className="adminTable-count">{pagination.totalItems} records</span>
           )}
@@ -198,11 +202,12 @@ export default function AdminContactUsPage() {
             </span>
             <div className="adminPagination-controls">
               <button
-                className="adminPagination-btn"
+                className="adminPagination-btn adminPagination-btn--nav"
                 disabled={!pagination.hasPreviousPage}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
+                aria-label="Previous page"
               >
-                &lsaquo;
+                <ChevronLeft size={15} strokeWidth={2.25} />
               </button>
               {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
                 (p) => (
@@ -216,11 +221,12 @@ export default function AdminContactUsPage() {
                 )
               )}
               <button
-                className="adminPagination-btn"
+                className="adminPagination-btn adminPagination-btn--nav"
                 disabled={!pagination.hasNextPage}
                 onClick={() => setPage((p) => p + 1)}
+                aria-label="Next page"
               >
-                &rsaquo;
+                <ChevronRight size={15} strokeWidth={2.25} />
               </button>
             </div>
           </div>
@@ -233,7 +239,7 @@ export default function AdminContactUsPage() {
             <div className="adminModal-header">
               <h2 className="adminModal-title">{viewing.fullName}</h2>
               <button className="adminModal-close" onClick={() => setViewing(null)}>
-                &times;
+                <X size={16} strokeWidth={2.25} />
               </button>
             </div>
             <div className="adminModal-body">

@@ -60,8 +60,8 @@
   width: clamp(94px, 9.5vw, 184px);
   min-height: clamp(28px, 2.8vw, 54px);
   border-radius: 50px;
-  background: white;
-  color: black;
+  /* background: inherit; */
+  /* color: black; */
   font-size: clamp(11px, 1.05vw, 20px);
 }
 .footer-reference-middle {
