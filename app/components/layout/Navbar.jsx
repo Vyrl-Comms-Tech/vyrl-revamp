@@ -356,7 +356,7 @@ const Navbar = () => {
                 className="box-1"
                 onClick={() => toggleMenu(false)}
               >
-                <p>Real Estate</p>
+                {/* <p>Real Estate</p> */}
                 <Image src="/arab3.avif" alt="" fill sizes="20vw" />
               </PageTransitionLink>
               <PageTransitionLink
@@ -364,7 +364,7 @@ const Navbar = () => {
                 className="box-1"
                 onClick={() => toggleMenu(false)}
               >
-                <p>Restaurant</p>
+                {/* <p>Restaurant</p> */}
                 <Image src="/lala1.avif" alt="" fill sizes="20vw" />
               </PageTransitionLink>
             </div>
@@ -374,7 +374,7 @@ const Navbar = () => {
                 className="box-1"
                 onClick={() => toggleMenu(false)}
               >
-                <p>Automotive</p>
+                {/* <p>Automotive</p> */}
                 <Image src="/sanam2.avif" alt="" fill sizes="20vw" />
               </PageTransitionLink>
             </div>

@@ -7,6 +7,7 @@ import VyrlAbout from "@/app/components/home/VyrlAbout";
 import OrbitGallery from "@/app/components/home/OrbitGallery";
 import Services3d from "@/app/components/home/Services3d";
 import Slider from "@/app/components/services/Slider";
+import FullBgImage from "../components/layout/FullBgImage";
 const page = () => {
   return (
     <div>
@@ -16,7 +17,9 @@ const page = () => {
       <VyrlAbout />
       {/* <SimilarPost /> */}
       {/* <HomeSecondLast /> */}
-      <OrbitGallery />
+      {/* <OrbitGallery /> */}
+      <FullBgImage/>
+    
     </div>
   );
 };

@@ -257,6 +257,14 @@
     max-height: 38px;
   }
 }
+@media (max-width: 1300px) {
+  .partner-card {
+    height: 129px;
+  }
+  .partner-logo {
+    max-height: 38px;
+  }
+}
 @media (max-width: 900px) {
   .partners-section {
     padding: 4rem 3vw;

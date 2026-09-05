@@ -12,6 +12,7 @@ import OrbitGallery from "@/app/components/home/OrbitGallery";
 
 import LazySection from "@/app/components/layout/LazySection";
 import DraggableMarquee from "../components/about/DraggableMarquee";
+import FullBgImage from "../components/layout/FullBgImage";
 const page = () => {
   return (
     <div>
@@ -39,7 +40,8 @@ const page = () => {
       {/* <SimilarPost /> */}
       <LazySection>
         {/* <HomeSecondLast /> */}
-        <OrbitGallery />
+        {/* <OrbitGallery /> */}
+      <FullBgImage/>
       </LazySection>
     </div>
   );

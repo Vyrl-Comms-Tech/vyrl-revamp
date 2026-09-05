@@ -337,6 +337,7 @@
   color: rgba(255, 255, 255, 0.4);
 }
 
+<<<<<<< Updated upstream
 .chatbot-sendBtn {
   flex-shrink: 0;
   display: flex;
@@ -457,6 +458,13 @@
   }
 }
 
+=======
+@media (max-width: 1320px) {
+  .chatbot {
+    bottom: 11px;
+  }
+}
+>>>>>>> Stashed changes
 @media (max-width: 520px) {
   .chatbot {
     right: auto;

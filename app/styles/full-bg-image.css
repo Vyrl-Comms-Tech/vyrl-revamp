@@ -1,0 +1,208 @@
+/* Pin/reveal host for the footer — same role .image-orbit plays for
+   OrbitGallery. Needs its own stacking context and clipped overflow so
+   .footer (absolutely positioned, sliding up from translateY(100%) per
+   footer.css) is contained and revealed over consultation-main-container
+   instead of spilling past the section while it's pinned. */
+.full-bg-image {
+  position: relative;
+  overflow: hidden;
+  height: 100vh;
+}
+
+.consultation-main-container {
+  position: relative;
+  /* 100px inline/block breathing room around the hero image block itself —
+     kept off .full-bg-image so the section (and .footer riding along
+     inside it for the pin/reveal) stays full width/height. */
+  width: calc(100% - 200px);
+  height: calc(100vh - 200px);
+  margin-inline: 100px;
+  margin-block: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border: 1px solid red; */
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.consultation-main-container .consultation-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.37) 0%, rgba(0, 0, 0, 0.37) 100%),
+    url("/orbit(18).avif") lightgray 50% / cover no-repeat;
+  background-attachment: fixed;
+  pointer-events: none;
+}
+
+.consultation-main-container .consultation-text-content {
+  position: relative;
+  z-index: 1;
+}
+
+.consultation-text-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.consultation-text-content h1 {
+  width: 75%;
+  color: #fff;
+  text-align: center;
+  font-size: 60px;
+  font-weight: 430;
+}
+
+.consultation-text-content p {
+  color: #ffffffd7;
+  text-align: center;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 100;
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+/* Responsive consultation layout */
+.consultation-text-content {
+  width: min(100%, 1100px);
+  padding-inline: clamp(24px, 5vw, 80px);
+}
+
+.consultation-text-content h1 {
+  font-size: clamp(38px, 4.2vw, 60px);
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.consultation-button {
+  min-height: 44px;
+  padding: 10px 22px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+@media (max-width: 1550px) {
+  .consultation-main-container {
+    width: calc(100% - 195px);
+    height: calc(100vh - 144px);
+    margin-block: 86px;
+  }
+  .consultation-text-content p {
+    max-width: 650px;
+  }
+}
+@media (max-width: 1024px) {
+  .consultation-main-container {
+    width: calc(100% - 80px);
+    height: min(72svh, 680px);
+    min-height: 520px;
+    margin-inline: 40px;
+  }
+
+  .consultation-text-content h1 {
+    width: min(90%, 760px);
+    font-size: clamp(38px, 5.5vw, 54px);
+  }
+}
+
+@media (max-width: 768px) {
+  .consultation-main-container {
+    width: calc(100% - 48px);
+    height: min(70svh, 600px);
+    min-height: 500px;
+    margin-inline: 24px;
+    border-radius: 18px;
+  }
+
+  .consultation-main-container .consultation-bg {
+    background-position: 58% center;
+  }
+
+  .consultation-text-content {
+    padding-inline: 24px;
+  }
+
+  .consultation-text-content h1 {
+    width: 100%;
+    font-size: clamp(34px, 7.5vw, 48px);
+    font-weight: 400;
+  }
+
+  .consultation-text-content p {
+    max-width: 32ch;
+    margin-top: 16px;
+    margin-bottom: 18px;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 480px) {
+  .consultation-main-container {
+    width: calc(100% - 32px);
+    height: 68svh;
+    min-height: 460px;
+    max-height: 580px;
+    margin-inline: 16px;
+    border-radius: 16px;
+  }
+
+  .consultation-text-content {
+    padding-inline: 18px;
+  }
+
+  .consultation-text-content h1 {
+    font-size: clamp(25px, 8.5vw, 40px);
+    line-height: 1.08;
+  }
+
+  .consultation-text-content p {
+    font-size: 15px;
+  }
+
+  .consultation-button {
+    width: auto;
+    min-height: 40px;
+    padding-inline: 18px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .consultation-text-content {
+    padding-inline: 14px;
+  }
+
+  .consultation-text-content h1 {
+    font-size: 29px;
+  }
+}
+
+@media (max-width: 800px) {
+  /* Pin is skipped on mobile (see FullBgImage.jsx), so let the section
+     size to its content instead of forcing the 100vh pin height, same
+     as .image-orbit's own max-width: 800px override in orbit-gallery.css. */
+  .full-bg-image {
+    height: auto;
+    overflow: visible;
+  }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .consultation-main-container {
+    height: 88svh;
+    min-height: 360px;
+  }
+
+  .consultation-text-content h1 {
+    width: min(90%, 680px);
+    font-size: clamp(30px, 5vw, 42px);
+  }
+
+  .consultation-text-content p {
+    margin-block: 10px 12px;
+  }
+}

@@ -14,6 +14,7 @@ const MODEL_JSON_PATH = "/Main_Section_compressed.json";
 const VIDEO_PATH = "/shoreel.mp4";
 
 export default function HeroModelSection() {
+  const shellRef = useRef(null);
   const sectionRef = useRef(null);
   const canvasRef = useRef(null);
   const heroHeadingRef = useRef(null);
@@ -34,7 +35,7 @@ export default function HeroModelSection() {
       trigger: section,
       start: "top top",
       end: "+=400% bottom",
-      pin: true,
+      pin: false,
     });
 
     return () => {
@@ -320,11 +321,10 @@ export default function HeroModelSection() {
 
           const modelTrigger = gsap.timeline({
             scrollTrigger: {
-              trigger: section,
+              trigger: shellRef.current,
               start: "top top",
-              end: "+=400% bottom",
+              end: "bottom bottom",
               scrub: 1,
-              pin: true,
               // markers: process.env.NODE_ENV === "development",
             },
           });
@@ -499,7 +499,8 @@ export default function HeroModelSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="heroSection">
+    <div ref={shellRef} className="heroSectionShell">
+      <section ref={sectionRef} className="heroSection">
       <div className="heroHeadingModel">
         <h2 ref={heroHeadingRef} className="heroHeadingModelHeading">
           Shaping The <br /> Next Generation <br /> Of Digital Experiences.
@@ -523,6 +524,7 @@ export default function HeroModelSection() {
           experiences that move brands forward.
         </h2>
       </div>
-    </section>
+      </section>
+    </div>
   );
 }

@@ -17,7 +17,7 @@ import LazySection from "@/app/components/layout/LazySection";
 
 export default function Home() {
   return (
-    <>
+    <>       
       <HeroModelSection />
       <TextAndCards />
       <LazySection placeholder={<div style={{ height: "100vh" }} />}>
@@ -42,3 +42,4 @@ export default function Home() {
     </>
   );
 }
+

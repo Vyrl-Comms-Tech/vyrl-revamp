@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 const TESTIMONIALS = [
   {
     id: 1,
-    video: "/Metro_compressed.mp4",
+    video: "/v1 (1).mp4",
     name: "Metro Jewellers",
     tags: ["JEWELRY", "E-COMMERCE", "BRANDING"],
     ctaLabel: "Watch Testimonials",
@@ -20,7 +20,7 @@ const TESTIMONIALS = [
   },
   {
     id: 2,
-    video: "/Zeds_compressed.mp4",
+    video: "/v1 (5).mp4",
     name: "Zeds Perfumes",
     tags: ["PERFUME", "E-COMMERCE"],
     ctaLabel: "Watch Testimonials",
@@ -29,7 +29,7 @@ const TESTIMONIALS = [
   },
   {
     id: 3,
-    video: "/Wellington_compressed.mp4",
+    video: "/v1 (4).mp4",
     name: "Wellington Properties",
     tags: ["REAL ESTATE", "UI/UX", "NEXT.JS"],
     ctaLabel: "Watch Testimonials",
@@ -38,7 +38,7 @@ const TESTIMONIALS = [
   },
   {
     id: 4,
-    video: "/AFY_compressed.mp4",
+    video: "/v1 (3).mp4",
     name: "AFY Realty",
     tags: ["REAL ESTATE", "BRANDING", "WEB"],
     ctaLabel: "Watch Testimonials",
@@ -47,7 +47,7 @@ const TESTIMONIALS = [
   },
   {
     id: 5,
-    video: "/SanamCars_compressed.mp4",
+    video:"/v1 (2).mp4",
     name: "Sanam Cars",
     tags: ["AUTOMOTIVE", "GSAP", "ScrollTrigger"],
     ctaLabel: "Watch Testimonials",

@@ -18,7 +18,7 @@ gsap.registerPlugin(MorphSVGPlugin);
  *   const [loaded, setLoaded] = useState(false);
  *   {!loaded && <Preloader onComplete={() => setLoaded(true)} />}
  */
-export default function Preloader1({ onComplete }) {
+export default function Preloader1({ onComplete}) {
   const containerRef = useRef(null);
   const pathRef = useRef(null);
   const counterRef = useRef(null);

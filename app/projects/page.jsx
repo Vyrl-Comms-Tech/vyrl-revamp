@@ -6,6 +6,7 @@ import ServicesSecondLast from "../components/services/ServicesSecondLast";
 import OrbitGallery from "@/app/components/home/OrbitGallery";
 import ResponsiveSwap from "@/app/components/layout/ResponsiveSwap";
 import Testimonials from "@/app/components/home/Testimonials";
+import FullBgImage from "../components/layout/FullBgImage";
 
 const page = () => {
   return (
@@ -13,9 +14,9 @@ const page = () => {
       <Suspense fallback={null}>
         <ProjectsGrid />
       </Suspense>
-      <ResponsiveSwap desktop={<Testimonials />} mobile={<ClientReviews />} />
-      <OrbitGallery />
-
+      {/* <ResponsiveSwap desktop={<Testimonials />} mobile={<ClientReviews />} /> */}
+      {/* <OrbitGallery /> */}
+      <FullBgImage/>
       {/* 
       <div className="client-review-section-container-project">
       <ClientReviews />

@@ -213,6 +213,11 @@ export default function ProjectsGrid() {
   // this section is about to end — same scrubbed-fade idiom Slider.jsx
   // uses for its own body-color handoff, just white instead of black and
   // anchored to the section's tail instead of its front half.
+  //
+  // .nav-bar/.menu-dropdown run the inverse of the body: glass/whitish
+  // immediately (readable over the black body up top) then scrubbed to
+  // solid black in that same last-25% window, landing right as the body
+  // turns white (readable over the white body from there on).
   useLayoutEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -221,18 +226,20 @@ export default function ProjectsGrid() {
 
     let navbarAttempts = 0;
     let cancelled = false;
-    const addNavbarDarkenTween = () => {
+    const addNavbarGlassTween = () => {
       if (cancelled) return;
       const navBar = document.querySelector(".nav-bar");
       const menuDropdown = document.querySelector(".menu-dropdown");
       if (navBar && menuDropdown) {
-        gsap.set([navBar, menuDropdown], { backgroundColor: "#0a0a0a" });
+        gsap.set([navBar, menuDropdown], {
+          backgroundColor: "rgba(255, 255, 255, 0.05)",
+        });
         return;
       }
       navbarAttempts += 1;
-      if (navbarAttempts < 30) requestAnimationFrame(addNavbarDarkenTween);
+      if (navbarAttempts < 30) requestAnimationFrame(addNavbarGlassTween);
     };
-    addNavbarDarkenTween();
+    addNavbarGlassTween();
 
     const ctx = gsap.context(() => {
       // Trigger spans the section's full scroll distance; the fade
@@ -258,8 +265,8 @@ export default function ProjectsGrid() {
         0.75,
       );
 
-      let lightenAttempts = 0;
-      const addNavbarLightenTween = () => {
+      let darkenAttempts = 0;
+      const addNavbarDarkenTween = () => {
         if (cancelled) return;
         const navBar = document.querySelector(".nav-bar");
         const menuDropdown = document.querySelector(".menu-dropdown");
@@ -267,17 +274,17 @@ export default function ProjectsGrid() {
           bodyTl.to(
             [navBar, menuDropdown],
             {
-              backgroundColor: "rgba(255, 255, 255, 0.05)",
+              backgroundColor: "#0a0a0a",
               ease: "power2.inOut",
             },
             0.75,
           );
           return;
         }
-        lightenAttempts += 1;
-        if (lightenAttempts < 30) requestAnimationFrame(addNavbarLightenTween);
+        darkenAttempts += 1;
+        if (darkenAttempts < 30) requestAnimationFrame(addNavbarDarkenTween);
       };
-      addNavbarLightenTween();
+      addNavbarDarkenTween();
     }, sectionRef);
 
     // During a client-side page transition, passive cleanup from the

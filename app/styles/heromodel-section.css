@@ -1,10 +1,22 @@
-.heroSection {
+.heroSectionShell {
+  height: 500vh;
   position: relative;
+}
+
+.heroSection {
+  position: sticky;
+  top: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
 
   z-index: 100;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroSectionShell {
+    height: 100vh;
+  }
 }
 .canvas {
   display: block;

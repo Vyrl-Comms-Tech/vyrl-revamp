@@ -1,925 +1,291 @@
-/* ─── Footer ─────────────────────────────────────────────── */
+/* The desktop position is controlled by OrbitGallery's reveal animation. */
 .footer {
   position: absolute;
   bottom: 0 !important;
-  z-index: 99999;
-  border-top-left-radius: 110px;
-  border-top-right-radius: 110px;
-  /* overlay:; */
-  width: 100% !important;
-
+  /* Orbit cards animate up to 800; the gallery heading sits at 900. */
+  z-index: 1000;
+  width: 100%;
   transform: translateY(100%) scale(0.8);
-  /* scale: (0.8); */
-  background-color: #000;
-  padding: 0 16px 40px;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-  gap: 20px;
+  background: #000;
+  color: #fff;
+  border-radius: 0;
 }
-
-.footer--no-radius {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-
-/* Legal pages use the footer in normal document flow, outside OrbitGallery. */
 .footer.footer--static {
   position: static;
   bottom: auto !important;
   transform: none;
 }
-
-/* ─── Row 1 – Logo ───────────────────────────────────────── */
-.footer-logo-row {
-  width: 100% !important;
-
-  scale: 1.5;
-  height: 460px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden !important;
-}
-
-/* .footer-logo-img {
-  height: 460px;
-  object-fit: contain;
-  scale: 1.4;
-} */
-
-.footer-logo-3d {
-  width: 100%;
-  height: 100%;
-}
-
-.footer-logo-3d canvas {
-  display: block;
-  width: 100%;
-  scale: 1.25;
-  margin-top: 20px;
-  height: 100%;
-}
-
-/* Shown instead of the 3D glass logo when WebGL isn't available in the
-   visitor's browser (see FooterLogo3D.jsx) — sized/positioned to sit
-   roughly where the canvas would. */
-.footer-logo-3d--fallback {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.footer-logo-3d--fallback img {
-  max-width: 70%;
-  max-height: 70%;
-  object-fit: contain;
-}
-
-/* ─── Row 2 – Connect + Nav ──────────────────────────────── */
-.footer-connect-row {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(52px);
-  border-radius: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 36px 40px;
-  gap: 10px;
-}
-
-/* Left */
-.footer-connect-left {
+.footer-reference {
+  box-sizing: border-box;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(28px, 4.5vh, 88px) 2.9vw clamp(24px, 4.7vh, 90px);
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  /* border: 1px solid rgb(9, 248, 149); */
 }
-
-.footer-connect-heading {
+.footer-reference *,
+.footer-reference *::before,
+.footer-reference *::after {
+  box-sizing: border-box;
+}
+.footer-reference a {
+  color: inherit;
+  text-decoration: none;
+}
+.footer-reference a:focus-visible,
+.footer-reference button:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 5px;
+}
+.footer-reference-top {
   display: flex;
-  align-items: center;
-  cursor: pointer;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 0 0.7vw clamp(16px, 2.9vh, 56px);
+  border-bottom: 1px solid #151515;
 }
-
-.footer-connect-title {
-  color: #fff;
-  font-size: 62px;
-  font-weight: 500;
+.footer-reference-top h2 {
   margin: 0;
+  font-size: clamp(30px, 3.03vw, 60px);
+  font-weight: 400;
+  line-height: 1.03;
+  letter-spacing: -0.045em;
+}
+.footer-reference a.footer-reference-contact {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: clamp(94px, 9.5vw, 184px);
+  min-height: clamp(28px, 2.8vw, 54px);
+  border-radius: 50px;
+  background: white;
+  color: black;
+  font-size: clamp(11px, 1.05vw, 20px);
+}
+.footer-reference-middle {
+  display: grid;
+  grid-template-columns: 29% 1fr;
+  gap: 2.1%;
+  padding: clamp(28px, 5vh, 96px) 0.7vw clamp(26px, 4.7vh, 90px);
+  border-bottom: 1px solid #151515;
+}
+.footer-reference-intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+}
+.footer-reference-intro p {
+  margin: 0;
+  font-size: clamp(12px, 1.18vw, 23px);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+.footer-reference-intro p span {
+  color: #808080;
+}
+.footer-reference-email {
+  font-size: clamp(22px, 2.22vw, 43px);
+  line-height: 1.1;
+  letter-spacing: -0.045em;
   white-space: nowrap;
+}
+.footer-reference-socials {
+  display: flex;
+  gap: clamp(6px, 0.65vw, 13px);
+}
+.footer-reference-socials a {
+  width: clamp(32px, 3.15vw, 61px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid #343434;
+  border-radius: 10px;
+}
+.footer-reference-socials svg {
+  width: 48%;
+  height: 48%;
+}
+.footer-reference-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1.65fr;
+  gap: 1.15vw;
+}
+.footer-reference-nav h3 {
+  margin: 0 0 0.8vw;
+  color: #808080;
+  font-size: clamp(10px, 1vw, 19px);
+  font-weight: 400;
+  line-height: 1.2;
+}
+.footer-reference-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35vw;
+  min-height: calc(100% - 2vw);
+  padding-left: 1.2vw;
+  border-left: 1px solid #0d0d0d;
+  font-size: clamp(14px, 1.42vw, 28px);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+.footer-reference-links a {
   width: fit-content;
 }
-
-.footer-arrow-btn {
-  flex-shrink: 0;
-  width: 46px;
-  height: 46px;
-  min-width: 46px;
-  border-radius: 5px;
-  background: #fff;
-  border: none;
-  cursor: pointer;
+.footer-reference-links a:hover {
+  color: #aaa;
+}
+.footer-reference-address {
+  font-size: clamp(12px, 1.2vw, 23px);
+  line-height: 1.25;
+}
+.footer-reference-bottom {
+  flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+  align-items: flex-end;
+  gap: 0.75vw;
+  padding: clamp(24px, 4.5vh, 86px) 0 0 0.9vw;
 }
-
-.footer-arrow-btn svg {
-  width: 20px;
-  height: 20px;
+.footer-reference-wordmark {
+  align-self: flex-start;
+  width: 38%;
+  padding-top:2.8vw;
+  color: white;
 }
-
-/* Left button: visible by default, collapses on hover */
-.footer-arrow-btn--left {
-  margin-right: 20px;
-  transform: scale(1) rotate(0deg);
-  transform-origin: center center;
-  transition:
-    width 0.45s cubic-bezier(0.87, 0, 0.13, 1),
-    min-width 0.45s cubic-bezier(0.87, 0, 0.13, 1),
-    margin-right 0.45s cubic-bezier(0.87, 0, 0.13, 1),
-    opacity 0.3s ease,
-    transform 0.4s cubic-bezier(0.87, 0, 0.13, 1);
-}
-
-/* Right button: hidden by default, appears on hover */
-.footer-arrow-btn--right {
-  width: 0;
-  min-width: 0;
-  margin-left: 0;
-  opacity: 0;
-  transform: scale(0) rotate(180deg);
-  transform-origin: center center;
-  transition:
-    width 0.45s cubic-bezier(0.87, 0, 0.13, 1),
-    min-width 0.45s cubic-bezier(0.87, 0, 0.13, 1),
-    margin-left 0.45s cubic-bezier(0.87, 0, 0.13, 1),
-    opacity 0.35s ease,
-    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-/* Hover: left hides, right appears, title shifts naturally */
-.footer-connect-heading:hover .footer-arrow-btn--left {
-  width: 0;
-  min-width: 0;
-  margin-right: 0;
-  opacity: 0;
-  transform: scale(0) rotate(180deg);
-}
-
-.footer-connect-heading:hover .footer-arrow-btn--right {
-  width: 46px;
-  min-width: 46px;
-  margin-left: 20px;
-  opacity: 1;
-  transform: scale(1) rotate(0deg);
-}
-
-.footer-connect-subtitle {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 18px;
-  line-height: 1.1;
-}
-
-/* Social */
-.footer-social {
-  display: flex;
-  gap: 15px;
-}
-
-.footer-social-btn {
-  position: relative;
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
-  overflow: hidden;
-}
-
-/* Fills up from the bottom on hover instead of a flat background swap —
-   the icon itself sits above it (z-index) so it stays visible the
-   whole time the fill rises underneath. */
-.footer-social-btn::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
+.footer-reference-wordmark svg {
+  display: block;
   width: 100%;
-  height: 0;
-  background: #fff;
-  transition: height 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+  height: auto;
 }
-
-.footer-social-btn:hover::before {
+.footer-reference-copyright {
+  margin: 0 0 0 auto;
+  text-align: right;
+  font-size: clamp(9px, 0.9vw, 17px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+.footer-reference-video {
+  position: relative;
+  flex: 0 0 auto;
+  display: block;
+  width: min(27.3vw, 521px);
+  aspect-ratio: 521 / 324;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #191919;
+  cursor: pointer;
+}
+.footer-reference-video video {
+  display: block;
+  width: 100%;
   height: 100%;
-}
-
-.footer-social-icon {
-  position: relative;
-  z-index: 1;
-  width: 25px;
-  height: 23px;
-  transition: filter 0.2s ease;
-}
-
-/* Icon paths are hardcoded fill="#E6E6E6" in the SVG markup, so a CSS
-   fill override can't reach them — invert to black via filter instead
-   once the white fill rises behind on hover, or the icon would
-   disappear into it. */
-.footer-social-btn:hover .footer-social-icon {
-  filter: brightness(0);
-}
-
-/* Right Nav */
-.footer-nav {
-  width: 50%;
-  display: flex;
-  gap: 52px;
-  padding-top: 4px;
-  /* border: 1px solid green; */
-}
-
-.footer-inner-link-col {
-  width: max-content;
-  display: flex;
-  gap: 60px;
-}
-
-.footer-nav-col {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.footer-nav-title {
-  color: #fff;
-  font-size: 22px;
-  font-weight: 500;
-}
-
-.footer-nav-link {
-  cursor: pointer;
-  color: #fff8;
-  font-size: 17px;
-  font-style: normal;
-  font-weight: 400;
-  text-decoration: none;
-}
-
-.footer-nav-link:hover {
-  color: #fff;
-}
-
-/* Current page's own footer link — non-clickable, dimmed instead of
-   the normal hover-brightens-to-white affordance. */
-.footer-nav-link--disabled {
-  cursor: default;
-  color: #fff5;
-  pointer-events: none;
-}
-
-.footer-nav-link--disabled:hover {
-  color: #fff5;
-}
-
-/* ─── Bottom Row ─────────────────────────────────────────── */
-.footer-bottom-row {
-  width: 100%;
-  border-radius: 20px;
-  gap: 10px;
-  /* border: 1px solid red; */
-  display: flex;
-}
-
-/* Subscribe */
-.footer-subscribe {
-  width: min-content;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  /* border: 1px solid yellow; */
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(52px);
-  padding: 30px 40px;
-  display: flex;
-  justify-content: center;
-  /* align-items: center; */
-}
-
-.footer-subscribe-title {
-  color: #fff;
-  font-size: 45px;
-  font-weight: 400;
-}
-
-.footer-subscribe-subtitle {
-  max-width: 570px;
-  color: rgba(255, 255, 255, 0.4);
-
-  font-weight: 300;
-  font-size: 17px;
-  /* border: 1px solid red; */
-}
-
-.footer-subscribe-form {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  /* border: 1px solid blue; */
-}
-
-.footer-subscribe-input {
-  width: 600px;
-  height: 55px;
-  border: none;
-  background: rgba(255, 255, 255, 0.07);
-  border-radius: 5px;
-  padding: 0px 18px;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 20px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.footer-subscribe-input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 20px;
-  font-weight: 400;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.footer-subscribe-input:focus {
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.footer-subscribe-btn {
-  padding: 10px 30px;
-  color: #fff;
-  border-radius: 7px;
-  background: transparent;
-  border: 1px solid #fff;
-  font-size: 18px;
-  font-weight: 300;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  overflow: hidden;
-}
-
-.footer-subscribe-btn span {
-  display: inline-block;
-  animation: footer-subscribe-btn-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes footer-subscribe-btn-in {
-  from {
-    opacity: 0;
-    transform: translateY(60%);
-    filter: blur(2px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
-
-.footer-subscribe-btn:hover {
-  opacity: 0.85;
-}
-
-.footer-subscribe-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.footer-subscribe-btn.is-success {
-  transform: scale(1.05);
-}
-
-.footer-subscribe-btn.is-success span {
-  animation: footer-subscribe-btn-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes footer-subscribe-btn-pop {
-  0% {
-    opacity: 0;
-    transform: translateY(60%) scale(0.7);
-  }
-  60% {
-    opacity: 1;
-    transform: translateY(-6%) scale(1.15);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.footer-subscribe-btn.is-error {
-  border-color: #FF8080;
-  color: #FF8080;
-  animation: footer-subscribe-btn-shake 0.45s ease;
-}
-
-@keyframes footer-subscribe-btn-shake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  20% {
-    transform: translateX(-6px);
-  }
-  40% {
-    transform: translateX(5px);
-  }
-  60% {
-    transform: translateX(-3px);
-  }
-  80% {
-    transform: translateX(2px);
-  }
-}
-
-/* Mascot */
-.footer-mascot {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-  /* border: 1px solid red; */
-}
-
-.footer-mascot video {
-  width: 300px;
-  height: 270px;
   object-fit: cover;
-  /* border: 1px solid red; */
 }
-
-.footer-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 20px;
-  width: 100%;
-  /* border: 1px solid blue; */
+.footer-reference-play {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  width: clamp(36px, 3vw, 58px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(7px);
 }
-
-.footer-time {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  /* border: 1px solid blue; */
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(52px);
-  padding-inline: 40px;
-  padding-block: 30px;
+.footer-reference-play img {
+  width: 40%;
+  height: 40%;
+  object-fit: contain;
 }
-
-.footer-local-time-container {
-  /* border: 1px solid yellow; */
-  width: max-content;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-}
-
-.footer-time-label {
-  color: #fff;
-  font-size: 25px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  text-transform: capitalize;
-}
-
-.footer-time-values {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 25px;
-}
-
-.footer-time-value {
-  color: #fff;
-  font-size: 22px;
-  font-weight: 400;
-  text-transform: capitalize;
-}
-
-.footer-next {
-  display: flex;
-  /* flex-direction: column; */
-  gap: 20px;
-  /* border: 1px solid green; */
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(52px);
-  padding: 30px;
-}
-
-.footer-next-title {
-  color: #fff;
-  cursor: pointer;
-  font-size: 45px;
-  white-space: nowrap;
-  font-style: normal;
-  font-weight: 500;
-}
-
-.footer-next-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-}
-
-.footer-next-line {
-  flex: 1;
-  height: 5px;
-  width: 0%;
-  background: #e6e6e6;
-  transition: width 0.05s linear;
-  flex: 1;
-}
-
-@media (max-width: 1620px) {
-  .footer-subscribe-input {
-    width: 390px;
+@media (max-width:1400px){
+  .footer-reference-middle {
+    padding: 10px 0.7vw 10px;
   }
-  .footer-logo-3d canvas {
-    scale: 1;
-  }
-  .footer-connect-title {
-    font-size: 52px;
-  }
-  .footer-mascot video {
-    width: 250px;
-    height: auto;
-  }
-  .footer-time-value {
-    font-size: 18px;
-  }
-  .footer-subscribe {
-    padding: 15px 33px;
-  }
-  .footer-subscribe-title {
-    font-size: 42px;
-  }
-  .footer-next-title {
-    font-size: 40px;
-  }
-  .footer-inner-link-col {
-    gap: 34px;
-  }
-  .footer-nav {
-    width: 57%;
-  }
-}
-@media (max-width: 1500px) {
-  .footer-inner-link-col {
-    /* gap: 12px; */
-  }
-  .footer-logo-3d canvas {
-    scale: 0.9;
-  }
-
-  .footer-connect-row {
-    padding: 16px 24px;
-  }
-}
-@media (max-width: 1400px) {
-  .footer-nav-link {
-    font-size: 15.5px;
-  }
-  .footer-subscribe-title{
-    font-size: 37px;
-  }
-  .footer-next-title {
-    font-size: 34px;
-  }
-  .footer-next{
-    
-    padding: 20px 15px 49px 15px;
-  }
-  .footer-subscribe-input {
-    width: 330px;
-  }
-  .footer-subscribe {
-    gap: 11px;
-  }
-  .footer-mascot video {
-    width: 210px;
-  }
-  .footer-subscribe-subtitle{
-    line-height: 111%;
-    font-size: 16px;
-  }
-}
-@media (max-width: 1300px) {
-  .footer-nav-link {
-    font-size: 14.5px;
-  }
-  .footer-subscribe-input {
-    width: 290px;
-  }
-  .footer-time {
-    padding-block: 9px;
-    padding-inline: 17px;
-  }
-  .footer-connect-left {
-    gap: 9px;
-  }
-  .footer-social-btn {
-    height: 45px;
-    width: 45px;
-  }
-  .footer-connect-title {
-    font-size: 43px;
-  }
-}
-
-@media (max-width: 1100px) {
-  .footer-logo-row {
-    height: 280px;
-  }
-
-  .footer-logo-img {
-    height: 260px;
-  }
-
-  .footer-connect-row {
-    padding: 28px 24px;
-    flex-direction: column;
-    gap: 28px;
-  }
-
-  .footer-connect-title {
-    font-size: 42px;
-  }
-
-  .footer-nav {
-    width: 100%;
-  }
-
-  .footer-inner-link-col {
-    width: 100%;
-    max-width: none;
-    flex-wrap: wrap;
-    gap: 32px 24px;
-  }
-
-  .footer-nav-col {
-    flex: 1 1 auto;
-    min-width: 140px;
-  }
-
-  .footer-bottom-row {
-    flex-direction: column;
-  }
-
-  .footer-subscribe {
-    width: 100%;
-  }
-
-  .footer-subscribe-form {
-    flex-wrap: wrap;
-  }
-
-  .footer-subscribe-input {
-    width: 100%;
-  }
-
-  .footer-mascot {
-    width: 100%;
-  }
-
-  .footer-mascot video {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    aspect-ratio: 300 / 270;
-  }
-
-  .footer-info {
-    width: 100%;
-  }
-
-  .footer-time {
-    flex-wrap: wrap;
-    padding-inline: 24px;
-    padding-block: 20px;
+  .footer-reference{
+    padding: clamp(28px, 4.5vh, 88px) 2.9vw clamp(21px, 2.7vh, 71px);
   }
 }
 @media (max-width: 800px) {
   .footer {
     position: relative;
-    /* Base rule sets bottom: 0 !important — on position: relative that
-       would still shift the box down from its normal flow position, so
-       it has to be overridden here too, not just `position`. */
     bottom: auto !important;
     transform: none;
     z-index: 9;
   }
-}
-
-/* ─── Mobile ─────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  .footer {
-    padding: 0 15px 42%;
-    gap: 14px;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    /* border-top-left-radius: 20px;
-    border-top-right-radius: 20px; */
+  .footer-reference {
+    padding: 40px 24px 28px;
   }
-
-  /* .footer {
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-  } */
-  .footer-logo-row {
-    height: 180px;
+  .footer-reference-top {
+    padding: 0 0 28px;
   }
-
-  .footer-logo-img {
-    height: 200px;
-    scale: 1.2;
+  .footer-reference-middle {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding: 28px 0;
   }
-
-  .footer-connect-row {
-    padding: 30px 7px;
-    gap: 22px;
-    border-radius: 16px;
+  .footer-reference-intro {
+    gap: 24px;
   }
-
-  .footer-connect-title {
-    font-size: 32px;
+  .footer-reference-intro p {
+    max-width: 340px;
+    font-size: 15px;
   }
-
-  .footer-arrow-btn {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
+  .footer-reference-email {
+    font-size: 30px;
   }
-
-  .footer-arrow-btn svg {
-    width: 15px;
-    height: 15px;
+  .footer-reference-socials a {
+    width: 40px;
   }
-
-  /* Desktop shows the left arrow first and reveals the right one only
-     on :hover — but touch devices have no hover, so the swap animation
-     between them never happens here, and both were being decided purely
-     by the :hover rules above, which mobile can't trigger. Instead:
-     hide the left arrow outright and force the right one permanently
-     visible, giving a static "heading — gap — arrow" layout with the
-     arrow on the right, independent of the hover state. */
-  .footer-connect-heading {
-    justify-content: space-between;
-    gap: 14px;
+  .footer-reference-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 20px;
   }
-
-  .footer-arrow-btn--left {
-    display: none;
+  .footer-reference-nav h3 {
+    margin-bottom: 12px;
+    font-size: 12px;
   }
-
-  .footer-arrow-btn--right,
-  .footer-connect-heading:hover .footer-arrow-btn--right {
-    width: 34px;
-    min-width: 34px;
-    margin-left: 0;
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-  }
-
-  .footer-connect-subtitle {
-    font-size: 17px;
-  }
-
-  .footer-social-btn {
-    width: 60px;
-    height: 60px;
-  }
-
-  .footer-inner-link-col {
-    gap: 14px 20px;
-  }
-
-  .footer-nav-col {
-    flex: 0 0 calc(50% - 10px);
-    width: calc(50% - 10px);
-    min-width: 0;
-    box-sizing: border-box;
-    gap: 3px;
-  }
-
-  .footer-nav-title {
-    font-size: 22px;
-  }
-
-  .footer-nav-link {
-    font-size: 19px;
-  }
-
-  .footer-bottom-row {
-    gap: 14px;
-  }
-
-  .footer-subscribe {
-    padding: 22px 7px;
-    border-radius: 16px;
-    gap: 14px;
-  }
-
-  .footer-subscribe-title {
-    font-size: 31px;
-  }
-
-  .footer-subscribe-subtitle {
-    font-size: 17px;
-    max-width: 100%;
-    line-height: 111%;
-  }
-
-  .footer-subscribe-input {
-    height: 48px;
-    font-size: 19px;
-    border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    background: rgba(255, 255, 255, 0.05);
-  }
-
-  .footer-subscribe-input::placeholder {
+  .footer-reference-links {
+    gap: 7px;
+    padding-left: 12px;
     font-size: 16px;
   }
-
-  .footer-subscribe-btn {
-    width: 100%;
-    text-align: center;
-    padding: 12px 20px;
+  .footer-reference-address {
+    font-size: 14px;
   }
-
-  .footer-subscribe-form {
-    flex-direction: column;
+  .footer-reference-bottom {
+    /* display: grid; */
+    /* grid-template-columns: 1fr; */
+    gap: 24px 16px;
+    padding: 28px 0 100px;
   }
-
-  .footer-mascot {
-    display: none;
+  .footer-reference-wordmark , .footer-reference-copyright{
+  display: none;  
   }
-
-  .footer-time {
-    flex-direction: column;
+  .footer-reference-video {
+    grid-column: 1 / -1;
+    width: min(100%, 521px);
+    justify-self: end;
+  }
+}
+@media (max-width: 420px) {
+  .footer-reference-top {
     align-items: flex-start;
-    gap: 14px;
-    padding: 18px 7px;
-    border-radius: 16px;
+    gap: 2px;
+    flex-direction: column;
   }
-
-  .footer-time-label {
+  .footer-reference-contact {
+    align-self: flex-end;
+  }
+  .footer-reference-top h2 {
     font-size: 29px;
-  }
-
-  .footer-time-values {
-    width: 100%;
-    justify-content: flex-start;
-    gap: 45px;
-  }
-
-  .footer-time-value {
-    font-size: 19px;
-  }
-
-  .footer-next {
-    padding: 18px;
-    border-radius: 16px;
-    gap: 14px;
-  }
-
-  .footer-next-title {
-    font-size: 26px;
   }
 }
 
-/* ─── Show Reel modal ────────────────────────────────────────────
-   Opacity/scale-driven, not display:none-driven, so the open/close
-   is an actual transition — Footer.tsx mounts this in its closed
-   state first, then flips the --open modifier a frame later (and
-   drops it before unmounting), giving both directions a real "from"
-   frame to animate from/to instead of an instant show/hide. */
 .reel-modal-overlay {
   position: fixed;
   inset: 0;
@@ -996,5 +362,96 @@
   .reel-modal-panel {
     width: 92vw;
     height: 45vh;
+  }
+}
+
+/* Separate sibling buttons keep the preview and playback controls accessible. */
+.footer-reference-open {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.footer-reference-play {
+  border: 0;
+  color: white;
+  cursor: pointer;
+}
+.footer-reel-dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 24px;
+  border: 0;
+  background: transparent;
+}
+.footer-reel-dialog[open] {
+  display: grid;
+  place-items: center;
+}
+.footer-reel-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+}
+.footer-reel-content {
+  position: relative;
+  width: min(90vw, 124vh);
+  height: 70vh;
+  overflow: hidden;
+  border-radius: 16px;
+  background: black;
+}
+@media (max-width: 768px) {
+  .footer-reel-content {
+    width: 92vw;
+    height: 45vh;
+  }
+}
+
+.footer-reference-open video {
+  transition: filter 220ms ease;
+}
+.footer-reference-fullscreen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(32px, 2.3vw, 44px);
+  height: auto;
+  color: #fff;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+.footer-reference-open:focus-visible video {
+  filter: brightness(0.72);
+}
+.footer-reference-open:focus-visible .footer-reference-fullscreen {
+  opacity: 1;
+}
+@media (hover: hover) {
+  .footer-reference-open:hover video {
+    filter: brightness(0.72);
+  }
+  .footer-reference-open:hover .footer-reference-fullscreen {
+    opacity: 1;
+  }
+}
+@media (hover: none) {
+  .footer-reference-fullscreen {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-reference-open video,
+  .footer-reference-fullscreen {
+    transition: none;
   }
 }

@@ -1,282 +1,189 @@
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import styles from "./Preloader.module.css";
-import { warmUpServices3d } from "@/app/lib/services3dRenderer";
+import "../../styles/preloader.css";
 
-// Read by PreloaderGate.tsx's beforeInteractive skip-script (stamped on
-// <html> before hydration/paint) — kept here so both files can import it
-// without an import cycle between PreLoader.tsx and PreloaderGate.tsx.
-export const PRELOADER_SKIP_CLASS = "preloader-skip";
-
-export interface PreloaderLetter {
-  src: string;
-  alt?: string;
+interface Preloader1Props {
+  onComplete?: () => void;
+  progress?: number;
 }
 
-export interface PreloaderProps {
-  /** Images that fly up-and-away during the intro (defaults spell "LOADING"). */
-  letters?: PreloaderLetter[];
-  /** Label rendered above the counter. */
-  label?: string;
-  /** Looping ambient track started once the reveal completes. */
-  ambientSoundSrc?: string;
-  /** Called once the reveal transition has fully finished. */
-  onFinish?: () => void;
-}
+export default function Preloader1({ onComplete, progress = 100 }: Preloader1Props) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
+  const animationCompleteRef = useRef(false);
+  const completionFiredRef = useRef(false);
 
-const DEFAULT_LETTERS: PreloaderLetter[] = [
-  { src: "/loader/l.avif" },
-  { src: "/loader/o.avif" },
-  { src: "/loader/a.avif" },
-  { src: "/loader/d.avif" },
-  { src: "/loader/i.avif" },
-  { src: "/loader/n.avif" },
-  { src: "/loader/g.avif" },
-];
+  const [isExiting, setIsExiting] = useState(false);
 
-export default function Preloader({
-  letters = DEFAULT_LETTERS,
-  label = "Loading Experience",
-  ambientSoundSrc,
-  onFinish,
-}: PreloaderProps) {
-  const rootRef = useRef<HTMLDivElement>(null);
-  const revealRef = useRef<HTMLDivElement>(null);
-  const loaderTextRef = useRef<HTMLDivElement>(null);
-  const counterRef = useRef<HTMLHeadingElement>(null);
-  const alphaRefs = useRef<Array<HTMLDivElement | null>>([]);
-
-  const isMountedRef = useRef(true);
-  const [hasRevealed, setHasRevealed] = useState(false);
-  const [isInert, setIsInert] = useState(false);
-
-  // ---------------------------------------------------------------------
-  // Reveal: once the intro (counter/letters) finishes, a circular
-  // clip-path on the black backdrop (revealRef) grows from a single
-  // point at center out past the viewport's corners, uncovering the
-  // real page underneath as it expands — CSS/GSAP only, no WebGL or
-  // Three.js (the original shader-based dissolve was too heavy and got
-  // removed entirely). This animates clip-path directly rather than a
-  // scaled transform: GSAP's transform-based tweens (x/y/scale) replace
-  // the *entire* transform property, which silently discarded this
-  // element's own translate(-50%,-50%) centering the moment a scale
-  // tween started — clip-path has no such conflict.
-  // ---------------------------------------------------------------------
-  const finishReveal = () => {
-    if (!isMountedRef.current) return;
-    setIsInert(true);
-
-    if (ambientSoundSrc) {
-      const ambient = new Audio(ambientSoundSrc);
-      ambient.loop = true;
-      ambient.volume = 0.6;
-      ambient.currentTime = 0;
-      ambient.play().catch(() => {});
-    }
-
-    // Fades .root out before calling onFinish, which unmounts the whole
-    // Preloader in PreloaderGate.tsx.
-    if (rootRef.current) {
-      gsap.to(rootRef.current, {
-        opacity: 0,
-        duration: 0.4,
-        ease: "power2.inOut",
-        onComplete: () => onFinish?.(),
-      });
-    } else {
-      onFinish?.();
+  const finishWhenReady = () => {
+    if (
+      animationCompleteRef.current &&
+      progress >= 100 &&
+      !completionFiredRef.current
+    ) {
+      completionFiredRef.current = true;
+      onComplete?.();
     }
   };
 
-  const handleReveal = () => {
-    if (hasRevealed) return;
-    setHasRevealed(true);
+  useEffect(() => {
+    finishWhenReady();
+  }, [progress, onComplete]);
 
-    gsap.delayedCall(0.3, () => {
-      if (!isMountedRef.current) return;
+  useEffect(() => {
+    const path = pathRef.current;
 
-      const reveal = revealRef.current;
-      if (!reveal) {
-        finishReveal();
-        return;
-      }
+    if (!path) return;
 
-      // Radius comfortably larger than the viewport diagonal guarantees
-      // full coverage at any aspect ratio once the circle finishes growing.
-      const maxRadius = Math.hypot(window.innerWidth, window.innerHeight);
+    const length = path.getTotalLength();
 
-      gsap.fromTo(
-        reveal,
-        { clipPath: "circle(0px at 50% 50%)" },
+    gsap.set(path, {
+      strokeDasharray: length,
+      strokeDashoffset: length,
+      opacity: 1,
+    });
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        animationCompleteRef.current = true;
+        finishWhenReady();
+      },
+    });
+
+    // V drawing
+    tl.to(path, {
+      strokeDashoffset: 0,
+
+      duration: 1.8,
+
+      ease: "power3.inOut",
+    })
+
+      // V filling
+      .to(path, {
+        fill: "#000",
+
+        duration: 1,
+
+        ease: "power2.out",
+      })
+
+      // remove outline
+      .to(path, {
+        strokeOpacity: 0,
+
+        duration: 0.5,
+      })
+
+      // Reveal YRL
+      .to(
+        ".hide",
+
         {
-          clipPath: `circle(${maxRadius}px at 50% 50%)`,
-          duration: 1.4,
-          ease: "power3.inOut",
-          onComplete: finishReveal,
+          y: 0,
+
+          opacity: 1,
+
+          duration: 1,
+
+          stagger: 0.15,
+
+          ease: "power3.out",
+        },
+
+        "-=.2",
+      )
+
+      // Small logo breathing
+      .to(
+        ".svg-fill-path",
+
+        {
+          scale: 1.05,
+
+          duration: 0.5,
+
+          ease: "power2.out",
+        },
+      )
+
+      .to(
+        ".svg-fill-path",
+
+        {
+          scale: 1,
+
+          duration: 0.5,
+
+          ease: "power2.inOut",
+        },
+      )
+
+      // Fade exit
+      .to(
+        ".hide",
+
+        {
+          y: -30,
+
+          opacity: 0,
+
+          duration: 0.6,
+
+          stagger: 0.05,
+
+          ease: "power2.in",
+        },
+      )
+
+      .to(
+        containerRef.current,
+
+        {
+          opacity: 0,
+
+          duration: 0.8,
+
+          ease: "power2.inOut",
+
+          onStart: () => {
+            setIsExiting(true);
+          },
         },
       );
-    });
-  };
-
-  // The whole site hides the native cursor (see globals.css) and relies
-  // on Navbar's custom animated cursor instead — but that element sits
-  // below the preloader's z-index, so while the preloader is up there
-  // was no visible cursor at all. Restoring the native cursor for as
-  // long as the preloader is actually interactive (i.e. until isInert
-  // flips true, meaning the reveal has finished and the custom cursor
-  // underneath takes back over) fixes that.
-  // Also drives the scroll lock (html.preloader-active in globals.css,
-  // plus SmoothScroll.jsx stopping Lenis). The preloader's overlay only
-  // ever blocked things visually — the real page underneath stayed fully
-  // scrollable the whole ~4s intro, so a user who scrolled during that
-  // window ended up wherever they'd scrolled to (footer, even) the
-  // instant the overlay faded, instead of at the hero. This component
-  // still mounts and runs its full timeline even when the beforeInteractive
-  // script has already hidden it via PRELOADER_SKIP_CLASS (see
-  // PreloaderGate.tsx) on repeat page loads within the same session — so
-  // without this check, every one of those invisible replays would also
-  // lock scrolling for ~4s on an otherwise-ready page.
-  useEffect(() => {
-    const skipped = document.documentElement.classList.contains(
-      PRELOADER_SKIP_CLASS,
-    );
-
-    if (isInert || skipped) {
-      document.documentElement.classList.remove("preloader-active");
-      document.body.classList.remove("preloader-active");
-      return;
-    }
-
-    window.scrollTo(0, 0);
-    document.documentElement.classList.add("preloader-active");
-    document.body.classList.add("preloader-active");
-    return () => {
-      document.documentElement.classList.remove("preloader-active");
-      document.body.classList.remove("preloader-active");
-    };
-  }, [isInert]);
-
-  // ---------------------------------------------------------------------
-  // Warm up heavy below-the-fold assets while the ~4s intro timeline is
-  // running anyway, so they're ready by the time the user actually
-  // reaches them — fire-and-forget, never blocks or delays the reveal.
-  //
-  // The services cube needs its GLB fully fetched *and* GLTF-parsed
-  // *and* DRACO-decoded, not just downloaded — a plain fetch() only
-  // warms the HTTP cache, but the parse/decode step is what actually
-  // took visible time once the section mounted (especially on
-  // /services, which isn't lazy-loaded at all and starts loading the
-  // instant that page opens). warmUpServices3d() does that fetch/parse/
-  // decode *and* also compiles the cube's shaders once, hidden, on a
-  // shared offscreen renderer (see services3dRenderer.js) — the actual
-  // GPU-driver compile cost is a separate, much bigger stall than the
-  // asset loading alone, and this is what lets it land here instead of
-  // mid-scroll once any Services3d instance (home or /services) mounts.
-  // ---------------------------------------------------------------------
-  useEffect(() => {
-    warmUpServices3d('/cube1-optimized.glb');
-
-    const unicornScriptSrc =
-      'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.2.8/dist/unicornStudio.umd.js';
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'script';
-    link.href = unicornScriptSrc;
-    document.head.appendChild(link);
 
     return () => {
-      link.remove();
+      tl.kill();
     };
-  }, []);
-
-  // ---------------------------------------------------------------------
-  // Intro timeline: counter + flying letters
-  // ---------------------------------------------------------------------
-  useEffect(() => {
-    isMountedRef.current = true;
-
-    // gsap.context scopes every tween created inside the callback so a
-    // single .revert() on unmount kills them all — no leaked tweens/timers.
-    const ctx = gsap.context(() => {
-      if (counterRef.current) {
-        const counterObj = { value: 0 };
-        gsap.to(counterObj, {
-          value: 101,
-          duration: 4,
-          ease: "power2.out",
-          onUpdate: () => {
-            if (counterRef.current) {
-              counterRef.current.textContent = String(
-                Math.floor(counterObj.value),
-              ).padStart(3, "0");
-            }
-          },
-          onComplete: () => handleReveal(),
-        });
-      }
-
-      gsap.to(loaderTextRef.current, {
-        autoAlpha: 0,
-        duration: 2,
-        ease: "power2.inOut",
-        delay: 2,
-      });
-
-      gsap.to(alphaRefs.current, {
-        y: -800,
-        x: "random(-120, 120)",
-        rotation: "random(-15, 15)",
-        duration: "random(5, 8)",
-        ease: "sine.out",
-        stagger: { each: 0.2, from: "random" },
-      });
-    }, rootRef);
-
-    return () => {
-      isMountedRef.current = false;
-      ctx.revert();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [onComplete]);
 
   return (
     <div
-      ref={rootRef}
-      className={styles.root}
-      data-inert={isInert || undefined}
-      aria-hidden={isInert || undefined}
+      ref={containerRef}
+      className={`pre-loader ${isExiting ? "pre-loader--exiting" : ""}`}
+      role="status"
+      aria-live="polite"
+      aria-label="Page loading"
     >
-      {/* Solid black backdrop that slides up and off-screen to reveal
-          the real page underneath. */}
-      <div className={styles.revealWrap}>
-        <div ref={revealRef} className={styles.reveal} />
-      </div>
-
-      <div className={styles.loaderPics} aria-hidden="true">
-        {letters.map((letter, index) => (
-          <div
-            key={letter.src}
-            className={styles.alpha}
-            ref={(el) => {
-              alphaRefs.current[index] = el;
-            }}
-          >
-            {/* Decorative, transient intro imagery — a plain <img> avoids
-                fighting next/image's required width/height for a purely
-                animated, non-LCP element. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={letter.src} alt={letter.alt ?? ""} />
-          </div>
-        ))}
-      </div>
-
-      <div className={styles.loaderText} ref={loaderTextRef}>
-        <h1 id="mini-loader-text">{label}</h1>
-        <h1 className={styles.bigger} ref={counterRef} aria-live="polite">
-          0
-        </h1>
+      <div className="svg-fill-path">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="652"
+          height="279"
+          viewBox="0 0 652 279"
+          fill="black"
+          aria-hidden="true"
+        >
+          <path
+            ref={pathRef}
+            className="first-path"
+            d="M231.695 74.2661L239 74.2661V34.4153C202.53 34.4153 208.053 34.9974 194.441 40.2586C175.882 47.4452 159.83 62.4228 150.113 81.7661C148.747 84.5869 142.927 97.4153 137.285 110.445C121.815 145.93 118.815 151.079 112.971 151.079C107.128 151.079 101.688 141.654 77.8668 90.3183C73.5907 81.2959 66.1131 64.9526 61.0534 54.1616L51.9191 34.6168L26.0609 34.2362C11.8668 34.0347 0.202643 33.9452 0.00115054 34.0347C-0.0884017 34.1243 5.06085 45.2959 11.5758 58.8183C17.9788 72.4302 28.0982 93.6317 33.8295 105.878C54.0459 148.841 63.7847 168.206 68.7325 175.102C79.2325 189.99 93.337 197.759 112.098 197.759C130.859 197.759 147.583 188.423 158.285 171.99C160.613 168.475 168.964 151.169 176.844 133.482C184.725 115.885 192.785 98.9601 194.643 95.8481C203.016 82.1467 216.538 74.2661 231.695 74.2661Z"
+            fill="black"
+          />
+        </svg>
       </div>
     </div>
   );

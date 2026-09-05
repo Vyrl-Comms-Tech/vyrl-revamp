@@ -9,7 +9,7 @@ import Navbar from "@/app/components/layout/Navbar";
 import SmoothScroll from "@/app/components/layout/SmoothScroll";
 import PreloaderGate from "@/app/components/layout/PreloaderGate";
 import PageTransitionOverlay from "@/app/components/layout/PageTransitionOverlay";
-import Chatbot from "@/app/components/layout/Chatbot";
+// import Chatbot from "@/app/components/layout/Chatbot"; // mid-merge-conflict, whole file commented out — see git status (UU)
 import FluidBackground from "@/app/components/layout/FluidBackgroundLoader";
 
 const laygrotesk = localFont({
@@ -80,7 +80,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <GlobalFooter />
-        <Chatbot />
+        {/* <Chatbot /> */}
         <PageTransitionOverlay />
       </body>
     </html>
