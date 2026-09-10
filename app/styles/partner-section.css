@@ -44,8 +44,8 @@
 }
 
 .partners-grid {
-  display: grid;
   grid-template-columns: repeat(3, 1fr);
+  display: grid;
   gap: 0.5rem;
 
   width: 100%;
@@ -242,6 +242,10 @@
   .partner-logo {
     max-height: 43px;
   }
+  
+.partners-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
   .partners-heading {
     font-size: clamp(2.25rem, 4vw, 5rem);
   }
