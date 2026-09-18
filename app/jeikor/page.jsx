@@ -1,5 +1,6 @@
 import React from 'react'
 import CaseStudyInner from '../components/caseStudy/CaseStudyInner'
+import { getCaseStudyJsonLd } from '../components/caseStudy/caseStudiesData'
 
 export const metadata = {
   title: "Jeikor Case Study",
@@ -11,6 +12,10 @@ export const metadata = {
 const page = () => {
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(getCaseStudyJsonLd("jeikor")) }}
+      />
       <CaseStudyInner slug="jeikor" />
     </div>
   )

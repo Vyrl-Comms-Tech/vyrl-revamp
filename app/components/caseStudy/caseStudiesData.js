@@ -153,3 +153,24 @@ export const getNextCaseStudy = (slug) => {
   if (!current) return null;
   return caseStudies[current.next] ?? null;
 };
+
+// Tells AI/search crawlers "Vyrl Communications made this site", linking
+// out to the live client URL — the counterpart to that site's own
+// (client-controlled, not guaranteed to exist) credit link back to us.
+export const getCaseStudyJsonLd = (slug) => {
+  const study = caseStudies[slug];
+  if (!study) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: `${study.title} Website`,
+    about: study.description,
+    url: study.websiteUrl,
+    creator: {
+      "@type": "Organization",
+      name: "Vyrl Communications",
+      url: "https://vyrl.ae",
+    },
+    mainEntityOfPage: `https://vyrl.ae${study.href}`,
+  };
+};
