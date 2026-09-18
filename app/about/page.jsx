@@ -14,6 +14,7 @@ import LazySection from "@/app/components/layout/LazySection";
 import DraggableMarquee from "../components/about/DraggableMarquee";
 import FullBgImage from "../components/layout/FullBgImage";
 import ResponsiveSwap from "../components/layout/ResponsiveSwap";
+import { getBreadcrumbJsonLd } from "../lib/breadcrumbJsonLd";
 
 export const metadata = {
   title: "About Us",
@@ -25,6 +26,12 @@ export const metadata = {
 const page = () => {
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(getBreadcrumbJsonLd([{ name: "About", path: "/about" }])),
+        }}
+      />
       <AboutHero />
       <AboutText />
       <LazySection>

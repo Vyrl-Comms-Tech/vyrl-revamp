@@ -8,6 +8,7 @@ import OrbitGallery from "@/app/components/home/OrbitGallery";
 import Services3d from "@/app/components/home/Services3d";
 import Slider from "@/app/components/services/Slider";
 import FullBgImage from "../components/layout/FullBgImage";
+import { getBreadcrumbJsonLd } from "../lib/breadcrumbJsonLd";
 
 export const metadata = {
   title: "Services",
@@ -19,6 +20,12 @@ export const metadata = {
 const page = () => {
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(getBreadcrumbJsonLd([{ name: "Services", path: "/services" }])),
+        }}
+      />
       <Slider />
       <Services3d dark />
       <ResponsiveSwap desktop={<Testimonials />} mobile={<ClientReviews />} />

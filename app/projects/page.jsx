@@ -7,6 +7,7 @@ import OrbitGallery from "@/app/components/home/OrbitGallery";
 import ResponsiveSwap from "@/app/components/layout/ResponsiveSwap";
 import Testimonials from "@/app/components/home/Testimonials";
 import FullBgImage from "../components/layout/FullBgImage";
+import { getBreadcrumbJsonLd } from "../lib/breadcrumbJsonLd";
 
 export const metadata = {
   title: "Our Work",
@@ -18,6 +19,12 @@ export const metadata = {
 const page = () => {
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(getBreadcrumbJsonLd([{ name: "Projects", path: "/projects" }])),
+        }}
+      />
       <Suspense fallback={null}>
         <ProjectsGrid />
       </Suspense>

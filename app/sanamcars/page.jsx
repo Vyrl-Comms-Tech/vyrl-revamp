@@ -1,6 +1,7 @@
 import React from 'react'
 import CaseStudyInner from '../components/caseStudy/CaseStudyInner'
 import { getCaseStudyJsonLd } from '../components/caseStudy/caseStudiesData'
+import { getBreadcrumbJsonLd } from '../lib/breadcrumbJsonLd'
 
 export const metadata = {
   title: "Sanam Cars Case Study",
@@ -15,6 +16,17 @@ const page = () => {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(getCaseStudyJsonLd("sanam-cars")) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            getBreadcrumbJsonLd([
+              { name: "Projects", path: "/projects" },
+              { name: "Sanam Cars", path: "/sanamcars" },
+            ]),
+          ),
+        }}
       />
       <CaseStudyInner slug="sanam-cars" />
     </div>

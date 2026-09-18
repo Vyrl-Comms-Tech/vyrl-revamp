@@ -1,5 +1,6 @@
 import React from 'react'
 import ContactHero from '../components/contact-us/ContactHero'
+import { getBreadcrumbJsonLd } from '../lib/breadcrumbJsonLd'
 
 export const metadata = {
   title: "Contact Us",
@@ -11,6 +12,12 @@ export const metadata = {
 const page = () => {
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(getBreadcrumbJsonLd([{ name: "Contact Us", path: "/contact-us" }])),
+        }}
+      />
       <ContactHero />
     </div>
   )

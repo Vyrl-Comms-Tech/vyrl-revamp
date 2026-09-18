@@ -28,6 +28,10 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "Applebot-Extended", allow: "/" },
       { userAgent: "Bytespider", allow: "/" },
       { userAgent: "Amazonbot", allow: "/" },
+      // Bing's index is what ChatGPT's and Microsoft Copilot's web
+      // search features query against, so this matters beyond Bing.co
+      { userAgent: "Bingbot", allow: "/" },
+      { userAgent: "MSNBot", allow: "/" },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
   };

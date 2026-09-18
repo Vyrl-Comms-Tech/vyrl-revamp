@@ -160,6 +160,13 @@ export const getNextCaseStudy = (slug) => {
 export const getCaseStudyJsonLd = (slug) => {
   const study = caseStudies[slug];
   if (!study) return null;
+
+  // Only real client testimonials, not the "Credits" placeholder text
+  // some case studies reuse in that slot (e.g. Sanam Cars repeats its
+  // own description there instead of quoting the client) — Review
+  // schema pointing back to non-review content would misrepresent it.
+  const hasGenuineTestimonial = study.creditsTitle === "Client Testimonial";
+
   return {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
@@ -172,5 +179,15 @@ export const getCaseStudyJsonLd = (slug) => {
       url: "https://vyrl.ae",
     },
     mainEntityOfPage: `https://vyrl.ae${study.href}`,
+    ...(hasGenuineTestimonial && {
+      review: {
+        "@type": "Review",
+        reviewBody: study.creditsText,
+        itemReviewed: {
+          "@type": "Organization",
+          name: "Vyrl Communications",
+        },
+      },
+    }),
   };
 };
