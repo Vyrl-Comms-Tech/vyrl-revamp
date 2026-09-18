@@ -14,6 +14,14 @@ import LazySection from "@/app/components/layout/LazySection";
 import DraggableMarquee from "../components/about/DraggableMarquee";
 import FullBgImage from "../components/layout/FullBgImage";
 import ResponsiveSwap from "../components/layout/ResponsiveSwap";
+
+export const metadata = {
+  title: "About Us",
+  description:
+    "Vyrl Communications is a Dubai-based creative and growth agency. Since 2024 we've partnered with 70+ brands, bringing together creative direction, strategy, technology, content, and automation.",
+  alternates: { canonical: "/about" },
+};
+
 const page = () => {
   return (
     <div>

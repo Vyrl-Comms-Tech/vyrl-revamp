@@ -44,12 +44,60 @@ const laygrotesk = localFont({
   display: "swap",
 });
 
+const SITE_URL = "https://vyrl.ae";
+const SITE_DESCRIPTION =
+  "Vyrl Communications is a Dubai-based creative and growth agency offering strategy & consultancy, branding & creative direction, web & app development, content & social media, performance marketing, and AI automation & tech solutions.";
+
 export const metadata: Metadata = {
-  title: "Vyrl Communications",
-  description: "",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Vyrl Communications | Creative & Growth Agency in Dubai",
+    template: "%s | Vyrl Communications",
+  },
+  description: SITE_DESCRIPTION,
   icons: {
     icon: "/favicon.avif",
   },
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "Vyrl Communications",
+    title: "Vyrl Communications | Creative & Growth Agency in Dubai",
+    description: SITE_DESCRIPTION,
+    images: ["/favicon.avif"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vyrl Communications | Creative & Growth Agency in Dubai",
+    description: SITE_DESCRIPTION,
+    images: ["/favicon.avif"],
+  },
+};
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Vyrl Communications",
+  alternateName: "VYRL",
+  url: SITE_URL,
+  logo: `${SITE_URL}/favicon.avif`,
+  description: SITE_DESCRIPTION,
+  email: "grow@vyrl.ae",
+  telephone: "+971585134999",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "International Business Tower, Business Bay",
+    addressLocality: "Dubai",
+    addressCountry: "AE",
+  },
+  sameAs: [
+    "https://www.linkedin.com/company/vyrl-communications/",
+    "https://www.facebook.com/vyrl.ae/",
+    "https://www.instagram.com/vyrl.ae/",
+  ],
 };
 
 export default function RootLayout({
@@ -65,6 +113,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${laygrotesk.variable} h-full antialiased`}>
       <body className="min-h-full">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         {/* <FluidBackground /> */}
         <SmoothScroll />
         {/* <Header /> */}

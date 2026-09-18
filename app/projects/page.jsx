@@ -8,6 +8,13 @@ import ResponsiveSwap from "@/app/components/layout/ResponsiveSwap";
 import Testimonials from "@/app/components/home/Testimonials";
 import FullBgImage from "../components/layout/FullBgImage";
 
+export const metadata = {
+  title: "Our Work",
+  description:
+    "Case studies from Vyrl Communications: branding, web and app development, and digital marketing work for clients including Lala Darbar, Sanam Cars, Arabian Estates, Jeikor, and Banda.",
+  alternates: { canonical: "/projects" },
+};
+
 const page = () => {
   return (
     <div>

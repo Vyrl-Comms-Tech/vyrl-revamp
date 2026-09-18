@@ -8,6 +8,14 @@ import OrbitGallery from "@/app/components/home/OrbitGallery";
 import Services3d from "@/app/components/home/Services3d";
 import Slider from "@/app/components/services/Slider";
 import FullBgImage from "../components/layout/FullBgImage";
+
+export const metadata = {
+  title: "Services",
+  description:
+    "Vyrl Communications' services: strategy & consultancy, branding & creative direction, web & app development, content & social media, performance marketing, and AI automation & tech solutions.",
+  alternates: { canonical: "/services" },
+};
+
 const page = () => {
   return (
     <div>
